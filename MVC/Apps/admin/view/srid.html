@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>坐标系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--jquery-->
+    <script src="../../../Scripts/jquery-3.3.1.js"></script>
+    <!--Layui-->
+    <link href="../layuiadmin/layui2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="../layuiadmin/style/admin.css" rel="stylesheet" />
+    <script src="../layuiadmin/layui2.5.6/layui.all.js"></script>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div style="padding-bottom: 10px;">
+                    <button id="addsrid" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新坐标系</button>
+                </div>
+
+                <table id="LAY-srid-manage" lay-filter="LAY-srid-manage"></table>
+                <script type="text/html" id="table-tootbar-srid">
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="sridedit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="sriddel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jQuery.support.cors = true;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var sriddatas = [];
+        var addsridlayerindex = null;
+
+        //请求坐标系统信息
+        GetSridInfo();
+
+        //渲染坐标系统表格
+        var sridtable = table.render({
+            elem: '#LAY-srid-manage'
+            , id: 'sridtableid'
+            , title: '坐标系统'
+            , page: true
+            , even: true
+            , limit: 20
+            , initSort: { field: 'id', type: 'asc' }
+            , toolbar: false
+            , totalRow: false
+            , cols: [[
+                { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
+                , { field: 'srid', title: 'SRID', width: 100, align: "center" }
+                , { field: 'name', title: '名称', width: 400, align: "center" }
+                , { field: 'wkt', title: 'WKT', align: "center" }
+                , { fixed: 'right', width: 200, align: 'center', toolbar: '#table-tootbar-srid' }
+            ]]
+            , data: sriddatas
+        });
+
+        //表格操作
+        table.on('tool(LAY-srid-manage)', function (obj) {
+            //var data = obj.data; //获得当前行数据
+            var layEvent = obj.event;
+
+            if (layEvent === 'sridedit') {
+                //编辑坐标系
+                addsridlayerindex = layer.open({
+                    type: 1
+                    , title: ['编辑坐标系信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                    , area: ['450px', '400px']
+                    , shade: [0.5, '#393D49']
+                    , offset: 'auto'
+                    , closeBtn: 1
+                    , maxmin: false
+                    , content: '<form class="layui-form" style="margin-top:10px" lay-filter="addsridform"><div class="layui-form-item"><label class="layui-form-label">SRID</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="srid" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="name" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item layui-form-text"><label class="layui-form-label">WKT</label><div class="layui-input-block" style="padding-right:10px"><textarea name="wkt" placeholder="请输入" class="layui-textarea" lay-verify="required" style="height:150px"></textarea></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="addsridsubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                    , zIndex: layer.zIndex
+                    , success: function (layero) {
+                        //置顶
+                        layer.setTop(layero);
+
+                        form.val("addsridform", {
+                            "srid": obj.data.srid
+                            , "name": obj.data.name
+                            , "wkt": obj.data.wkt
+                        });
+
+                        form.on('submit(addsridsubmit)', function (data) {
+                            data.field.id = obj.data.id;
+                            $.ajax({
+                                url: window.parent.servicesurl + "/api/Srid/UpdateSrid", type: "put", data: data.field,
+                                success: function (result) {
+                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                    GetSridInfo();
+                                }, datatype: "json"
+                            });
+
+                            layer.close(addsridlayerindex);
+                            return false;
+                        });
+                    }
+                    , end: function () { }
+                });
+
+            } else if (layEvent === 'sriddel') {
+                //删除坐标系
+                layer.confirm('是否删除？', function (index) {
+                    obj.del(); //删除表格对应行
+                    layer.close(index);
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url: window.parent.servicesurl + "/api/Srid/DeleteSrid", type: "delete", data: { "id": obj.data.id },
+                        success: function (result) {
+                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        }, datatype: "json"
+                    });
+                });
+            }
+        });
+
+        //添加坐标系统
+        $("#addsrid").on("click", function () {
+            addsridlayerindex = layer.open({
+                type: 1
+                , title: ['添加新坐标系', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['450px', '400px']
+                , shade: [0.5, '#393D49']
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: false
+                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="addsridform"><div class="layui-form-item"><label class="layui-form-label">SRID</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="srid" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="name" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item layui-form-text"><label class="layui-form-label">WKT</label><div class="layui-input-block" style="padding-right:10px"><textarea name="wkt" placeholder="请输入" class="layui-textarea" lay-verify="required" style="height:150px"></textarea></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="addsridsubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    //置顶
+                    layer.setTop(layero);
+
+                    form.on('submit(addsridsubmit)', function (data) {
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Srid/AddSrid", type: "post", data: data.field,
+                            success: function (result) {
+                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                GetSridInfo();
+                            }, datatype: "json"
+                        });
+
+                        layer.close(addsridlayerindex);
+                        return false;
+                    });
+                }
+                , end: function () { }
+            });
+        });
+
+        //获取坐标系统信息
+        function GetSridInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/Srid/GetSridInfo", type: "get",
+                success: function (data) {
+                    if (data == "") {
+                        layer.msg("无坐标系信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        sridtable.reload({ id: 'sridtableid', data: [] });
+                    }
+                    else {
+                        var sridinfos = JSON.parse(data);
+                        sriddatas = [];
+                        for (var i in sridinfos) {
+                            var sriddata = new Object;
+                            sriddata.id = sridinfos[i].Id;
+                            sriddata.srid = sridinfos[i].SRID;
+                            sriddata.name = sridinfos[i].NAME;
+                            sriddata.wkt = sridinfos[i].WKT;
+                            sriddatas.push(sriddata);
+                        }
+                        sridtable.reload({ id: 'sridtableid', data: sriddatas });
+                    }
+                }, datatype: "json"
+            });
+        }
+
+    </script>
+</body>
+</html>

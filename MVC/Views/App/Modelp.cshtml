@@ -1,0 +1,79 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>实景模型管理系统(处理)</title>
+    <!--jquery-->
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="~/Scripts/viewer.min.css">
+    <script src="~/Scripts/viewer.min.js"></script>
+    <!--CesiumJS-->
+    <link href="~/Scripts/Cesium/Widgets/widgets.css" rel="stylesheet" />
+    <script src="~/Scripts/Cesium/Cesium.js"></script>
+    <script src="~/Scripts/navigation/viewerCesiumNavigationMixin.min.js"></script>
+    <script src="~/Scripts/navigation/SpirographPositionProperty.js"></script>
+    <!--Layui-->
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.all.js"></script>
+
+    <link href="~/Apps/model/css/main.css" rel="stylesheet" />
+    <style>
+        body {
+            overflow-y: scroll; /* 禁止刷新后出现横向滚动条 */
+        }
+    </style>
+</head>
+<body>
+    <!--顶栏-->
+    <div id="header">
+        <!--系统logo-->
+        <img id="syslogo" src="~/Resources/img/head/modellogo.png" />
+        <!--当前项目-->
+        <div class="layui-inline" style="position:absolute;left:420px;top:5px;bottom:5px">
+            <div class="layui-input-inline" id="currentprojectoperate">
+                <select id="currentproject"></select>
+            </div>
+        </div>
+        <!--工具栏-->
+        <div style="position:absolute;top:7px;right:5px">
+            <butto id="userbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-user"><span style="margin-left:5px">@ViewBag.User</span></i></butto>
+            <button id="noticebtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-notice"></i></button>
+            <button id="setbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-set-fill"></i></button>
+            <a href="~/Platform/Logout">
+                <button id="exitbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-logout"></i></button>
+            </a>
+        </div>
+    </div>
+    <!--地图-->
+    <div id="map"></div>
+    <!--javascript-->
+    <script>
+        var servicesurl = @Html.Raw(Json.Encode(ViewBag.ServicesURL));
+        var datasurl = @Html.Raw(Json.Encode(ViewBag.DatasURL));
+        var ViewBag = @Html.Raw(Json.Encode(ViewBag));
+    </script>
+
+    <!--开发-->
+    <script src="~/Apps/model/js/1.1-all.js"></script>
+    <script src="~/Apps/model/js/1.2-para.js"></script>
+    <script src="~/Apps/model/js/3.0-map.js"></script>
+    <script src="~/Apps/model/js/4.1-projectlist-modelp.js"></script>
+    <script src="~/Apps/model/js/4.2-projectinfo-modelp.js"></script>
+    <script src="~/Apps/model/js/4.4-taskinfo-modelp.js"></script>
+    <script src="~/Apps/model/js/4.5-newtaskinfo-modelp.js"></script>
+    <script src="~/Apps/model/js/5.0-header.js"></script>
+    <script src="~/Apps/model/js/5.1-message.js"></script>
+    <script src="~/Apps/model/js/5.2-setting.js"></script>
+    <script src="~/Apps/model/js/6.0-util-modelp.js"></script>
+    <!--实景模型系统，导入测量工具-->
+    <script src="~/Apps/model/js/6.1-measure.js"></script>
+    <script src="~/Apps/model/js/6.2-draw.js"></script>
+    <script src="~/Apps/model/js/6.3-localtool.js"></script>
+
+</body>
+</html>

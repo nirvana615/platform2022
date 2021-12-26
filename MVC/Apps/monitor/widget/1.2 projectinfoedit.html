@@ -1,0 +1,486 @@
+﻿<!--编辑项目-->
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px">
+    <ul class="layui-tab-title">
+        <li class="layui-this">基本信息</li>
+        <li>灾害体信息</li>
+        <li>测绘信息</li>
+        <li>地质信息</li>
+        <li>监测设计</li>
+        <li>文档信息</li>
+        <li>项目成员</li>
+        <li>参建单位</li>
+    </ul>
+
+    <div class="layui-tab-content" style="margin:0px 0px">
+
+        <!--基本信息-->
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" style="margin-top:0px" lay-filter="editprojectinfoform">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">项目名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="xmmc" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">项目编码</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="xmbm" lay-verify="required" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">项目类型</label>
+                                <div class="layui-input-block">
+                                    <select id="xmlxid" name="xmlx">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">项目类别</label>
+                                <div class="layui-input-block">
+                                    <select id="xmlbid" name="xmlb">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md4" style="width:25%">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">中心经度</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zxjd" lay-verify="required|number" autocomplete="off" placeholder="请输入" class="layui-input" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4" style="width:25%">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">中心纬度</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zxwd" lay-verify="required|number" autocomplete="off" placeholder="请输入" class="layui-input" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4" style="width:50%">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">坐标系统</label>
+                                <div class="layui-input-block">
+                                    <select id="kjckid" name="kjck" lay-verify="required">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">行政区划</label>
+                    <div class="layui-input-inline" style="width:200px;">
+                        <select id="provinceid" name="province" lay-verify="required">
+                            <option value="">省/市</option>
+                            <option value="0">重庆市</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width:200px;">
+                        <select id="cityid" name="city" lay-verify="required">
+                            <option value="">市辖区/县</option>
+                            <option value="0">市辖区</option>
+                            <option value="1">县</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width:200px;">
+                        <select id="districtid" name="district" lay-verify="required">
+                            <option value="">区/县</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">项目位置</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="xmwz" autocomplete="off" placeholder="请输入" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md6">
+                            <div class="grid-demo grid-demo-bg1">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">开始时间</label>
+                                    <div class="layui-input-inline" style="width:250px;">
+                                        <input type="text" id="xmkssjid" name="xmkssj" lay-verify="date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md6">
+                            <div class="grid-demo">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">结束时间</label>
+                                    <div class="layui-input-inline" style="width:250px;">
+                                        <input type="text" id="xmjssjid" name="xmjssj" lay-verify="date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md6">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">灾害点名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zhdmc" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md6">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">灾害点编号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zhdtybh" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">灾害类型</label>
+                                <div class="layui-input-block">
+                                    <select id="zhlxid" name="zhlx" lay-verify="required">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">灾害等级</label>
+                                <div class="layui-input-block">
+                                    <select id="zhdjid" name="zhdj">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">灾害险情</label>
+                                <div class="layui-input-block">
+                                    <select id="zhxqid" name="zhxq">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">预警级别</label>
+                                <div class="layui-input-block">
+                                    <select id="yjjbid" name="yjjb">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">监测级别</label>
+                                <div class="layui-input-block">
+                                    <select id="jcjbid" name="jcjb">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">监测手段</label>
+                                <div class="layui-input-block">
+                                    <select id="jcsdid" name="jcsd">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">是否库区</label>
+                                <div class="layui-input-block">
+                                    <select id="sfkqid" name="sfkq"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">是否涉水</label>
+                                <div class="layui-input-block">
+                                    <select id="sfssid" name="sfss"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">是否结束</label>
+                                <div class="layui-input-block">
+                                    <select id="sfjsid" name="sfjs"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row layui-col-space1">
+                        <div class="layui-col-md3">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">面积</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="mj" autocomplete="off" class="layui-input" placeholder="请输入" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">面积单位</label>
+                                <div class="layui-input-block">
+                                    <select id="mjdwid" name="mjdw" lay-verify="required">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">体积</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="tj" autocomplete="off" class="layui-input" placeholder="请输入" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md3">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">体积单位</label>
+                                <div class="layui-input-block">
+                                    <select id="tjdwid" name="tjdw" lay-verify="required">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row layui-col-space1">
+                        <div class="layui-col-md3" style="width:25%">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">威胁户数</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="wxhs" autocomplete="off" class="layui-input" placeholder="请输入" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3" style="width:25%">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">威胁人数</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="wxrs" autocomplete="off" class="layui-input" placeholder="请输入" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3" style="width:50%">
+                            <label class="layui-form-label" style="width:200px">威胁房屋面积(平方米)</label>
+                            <input type="text" name="wxfwmj" autocomplete="off" class="layui-input" placeholder="请输入" style="width:180px;float:right" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">其他威胁</label>
+                    <div class="layui-input-block">
+                        <textarea name="qtwx" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top:5px">
+                    <div style="position:absolute;right:5px;">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="editprojectinfosubmit" style="width:120px">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!--灾害体-->
+        <div class="layui-tab-item">
+            <div class="layui-card-body" style="padding:0px 0px;">
+                <table id="disaster-edit" lay-filter="disaster-edit"></table>
+
+                <script type="text/html" id="adddisaster">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="adddisaster">添加灾害体</button>
+                    </div>
+                </script>
+                <script type="text/html" id="table-toolbar-disaster">
+                    <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="disasterview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                    <a class="layui-btn layui-bg-blue layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="disasteredit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                    <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="disasterdel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                </script>
+            </div>
+        </div>
+
+        <!--测绘信息-->
+        <div class="layui-tab-item">
+            测绘信息
+        </div>
+
+        <!--地质信息-->
+        <div class="layui-tab-item">
+            地质信息
+        </div>
+
+        <!--监测设计信息-->
+        <div class="layui-tab-item" style="margin:1px 0">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:0px 0px">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" style="width:45%">监测剖面</li>
+                    <li style="width:45%">监测点</li>
+                </ul>
+
+                <div class="layui-tab-content">
+                    <!--监测剖面-->
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-card-body" style="padding:0px 0px;">
+                            <table class="layui-hide" id="sectiontable-edit" lay-filter="sectiontable-edit"></table>
+
+                            <script type="text/html" id="addsection">
+                                <div class="layui-btn-container">
+                                    <button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="addsection">添加监测剖面</button>
+                                </div>
+                            </script>
+                            <script type="text/html" id="table-toolbar-section">
+                                <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;" lay-event="sectionview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important"></i></a>
+                                <a class="layui-btn layui-bg-blue layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="sectionedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                                <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="sectiondel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                            </script>
+                        </div>
+                    </div>
+
+                    <!--监测点-->
+                    <div class="layui-tab-item">
+                        <div class="layui-card-body" style="padding:0px 0px;">
+                            <form class="layui-form layui-form-pane" lay-filter="monitoreditform" action="">
+                                <div class="layui-row">
+                                    <div class="layui-col-md6">
+                                        <div class="grid-demo grid-demo-bg1">
+                                            <div class="layui-input-block" style="margin-left:0px;margin-right:5px;margin-bottom:5px;">
+                                                <select id="monitorclassid" name="monitorclass" lay-filter="monitorclass">
+                                                    <option value="0" selected="selected">按灾害体分类</option>
+                                                    <option value="1">按监测方法分类</option>
+                                                    <option value="2">按监测剖面分类</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-col-md6">
+                                        <div class="grid-demo">
+                                            <div class="layui-input-block" style="margin-left:5px;margin-bottom:5px;">
+                                                <select id="monitorclassitemid" name="monitorclassitem" lay-filter="monitorclassitem"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <table class="layui-hide" id="monitortable-edit" lay-filter="monitortable-edit"></table>
+                            <script type="text/html" id="addmonitor">
+                                <div class="layui-btn-container">
+                                    <button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="addmonitor">添加监测点</button>
+                                </div>
+                            </script>
+                            <script type="text/html" id="table-toolbar-monitor">
+                                <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;" lay-event="monitorview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important"></i></a>
+                                <a class="layui-btn layui-bg-blue layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="monitoredit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                                <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="monitordel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                            </script>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--文档信息-->
+        <div class="layui-tab-item">
+            文档信息
+        </div>
+
+        <!--项目成员信息-->
+        <div class="layui-tab-item">
+            项目成员信息
+        </div>
+
+        <!--参建单位信息-->
+        <div class="layui-tab-item">
+            参建单位信息
+        </div>
+
+    </div>
+</div>

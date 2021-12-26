@@ -1,0 +1,118 @@
+﻿<!--设备管理-->
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px">
+    <ul class="layui-tab-title">
+        <li class="layui-this" style="width:40%;padding-top: 10px;">概况</li>
+        <li style="width:40%;padding-top: 10px;">详情</li>
+    </ul>
+
+    <div class="layui-tab-content">
+        <!--概况-->
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" lay-filter="autodevicesform" style="margin-top:5px;">
+                <div class="layui-row">
+                    <div class="layui-col-xs6">
+                        <div class="grid-demo grid-demo-bg1">
+                            <div class="layui-form-item">
+                                <div class="layui-input-block" style="margin-left:10px;">
+                                    <select id="autodevicespretimeid" name="autodevicespretime" lay-filter="autodevicespretimefilter" style="visibility:visible;"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <div class="grid-demo">
+                            <div class="layui-form-item">
+                                <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">
+                                    <input id="autodevicescustomtimeid" name="autodevicescustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="layui-row">
+                <div class="layui-col-xs6">
+                    <div class="grid-demo grid-demo-bg1">
+                        1
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="grid-demo">
+                        <!--设备数量-->
+                        <div id="autodevicechartbynum" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row">
+                <div class="layui-col-xs6">
+                    <div class="grid-demo grid-demo-bg1">
+                        <!--按灾害体-->
+                        <div id="autodevicechartbydisaster" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="grid-demo">
+                        <!--按设备类型-->
+                        <div id="autodevicechartbytype" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--详情-->
+        <div class="layui-tab-item">
+            <div class="layui-row">
+                <!--左侧-->
+                <div class="layui-col-md3" style="width:20%;height:500px;overflow: auto;">
+                    <div id="device-monitor-tree" class="grid-demo"></div>
+                </div>
+
+                <!--右侧-->
+                <div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">
+                    <div class="grid-demo grid-demo-bg1">
+                        <!--工具栏-->
+                        <form class="layui-form" lay-filter="autodeviceform" style="margin-top:5px;">
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block" style="margin-left:10px;">
+                                                <select id="autodevicepretimeid" name="autodevicepretime" lay-filter="autodevicepretimefilter" style="visibility:visible;"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">
+                                                <input id="autodevicecustomtimeid" name="autodevicecustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!--采集数量柱状图-->
+                        <div id="autodevicechart" class="layui-tab-item layui-show" style="width:780px;height:600px"></div>
+
+                        <!--设备采集率-->
+                        <div style="padding-left:50px;padding-right:10px;padding-top:20px;">
+                            <div class="layui-progress layui-progress" lay-showpercent="true" lay-filter="devicerate">
+                                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

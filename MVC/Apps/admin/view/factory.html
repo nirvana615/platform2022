@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>设备厂家</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--jquery-->
+    <script src="../../../Scripts/jquery-3.3.1.js"></script>
+    <!--Layui-->
+    <link href="../layuiadmin/layui2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="../layuiadmin/style/admin.css" rel="stylesheet" />
+    <script src="../layuiadmin/layui2.5.6/layui.all.js"></script>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div style="padding-bottom: 10px;">
+                    <button id="addfactory" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新设备厂家</button>
+                </div>
+
+                <table id="LAY-factory-manage" lay-filter="LAY-factory-manage"></table>
+                <script type="text/html" id="table-toolbar-factory">
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="factoryedit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="factorydel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jQuery.support.cors = true;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var factorydatas = [];
+        var addfactorylayerindex = null;
+
+        //请求自动化监测设备厂家信息
+        GetFactoryInfo();
+
+        var factorytable = table.render({
+            elem: '#LAY-factory-manage'
+            , id: 'factorytableid'
+            , title: '自动化监测设备厂家信息'
+            , page: true
+            , even: true
+            , limit: 20
+            , initSort: { field: 'id', type: 'asc' }
+            , toolbar: false
+            , totalRow: false
+            , cols: [[
+                { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
+                , { field: 'cjmc', title: '厂家名称', align: "center" }
+                , { field: 'cjjc', title: '厂家简称', align: "center" }
+                , { field: 'cjbm', title: '厂家编码', align: "center" }
+                , { field: 'cjsj', title: '创建时间', align: "center" }
+                , { field: 'bz', title: '备注', align: "center" }
+                , { fixed: 'right', width: 200, align: 'center', toolbar: '#table-toolbar-factory' }
+            ]]
+            , data: factorydatas
+        });
+
+
+        table.on('tool(LAY-factory-manage)', function (obj) {
+            //var data = obj.data; //获得当前行数据
+            var layEvent = obj.event;
+
+            if (layEvent === 'factoryedit') {
+                //编辑自动化监测设备厂家
+                addfactorylayerindex = layer.open({
+                    type: 1
+                    , title: ['编辑设备厂家信息', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                    , area: ['400px', '400px']
+                    , shade: [0.5, '#393D49']
+                    , offset: 'auto'
+                    , closeBtn: 1
+                    , maxmin: false
+                    , content: '<form class="layui-form" style="margin-top:10px" lay-filter="addfactoryform"><div class="layui-form-item"><label class="layui-form-label">厂家名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="cjmc" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">厂家简称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="cjjc" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">厂家编码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="cjbm" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="addfactorysubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                    , zIndex: layer.zIndex
+                    , success: function (layero) {
+                        layer.setTop(layero);
+
+                        form.val("addfactoryform", {
+                            "cjmc": obj.data.cjmc
+                            , "cjjc": obj.data.cjjc
+                            , "cjbm": obj.data.cjbm
+                            , "bz": obj.data.bz
+                        });
+
+                        form.on('submit(addfactorysubmit)', function (data) {
+                            data.field.id = obj.data.id;
+                            $.ajax({
+                                url: window.parent.servicesurl + "/api/Factory/UpdateFactory", type: "put", data: data.field,
+                                success: function (result) {
+                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                    GetFactoryInfo();
+                                }, datatype: "json"
+                            });
+
+                            layer.close(addfactorylayerindex);
+                            return false;
+                        });
+                    }
+                    , end: function () { }
+
+                });
+
+            } else if (layEvent === 'factorydel') {
+                layer.confirm('是否删除？', function (index) {
+                    obj.del(); //删除表格对应行
+                    layer.close(index);
+
+                    $.ajax({
+                        url: window.parent.servicesurl + "/api/Factory/DeleteFactory", type: "delete", data: { "id": obj.data.id },
+                        success: function (result) {
+                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        }, datatype: "json"
+                    });
+                });
+            }
+        });
+
+        //添加自动化监测设备厂家
+        $("#addfactory").on("click", function () {
+            addfactorylayerindex = layer.open({
+                type: 1
+                , title: ['添加新设备厂家', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['400px', '350px']
+                , shade: [0.5, '#393D49']
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: false
+                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="addfactoryform"><div class="layui-form-item"><label class="layui-form-label">厂家名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="cjmc" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">厂家简称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="cjjc" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">厂家编码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="cjbm" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="addfactorysubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    //置顶
+                    layer.setTop(layero);
+
+                    form.on('submit(addfactorysubmit)', function (data) {
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Factory/AddFactory", type: "post", data: data.field,
+                            success: function (result) {
+                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                GetFactoryInfo();
+                            }, datatype: "json"
+                        });
+
+                        layer.close(addfactorylayerindex);
+                        return false;
+                    });
+                }
+                , end: function () { }
+            });
+        });
+
+        //获取自动化监测设备厂家信息
+        function GetFactoryInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/Factory/GetFactoryInfo", type: "get",
+                success: function (data) {
+                    if (data == "") {
+                        layer.msg("无自动化监测设备厂家信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        factorytable.reload({ id: 'factorytableid', data: [] });
+                    }
+                    else {
+                        var factoryinfos = JSON.parse(data);
+                        factorydatas = [];
+                        for (var i in factoryinfos) {
+                            var factorydata = new Object;
+                            factorydata.id = factoryinfos[i].Id;
+                            factorydata.cjmc = factoryinfos[i].CJMC;
+                            factorydata.cjjc = factoryinfos[i].CJJC;
+                            factorydata.cjbm = factoryinfos[i].CJBM;
+                            factorydata.cjsj = factoryinfos[i].CJSJ;
+                            factorydata.bz = factoryinfos[i].BZ;
+                            factorydatas.push(factorydata);
+                        }
+                        factorytable.reload({ id: 'factorytableid', data: factorydatas });
+                    }
+                }, datatype: "json"
+            });
+        }
+
+    </script>
+</body>
+</html>

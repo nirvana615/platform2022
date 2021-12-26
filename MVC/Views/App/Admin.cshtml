@@ -1,0 +1,206 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>后台管理系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--Layui-->
+    <link href="~/Apps/admin/layuiadmin/layui2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="~/Apps/admin/layuiadmin/style/admin.css" rel="stylesheet" />
+    <script src="~/Apps/admin/layuiadmin/layui2.5.6/layui.js"></script>
+
+</head>
+<body class="layui-layout-body">
+
+    <div id="LAY_app">
+        <div class="layui-layout layui-layout-admin">
+            <!--顶部区域 -->
+            <div class="layui-header">
+                <ul class="layui-nav layui-layout-left">
+                    <li class="layui-nav-item layadmin-flexible" lay-unselect>
+                        <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                            <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;" layadmin-event="refresh" title="刷新">
+                            <i class="layui-icon layui-icon-refresh-3"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+                    @*<li class="layui-nav-item" lay-unselect>
+                            <a lay-href="~/Apps/admin/page/message.html" layadmin-event="message" lay-text="消息中心">
+                                <i class="layui-icon layui-icon-notice"></i>
+                                <span class="layui-badge-dot"></span>
+                            </a>
+                        </li>*@
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="javascript:;" layadmin-event="theme">
+                            <i class="layui-icon layui-icon-theme"></i>
+                        </a>
+                    </li>
+                    @*<li class="layui-nav-item layui-hide-xs" lay-unselect>
+                            <a href="javascript:;" layadmin-event="note">
+                                <i class="layui-icon layui-icon-note"></i>
+                            </a>
+                        </li>*@
+                    @*<li class="layui-nav-item layui-hide-xs" lay-unselect>
+                            <a href="javascript:;" layadmin-event="fullscreen">
+                                <i class="layui-icon layui-icon-screen-full"></i>
+                            </a>
+                        </li>*@
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;">
+                            <cite>@ViewBag.User</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd style="text-align: center;"><a href="~/Platform/Logout">退出</a></dd>
+                        </dl>
+                    </li>
+
+                </ul>
+            </div>
+
+            <!-- 侧边菜单 -->
+            <div class="layui-side layui-side-menu">
+                <div class="layui-side-scroll">
+                    <div class="layui-logo">
+                        <span><b>后台管理系统</b></span>
+                    </div>
+
+                    <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+
+                        <!--用户管理-->
+                        <li class="layui-nav-item">
+                            <a lay-href="~/Apps/admin/view/user.html" lay-tips="用户管理" lay-direction="2">
+                                <i class="layui-icon layui-icon-user"></i>
+                                <cite>用户管理</cite>
+                            </a>
+                        </li>
+
+                        <!--角色管理-->
+                        <li class="layui-nav-item">
+                            <a lay-href="~/Apps/admin/view/role.html" lay-tips="角色管理" lay-direction="2">
+                                <i class="layui-icon layui-icon-auz"></i>
+                                <cite>角色管理</cite>
+                            </a>
+                        </li>
+
+                        <!--用户授权-->
+                        <li class="layui-nav-item">
+                            <a lay-href="~/Apps/admin/view/auth.html" lay-tips="用户授权" lay-direction="2">
+                                <i class="layui-icon layui-icon-share"></i>
+                                <cite>用户授权</cite>
+                            </a>
+                        </li>
+
+                        <!--自动化监测设备-->
+                        <li class="layui-nav-item">
+                            <a href="javascript:;" lay-tips="自动化监测" lay-direction="2">
+                                <i class="layui-icon layui-icon-app"></i>
+                                <cite>自动化监测</cite>
+                            </a>
+                            <dl class="layui-nav-child">
+                                <dd>
+                                    <a lay-href="~/Apps/admin/view/device.html">监测设备</a>
+                                </dd>
+                                <dd>
+                                    <a lay-href="~/Apps/admin/view/database.html">监测数据库</a>
+                                </dd>
+                                <dd>
+                                    <a lay-href="~/Apps/admin/view/sql.html">ETL SQL</a>
+                                </dd>
+                                <dd>
+                                    <a lay-href="~/Apps/admin/view/factory.html">设备厂家</a>
+                                </dd>
+                                <dd>
+                                    <a lay-href="~/Apps/admin/view/sale.html">设备经销商</a>
+                                </dd>
+                            </dl>
+                        </li>
+
+                        <!--坐标系统-->
+                        <li class="layui-nav-item">
+                            <a lay-href="~/Apps/admin/view/srid.html" lay-tips="坐标系统" lay-direction="2">
+                                <i class="layui-icon"><svg t="1613571844310" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4253" width="16" height="16"><path d="M924.16 544H469.76V89.6c0-11.264-9.216-20.48-20.48-20.48s-20.48 9.216-20.48 20.48v466.432L99.072 885.76c-7.936 7.936-7.936 20.992 0 28.928 4.096 4.096 9.216 5.888 14.592 5.888 5.12 0 10.496-2.048 14.592-5.888l329.728-329.728H924.16c11.264 0 20.48-9.216 20.48-20.48s-9.216-20.48-20.48-20.48z" p-id="4254" fill="#ffffff"></path><path d="M370.944 120.576l78.336-78.336 78.336 78.336M884.992 485.12l78.336 78.336-78.336 78.336M191.744 932.864H80.896v-110.848M308.736 884.48l-18.432 27.904 18.176 27.392H296.96l-10.496-17.664c-0.512-1.024-1.28-2.304-2.304-4.352h-0.256c0 0.256-0.768 1.536-2.56 4.352l-10.752 17.664h-11.264l18.688-27.136-17.92-28.16h11.52l10.24 18.432c0.512 1.024 1.28 2.56 2.304 4.352h0.256l13.568-22.784h10.752zM936.448 385.28l-25.088 63.744c-4.608 11.776-11.264 17.664-19.712 17.664-2.56 0-4.608-0.256-6.144-0.768v-8.704c1.792 0.768 3.84 1.024 5.376 1.024 4.352 0 7.68-2.56 9.984-7.68l4.352-9.984-21.76-55.296h10.752l14.336 41.472 1.28 4.608h0.256c0.256-1.024 0.512-2.56 1.28-4.352l15.104-41.728h9.984zM613.12 102.656h-45.824v-3.328l32.256-44.032h-29.184v-8.192h43.008v3.328L581.376 94.72h31.744v7.936z" p-id="4255" fill="#ffffff"></path></svg></i>
+                                <cite>坐标系统</cite>
+                            </a>
+                        </li>
+
+                        <!--人员管理-->
+                        <li class="layui-nav-item">
+                            <a lay-href="javascript:;" lay-tips="人员管理" lay-direction="2">
+                                <i class="layui-icon layui-icon-friends"></i>
+                                <cite>人员管理</cite>
+                            </a>
+                        </li>
+
+                        <!--单位管理-->
+                        <li class="layui-nav-item">
+                            <a lay-href="javascript:;" lay-tips="单位管理" lay-direction="2">
+                                <i class="layui-icon layui-icon-template"></i>
+                                <cite>单位管理</cite>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 页面标签 -->
+            <div class="layadmin-pagetabs" id="LAY_app_tabs">
+                <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+                <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+                <div class="layui-icon layadmin-tabs-control layui-icon-down">
+                    <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                        <li class="layui-nav-item" lay-unselect>
+                            <a href="javascript:;"></a>
+                            <dl class="layui-nav-child layui-anim-fadein">
+                                <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                                <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                                <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+                <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+                    <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                        <li lay-id="home/console.html" lay-attr="home/console.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 主体内容 -->
+            <div class="layui-body" id="LAY_app_body">
+                <div class="layadmin-tabsbody-item layui-show">
+                    <iframe src="~/Apps/admin/view/home.html" frameborder="0" class="layadmin-iframe"></iframe>
+                </div>
+            </div>
+
+            <!-- 辅助元素，一般用于移动设备下遮罩 -->
+            <div class="layadmin-body-shade" layadmin-event="shade"></div>
+
+        </div>
+    </div>
+
+    <!--javascript-->
+    <script>
+        var servicesurl = @Html.Raw(Json.Encode(ViewBag.ServicesURL));
+
+        layui.config({
+            base: '../../Apps/admin/layuiadmin/'
+        }).extend({
+            index: 'lib/index'
+        }).use('index');
+    </script>
+</body>
+</html>

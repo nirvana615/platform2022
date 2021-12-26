@@ -1,0 +1,102 @@
+﻿<!--新增判据-->
+<form class="layui-form" action="" lay-filter="criterionaddform" style="margin-top:10px;margin-right:10px;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:60px;">判据名称</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="pjmc" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:60px;">预警级别</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <select id="yjjbid" name="yjjb" lay-filter="yjjb" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:60px;">灾害体</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <select id="zhtcid" name="zhtc" lay-filter="zhtc" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:60px;">监测点</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <select id="jcdcid" name="jcdc" lay-filter="jcdc" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:60px;padding-top:105px;">监测阈值</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <textarea name="jcyz" class="layui-textarea" style="min-height:232px!important"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:60px;padding-top:105px;">判据项</label>
+                    <div class="layui-input-block" style="margin-left:90px;height:230px;border:solid;border-color:#e6e6e6;border-width:1px;">
+                        <div id="pjxid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:60px;padding-top:50px;">判据公式</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <textarea id="pjgsid" name="pjgs" class="layui-textarea" style="min-height:120px!important;" lay-verify="required"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:10px;">
+        <div class="layui-input-block" style="margin-left:90px;">
+            <button id="btnzkh" type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i id="pjxzkh" style="font-size:14px!important;font-style:normal;">(</i></button>
+            <button id="btnykh" type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i id="pjxykh" style="font-size:14px!important;font-style:normal;">)</i></button>
+            <button id="btnand" type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i id="pjxand" style="font-size:14px!important;font-style:normal;">AND</i></button>
+            <button id="btnor" type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i id="pjxor" style="font-size:14px!important;font-style:normal;">OR</i></button>
+            <button id="btndy" type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i id="pjxdy" style="font-size:14px!important;font-style:normal;">></i></button>
+            <button id="btnxy" type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i id="pjxxy" style="font-size:14px!important;font-style:normal;"><</i></button>
+            <button id="btndydy" type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i id="pjxdydy" style="font-size:14px!important;font-style:normal;">>=</i></button>
+            <button id="btnxydy" type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i id="pjxxydy" style="font-size:14px!important;font-style:normal;"><=</i></button>
+            <button id="btnbdy" type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i id="pjxbdy" style="font-size:14px!important;font-style:normal;">!=</i></button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:60px;padding-top:25px;">描述</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <textarea name="ms" class="layui-textarea" style="min-height:70px!important;"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:60px;">备注</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="bz" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-bottom:10px">
+        <div style="position:absolute;right:10px;bottom:10px;">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="criterionaddsave" style="width:100px">保存</button>
+        </div>
+    </div>
+</form>
+

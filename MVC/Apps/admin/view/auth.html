@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户授权</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--jquery-->
+    <script src="../../../Scripts/jquery-3.3.1.js"></script>
+    <!--Layui-->
+    <link href="../layuiadmin/layui2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="../layuiadmin/style/admin.css" rel="stylesheet" />
+    <script src="../layuiadmin/layui2.5.6/layui.all.js"></script>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <form class="layui-form" action="" lay-filter="authuserform" style="margin-top:0px;">
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-md9">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label" style="width:60px;">选择用户</label>
+                                <div class="layui-input-block" style="margin-left:90px;">
+                                    <select id="usersid" name="users" lay-filter="selectuser">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3">
+                            <div class="grid-demo" style="position:absolute;right:5px;">
+                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="authusersubmit" style="width:120px;">更新授权</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-demo" style="margin-top:10px;">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:60px;padding-top:290px;">监测项目</label>
+                            <div class="layui-input-block" style="margin-left:90px;height:600px;border:solid;border-color:#e6e6e6;border-width:1px;">
+                                <div id="monitorprojectid" style="padding:10px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jQuery.support.cors = true;
+        var form = layui.form;
+        var tree = layui.tree;
+
+        var monitorprojects = [];
+        var curuserid = null;
+
+        //渲染监测项目
+        tree.render({
+            elem: '#monitorprojectid'
+            , id: 'monitorprojecttreeid'
+            , data: []
+            , accordion: true
+            , showCheckbox: true
+            , showLine: false
+            , click: function (obj) {
+            }
+            , oncheck: function (obj) {
+                if (obj.checked) {
+                    for (var i in monitorprojects) {
+                        if (monitorprojects[i].id == obj.data.id) {
+                            monitorprojects[i].checked = true;
+                        }
+                    }
+                }
+                else {
+                    for (var i in monitorprojects) {
+                        if (monitorprojects[i].id == obj.data.id) {
+                            monitorprojects[i].checked = false;
+                        }
+                    }
+                }
+
+                console.info(monitorprojects);
+            }
+        });
+
+        GetMonitorUserInfo();
+        GetMonitorProjectInfo();
+
+        form.render();
+        form.render('select');
+
+        //获取用户信息
+        function GetMonitorUserInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/User/GetMonitorUserInfo", type: "get",
+                success: function (data) {
+                    if (data == "") {
+                        layer.msg("无监测用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        curuserid = null;
+                    }
+                    else {
+                        var userinfodatas = JSON.parse(data);
+                        for (var i in userinfodatas) {
+                            document.getElementById('usersid').innerHTML += '<option value="' + userinfodatas[i].Id + '">' + userinfodatas[i].UserName + '</option>';
+                        }
+
+                        form.render();
+                        form.render('select');
+
+                        //切换用户
+                        form.on('select(selectuser)', function (data) {
+                            if (data.value == "") {
+                                curuserid = null;
+                                for (var i in monitorprojects) {
+                                    monitorprojects[i].checked = false;
+                                }
+
+                                tree.reload('monitorprojecttreeid', {
+                                    data: monitorprojects
+                                });
+                            }
+                            else {
+                                curuserid = data.value;
+                                $.ajax({
+                                    url: window.parent.servicesurl + "/api/Project/GetMapUserMonitorProject", type: "get", data: { "id": data.value },
+                                    success: function (data) {
+                                        if (data == "") {
+                                        }
+                                        else {
+                                            var mapusermonitorprojectdata = JSON.parse(data);
+                                            var usermonitorprojectids = [];
+                                            for (var i in mapusermonitorprojectdata) {
+                                                usermonitorprojectids.push(mapusermonitorprojectdata[i].MonitorProjectId);
+                                            }
+
+                                            for (var i in monitorprojects) {
+                                                if (usermonitorprojectids.indexOf(monitorprojects[i].id) != -1) {
+                                                    monitorprojects[i].checked = true;
+                                                }
+                                                else {
+                                                    monitorprojects[i].checked = false;
+                                                }
+                                            }
+
+                                            tree.reload('monitorprojecttreeid', {
+                                                data: monitorprojects
+                                            });
+                                        }
+                                    }, datatype: "json"
+                                });
+                            }
+                        });
+                    }
+                }, datatype: "json"
+            });
+        }
+
+        //获取监测项目信息
+        function GetMonitorProjectInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/Project/GetProjectList", type: "get",
+                success: function (data) {
+                    monitorprojects = [];
+                    if (data == "") {
+                        layer.msg("无监测项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    }
+                    else {
+                        var monitorprojectdatas = JSON.parse(data);
+                        for (var i in monitorprojectdatas) {
+                            var monitorproject = new Object;
+                            monitorproject.id = monitorprojectdatas[i].Id;
+                            monitorproject.title = monitorprojectdatas[i].XMMC;
+                            monitorproject.checked = false;
+                            monitorprojects.push(monitorproject);
+                        }
+
+                        tree.reload('monitorprojecttreeid', {
+                            data: monitorprojects
+                        });
+                    }
+                }, datatype: "json"
+            });
+        }
+
+        //更新授权
+        form.on('submit(authusersubmit)', function (data) {
+            if (curuserid == null) {
+                layer.msg("请先选择监测用户！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            }
+            else {
+                data.field.userid = curuserid;
+                var monitorprojectids = "";
+                for (var i = 0; i < monitorprojects.length; i++) {
+                    if (monitorprojects[i].checked == true) {
+                        monitorprojectids += monitorprojects[i].id + ",";
+                    }
+                }
+                if (monitorprojectids != "") {
+                    if ((monitorprojectids.indexOf(",") != -1)) {
+                        data.field.monitorprojectids = monitorprojectids.substring(0, monitorprojectids.length - 1);
+                    }
+                    else {
+                        data.field.monitorprojectids = monitorprojectids;
+                    }
+                }
+
+
+                $.ajax({
+                    url: window.parent.servicesurl + "/api/Project/UpdateMapUserMonitorProject", type: "put", data: data.field,
+                    success: function (result) {
+                        if (result != "") {
+                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        }
+                    }, datatype: "json"
+                });
+            }
+
+            return false;
+        });
+    </script>
+</body>
+</html>

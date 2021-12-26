@@ -1,0 +1,36 @@
+﻿<form class="layui-form" style="margin-top:10px" lay-filter="editroiform">
+    <div class="layui-form-item">
+        <label class="layui-form-label">靶区名称</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="image_bqmc_edit" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">靶区编号</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="image_bqbh_edit" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">靶区类型</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <select id="bqlxid" name="image_bqlx_edit" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="image_bz_edit" autocomplete="off" placeholder="请输入" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item" style="margin-top:10px">
+        <div style="position:absolute;right:15px;">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="editroiinfosubmit" style="width:100px">保存</button>
+        </div>
+    </div>
+
+</form>

@@ -1,0 +1,676 @@
+﻿<!--起飞点属性(查看)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-takeoff-jd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-takeoff-wd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-takeoff-gc" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">起飞高度m</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-takeoff-gd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">速&emsp;&emsp;度m/s</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-takeoff-sd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+</div>
+
+<!--降落点属性(查看)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-landing-jd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-landing-wd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-landing-gc" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">降落高度m</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-landing-gd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+</div>
+
+<!--避障点属性(查看)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-avoid-jd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-avoid-wd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-avoid-gc" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">避障高度m</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-avoid-gd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">速&emsp;&emsp;度m/s</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-avoid-sd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+</div>
+
+<!--目标点属性(查看)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label>
+                    <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+                        <input type="text" name="uav-route-add-target-jd" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <input type="text" name="uav-route-add-target-wd" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label>
+                    <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+                        <input type="text" name="uav-route-add-target-gc" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">拍照距离m</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <input type="text" name="uav-route-add-target-pd" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">调整距离m</label>
+                    <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+                        <input type="text" name="uav-route-add-target-ad" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">速&emsp;&emsp;度m/s</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <input type="text" name="uav-route-add-target-sd" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">调整速度m/s</label>
+                    <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+                        <input type="text" name="uav-route-add-target-as" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">X轴范围m</label>
+                <div class="layui-input-block" style="margin-left:90px;">
+                    <input type="text" name="uav-route-add-target-xoffset" autocomplete="off" class="layui-input" readonly="readonly" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">Y轴范围m</label>
+                    <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+                        <input type="text" name="uav-route-add-target-yoffset" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">Z轴范围m</label>
+                <div class="layui-input-block" style="margin-left:90px;">
+                    <input type="text" name="uav-route-add-target-zoffset" autocomplete="off" class="layui-input" readonly="readonly" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--目标点（视线）属性(查看)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-target-jd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-target-wd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="grid-demo grid-demo-bg1">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label>
+            <div class="layui-input-block" style="margin-left:90px;">
+                <input type="text" name="uav-route-add-target-gc" autocomplete="off" class="layui-input" readonly="readonly" />
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">拍照距离m</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-target-pd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">调整距离m</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-target-ad" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">速&emsp;&emsp;度m/s</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-target-sd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">调整速度m/s</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-target-as" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">是否水平</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="checkbox" name="uav-route-add-target-level" lay-skin="switch" lay-text="开启|关闭" disabled="disabled">
+        </div>
+    </div>
+</div>
+
+<!--目标区域属性(查看)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">GSD地面分辨率cm</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="text" name="uav-route-add-targetarea-gsd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">航向重叠度%</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="text" name="uav-route-add-targetarea-fo" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">旁向重叠度%</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="text" name="uav-route-add-targetarea-so" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">首末航线多角度</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="checkbox" name="uav-route-add-targetarea-ma" lay-skin="switch" lay-text="开启|关闭" disabled="disabled">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">网格井字形</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="checkbox" name="uav-route-add-targetarea-dg" lay-skin="switch" lay-text="开启|关闭" disabled="disabled">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">方向修正</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="checkbox" name="uav-route-add-targetarea-dm" lay-skin="switch" lay-text="开启|关闭" disabled="disabled">
+        </div>
+    </div>
+</div>
+
+
+<!--起飞点属性(编辑)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-takeoff-jd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-takeoff-wd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-takeoff-gc" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">起飞高度m</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-takeoff-gd" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">速&emsp;&emsp;度m/s</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-takeoff-sd" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <div style="margin-top:5px;">
+        <button type="button" id="uav-route-add-save" class="layui-btn layui-btn-primary layui-btn-sm" style="width:96%;margin-left:2%;margin-right:2%;">修改</button>
+    </div>
+</div>
+
+<!--降落点属性(编辑)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-landing-jd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-landing-wd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-landing-gc" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">降落高度m</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-landing-gd" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <div style="margin-top:5px;">
+        <button type="button" id="uav-route-add-save" class="layui-btn layui-btn-primary layui-btn-sm" style="width:96%;margin-left:2%;margin-right:2%;">保存</button>
+    </div>
+</div>
+
+<!--避障点属性(编辑)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-avoid-jd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-avoid-wd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-avoid-gc" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">避障高度m</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-avoid-gd" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">速&emsp;&emsp;度m/s</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-avoid-sd" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <div style="margin-top:5px;">
+        <button type="button" id="uav-route-add-save" class="layui-btn layui-btn-primary layui-btn-sm" style="width:96%;margin-left:2%;margin-right:2%;">修改</button>
+    </div>
+</div>
+
+<!--目标点属性(编辑)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label>
+                    <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+                        <input type="text" name="uav-route-add-target-jd" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <input type="text" name="uav-route-add-target-wd" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label>
+                    <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+                        <input type="text" name="uav-route-add-target-gc" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">拍照距离m</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <input type="text" name="uav-route-add-target-pd" autocomplete="off" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">调整距离m</label>
+                    <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+                        <input type="text" name="uav-route-add-target-ad" autocomplete="off" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">速&emsp;&emsp;度m/s</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <input type="text" name="uav-route-add-target-sd" autocomplete="off" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">调整速度m/s</label>
+                    <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+                        <input type="text" name="uav-route-add-target-as" autocomplete="off" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">X轴范围m</label>
+                <div class="layui-input-block" style="margin-left:90px;">
+                    <input type="text" name="uav-route-add-target-xoffset" autocomplete="off" class="layui-input" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">Y轴范围m</label>
+                    <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+                        <input type="text" name="uav-route-add-target-yoffset" autocomplete="off" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">Z轴范围m</label>
+                <div class="layui-input-block" style="margin-left:90px;">
+                    <input type="text" name="uav-route-add-target-zoffset" autocomplete="off" class="layui-input" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <div style="margin-top:5px;">
+        <button type="button" id="uav-route-add-save" class="layui-btn layui-btn-primary layui-btn-sm" style="width:96%;margin-left:2%;margin-right:2%;">修改</button>
+    </div>
+</div>
+
+<!--目标点视线属性(编辑)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-target-jd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-target-wd" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-target-gc" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">拍照距离m</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-target-pd" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">调整距离m</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-target-ad" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">速&emsp;&emsp;度m/s</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="text" name="uav-route-add-target-sd" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">调整速度m/s</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-route-add-target-as" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-bottom:2px;">
+        <label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">是否水平</label>
+        <div class="layui-input-block" style="margin-left:90px;">
+            <input type="checkbox" name="uav-route-add-target-level" lay-skin="switch" lay-text="开启|关闭">
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <div style="margin-top:5px;">
+        <button type="button" id="uav-route-add-save" class="layui-btn layui-btn-primary layui-btn-sm" style="width:96%;margin-left:2%;margin-right:2%;">修改</button>
+    </div>
+</div>
+
+<!--目标区域属性(编辑)-->
+<div style="margin-top:5px;padding-right:5px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">GSD地面分辨率cm</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="text" name="uav-route-add-targetarea-gsd" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">航向重叠度%</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="text" name="uav-route-add-targetarea-fo" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">旁向重叠度%</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="text" name="uav-route-add-targetarea-so" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-bottom:2px;">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">首末航线多角度</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="checkbox" name="uav-route-add-targetarea-ma" lay-skin="switch" lay-text="开启|关闭">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-bottom:2px;">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">网格井字形</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="checkbox" name="uav-route-add-targetarea-dg" lay-skin="switch" lay-text="开启|关闭">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-bottom:2px;">
+        <label class="layui-form-label" style="width:150px;text-align:left;padding-left:5px;padding-right:5px;">方向修正</label>
+        <div class="layui-input-block" style="margin-left:160px;">
+            <input type="checkbox" name="uav-route-add-targetarea-dm" lay-skin="switch" lay-text="开启|关闭">
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <div style="margin-top:5px;">
+        <button type="button" id="uav-route-add-save" class="layui-btn layui-btn-primary layui-btn-sm" style="width:96%;margin-left:2%;margin-right:2%;">修改</button>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+﻿<!--编辑项目-->
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px">
+    <ul class="layui-tab-title">
+        <li class="layui-this" style="width:28%;">项目信息</li>
+        <li style="width:28%;">三维实景模型</li>
+        <li style="width:28%;">点云</li>
+    </ul>
+
+    <div class="layui-tab-content" style="margin:5px 0px">
+        <!--项目信息-->
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" style="margin-top:0px" lay-filter="uav-project-edit">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:60px;">项目名称</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <input type="text" name="uav-project-edit-xmmc" autocomplete="off" lay-verify="required" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:60px;">项目编码</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <input type="text" name="uav-project-edit-xmbm" autocomplete="off" lay-verify="required" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:60px;">创建时间</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <input type="text" name="uav-project-edit-cjsj" autocomplete="off" lay-verify="required" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:60px;padding-top:45px;">备&emsp;&emsp;注</label>
+                    <div class="layui-input-block" style="margin-left:90px;">
+                        <textarea name="uav-project-edit-bz" class="layui-textarea" style="height:120px;"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top:10px">
+                    <div style="position:absolute;right:5px;">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="uav-project-edit-submit" style="width:100px">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!--三维实景模型-->
+        <div class="layui-tab-item">
+            <div class="layui-card-body" style="padding:0px 0px;">
+                <table id="uav-project-model" lay-filter="uav-project-model"></table>
+
+                <script type="text/html" id="uav-project-model-add">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="uav-project-model-add">添加三维实景模型</button>
+                    </div>
+                </script>
+
+                <script type="text/html" id="table-toolbar-model">
+                    <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                </script>
+            </div>
+        </div>
+
+        <!--点云-->
+        <div class="layui-tab-item">
+            <div class="layui-card-body" style="padding:0px 0px;">
+                <table id="uav-project-pts" lay-filter="uav-project-pts"></table>
+
+                <script type="text/html" id="uav-project-pts-add">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="uav-project-pts-add">添加点云</button>
+                    </div>
+                </script>
+
+                <script type="text/html" id="table-toolbar-model">
+                    <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="ptsdel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                </script>
+            </div>
+        </div>
+
+    </div>
+</div>

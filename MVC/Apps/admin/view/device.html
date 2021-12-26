@@ -1,0 +1,738 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>自动化监测设备</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--jquery-->
+    <script src="../../../Scripts/jquery-3.3.1.js"></script>
+    <!--Layui-->
+    <link href="../layuiadmin/layui2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="../layuiadmin/style/admin.css" rel="stylesheet" />
+    <script src="../layuiadmin/layui2.5.6/layui.all.js"></script>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div style="padding-bottom:10px;">
+                    <button id="adddevice" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新监测设备</button>
+                    <button id="adddevices" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新监测设备(批量)</button>
+                </div>
+
+                <table id="LAY-device-manage" lay-filter="LAY-device-manage"></table>
+                <script type="text/html" id="table-toolbar-device">
+                    <a class="layui-btn layui-btn layui-btn-xs" lay-event="deviceview"><i class="layui-icon layui-icon-read"></i>详情</a>
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="deviceedit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="devicedel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jQuery.support.cors = true;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var devicedatas = [];
+        var adddevicelayerindex = null;
+
+        var devicetypes = [];//设备类型
+        var powertypes = [];//供电类型
+        var userinfos = [];//监测用户
+        var cjinfos = [];//设备厂家
+        var jxsinfos = [];//设备经销商
+        var dbinfos = [];//监测数据库
+        var readsqlinfos = [];//读取SQL
+        var writesqlinfos = [];//写入SQL
+
+        $.ajax({
+            url: window.parent.servicesurl + "/api/Parameter/GetDeviceType", type: "get",
+            success: function (data) {
+                var devicetypedata = JSON.parse(data);
+                for (var i in devicetypedata) {
+                    var devicetype = new Object;
+                    devicetype.name = devicetypedata[i][0];
+                    devicetype.value = devicetypedata[i][1];
+                    devicetypes.push(devicetype);
+                }
+            }, datatype: "json"
+        });
+        $.ajax({
+            url: window.parent.servicesurl + "/api/Parameter/GetPowerType", type: "get",
+            success: function (data) {
+                var powertypedata = JSON.parse(data);
+                for (var i in powertypedata) {
+                    var powertype = new Object;
+                    powertype.name = powertypedata[i][0];
+                    powertype.value = powertypedata[i][1];
+                    powertypes.push(powertype);
+                }
+            }, datatype: "json"
+        });
+        $.ajax({
+            url: window.parent.servicesurl + "/api/User/GetMonitorUserInfo", type: "get",
+            success: function (data) {
+                var userdata = JSON.parse(data);
+                for (var i in userdata) {
+                    var userinfo = new Object;
+                    userinfo.value = userdata[i].Id;
+                    userinfo.name = userdata[i].UserName;
+                    userinfos.push(userinfo);
+                }
+            }, datatype: "json"
+        });
+        $.ajax({
+            url: window.parent.servicesurl + "/api/Factory/GetFactoryInfo", type: "get",
+            success: function (data) {
+                var factoryinfos = JSON.parse(data);
+                for (var i in factoryinfos) {
+                    var cjinfo = new Object;
+                    cjinfo.value = factoryinfos[i].Id;
+                    cjinfo.name = factoryinfos[i].CJMC;
+                    cjinfos.push(cjinfo);
+                }
+            }, datatype: "json"
+        });
+        $.ajax({
+            url: window.parent.servicesurl + "/api/Sale/GetSaleInfo", type: "get",
+            success: function (data) {
+                var saleinfos = JSON.parse(data);
+                for (var i in saleinfos) {
+                    var jxsinfo = new Object;
+                    jxsinfo.value = saleinfos[i].Id;
+                    jxsinfo.name = saleinfos[i].JXSMC;
+                    jxsinfos.push(jxsinfo);
+                }
+            }, datatype: "json"
+        });
+        $.ajax({
+            url: window.parent.servicesurl + "/api/Database/GetDatabaseInfo", type: "get",
+            success: function (data) {
+                var databaseinfos = JSON.parse(data);
+                for (var i in databaseinfos) {
+                    var dbinfo = new Object;
+                    dbinfo.value = databaseinfos[i].Id;
+                    dbinfo.name = databaseinfos[i].BZ;
+                    dbinfos.push(dbinfo);
+                }
+            }, datatype: "json"
+        });
+        $.ajax({
+            url: window.parent.servicesurl + "/api/SQL/GetReadSQLInfo", type: "get",
+            success: function (data) {
+                var sqlinfodata = JSON.parse(data);
+                for (var i in sqlinfodata) {
+                    var readsqlinfo = new Object;
+                    readsqlinfo.value = sqlinfodata[i].Id;
+                    readsqlinfo.name = sqlinfodata[i].BZ;
+                    readsqlinfos.push(readsqlinfo);
+                }
+            }, datatype: "json"
+        });
+        $.ajax({
+            url: window.parent.servicesurl + "/api/SQL/GetWriteSQLInfo", type: "get",
+            success: function (data) {
+                var sqlinfodata = JSON.parse(data);
+                for (var i in sqlinfodata) {
+                    var writesqlinfo = new Object;
+                    writesqlinfo.value = sqlinfodata[i].Id;
+                    writesqlinfo.name = sqlinfodata[i].BZ;
+                    writesqlinfos.push(writesqlinfo);
+                }
+            }, datatype: "json"
+        });
+
+        GetDeviceInfo();
+
+        var devicetable = table.render({
+            elem: '#LAY-device-manage'
+            , id: 'devicetableid'
+            , title: '自动化监测设备信息'
+            , page: true
+            , even: true
+            , limit: 20
+            , initSort: { field: 'id', type: 'asc' }
+            , toolbar: false
+            , totalRow: false
+            , cols: [[
+                { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
+                , { field: 'code', title: '唯一编码', align: "center" }
+                , { field: 'sbmc', title: '设备名称', align: "center" }
+                , { field: 'sbbh', title: '设备编号', align: "center" }
+                , { field: 'sbxh', title: '设备型号', align: "center" }
+                , { field: 'sblx', title: '设备类型', align: "center" }
+                , { field: 'gdfs', title: '供电方式', align: "center" }
+                , { field: 'cjsj', title: '创建时间', align: "center" }
+                , { field: 'bsm', title: '标识码', align: "center" }
+                , { field: 'bz', title: '备注', align: "center" }
+                , { fixed: 'right', width: 220, align: 'center', toolbar: '#table-toolbar-device' }
+            ]]
+            , data: devicedatas
+        });
+
+        table.on('tool(LAY-device-manage)', function (obj) {
+            var layEvent = obj.event;
+
+            if (layEvent === 'deviceview') {
+                adddevicelayerindex = layer.open({
+                    type: 1
+                    , title: ['设备详情', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                    , area: ['650px', '550px']
+                    , shade: [0.5, '#393D49']
+                    , offset: 'auto'
+                    , closeBtn: 1
+                    , maxmin: false
+                    , content: '<form class="layui-form" style="margin-top:10px" lay-filter="adddeviceform"><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief"><!--标签--><ul class="layui-tab-title"><li class="layui-this" style="width:100px">设备信息</li><li style="width:100px">设备厂家</li><li style="width:100px">设备经销商</li><li style="width:100px">监测数据库</li><li style="width:100px">ETL SQL</li></ul><!--内容--><div class="layui-tab-content"><!--设备信息--><div class="layui-tab-item layui-show"><div class="layui-form-item"><label class="layui-form-label">唯一编码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="code" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">设备名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbmc" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">设备编号</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbbh" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">设备型号</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbxh" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">设备类型</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sblx" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">供电方式</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="gdfs" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">所属用户</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bsm" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" class="layui-input" readonly="readonly" /></div></div></div><!--设备厂家--><div class="layui-tab-item"><div class="layui-form-item"><label class="layui-form-label">厂家名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="cjmc" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">厂家简称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="cjjc" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">厂家编码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="cjbm" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item layui-form-text"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><textarea name="cjbz" class="layui-textarea" readonly="readonly" style="height:250px"></textarea></div></div></div><!--设备经销商--><div class="layui-tab-item"><div class="layui-form-item"><label class="layui-form-label">经销商名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="jxsmc" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">经销商简称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="jxsjc" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">经销商编码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="jxsbm" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item layui-form-text"><label class="layui-form-label">备&emsp;&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><textarea name="jxsbz" class="layui-textarea" readonly="readonly" style="height:250px"></textarea></div></div></div><!--监测数据库--><div class="layui-tab-item"><div class="layui-form-item"><label class="layui-form-label">数据库类型</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="dblx" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">IP</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="dbip" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">端&emsp;&emsp;&emsp;口</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="dbport" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">数据库名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="dbname" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">账&emsp;&emsp;&emsp;户</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="dbuser" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">密&emsp;&emsp;&emsp;码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="dbpw" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">数据库地址</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="dbadd" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="dbbz" class="layui-input" readonly="readonly" /></div></div></div><!--ETL SQL--><div class="layui-tab-item"><div class="layui-form-item layui-form-text"><label class="layui-form-label">读取SQL</label><div class="layui-input-block" style="padding-right:10px"><textarea name="readsql" class="layui-textarea" readonly="readonly" style="height:145px"></textarea></div></div><div class="layui-form-item"><label class="layui-form-label">读取备注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="readbz" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item layui-form-text"><label class="layui-form-label">写入SQL</label><div class="layui-input-block" style="padding-right:10px"><textarea name="writesql" class="layui-textarea" readonly="readonly" style="height:145px"></textarea></div></div><div class="layui-form-item"><label class="layui-form-label">写入备注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="writebz" class="layui-input" readonly="readonly" /></div></div></div></div></div></form>'
+                    , zIndex: layer.zIndex
+                    , success: function (layero) {
+                        layer.setTop(layero);
+
+                        form.val("adddeviceform", {
+                            "code": obj.data.code
+                            , "sbmc": obj.data.sbmc
+                            , "sbbh": obj.data.sbbh
+                            , "sbxh": obj.data.sbxh
+                            , "sblx": obj.data.sblx
+                            , "gdfs": obj.data.gdfs
+                            , "bsm": obj.data.bsm
+                            , "bz": obj.data.bz
+                        });
+
+                        //$.ajax({
+                        //    url: window.parent.servicesurl + "/api/Device/GetUserNameBybsm", type: "get", data: { "bsm": obj.data.bsm },
+                        //    success: function (result) {
+                        //        form.val("adddeviceform", {
+                        //            "bsm": result
+                        //        });
+                        //    }, datatype: "json"
+                        //});
+
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/GetFactoryById", type: "get", data: { "id": obj.data.id },
+                            success: function (result) {
+                                if (result != "") {
+                                    var factory = JSON.parse(result);
+                                    if (factory != undefined) {
+                                        form.val("adddeviceform", {
+                                            "cjmc": factory.CJMC
+                                            , "cjjc": factory.CJJC
+                                            , "cjbm": factory.CJBM
+                                            , "cjbz": factory.BZ
+                                        });
+                                    }
+                                }
+                            }, datatype: "json"
+                        });
+
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/GetSaleById", type: "get", data: { "id": obj.data.id },
+                            success: function (result) {
+                                if (result != "") {
+                                    var sale = JSON.parse(result);
+                                    if (sale != undefined) {
+                                        form.val("adddeviceform", {
+                                            "jxsmc": sale.JXSMC
+                                            , "jxsjc": sale.JXSJC
+                                            , "jxsbm": sale.JXSBM
+                                            , "jxsbz": sale.BZ
+                                        });
+                                    }
+                                }
+                            }, datatype: "json"
+                        });
+
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/GetDatabasebyId", type: "get", data: { "id": obj.data.id },
+                            success: function (result) {
+                                if (result != "") {
+                                    var db = JSON.parse(result);
+                                    if (db != undefined) {
+                                        form.val("adddeviceform", {
+                                            "dblx": db.DBLX
+                                            , "dbip": db.DBIP
+                                            , "dbport": db.DBPORT
+                                            , "dbname": db.DBNAME
+                                            , "dbuser": db.DBUSER
+                                            , "dbpw": db.DBPW
+                                            , "dbadd": db.DBADD
+                                            , "dbbz": db.BZ
+                                        });
+                                    }
+                                }
+                            }, datatype: "json"
+                        });
+
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/GetReadSQLbyId", type: "get", data: { "id": obj.data.id },
+                            success: function (result) {
+                                if (result != "") {
+                                    var sql = JSON.parse(result);
+                                    if (sql != undefined) {
+                                        form.val("adddeviceform", {
+                                            "readsql": sql.Sql
+                                            , "readbz": sql.BZ
+                                        });
+                                    }
+                                }
+                            }, datatype: "json"
+                        });
+
+
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/GetWriteSQLbyId", type: "get", data: { "id": obj.data.id },
+                            success: function (result) {
+                                if (result != "") {
+                                    var sql = JSON.parse(result);
+                                    if (sql != undefined) {
+                                        form.val("adddeviceform", {
+                                            "writesql": sql.Sql
+                                            , "writebz": sql.BZ
+                                        });
+                                    }
+                                }
+                            }, datatype: "json"
+                        });
+                    }
+                    , end: function () { }
+                });
+
+            } else if (layEvent === 'deviceedit') {
+                adddevicelayerindex = layer.open({
+                    type: 1
+                    , title: ['编辑设备信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                    , area: ['800px', '610px']
+                    , shade: [0.5, '#393D49']
+                    , offset: 'auto'
+                    , closeBtn: 1
+                    , maxmin: false
+                    , content: '<form class="layui-form" style="margin-top:10px" lay-filter="adddeviceform"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">唯一编码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="code" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" /></div></div></div></div><div class="layui-col-md6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">设备名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbmc" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div></div></div></div><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">设备编号</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbbh" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" /></div></div></div></div><div class="layui-col-md6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">设备型号</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbxh" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div></div></div></div><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">设备类型</label><div class="layui-input-block" style="padding-right:10px"><select id="sblxid" name="sblx" lay-filter="sblxselect" lay-verify="required"><option value="">请选择</option></select></div></div></div></div><div class="layui-col-md6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">供电方式</label><div class="layui-input-block" style="padding-right:10px"><select id="gdfsid" name="gdfs" lay-filter="gdfsselect" lay-verify="required"><option value="">请选择</option></select></div></div></div></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">设备厂家</label><div class="layui-input-block" style="padding-right:10px;"><select id="cjid" name="cj" lay-filter="cjselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">设备经销商</label><div class="layui-input-block" style="padding-right:10px;"><select id="jxsid" name="jxs" lay-filter="jxsselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">监测数据库</label><div class="layui-input-block" style="padding-right:10px;"><select id="dbid" name="db" lay-filter="dbselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">读取SQL</label><div class="layui-input-block" style="padding-right:10px;"><select id="readsqlid" name="readsql" lay-filter="readsqlselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">写入SQL</label><div class="layui-input-block" style="padding-right:10px;"><select id="writesqlid" name="writesql" lay-filter="writesqlselect"><option value="">请选择</option></select></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="adddevicesubmit" style="width:80px;margin-left:200px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                    , zIndex: layer.zIndex
+                    , success: function (layero) {
+                        layer.setTop(layero);
+
+                        form.val("adddeviceform", {
+                            "code": obj.data.code
+                            , "sbmc": obj.data.sbmc
+                            , "sbbh": obj.data.sbbh
+                            , "sbxh": obj.data.sbxh
+                            , "bz": obj.data.bz
+                        });
+
+                        if (devicetypes.length > 0) {
+                            for (var i in devicetypes) {
+                                if (devicetypes[i].name == obj.data.sblx) {
+                                    document.getElementById("sblxid").innerHTML += '<option value="' + devicetypes[i].value + '" selected>' + devicetypes[i].name + '</option>';
+                                }
+                                else {
+                                    document.getElementById("sblxid").innerHTML += '<option value="' + devicetypes[i].value + '">' + devicetypes[i].name + '</option>';
+                                }
+                            }
+                        }
+
+                        if (powertypes.length > 0) {
+                            for (var i in powertypes) {
+                                if (powertypes[i].name == obj.data.gdfs) {
+                                    document.getElementById("gdfsid").innerHTML += '<option value="' + powertypes[i].value + '" selected>' + powertypes[i].name + '</option>';
+                                }
+                                else {
+                                    document.getElementById("gdfsid").innerHTML += '<option value="' + powertypes[i].value + '">' + powertypes[i].name + '</option>';
+                                }
+                            }
+                        }
+
+                        //$.ajax({
+                        //    url: window.parent.servicesurl + "/api/Device/GetUserNameBybsm", type: "get", data: { "bsm": obj.data.bsm },
+                        //    success: function (result) {
+                        //        if (result != "") {
+                        //            if (userinfos.length > 0) {
+                        //                for (var i in userinfos) {
+                        //                    if (userinfos[i].name == result) {
+                        //                        document.getElementById("bsmid").innerHTML += '<option value="' + userinfos[i].value + '" selected>' + userinfos[i].name + '</option>';
+                        //                    }
+                        //                    else {
+                        //                        document.getElementById("bsmid").innerHTML += '<option value="' + userinfos[i].value + '">' + userinfos[i].name + '</option>';
+                        //                    }
+                        //                }
+                        //            }
+                        //        }
+                        //        else {
+                        //            if (userinfos.length > 0) {
+                        //                for (var i in userinfos) {
+                        //                    document.getElementById("bsmid").innerHTML += '<option value="' + userinfos[i].value + '">' + userinfos[i].name + '</option>';
+                        //                }
+                        //            }
+                        //        }
+
+                        //        form.render();
+                        //        form.render('select');
+                        //    }, datatype: "json"
+                        //});
+
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/GetFactoryById", type: "get", data: { "id": obj.data.id },
+                            success: function (result) {
+                                if (result != "") {
+                                    var factory = JSON.parse(result);
+                                    if (factory != undefined) {
+                                        if (cjinfos.length > 0) {
+                                            for (var i in cjinfos) {
+                                                if (cjinfos[i].name == factory.CJMC) {
+                                                    document.getElementById("cjid").innerHTML += '<option value="' + cjinfos[i].value + '" selected>' + cjinfos[i].name + '</option>';
+                                                }
+                                                else {
+                                                    document.getElementById("cjid").innerHTML += '<option value="' + cjinfos[i].value + '">' + cjinfos[i].name + '</option>';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (cjinfos.length > 0) {
+                                        for (var i in cjinfos) {
+                                            document.getElementById("cjid").innerHTML += '<option value="' + cjinfos[i].value + '">' + cjinfos[i].name + '</option>';
+                                        }
+                                    }
+                                }
+
+                                form.render();
+                                form.render('select');
+                            }, datatype: "json"
+                        });
+
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/GetSaleById", type: "get", data: { "id": obj.data.id },
+                            success: function (result) {
+                                if (result != "") {
+                                    var sale = JSON.parse(result);
+                                    if (sale != undefined) {
+                                        if (jxsinfos.length > 0) {
+                                            for (var i in jxsinfos) {
+                                                if (jxsinfos[i].name == sale.JXSMC) {
+                                                    document.getElementById("jxsid").innerHTML += '<option value="' + jxsinfos[i].value + '" selected>' + jxsinfos[i].name + '</option>';
+                                                }
+                                                else {
+                                                    document.getElementById("jxsid").innerHTML += '<option value="' + jxsinfos[i].value + '">' + jxsinfos[i].name + '</option>';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (jxsinfos.length > 0) {
+                                        for (var i in jxsinfos) {
+                                            document.getElementById("jxsid").innerHTML += '<option value="' + jxsinfos[i].value + '">' + jxsinfos[i].name + '</option>';
+                                        }
+                                    }
+                                }
+
+                                form.render();
+                                form.render('select');
+                            }, datatype: "json"
+                        });
+
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/GetDatabasebyId", type: "get", data: { "id": obj.data.id },
+                            success: function (result) {
+                                if (result != "") {
+                                    var db = JSON.parse(result);
+                                    if (db != undefined) {
+                                        if (dbinfos.length > 0) {
+                                            for (var i in dbinfos) {
+                                                if (dbinfos[i].name == db.BZ) {
+                                                    document.getElementById("dbid").innerHTML += '<option value="' + dbinfos[i].value + '" selected>' + dbinfos[i].name + '</option>';
+                                                }
+                                                else {
+                                                    document.getElementById("dbid").innerHTML += '<option value="' + dbinfos[i].value + '">' + dbinfos[i].name + '</option>';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (dbinfos.length > 0) {
+                                        for (var i in dbinfos) {
+                                            document.getElementById("dbid").innerHTML += '<option value="' + dbinfos[i].value + '">' + dbinfos[i].name + '</option>';
+                                        }
+                                    }
+                                }
+
+                                form.render();
+                                form.render('select');
+                            }, datatype: "json"
+                        });
+
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/GetReadSQLbyId", type: "get", data: { "id": obj.data.id },
+                            success: function (result) {
+                                if (result != "") {
+                                    var sql = JSON.parse(result);
+                                    if (sql != undefined) {
+                                        if (readsqlinfos.length > 0) {
+                                            for (var i in readsqlinfos) {
+                                                if (readsqlinfos[i].name == sql.BZ) {
+                                                    document.getElementById("readsqlid").innerHTML += '<option value="' + readsqlinfos[i].value + '" selected>' + readsqlinfos[i].name + '</option>';
+                                                }
+                                                else {
+                                                    document.getElementById("readsqlid").innerHTML += '<option value="' + readsqlinfos[i].value + '">' + readsqlinfos[i].name + '</option>';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else {
+                                    for (var i in readsqlinfos) {
+                                        document.getElementById("readsqlid").innerHTML += '<option value="' + readsqlinfos[i].value + '">' + readsqlinfos[i].name + '</option>';
+                                    }
+                                }
+
+                                form.render();
+                                form.render('select');
+                            }, datatype: "json"
+                        });
+
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/GetWriteSQLbyId", type: "get", data: { "id": obj.data.id },
+                            success: function (result) {
+                                if (result != "") {
+                                    var sql = JSON.parse(result);
+                                    if (sql != undefined) {
+                                        if (writesqlinfos.length > 0) {
+                                            for (var i in writesqlinfos) {
+                                                if (writesqlinfos[i].name == sql.BZ) {
+                                                    document.getElementById("writesqlid").innerHTML += '<option value="' + writesqlinfos[i].value + '" selected>' + writesqlinfos[i].name + '</option>';
+                                                }
+                                                else {
+                                                    document.getElementById("writesqlid").innerHTML += '<option value="' + writesqlinfos[i].value + '">' + writesqlinfos[i].name + '</option>';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (writesqlinfos.length > 0) {
+                                        for (var i in writesqlinfos) {
+                                            document.getElementById("writesqlid").innerHTML += '<option value="' + writesqlinfos[i].value + '">' + writesqlinfos[i].name + '</option>';
+                                        }
+                                    }
+                                }
+
+                                form.render();
+                                form.render('select');
+                            }, datatype: "json"
+                        });
+
+                        form.render();
+                        form.render('select');
+
+                        form.on('submit(adddevicesubmit)', function (data) {
+                            data.field.id = obj.data.id;
+                            $.ajax({
+                                url: window.parent.servicesurl + "/api/Device/UpdateDevice", type: "put", data: data.field,
+                                success: function (result) {
+                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                    GetDeviceInfo();
+                                }, datatype: "json"
+                            });
+
+                            layer.close(adddevicelayerindex);
+                            return false;
+                        });
+                    }
+                    , end: function () { }
+                });
+
+            }
+            else if (layEvent === 'devicedel') {
+                layer.confirm('是否删除？', function (index) {
+                    obj.del();
+                    layer.close(index);
+                    $.ajax({
+                        url: window.parent.servicesurl + "/api/Device/DeleteDevice", type: "delete", data: { "id": obj.data.id },
+                        success: function (result) {
+                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        }, datatype: "json"
+                    });
+                });
+            }
+        });
+
+        $("#adddevice").on("click", function () {
+            adddevicelayerindex = layer.open({
+                type: 1
+                , title: ['添加自动化监测设备', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['800px', '610px']
+                , shade: [0.5, '#393D49']
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: false
+                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="adddeviceform"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">唯一编码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="code" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" /></div></div></div></div><div class="layui-col-md6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">设备名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbmc" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div></div></div></div><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">设备编号</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbbh" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" /></div></div></div></div><div class="layui-col-md6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">设备型号</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbxh" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div></div></div></div><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">设备类型</label><div class="layui-input-block" style="padding-right:10px"><select id="sblxid" name="sblx" lay-filter="sblxselect" lay-verify="required"><option value="">请选择</option></select></div></div></div></div><div class="layui-col-md6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">供电方式</label><div class="layui-input-block" style="padding-right:10px"><select id="gdfsid" name="gdfs" lay-filter="gdfsselect" lay-verify="required"><option value="">请选择</option></select></div></div></div></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">设备厂家</label><div class="layui-input-block" style="padding-right:10px;"><select id="cjid" name="cj" lay-filter="cjselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">设备经销商</label><div class="layui-input-block" style="padding-right:10px;"><select id="jxsid" name="jxs" lay-filter="jxsselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">监测数据库</label><div class="layui-input-block" style="padding-right:10px;"><select id="dbid" name="db" lay-filter="dbselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">读取SQL</label><div class="layui-input-block" style="padding-right:10px;"><select id="readsqlid" name="readsql" lay-filter="readsqlselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">写入SQL</label><div class="layui-input-block" style="padding-right:10px;"><select id="writesqlid" name="writesql" lay-filter="writesqlselect"><option value="">请选择</option></select></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="adddevicesubmit" style="width:80px;margin-left:200px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+
+                    if (devicetypes.length > 0) {
+                        for (var i in devicetypes) {
+                            document.getElementById("sblxid").innerHTML += '<option value="' + devicetypes[i].value + '">' + devicetypes[i].name + '</option>';
+                        }
+                    }
+                    if (powertypes.length > 0) {
+                        for (var i in powertypes) {
+                            document.getElementById("gdfsid").innerHTML += '<option value="' + powertypes[i].value + '">' + powertypes[i].name + '</option>';
+                        }
+                    }
+                    if (cjinfos.length > 0) {
+                        for (var i in cjinfos) {
+                            document.getElementById("cjid").innerHTML += '<option value="' + cjinfos[i].value + '">' + cjinfos[i].name + '</option>';
+                        }
+                    }
+                    if (jxsinfos.length > 0) {
+                        for (var i in jxsinfos) {
+                            document.getElementById("jxsid").innerHTML += '<option value="' + jxsinfos[i].value + '">' + jxsinfos[i].name + '</option>';
+                        }
+                    }
+                    if (dbinfos.length > 0) {
+                        for (var i in dbinfos) {
+                            document.getElementById("dbid").innerHTML += '<option value="' + dbinfos[i].value + '">' + dbinfos[i].name + '</option>';
+                        }
+                    }
+                    if (readsqlinfos.length > 0) {
+                        for (var i in readsqlinfos) {
+                            document.getElementById("readsqlid").innerHTML += '<option value="' + readsqlinfos[i].value + '">' + readsqlinfos[i].name + '</option>';
+                        }
+                    }
+                    if (writesqlinfos.length > 0) {
+                        for (var i in writesqlinfos) {
+                            document.getElementById("writesqlid").innerHTML += '<option value="' + writesqlinfos[i].value + '">' + writesqlinfos[i].name + '</option>';
+                        }
+                    }
+
+                    form.render();
+                    form.render('select');
+
+                    form.on('submit(adddevicesubmit)', function (data) {
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/AddDevice", type: "post", data: data.field,
+                            success: function (result) {
+                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                GetDeviceInfo();
+                            }, datatype: "json"
+                        });
+
+                        layer.close(adddevicelayerindex);
+                        return false;
+                    });
+                }
+                , end: function () { }
+            });
+        });
+
+
+        $("#adddevices").on("click", function () {
+            adddevicelayerindex = layer.open({
+                type: 1
+                , title: ['添加自动化监测设备(批量)', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['800px', '670px']
+                , shade: [0.5, '#393D49']
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: false
+                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="adddevicesform"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">编码前缀</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="codeprefix" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" /></div></div></div></div><div class="layui-col-md6"><div class="grid-demo"><div class="layui-form-item"><div class="layui-inline"><label class="layui-form-label">范&emsp;&emsp;围</label><div class="layui-input-inline" style="width: 100px;"><input type="number" name="startcode" placeholder="起始序号" autocomplete="off" class="layui-input" lay-verify="required|number" /></div><div class="layui-form-mid">-</div><div class="layui-input-inline" style="width: 100px;"><input type="number" name="endcode" placeholder="终止序号" autocomplete="off" class="layui-input" lay-verify="required|number" /></div></div></div></div></div></div><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">设备名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbmc" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div></div></div><div class="layui-col-md6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">设备编号</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbbh" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" value="后期添加"/></div></div></div></div></div><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">设备型号</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="sbxh" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div></div></div><div class="layui-col-md6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">设备类型</label><div class="layui-input-block" style="padding-right:10px"><select id="sblxid" name="sblx" lay-filter="sblxselect" lay-verify="required"><option value="">请选择</option></select></div></div></div></div></div><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">供电方式</label><div class="layui-input-block" style="padding-right:10px"><select id="gdfsid" name="gdfs" lay-filter="gdfsselect" lay-verify="required"><option value="">请选择</option></select></div></div></div></div><div class="layui-col-md6"><div class="grid-demo"><div class="layui-form-item"></div></div></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">设备厂家</label><div class="layui-input-block" style="padding-right:10px;"><select id="cjid" name="cj" lay-filter="cjselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">设备经销商</label><div class="layui-input-block" style="padding-right:10px;"><select id="jxsid" name="jxs" lay-filter="jxsselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">监测数据库</label><div class="layui-input-block" style="padding-right:10px;"><select id="dbid" name="db" lay-filter="dbselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">读取SQL</label><div class="layui-input-block" style="padding-right:10px;"><select id="readsqlid" name="readsql" lay-filter="readsqlselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">写入SQL</label><div class="layui-input-block" style="padding-right:10px;"><select id="writesqlid" name="writesql" lay-filter="writesqlselect"><option value="">请选择</option></select></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="adddevicesubmit" style="width:80px;margin-left:200px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+
+                    if (devicetypes.length > 0) {
+                        for (var i in devicetypes) {
+                            document.getElementById("sblxid").innerHTML += '<option value="' + devicetypes[i].value + '">' + devicetypes[i].name + '</option>';
+                        }
+                    }
+                    if (powertypes.length > 0) {
+                        for (var i in powertypes) {
+                            document.getElementById("gdfsid").innerHTML += '<option value="' + powertypes[i].value + '">' + powertypes[i].name + '</option>';
+                        }
+                    }
+                    if (cjinfos.length > 0) {
+                        for (var i in cjinfos) {
+                            document.getElementById("cjid").innerHTML += '<option value="' + cjinfos[i].value + '">' + cjinfos[i].name + '</option>';
+                        }
+                    }
+                    if (jxsinfos.length > 0) {
+                        for (var i in jxsinfos) {
+                            document.getElementById("jxsid").innerHTML += '<option value="' + jxsinfos[i].value + '">' + jxsinfos[i].name + '</option>';
+                        }
+                    }
+                    if (dbinfos.length > 0) {
+                        for (var i in dbinfos) {
+                            document.getElementById("dbid").innerHTML += '<option value="' + dbinfos[i].value + '">' + dbinfos[i].name + '</option>';
+                        }
+                    }
+                    if (readsqlinfos.length > 0) {
+                        for (var i in readsqlinfos) {
+                            document.getElementById("readsqlid").innerHTML += '<option value="' + readsqlinfos[i].value + '">' + readsqlinfos[i].name + '</option>';
+                        }
+                    }
+                    if (writesqlinfos.length > 0) {
+                        for (var i in writesqlinfos) {
+                            document.getElementById("writesqlid").innerHTML += '<option value="' + writesqlinfos[i].value + '">' + writesqlinfos[i].name + '</option>';
+                        }
+                    }
+
+                    form.render();
+                    form.render('select');
+
+                    form.on('submit(adddevicesubmit)', function (data) {
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Device/AddDevices", type: "post", data: data.field,
+                            success: function (result) {
+                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                GetDeviceInfo();
+                            }, datatype: "json"
+                        });
+
+                        layer.close(adddevicelayerindex);
+                        return false;
+                    });
+                }
+                , end: function () { }
+            });
+        });
+
+        function GetDeviceInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/Device/GetDeviceInfo", type: "get",
+                success: function (data) {
+                    if (data == "") {
+                        layer.msg("无自动化监测设备信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        devicetable.reload({ id: 'devicetableid', data: [] });
+                    }
+                    else {
+                        var deviceinfos = JSON.parse(data);
+                        devicedatas = [];
+                        for (var i in deviceinfos) {
+                            var devicedata = new Object;
+                            devicedata.id = deviceinfos[i].Id;
+                            devicedata.code = deviceinfos[i].Code;
+                            devicedata.sbmc = deviceinfos[i].SBMC;
+                            devicedata.sbbh = deviceinfos[i].SBBH;
+                            devicedata.sbxh = deviceinfos[i].SBXH;
+                            devicedata.sblx = deviceinfos[i].SBLX;
+                            devicedata.gdfs = deviceinfos[i].GDFS;
+                            devicedata.cjsj = deviceinfos[i].CJSJ;
+                            devicedata.bsm = deviceinfos[i].BSM;
+                            devicedata.bz = deviceinfos[i].BZ;
+
+                            devicedatas.push(devicedata);
+                        }
+                        devicetable.reload({ id: 'devicetableid', data: devicedatas });
+                    }
+                }, datatype: "json"
+            });
+        }
+
+    </script>
+</body>
+</html>

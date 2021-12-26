@@ -1,0 +1,147 @@
+﻿<!--新建任务-->
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:0px;">
+    <ul class="layui-tab-title">
+        <li class="layui-this" style="width:97%;padding-top: 0px;">任务设置</li>
+    </ul>
+
+    <div class="layui-tab-content">
+        <!--任务置-->
+        <div class="layui-tab-item layui-show">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBriefitem" style="margin:0px;">
+                <ul class="layui-tab-title" style="float: left;width:120px;border-color:white;">
+                    <li class="layui-this" style="display: block;">基本信息</li>
+                    <li style="display: block;">点云配准</li>
+                    <li style="display: block;">参考点云</li>
+                    <li style="display: block;">目标点云</li>
+                    <li style="display: block;">完成设置</li>
+                </ul>
+
+                <div class="layui-tab-content" style="height: 690px;width:840px;float: left;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;">
+                    <!--基本信息-->
+                    <div class="layui-tab-item layui-show">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+                            <legend>基本信息</legend>
+                        </fieldset>
+                        <form class="layui-form" action="" lay-filter="addtaskinfoform">
+
+                            <div class="layui-form-item">
+                                <div class="layui-row">
+                                    <label class="layui-form-label" style="margin-top:10px">项目</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="taskxmmc" name="taskxmmc" class="layui-input" readonly="readonly" />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+
+                                <div class="layui-col-md6">
+                                    <div class="grid-demo">
+                                        <label class="layui-form-label">项目区域</label>
+                                        <div class="layui-input-block">
+                                            <select id="taskregionid" name="taskregion" lay-filter="regionidfilter">
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">创建时间</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" id="taskcjsjid" name="taskcjsj" lay-verify="date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">备注</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  id="bzid" name="bz" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--点云配准-->
+                    <div class="layui-tab-item">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+                            <legend>点云配准</legend>
+                        </fieldset>
+                        <form class="layui-form" action="" lay-filter="registrationway" style="margin-top:5px;">
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <label class="layui-form-label" style="width:60px;">配准方式</label>
+                                        <div class="layui-input-inline" style="width:200px;">
+                                            <select id="registration_way" name="registration_way" lay-verify="required" lay-filter="registration_way">
+                                                <option value="">请选择</option>
+                                                <option value="0">手动配准</option>
+                                                <option value="1">自动配准</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <table id="add-registration-points-table" lay-filter="add-registration-points-table" style="margin-top:10px;"></table>
+
+                        <script type="text/html" id="addregistrationpoints">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm layui-btn-blue" style="font-size:14px" lay-event="addregistrationpoints">添加配准对</button>
+                            </div>
+                        </script>
+
+                        <script type="text/html" id="table-toolbar-addregistrationpoints">
+                            <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="registrationpointsview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                            <a class="layui-btn layui-bg-blue layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="registrationpointsedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                            <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="registrationpointsdel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                        </script>
+                    </div>
+                    <!--参考点云-->
+                    <div class="layui-tab-item">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+                            <legend>参考点云</legend>
+                        </fieldset>
+                        <table id="select-source-pointcloud-table" lay-filter="select-source-pointcloud-table" style="margin-top:10px;"></table>
+                        <script type="text/html" id="checkSourceData">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm layui-btn-blue" lay-event="getCheckSourceData">确认所选参考点云</button>
+                            </div>
+                        </script>
+                    </div>
+                    <!--目标点云-->
+                    <div class="layui-tab-item">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+                            <legend>目标点云</legend>
+                        </fieldset>
+                        <table id="select-target-pointcloud-table" lay-filter="select-target-pointcloud-table" style="margin-top:10px;"></table>
+                        <script type="text/html" id="checkTargetData">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm layui-btn-blue" lay-event="getCheckTargetData">确认所选目标点云</button>
+                            </div>
+                        </script>
+                    </div>
+                    <!--完成-->
+                    <div class="layui-tab-item">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+                            <legend>完成设置</legend>
+                        </fieldset>
+                        <div class="layui-form-item" style="margin-top:10px">
+                            <div style="position:absolute;left:150px;">
+                                <button type="submit" class="layui-btn layui-btn-primary layui-border-green" lay-submit="" lay-filter="editpointcloudprojectinfosave" style="width:120px">保存</button>
+                                <button type="submit"style="position:absolute;left:150px;width:120px" class="layui-btn" lay-submit="" lay-filter="editpointcloudprojectinfosubmit">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

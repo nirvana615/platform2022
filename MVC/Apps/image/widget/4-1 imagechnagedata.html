@@ -1,0 +1,51 @@
+﻿<!--目标变化信息可视化-->
+<div class="layui-row">
+    <!--左侧-->
+    <div class="layui-col-md3" style="width:20%;height:750px;overflow: auto;">
+        <div id="targettree" class="grid-demo"></div>
+    </div>
+
+    <!--右侧-->
+    <div class="layui-col-md9" style="width:80%;height:640px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">
+        <div class="grid-demo grid-demo-bg1">
+            <!--工具栏-->
+            <form class="layui-form" lay-filter="imagedataform" style="margin-top:5px;">
+                <div class="layui-row">
+                    <div class="layui-col-xs6">
+                        <div class="grid-demo grid-demo-bg1">
+                            <div class="layui-form-item">
+                                <div class="layui-input-block" style="margin-left:10px;visibility:hidden;" id="imagedatapretimedivid">
+                                    <select id="imagedatapretimeid" name="imagedatapretime" lay-filter="imagedatapretimefilter"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <div class="grid-demo">
+                            <div class="layui-form-item">
+                                <div class="layui-input-block" style="margin-left:10px;margin-right:10px;visibility:hidden;" id="imagedatacustomtimedivid">
+                                    <input id="imagedatacustomtimeid" name="imagedatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" pane="" id="imagedatappsdivfid" style="visibility:hidden;">
+                    <label class="layui-form-label" style="text-align:left;">匹配算法</label>
+                    <div class="layui-input-block" id="imagedatappsfid">
+                    </div>
+                </div>
+
+            </form>
+            <!--各靶区对变化数据图形-->
+            <div id="imagedatachart" class="layui-tab-item layui-show" style="width:790px;height:540px"></div>
+
+
+            <!--统计表格-->
+            <div id="imagedatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;">
+                <table id="imagedatastatistics" class="layui-hide"></table>
+            </div>
+
+        </div>
+    </div>
+</div>

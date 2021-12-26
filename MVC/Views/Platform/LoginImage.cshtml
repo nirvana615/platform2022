@@ -1,0 +1,161 @@
+﻿
+@{
+    /**/
+
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>登录</title>
+    <!--jquery-->
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <!--Layui-->
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.all.js"></script>
+
+    <style>
+        .gbGlassmorphism {
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(17, 25, 40, 0.5);
+        }
+
+        .cardGlassmorphism {
+            backdrop-filter: blur(10px) saturate(100%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(17, 25, 40, 0.25);
+            border-radius: 15px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -250px;
+            margin-top: -250px;
+            text-align: center;
+            width: 520px;
+            height: 420px;
+        }
+
+        .bgpic {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chinaTitle {
+            color: white;
+            font-size: 40px;
+            font-family: 'Microsoft YaHei';
+            letter-spacing: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div style="position:absolute;width:100%;height:100%;">
+        <!--背景轮播图片-->
+        <div style="position:absolute;width:100%;height:100%;">
+            <div class="layui-carousel" id="piccarousel" style="width:100%;height:100%;">
+                <div carousel-item="">
+                    <div>
+                        <img src="~/Resources/pic/bg/bg1.jpg" alt="" class="bgpic" />
+                    </div>
+                    <div>
+                        <img src="~/Resources/pic/bg/bg2.jpg" alt="" class="bgpic" />
+                    </div>
+                    <div>
+                        <img src="~/Resources/pic/bg/bg3.jpg" alt="" class="bgpic" />
+                    </div>
+                    <div>
+                        <img src="~/Resources/pic/bg/bg4.jpg" alt="" class="bgpic" />
+                    </div>
+                    <div>
+                        <img src="~/Resources/pic/bg/bg5.jpg" alt="" class="bgpic" />
+                    </div>
+                    <div>
+                        <img src="~/Resources/pic/bg/bg6.jpg" alt="" class="bgpic" />
+                    </div>
+                    <div>
+                        <img src="~/Resources/pic/bg/bg7.jpg" alt="" class="bgpic" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--背景模糊-->
+        <div class="gbGlassmorphism" style="position:absolute;width:100%;height:100%;"></div>
+
+        <!--窗体模糊-->
+        <div class="cardGlassmorphism">
+
+            <div style="margin-top:30px;margin-bottom:50px;">
+                <p class="chinaTitle">影像对比分析系统</p>
+            </div>
+
+            <div style="margin:10px 50px 10px 50px;">
+                <form class="layui-form" action="~/Platform/LoginImage" method="post">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="color:white;padding-left:0px;font-size:20px;text-align:left;width:200px;"><i class="layui-icon layui-icon-username" style="font-size:20px;"></i>&nbsp;&nbsp;用&nbsp;&nbsp;户&nbsp;&nbsp;username</label>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:10px;">
+                        <div class="layui-input-block" style="margin-left:0px;">
+                            <input type="text" name="username" lay-verify="required" lay-reqtext="用户不能为空！" placeholder="请输入用户" autocomplete="off" class="layui-input" style="background-color:rgba(255, 255, 255, 0.9);height:40px;font-size:16px;font-family: 'Microsoft YaHei';letter-spacing:1px;">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="color:white;padding-left:0px;font-size:20px;text-align:left;width:200px;"><i class="layui-icon layui-icon-password" style="font-size:20px;"></i>&nbsp;&nbsp;密&nbsp;&nbsp;码&nbsp;&nbsp;password</label>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:0px;">
+                        <div class="layui-input-block" style="margin-left:0px;">
+                            <input type="password" name="password" lay-verify="required" lay-reqtext="密码不能为空！" placeholder="请输入密码" autocomplete="off" class="layui-input" style="background-color:rgba(255, 255, 255, 0.9);height:40px;font-size:16px;font-family: 'Microsoft YaHei';letter-spacing:1px;">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="margin-left:0px;display:flex;align-items:center;">
+                            <p style="color:white;display:flex;height:40px;align-items:center;margin: 0 auto;font-size:16px;font-family: 'Microsoft YaHei';letter-spacing:1px;">
+                                @Html.ValidationMessage("failed")
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <button type="submit" class="layui-btn" lay-submit="" style="width:100%;height:40px;font-size:20px;">登&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+                    </div>
+
+                    @*<div class="layui-form-item">
+                            <button type="reset" class="layui-btn layui-btn-primary" style="width:100%;font-size:20px;">重&nbsp;&nbsp;&nbsp;&nbsp;置</button>
+                        </div>*@
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        layui.use(['carousel', 'form'], function () {
+            var carousel = layui.carousel
+                , form = layui.form;
+
+            //图片轮播
+            carousel.render({
+                elem: '#piccarousel'
+                , anim: 'fade'
+                , autoplay: true
+                , interval: 6000
+                , width: '100%'
+                , height: '100%'
+                , arrow: 'none'
+                , indicator: 'inside'
+            });
+        });
+    </script>
+</body>
+</html>

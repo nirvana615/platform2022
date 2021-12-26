@@ -1,0 +1,326 @@
+﻿<!--查看项目-->
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:0px 0px">
+    <ul class="layui-tab-title">
+        <li class="layui-this">基本信息</li>
+    </ul>
+
+    <div class="layui-tab-content" style="margin:0px 0px">
+
+        <!--基本信息-->
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" style="margin-top:0px" lay-filter="projectinfoviewform">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">项目名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="xmmc" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">项目编码</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="xmbm" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">项目类型</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="xmlx" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">项目类别</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="xmlb" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md4" style="width:25%">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">中心经度</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zxjd" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4" style="width:25%">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">中心纬度</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zxwd" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4" style="width:50%">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">坐标系统</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="kjck" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md3">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">行政区划</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="xzqdm" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md9">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">项目位置</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="xmwz" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md6">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">开始时间</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="xmkssj" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md6">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">结束时间</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="xmjssj" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md6">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">灾害点名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zhdmc" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md6">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">灾害点编号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zhdtybh" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">灾害类型</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zhlx" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">灾害等级</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zhdj" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">灾害险情</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zhxq" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">预警级别</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="yjjb" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">监测级别</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="jcjb" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">监测手段</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="jcsd" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">是否库区</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="sfkq" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">是否涉水</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="sfss" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md4">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">是否结束</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="sfjs" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row layui-col-space1">
+                        <div class="layui-col-md3">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">面积</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="mj" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">面积单位</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="mjdw" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">体积</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="tj" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md3">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">体积单位</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="tjdw" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-row layui-col-space1">
+                        <div class="layui-col-md3" style="width:25%">
+                            <div class="grid-demo grid-demo-bg1">
+                                <label class="layui-form-label">威胁户数</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="wxhs" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3" style="width:25%">
+                            <div class="grid-demo">
+                                <label class="layui-form-label">威胁人数</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="wxrs" class="layui-input" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3" style="width:50%">
+                            <label class="layui-form-label" style="width:200px">威胁房屋面积(平方米)</label>
+                            <input type="text" name="wxfwmj" class="layui-input" readonly="readonly" style="width:180px;float:right" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="padding-top:30px;">其他威胁</label>
+                    <div class="layui-input-block">
+                        <textarea name="qtwx" class="layui-textarea" readonly="readonly" style="min-height:80px!important"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bz" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+ 
+
+    </div>
+</div>

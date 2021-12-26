@@ -1,0 +1,41 @@
+﻿<!--项目列表-->
+<div class="layui-row" style="margin-left:10px;margin-top:10px">
+    <div class="layui-input-inline">
+        <input type="text" id="projectfilter" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="width:230px;padding-left:25px;border-radius:5px;">
+    </div>
+    <button id="projectsearch" type="button" class="layui-btn" style="width:60px;border-radius:5px;margin-left:5px">
+            <i class="layui-icon layui-icon-search" ></i>
+        </button>
+</div>
+
+<div class="layui-row" style="margin-left:10px;margin-top:10px">
+    <div class="layui-input-inline">
+        <div id="projectbyarea"></div>
+        <!--<div class="layui-tab-item" id="projectbylayer"></div>-->
+    </div>
+</div>
+
+
+
+<div class="layui-row" style="position:absolute;top:5px;width:100%">
+    <!--搜索-->
+    <div class="layui-col-md9" style="float:left">
+        <div class="grid-demo grid-demo-bg1"> <input type="text" id="projectfilter" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="left:30px;height:30px;padding-left:35px;border-radius:5px;margin-left:5px;margin-right:10px;"> </div>
+    </div>
+    <div class="layui-col-md3" style="float:right">
+        <div class="grid-demo grid-demo-bg1"> <button id="projectsearch" type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="border-style:hidden;"><i class="layui-icon layui-icon-search" style="margin-right:0px"></i></button> </div>
+    </div>
+</div>
+<!--项目列表-->
+<div class="layui-tab layui-tab-brief" lay-filter="projectListTab" style="margin-top:30px">
+    <!--选项卡-->
+    <ul class="layui-tab-title">
+        <li lay-id="list_1" class="layui-this" style="width:40%;padding-top: 10px;">项目列表</li>
+        <!--<li lay-id="list_2" style="width:40%;padding-top: 10px;">图层列表</li>-->
+    </ul>
+    <!--tree-->
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show" id="projectbyarea"></div>
+        <!--<div class="layui-tab-item" id="projectbylayer"></div>-->
+    </div>
+</div>

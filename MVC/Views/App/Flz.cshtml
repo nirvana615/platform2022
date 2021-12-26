@@ -1,0 +1,325 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>消落带采集系统</title>
+    <!--jquery-->
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="~/Scripts/viewer.min.css">
+    <script src="~/Scripts/viewer.min.js"></script>
+    <!--CesiumJS-->
+    <link href="~/Scripts/Cesium/Widgets/widgets.css" rel="stylesheet" />
+    <script src="~/Scripts/Cesium/Cesium.js"></script>
+    <script src="~/Scripts/navigation/viewerCesiumNavigationMixin.min.js"></script>
+    <script src="~/Scripts/navigation/SpirographPositionProperty.js"></script>
+    <!--Layui-->
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.all.js"></script>
+    <!--ECharts-->
+    <script src="~/Scripts/ECharts/echarts.min.js"></script>
+    @*<script src="~/Scripts/ECharts/echarts.js"></script>*@
+
+    <link href="~/Apps/flz/css/main.css" rel="stylesheet" />
+    <style>
+        body {
+            overflow-y: scroll; /* 禁止刷新后出现横向滚动条 */
+        }
+
+        .layui-layer-rim .layui-layer-content {
+            height: 84% !important;
+        }
+    </style>
+
+
+</head>
+<body oncontextmenu="hideContextmenu()">
+    <!--顶栏-->
+    <div id="header">
+        <!--系统logo-->
+        @*<img src="~/Resources/img/head/flzlogo.png" />*@
+        <div id="syslogo"><span>消落带地质要素在线辅助采集系统</span></div>
+
+        <!--当前项目-->
+        <div class="layui-inline" style="position:absolute;left:420px;bottom:5px">
+            <div class="layui-input-inline" id="currentprojectoperate">
+                <select id="currentproject"></select>
+            </div>
+        </div>
+        <!--工具栏-->
+        <div style="position:absolute;right:5px">
+            <button id="userbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="color:Lavender"><span class="layui-icon layui-icon-user" style="font-size:16px "><span style="margin-left:5px ;font-size:16px">@ViewBag.UserName</span></span></button>
+            <button id="noticebtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="color:Lavender"><span style="font-size:16px " class="layui-icon layui-icon-notice"></span></button>
+            <button id="setbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="color:Lavender"><span style="font-size:16px " class="layui-icon layui-icon-set-fill"></span></button>
+            <a href="~/Platform/Logout">
+                <button id="exitbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="color:Lavender"><span style="font-size:16px " class="layui-icon layui-icon-logout"></span></button>
+            </a>
+        </div>
+
+    </div>
+    <div id="test"><span>测试</span></div>
+    @*<div id="gongJu">
+            <ul class="layui-nav layui-bg-cyan">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">测窗管理</a>
+                    <dl class="layui-nav-child">
+                        <dd onclick="windowInfoZiDingYi()"><a href="javascript:;">自定义测窗</a></dd>
+                        <dd onclick="addAreaLabel()"><a href="javascript:;">固定测窗</a></dd>
+                        <dd onclick="pdfWindowTongji()"><a href="javascript:;">测窗成图</a></dd>
+                        <dd onclick="windowTongji()"><a href="javascript:;">测窗统计</a></dd>
+
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">优势结构面</a>
+                    <dl class="layui-nav-child">
+                        <dd onclick="drwjiegou()"><a href="javascript:;">采集</a></dd>
+                        <dd onclick="jieGouTongji()"><a href="javascript:;">统计</a></dd>
+                        <dd onclick="jieLiMeiguihua()"><a href="javascript:;">玫瑰花</a></dd>
+
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">节理</a>
+                    <dl class="layui-nav-child">
+                        <dd onclick="gotoJieli()"><a href="javascript:;">素描</a></dd>
+                        <dd onclick="jieLiTongji()"><a href="javascript:;">统计</a></dd>
+
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">模型标注</a>
+                    <dl class="layui-nav-child">
+                        <dd onclick="pointMeasure()"><a href="javascript:;">坐标</a></dd>
+                        <dd onclick="lengthMeasure()"><a href="javascript:;">多段线</a></dd>
+                        <dd onclick="areaMeasure()"><a href="javascript:;">范围</a></dd>
+                        <dd onclick="drwBianJie()"><a href="javascript:;">边界勾画</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">工具</a>
+                    <dl class="layui-nav-child">
+                        <dd onclick="pointMeasure2()"><a href="javascript:;">坐标</a></dd>
+                        <dd onclick="lengthMeasure2()"><a href="javascript:;">长度</a></dd>
+                        <dd onclick="heightMeasure()"><a href="javascript:;">高度</a></dd>
+                        <dd onclick="areaMeasure2()"><a href="javascript:;">面积</a></dd>
+                        <dd onclick="getOccurrence()"><a href="javascript:;">产状</a></dd>
+                        <dd onclick="Clear()"><a href="javascript:;">清除</a></dd>
+
+                    </dl>
+                </li>
+            </ul>
+
+        </div>*@
+    <div id="gongJulan">
+        <div style="width:216px;display: inline-block">
+
+            <div><span style=" margin-top:5px; margin-left:50px">测窗</span></div>
+            <div>
+                <img src="~/Resources/img//survey/zdyWindon.png" onclick="windowInfoZiDingYi()" title="自定义测窗" class="surveyStyle" />
+                <img src="~/Resources/img/survey/gdWindon.png" onclick="addAreaLabel()" title="固定测窗" class="surveyStyle" />
+                <img src="~/Resources/img//survey/winChentu.png" onclick="pdfWindowTongji()" title="测窗成图" class="surveyStyle" />
+                <img src="~/Resources/img/survey/winTongji.png" onclick="windowTongji()" title="测窗统计" class="surveyStyle" />
+                @*<img src="~/Resources/img/survey/winTongji.png" onclick="drowmeasurWindow()" title="测窗重绘" class="surveyStyle" />
+                    <img src="~/Resources/img/survey/winTongji.png" onclick="drowmeasurSubmit()" title="重绘提交" class="surveyStyle" />*@
+            </div>
+
+        </div>
+        <img src="~/Resources/img/survey/fenge.png" class="surveyFevGeStyle" />
+        <div style="width:93px;display: inline-block">
+            <div><span style=" margin-top:5px; margin-left:30px">结构面</span></div>
+            <div>
+                <img src="~/Resources/img/survey/jiegoucaiji.png" onclick="drwjiegou()" title="结构面采集" class="surveyStyle" />
+                <img src="~/Resources/img//survey/jiegoutongji.png" onclick="jieGouTongji()" title="结构面统计" class="surveyStyle" />
+                <img src="~/Resources/img/survey/meiguihua.png" onclick="jieLiMeiguihua()" title="玫瑰花" class="surveyStyle" />
+            </div>
+
+        </div>
+        <img src="~/Resources/img/survey/fenge.png" class="surveyFevGeStyle" />
+        <div style="width:163px;display: inline-block">
+            <div><span style=" margin-top:5px; margin-left:50px">标注</span></div>
+            <div>
+                <img src="~/Resources/img/survey/point.png" onclick="pointMeasure()" title="点标注" class="surveyStyle" />
+                <img src="~/Resources/img//survey/line.png" onclick="lengthMeasure()" title="线标注" class="surveyStyle" />
+                <img src="~/Resources/img/survey/areabiaozhu.png" onclick="areaMeasure()" title="面标注" class="surveyStyle" />
+                <img src="~/Resources/img/survey/fanwei.png" onclick="drwBianJie()" title="边界勾画" class="surveyStyle" />
+                <img src="~/Resources/img/survey/point.png" onclick="biaozhuMangan()" title="标注" class="surveyStyle" />
+            </div>
+
+        </div>
+        <img src="~/Resources/img/survey/fenge.png" class="surveyFevGeStyle" />
+        <div style="width:62px;display: inline-block">
+            <div><span style=" margin-top:5px; margin-left:25px">节理</span></div>
+            <div>
+                <img src="~/Resources/img/survey/jielicaiji.png" onclick="gotoJieli()" title="节理素描" class="surveyStyle" />
+                <img src="~/Resources/img//survey/jielitongji.png" onclick="jieLiTongji()" title="节理统计" class="surveyStyle" />
+            </div>
+
+        </div>
+        <img src="~/Resources/img/survey/fenge.png" class="surveyFevGeStyle" />
+        <div style="width:62px;display: inline-block">
+            <div><span style=" margin-top:5px; margin-left:25px">斜坡</span></div>
+            <div>
+                <img src="~/Resources/img/survey/xiePuo.png" onclick="gotoXiePuo()" title="斜坡新增-边界勾画" class="surveyStyle" />
+                <img src="~/Resources/img/survey/xiePuoTong.png" onclick="xiePuoTongji()" title="斜坡统计" class="surveyStyle" />
+            </div>
+
+        </div>
+        <img src="~/Resources/img/survey/fenge.png" class="surveyFevGeStyle" />
+        <div style="width:232px;display: inline-block">
+            <div><span style=" margin-top:5px; margin-left:70px">测量工具</span></div>
+            <div>
+                @*<img src="~/Resources/img//survey/position.png" onclick="pointMeasure2()" title="坐标" class="surveyStyle" />
+        <img src="~/Resources/img//survey/distance.png" onclick="lengthMeasure2()" title="长度" class="surveyStyle" />
+        <img src="~/Resources/img//survey/height.png" onclick="heightMeasure()" title="高度" class="surveyStyle" />
+        <img src="~/Resources/img/survey/area.png" onclick="areaMeasure2()" title="面积" class="surveyStyle" />
+        <img src="~/Resources/img//survey/azimuth.png" onclick="getOccurrence()" title="产状" class="surveyStyle" />
+        <img src="~/Resources/img/survey/remove.png" onclick="Clear()" title="清除" class="surveyStyle" />*@
+
+                <img src="~/Resources/img/survey/celiang.png" onclick="celiang()" title="测量" class="surveyStyle" />
+                <img src="~/Resources/img/survey/position.png" onclick="pointMeasure2()" title="坐标" class="surveyStyle" />
+
+                <img src="~/Resources/img/survey/height.png" onclick="heightMeasure()" title="距离" class="surveyStyle" />
+                <img src="~/Resources/img/survey/area.png" onclick="areaMeasure2()" title="面积" class="surveyStyle" />
+                <img src="~/Resources/img/survey/azimuth.png" onclick="getOccurrence()" title="产状" class="surveyStyle" />
+                @*<img src="~/Resources/img/survey/azimuth.png" onclick="getpoly()" title="临时" class="surveyStyle" />*@
+                <img src="~/Resources/img/survey/zouXiang.png" onclick="azimuthMeasure()" title="走向" class="surveyStyle" />
+                @*<img src="~/Resources/img/survey/position.png" onclick="getxyzh()" title="定位" class="surveyStyle" />*@
+                @*<img src="~/Resources/img/survey/position.png" onclick="dispalyPosition()" title="定位" class="surveyStyle" />
+        <img src="~/Resources/img/mark/l1.png" onclick="modelJiaMiDian()" title="模型加密点" class="surveyStyle" />*@
+                <img src="~/Resources/img/survey/remove.png" onclick="ClearCeliangTemp()" title="清除" class="surveyStyle" />
+            </div>
+
+        </div>
+    </div>
+    @*<div id="mainpdf" style="width:790px;height:540px;top:40px">1</div>*@
+    <!--地图-->
+    <div id="map"></div>
+
+
+    @*<!--功能开关-->
+        <img id="openmenu" src="../../Resources/img/icon/left.png" title="显示功能面板" onclick="openMenu()" />
+        <!--功能-->
+        <div id="menu">
+            <div id="accordion">
+
+
+                <div class="layui-layer-title" style="font-weight: bold; font-size: large; cursor: move;">测窗管理</div>
+
+                <div class="divborder">
+                    &nbsp;&nbsp; <button class="layui-btn " style="width:100px" onclick="windowInfoZiDingYi()">自定义测窗</button>
+                    <button class="layui-btn " style="width:100px" onclick="addAreaLabel()">固定测窗</button>
+                    <br />
+                </div>
+                <div class="divborder">
+                    &nbsp;&nbsp; <button class="layui-btn " style="width:100px" onclick="pdfWindowTongji()">测窗成图</button>
+                    <button class="layui-btn " style="width:100px" onclick="windowTongji()">测窗统计</button>
+                    <br />
+                </div>
+                <div class="divborder">
+                    &nbsp;&nbsp;
+                    <input type="text" value="当前" readonly="readonly" style="background-color: rgba(255,255,255,0); border: 0px; width: 40px; vertical-align: middle; text-decoration: none; font: 15px/100% 'Microsoft yahei'; text-shadow: 0 1px 1px rgba(0,0,0,.3);" />
+                    <input id="windowInfoName" type="text" readonly="readonly" style="width: 80px; background-color: #fff; vertical-align: middle; height: 30px;" />
+                    &nbsp;&nbsp;
+                    <button class="layui-btn " style="width:70px" onclick="changewindow()">更改</button>
+                    <br />
+                </div>
+
+                <div class="layui-layer-title" style="font-weight: bold; font-size: large; cursor: move;">节理管理</div>
+                <div class="divborder">
+                    &nbsp;&nbsp;<input id="collector" type="text" placeholder="采集人" style="width: 60px; background-color: #fff; vertical-align: middle; height: 30px;" />
+                    &nbsp;<button class="layui-btn " onclick="drwjieli()">素描</button>
+                    &nbsp;<button class="layui-btn " onclick="jieLiTongji()">统计</button>
+                </div>
+                <div class="layui-layer-title" style="font-weight: bold; font-size: large; cursor: move;">优势结构面</div>
+                <div class="divborder">
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="drwjiegou()">采集</button>
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="jieGouTongji()">统计</button>
+                    <br />
+                    <br />
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="jieLiMeiguihua()">玫瑰花</button>
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="drwBianJie()">边界勾画</button>
+                </div>
+                <div class="layui-layer-title" style="font-weight: bold; font-size: large; cursor: move;">模型标注</div>
+                <div class="divborder">
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="pointMeasure()">坐标标注</button>
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="lengthMeasure()">长度标注</button>
+                    <br />
+                    <br />
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="areaMeasure()">范围</button>
+                    <br />
+                    <br />
+
+                </div>
+                <div class="layui-layer-title" style="font-weight: bold; font-size: large; cursor: move;">测量工具</div>
+                <div class="divborder">
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="pointMeasure2()">坐标</button>
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="lengthMeasure2()">长度</button>
+                    <br />
+                    <br />
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="heightMeasure()">高度</button>
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="areaMeasure2()">面积</button>
+                    <br />
+                    <br />
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="getOccurrence()">产状</button>
+                    &nbsp;&nbsp;<button class="layui-btn " style="width:100px" onclick="Clear()">清除</button>
+                    <br />
+                    <br />
+
+                </div>
+                <!--<h3 onclick="Clear()">图片标注</h3>
+                <div style="max-height: 500px">
+                </div>-->
+                <!-- <h3>地质要素</h3>
+                <div>
+                    <div class="divborder">
+                        <button onclick="getOccurrence()" class="button white medium" title="在模型上点击三个点">产状</button>
+                        <br />
+                        <br />
+                        <button onclick="getTraceLength()" class="button white medium">迹线</button>
+                        <br />
+                        <br />
+                        <button onclick="Clear()" class="button white medium">清除</button>
+                    </div>
+                </div>-->
+            </div>
+        </div>*@
+
+    <!--javascript-->
+    <script>
+        var servicesurl = @Html.Raw(Json.Encode(ViewBag.ServicesURL));
+        var datasurl = @Html.Raw(Json.Encode(ViewBag.DatasURL));
+        var ViewBag = @Html.Raw(Json.Encode(ViewBag));
+    </script>
+    <!--页面的html放在这里-->
+    <script src="~/Apps/flz/js/html.js"></script>
+    <script src="~/Apps/flz/js/1.1-all.js"></script>
+    <script src="~/Apps/flz/js/1.2-para.js"></script>
+    <script src="~/Apps/flz/js/3.0-map.js"></script>
+    <script src="~/Apps/flz/js/4.1-projectlist.js"></script>
+    <script src="~/Apps/flz/js/4.2-projectinfo.js"></script>
+    <script src="~/Apps/flz/js/5.0-header.js"></script>
+    <script src="~/Apps/flz/js/5.1-message.js"></script>
+    <script src="~/Apps/flz/js/5.2-setting.js"></script>
+    <script src="~/Apps/flz/js/6.0-util.js"></script>
+    <script src="~/Apps/flz/js/6.1-layerlist.js"></script>
+    <script src="~/Apps/flz/js/6.2-autodevice.js"></script>
+    <script src="~/Apps/flz/js/6.3-autodata.js"></script>
+    <script src="~/Apps/flz/js/6.4-analysis.js"></script>
+    <script src="~/Apps/flz/js/6.5-warning.js"></script>
+    <script src="~/Apps/rock/js/6.6-measure.js"></script>
+    <script src="~/Apps/flz/js/6.6-xiePuo.js"></script>
+
+    <script src="~/Apps/flz/js/6.8-localtool.js"></script>
+    <script src="~/Apps/flz/js/6.9-report.js"></script>
+    <!--新增陈小飞 修改-->
+    <script src="~/Apps/flz/js/6.7-draw.js"></script>
+    <script src="~/Apps/rock/js/6.7-draw.js"></script><!--引入标注-->
+
+</body>
+</html>

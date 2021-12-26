@@ -1,0 +1,46 @@
+﻿html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#header {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(48, 51, 54, 1);
+}
+
+#map {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    top: 50px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+#syslogo {
+    position: absolute;
+    width: 273px;
+    height: 50px;
+    top: 0px;
+    left: 5px;
+}
+
+.cesium-baseLayerPicker-dropDown {
+    top:50px;
+}
+
+div {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}

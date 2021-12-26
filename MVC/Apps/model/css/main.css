@@ -1,0 +1,82 @@
+﻿html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#header {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(48, 51, 54, 1);
+}
+
+#map {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    top: 50px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+#syslogo {
+    position: absolute;
+    width: 389px;
+    height: 50px;
+    top: 0px;
+    left: 5px;
+}
+
+#currentproject {
+    text-align-last: left;
+    font-family: 'Microsoft YaHei';
+    font-size: large;
+    width: 600px;
+    height: 35px;
+    background-color: rgba(48, 51, 54, 0.5);
+    font-size: medium;
+    color: lightgray;
+    border-radius: 10px;
+    border-color: rgba(48, 51, 54, 1);
+    visibility:hidden
+}
+
+@keyframes shock {
+    0% {
+        margin-left: 0px;
+        margin-right: 5px;
+        margin-top: 0px;
+    }
+
+    100% {
+        margin-left: 5px;
+        margin-right: 0px;
+        margin-top: 5px; /* 可以自定义上下左右的幅度 */
+    }
+}
+
+#task_count {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    line-height: 20px;
+    font-size: 12px;
+    left: -15px;
+    top: -5px;
+    border-radius: 5px;
+    animation-delay: 0s;
+    animation-name: shock;
+    animation-duration: .4s;
+    animation-iteration-count: 5;
+    animation-direction: normal;
+    animation-timing-function: linear;
+}

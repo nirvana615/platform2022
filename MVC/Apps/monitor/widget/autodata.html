@@ -1,0 +1,46 @@
+﻿<!--自动化监测数据可视化-->
+<div class="layui-row">
+    <!--左侧-->
+    <div class="layui-col-md3" style="width:20%;height:750px;overflow: auto;">
+        <div id="monitortreebytype" class="grid-demo"></div>
+    </div>
+
+    <!--右侧-->
+    <div class="layui-col-md9" style="width:80%;height:740px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">
+        <div class="grid-demo grid-demo-bg1">
+            <!--工具栏-->
+            <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;">
+                <div class="layui-row">
+                    <div class="layui-col-xs6">
+                        <div class="grid-demo grid-demo-bg1">
+                            <div class="layui-form-item">
+                                <div class="layui-input-block" style="margin-left:10px;">
+                                    <select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <div class="grid-demo">
+                            <div class="layui-form-item">
+                                <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">
+                                    <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!--图形-->
+            <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:540px"></div>
+
+            <!--统计表格-->
+            <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;">
+                <table id="autodatastatistics" class="layui-hide"></table>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+﻿<form class="layui-form" style="margin-top:10px" lay-filter="addsqlform">
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">SQL</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <textarea name="sql" placeholder="请输入" class="layui-textarea" lay-verify="required" style="height:200px"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <select id="typeid" name="type" lay-filter="typeselect" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:30px">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="addsqlsubmit" style="width:80px">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button>
+        </div>
+    </div>
+</form>

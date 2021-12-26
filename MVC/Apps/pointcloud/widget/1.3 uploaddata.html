@@ -1,0 +1,116 @@
+﻿<!--上传点云数据-->
+<form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="uploaddataform">
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">上传项目</label>
+                    <div class="layui-input-block">
+                        <select id="projectid" name="project" lay-filter="projectfilter">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6">
+                <div class="grid-demo">
+                    <label class="layui-form-label">项目区域</label>
+                    <div class="layui-input-block">
+                        <select id="regionid" name="region" lay-filter="regionidfilter">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md6" style="width:50%">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">坐标系统</label>
+                    <div class="layui-input-block">
+                        <select id="kjckid" name="kjck" lay-verify="required">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">采集时间</label>
+                        <div class="layui-input-inline" style="width:250px;">
+                            <input type="text" id="cjsjid" name="cjsj" lay-verify="date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">采集人员</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="people" name="people" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">采集设备</label>
+                    <div class="layui-input-block">
+                        <select id="deviceid" name="type">
+                            <option value="">请选择</option>
+                            <option value="0">无人机</option>
+                            <option value="1">Lidar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+
+
+            <div class="layui-col-md6" style="width:50%">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">数据格式</label>
+                    <div class="layui-input-block">
+                        <select id="sjgsid" name="type">
+                            <option value="">请选择</option>
+                            <option value="0">las</option>
+                            <option value="1">pcd</option>
+                            <option value="2">txt</option>
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input type="text" id ="bz"name="bz" autocomplete="off" placeholder="请输入" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:30px">
+        <div style="position:absolute;left:50px;">
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="selectdata" style="width:100px">选择文件</button>
+            <button type="button" class="layui-btn layui-btn-green layui-btn-sm" id="uploaddata" style="width:100px">上传</button>
+        </div>
+    </div>
+</form>

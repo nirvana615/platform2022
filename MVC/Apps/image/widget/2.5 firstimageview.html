@@ -1,0 +1,23 @@
+﻿
+<form class="layui-form" style="margin-top:10px" lay-filter="viewfirstimageform">
+    <div class="layui-form-item" style="height: 220px;">
+        <div class="layui-upload">
+            <div class="layui-row" style="margin-top:20px;margin-left:10px;margin-right:20px">
+                <div class="layui-col-xs6">
+                    <div class="grid-demo grid-demo-bg1">
+                        <button type="button" class="layui-btn-fluid layui-btn layui-btn-primary layui-border-green" id="image_rois_view">1-查看靶区分布</button>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="grid-demo">
+                        <button type="button" class="layui-btn-fluid layui-btn layui-btn-primary layui-border-green" id="image_rois_clear">2-清除</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-upload-list" style="height:420px;margin-top:10px;margin-left:10px;margin-right:10px;background-color:rgba(25,25,0,0.11)">
+                <p style="color:green;font-size:15px;">在此显示首期影像，点击“1-查看靶区分布”，可在影像上圈出靶区区域，点击“2-清除”，清除靶区显示</p>
+                <img class="layui-upload-img" id="image_firstimage_img" name="image_firstimage_img" style="width:100%;height:auto;vertical-align:middle">
+            </div>
+        </div>
+    </div>
+</form>

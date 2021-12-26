@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SQL</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--jquery-->
+    <script src="../../../Scripts/jquery-3.3.1.js"></script>
+    <!--Layui-->
+    <link href="../layuiadmin/layui2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="../layuiadmin/style/admin.css" rel="stylesheet" />
+    <script src="../layuiadmin/layui2.5.6/layui.all.js"></script>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div style="padding-bottom:10px;">
+                    <button id="addsql" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新SQL</button>
+                </div>
+
+                <table id="LAY-sql-manage" lay-filter="LAY-sql-manage"></table>
+                <script type="text/html" id="table-toolbar-sql">
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="sqledit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="sqldel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jQuery.support.cors = true;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var sqldatas = [];
+        var addsqllayerindex = null;
+
+        GetSqlInfo();
+
+        var sqltable = table.render({
+            elem: '#LAY-sql-manage'
+            , id: 'sqltableid'
+            , title: 'SQL信息'
+            , page: true
+            , even: true
+            , limit: 20
+            , initSort: { field: 'id', type: 'asc' }
+            , toolbar: false
+            , totalRow: false
+            , cols: [[
+                { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
+                , { field: 'type', title: '类型', width: 100, align: "center" }
+                , { field: 'sql', title: 'SQL', align: "left" }
+                , { field: 'cjsj', title: '创建时间', width: 180, align: "center" }
+                , { field: 'bz', title: '备注', width: 180, align: "center" }
+                , { fixed: 'right', width: 200, align: 'center', toolbar: '#table-toolbar-sql' }
+            ]]
+            , data: sqldatas
+        });
+
+        table.on('tool(LAY-sql-manage)', function (obj) {
+            //var data = obj.data; //获得当前行数据
+            var layEvent = obj.event;
+
+            if (layEvent === 'sqledit') {
+                addsqllayerindex = layer.open({
+                    type: 1
+                    , title: ['编辑SQL信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                    , area: ['400px', '450px']
+                    , shade: [0.5, '#393D49']
+                    , offset: 'auto'
+                    , closeBtn: 1
+                    , maxmin: false
+                    , content: '<form class="layui-form" style="margin-top:10px" lay-filter="addsqlform"><div class="layui-form-item layui-form-text"><label class="layui-form-label">SQL</label><div class="layui-input-block" style="padding-right:10px"><textarea name="sql" placeholder="请输入" class="layui-textarea" lay-verify="required" style="height:200px"></textarea></div></div><div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-block" style="padding-right:10px"><select id="typeid" name="type" lay-filter="typeselect" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="addsqlsubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                    , zIndex: layer.zIndex
+                    , success: function (layero) {
+                        layer.setTop(layero);
+
+                        form.val("addsqlform", {
+                            "sql": obj.data.sql
+                            , "bz": obj.data.bz
+                        });
+
+                        if (obj.data.type == "读取") {
+                            document.getElementById("typeid").innerHTML += '<option value="0" selected>读取</option><option value="1">写入</option>';
+                        }
+                        else if (obj.data.type == "写入") {
+                            document.getElementById("typeid").innerHTML += '<option value="0">读取</option><option value="1" selected>写入</option>';
+                        }
+                        else {
+                            document.getElementById("typeid").innerHTML += '<option value="0">读取</option><option value="1">写入</option>';
+                        }
+
+                        form.render();
+                        form.render('select');
+
+                        form.on('submit(addsqlsubmit)', function (data) {
+                            data.field.id = obj.data.id;
+                            $.ajax({
+                                url: window.parent.servicesurl + "/api/Sql/UpdateSQL", type: "put", data: data.field,
+                                success: function (result) {
+                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                    GetSqlInfo();
+                                }, datatype: "json"
+                            });
+
+                            layer.close(addsqllayerindex);
+                            return false;
+                        });
+                    }
+                    , end: function () { }
+                });
+
+            } else if (layEvent === 'sqldel') {
+                layer.confirm('是否删除？', function (index) {
+                    obj.del();
+                    layer.close(index);
+                    $.ajax({
+                        url: window.parent.servicesurl + "/api/Sql/DeleteSQL", type: "delete", data: { "id": obj.data.id },
+                        success: function (result) {
+                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        }, datatype: "json"
+                    });
+                });
+            }
+        });
+
+        $("#addsql").on("click", function () {
+            addsqllayerindex = layer.open({
+                type: 1
+                , title: ['添加新SQL', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['400px', '450px']
+                , shade: [0.5, '#393D49']
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: false
+                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="addsqlform"><div class="layui-form-item layui-form-text"><label class="layui-form-label">SQL</label><div class="layui-input-block" style="padding-right:10px"><textarea name="sql" placeholder="请输入" class="layui-textarea" lay-verify="required" style="height:200px"></textarea></div></div><div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-block" style="padding-right:10px"><select id="typeid" name="type" lay-filter="typeselect" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="addsqlsubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+
+                    document.getElementById("typeid").innerHTML += '<option value="0">读取</option><option value="1">写入</option>';
+
+                    form.render();
+                    form.render('select');
+
+                    form.on('submit(addsqlsubmit)', function (data) {
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Sql/AddSQL", type: "post", data: data.field,
+                            success: function (result) {
+                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                GetSqlInfo();
+                            }, datatype: "json"
+                        });
+
+                        layer.close(addsqllayerindex);
+                        return false;
+                    });
+                }
+                , end: function () { }
+            });
+        });
+
+        function GetSqlInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/Sql/GetSQLInfo", type: "get",
+                success: function (data) {
+                    if (data == "") {
+                        layer.msg("无SQL信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        sqltable.reload({ id: 'sqltableid', data: [] });
+                    }
+                    else {
+                        var sqlinfos = JSON.parse(data);
+                        sqldatas = [];
+                        for (var i in sqlinfos) {
+                            var sqldata = new Object;
+                            sqldata.id = sqlinfos[i].Id;
+                            sqldata.sql = sqlinfos[i].Sql;
+                            sqldata.cjsj = sqlinfos[i].CJSJ;
+                            sqldata.bz = sqlinfos[i].BZ;
+                            sqldata.type = sqlinfos[i].Type;
+                            sqldatas.push(sqldata);
+                        }
+                        sqltable.reload({ id: 'sqltableid', data: sqldatas });
+                    }
+                }, datatype: "json"
+            });
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>快捷入口</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layuiadmin/layui2.5.6/css/layui.css" media="all">
+    <link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md8" style="width:100%">
+                <div class="layui-col-md6" style="width:100%">
+                    <div class="layui-card">
+                        <div class="layui-card-header">快捷方式</div>
+                        <div class="layui-card-body">
+                            <div class="layui-carousel layadmin-carousel layadmin-shortcut">
+                                <div carousel-item>
+                                    <ul class="layui-row layui-col-space10">
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="../Apps/admin/view/user.html">
+                                                <i class="layui-icon layui-icon-user"></i>
+                                                <cite>用户</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="../Apps/admin/view/role.html">
+                                                <i class="layui-icon layui-icon-auz"></i>
+                                                <cite>角色</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="../Apps/admin/view/auth.html">
+                                                <i class="layui-icon layui-icon-share"></i>
+                                                <cite>授权</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="../Apps/admin/view/srid.html">
+                                                <i class="layui-icon layui-icon-website"></i>
+                                                <cite>坐标系统</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="../Apps/admin/view/device.html">
+                                                <i class="layui-icon layui-icon-console"></i>
+                                                <cite>监测设备</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="../Apps/admin/view/database.html">
+                                                <i class="layui-icon layui-icon-template-1"></i>
+                                                <cite>监测数据库</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="../Apps/admin/view/sql.html">
+                                                <i class="layui-icon layui-icon-senior"></i>
+                                                <cite>ETL</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="../Apps/admin/view/factory.html">
+                                                <i class="layui-icon layui-icon-diamond"></i>
+                                                <cite>设备厂家</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="../Apps/admin/view/sale.html">
+                                                <i class="layui-icon layui-icon-download-circle"></i>
+                                                <cite>设备经销商</cite>
+                                            </a>
+                                        </li>
+                                        <!--<li class="layui-col-xs3">
+                                            <a lay-href="factory.html">
+                                                <i class="layui-icon layui-icon-group"></i>
+                                                <cite>人员</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="sale.html">
+                                                <i class="layui-icon layui-icon-cart"></i>
+                                                <cite>单位</cite>
+                                            </a>
+                                        </li>-->
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../layuiadmin/layui/layui.js?t=1"></script>
+    <script>
+        layui.config({
+            base: '../layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'console']);
+    </script>
+</body>
+</html>
+

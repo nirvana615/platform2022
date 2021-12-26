@@ -1,0 +1,44 @@
+﻿<!--工具栏-->
+<div class="layui-row" style="position:absolute;top:5px;width:100%">
+    <!--搜索-->
+    <div class="layui-col-md6" style="width:70%">
+        <div class="grid-demo grid-demo-bg1">
+            <input type="text" id="projectfilter" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="left:30px;height:30px;padding-left:35px;border-radius:5px">
+        </div>
+    </div>
+
+    <!--创建项目-->
+    <div class="layui-col-md2" style="width:10%">
+        <div class="grid-demo">
+            <button id="projectadd" type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="border-style:hidden;float:right"><i class="layui-icon layui-icon-add-circle" style="margin-right:0px"></i></button>
+        </div>
+    </div>
+    <!--选择文件-->
+    <div class="layui-col-md2" style="width:10%">
+        <div class="grid-demo">
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="selectpcdata" style="border-style:hidden;float:right"><i class="layui-icon layui-icon-file-b" style="margin-right:0px"></i></button>
+        </div>
+    </div>
+    <!--文件上传-->
+    <div class="layui-col-md2" style="width:10%">
+        <div class="grid-demo">
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="startupload" style="border-style:hidden;float:right"><i class="layui-icon layui-icon-upload-circle" style="margin-right:0px"></i></button>
+        </div>
+    </div>
+</div>
+<!--项目列表-->
+<div class="layui-tab layui-tab-brief" lay-filter="projectListTab"
+     style="margin-top:30px">
+    <!--选项卡-->
+    <ul class="layui-tab-title">
+        <li lay-id="list_1" class="layui-this" style="width:40%;padding-top: 3px;">监测项目列表</li>
+        <li lay-id="list_2" class="layui-this" style="width:40%;padding-top: 3px;">点云分析</li>
+
+    </ul>
+    <!--tree-->
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show" id="projectbyname"></div>
+        <div class="layui-tab-item" id="projectpointcloud"></div>
+    </div>
+
+</div>

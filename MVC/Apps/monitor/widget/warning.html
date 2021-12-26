@@ -1,0 +1,545 @@
+﻿<!--预警分析-->
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:0px;">
+    <ul class="layui-tab-title">
+        <li class="layui-this" style="width:45%;padding-top: 0px;">预警预报消息</li>
+        <li style="width:45%;padding-top: 0px;">预警模型设置</li>
+    </ul>
+
+    <div class="layui-tab-content">
+        <!--预警信息-->
+        <div class="layui-tab-item layui-show" style="padding-left:5px;padding-right:5px;">
+            <!--预警数量-->
+            <div style="margin-top: 15px;">
+                <button id="btn-wi-all" type="button" class="layui-btn layui-btn-primary" style="height:50px;">预警总数  <span id="warning-all-count"></span></button>
+                <button id="btn-wi-blue" type="button" class="layui-btn layui-btn-blue" style="height:50px;">蓝色预警  <span id="warning-blue-count"></span></button>
+                <button id="btn-wi-yellow" type="button" class="layui-btn layui-btn-yellow" style="height:50px;">黄色预警  <span id="warning-yellow-count"></span></button>
+                <button id="btn-wi-orange" type="button" class="layui-btn layui-btn-orange" style="height:50px;">橙色预警  <span id="warning-orange-count"></span></button>
+                <button id="btn-wi-red" type="button" class="layui-btn layui-btn-red" style="height:50px;">红色预警  <span id="warning-red-count"></span></button>
+            </div>
+
+            <!--预警信息-->
+            <div class="layui-card-body" style="margin-top:15px;padding:0px 0px;">
+                <table id="warninginfotable" lay-filter="warninginfo-operae"></table>
+
+                <script type="text/html" id="table-toolbar-warninginfo">
+                    <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="warninginfoview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                    <a class="layui-btn layui-bg-blue layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="warninginfomark"><i class="layui-icon layui-icon-rate" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                </script>
+            </div>
+        </div>
+
+        <!--预警模型设置-->
+        <div class="layui-tab-item">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBriefitem" style="margin:0px;">
+                <ul class="layui-tab-title" style="float: left;width:120px;border-color:white;">
+                    <li class="layui-this" style="display: block;">临界条件</li>
+                    <li style="display: block;">监测阈值</li>
+                    <li style="display: block;">预警判据</li>
+                    <li style="display: block;">预警模型</li>
+                    <li style="display: block;">信息发布</li>
+                </ul>
+
+                <div class="layui-tab-content" style="height: 690px;width:840px;float: left;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;">
+                    <div class="layui-tab-item layui-show">
+                        <!--临界条件-->
+                        <form class="layui-form" action="" lay-filter="warningthresholdform">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:160px;">灾害体</label>
+                                <div class="layui-input-block" style="margin-left:190px;">
+                                    <select id="zhtwid" name="zhtw" lay-filter="zhtw">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item" style="padding-top:15px;">
+                                <label class="layui-form-label" style="width:160px;">临界条件判据公式</label>
+                                <div class="layui-input-block" style="margin-left:190px;">
+                                    <select id="ljpjgsid" name="ljpjgs" lay-filter="ljpjgs">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:160px;">调整系数</label>
+                                <div class="layui-input-block" style="margin-left:190px;">
+                                    <input type="text" name="tzxs" class="layui-input" value="1.000" lay-verify="number">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:160px;">危岩崩塌临界条件判据</label>
+                                <div class="layui-input-block" style="margin-left:190px;">
+                                    <input type="text" name="ljtj" class="layui-input" readonly="readonly">
+                                </div>
+                            </div>
+
+                            <div class="layui-row" style="padding-top:15px;">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:160px;">危岩破坏模式</label>
+                                            <div class="layui-input-block" style="margin-left:190px;">
+                                                <input type="text" name="wyphms" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:180px;">危岩破坏模式亚类</label>
+                                            <div class="layui-input-block" style="margin-left:210px;">
+                                                <input type="text" name="wyphmsyl" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:160px;">岩体容重(KN/m³)</label>
+                                            <div class="layui-input-block" style="margin-left:190px;">
+                                                <input type="text" name="ytrz" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:180px;">岩体泊松比</label>
+                                            <div class="layui-input-block" style="margin-left:210px;">
+                                                <input type="text" name="ytbsb" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:160px;">岩体弹性模量(kPa)</label>
+                                            <div class="layui-input-block" style="margin-left:190px;">
+                                                <input type="text" name="yttxml" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:180px;">危岩单体自重(KN/m)</label>
+                                            <div class="layui-input-block" style="margin-left:210px;">
+                                                <input type="text" name="wydtzz" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:160px;">潜在滑面粘聚力(kPa)</label>
+                                            <div class="layui-input-block" style="margin-left:190px;">
+                                                <input type="text" name="qzhmnjl" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:180px;">潜在滑面内摩擦角(°)</label>
+                                            <div class="layui-input-block" style="margin-left:210px;">
+                                                <input type="text" name="qzhmnmcj" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:160px;">底部软弱层内聚力(kPa)</label>
+                                            <div class="layui-input-block" style="margin-left:190px;">
+                                                <input type="text" name="dbrrcnjl" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:180px;">底部软弱层内摩擦角(°)</label>
+                                            <div class="layui-input-block" style="margin-left:210px;">
+                                                <input type="text" name="dbrrcnmcj" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:160px;">危岩单体宽度(m)</label>
+                                            <div class="layui-input-block" style="margin-left:190px;">
+                                                <input type="text" name="wydtkd" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:180px;">危岩单体厚度(m)</label>
+                                            <div class="layui-input-block" style="margin-left:210px;">
+                                                <input type="text" name="wydthd" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:160px;">危岩单体高度(m)</label>
+                                            <div class="layui-input-block" style="margin-left:190px;">
+                                                <input type="text" name="wydtgd" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:180px;">岩石抗剪强度(kPa)</label>
+                                            <div class="layui-input-block" style="margin-left:210px;">
+                                                <input type="text" name="yskjqd" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:160px;">岩体抗拉强度(kPa)</label>
+                                            <div class="layui-input-block" style="margin-left:190px;">
+                                                <input type="text" name="wydtytklqd" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:180px;">岩体单轴抗压强度(kPa)</label>
+                                            <div class="layui-input-block" style="margin-left:210px;">
+                                                <input type="text" name="ytdzkyqd" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:160px;padding-top:1px;">危岩单体重心到后缘裂缝底部的水平距离(m)</label>
+                                            <div class="layui-input-block" style="margin-left:190px;">
+                                                <input type="text" name="wydtzxdhylfdbdspjl" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:180px;padding-top:1px;">危岩单体重心距离底部旋转点的水平距离(m)</label>
+                                            <div class="layui-input-block" style="margin-left:210px;">
+                                                <input type="text" name="wydtzxjldbxzddspjl" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:160px;padding-top:1px;">危岩单体重心距离底部旋转点的垂直距离(m)</label>
+                                            <div class="layui-input-block" style="margin-left:190px;">
+                                                <input type="text" name="wydtzxjldbxzddczjl" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:180px;padding-top:1px;">单位单体下部软弱层岩体潜在剪切段破裂面正应力(kPa)</label>
+                                            <div class="layui-input-block" style="margin-left:210px;">
+                                                <input type="text" name="dwdtxbrrcytqzjqdplmzyl" class="layui-input" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item" style="margin-bottom:10px">
+                                <div style="position:absolute;right:140px;bottom:10px;">
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="warningthresholdcalculation" style="width:100px">计算</button>
+                                </div>
+                                <div style="position:absolute;right:30px;bottom:10px;">
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="warningthresholdsave" style="width:100px">保存</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <!--监测阈值-->
+                        <form class="layui-form" action="" lay-filter="monitorthresholdform">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:100px;">灾害体</label>
+                                <div class="layui-input-block" style="margin-left:130px;">
+                                    <select id="zhtmid" name="zhtm" lay-filter="zhtm">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item" style="margin-top:10px;">
+                                <label class="layui-form-label" style="width:100px;">临界条件</label>
+                                <div class="layui-input-block" style="margin-left:130px;">
+                                    <input type="text" name="ljtj" class="layui-input" readonly="readonly">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:100px;">监测点</label>
+                                <div class="layui-input-block" style="margin-left:130px;">
+                                    <select id="jcdid" name="jcd" lay-filter="jcd">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:100px;">平面x坐标(m)</label>
+                                <div class="layui-input-block" style="margin-left:130px;">
+                                    <input type="text" name="pmxzb" class="layui-input" readonly="readonly">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:100px;">平面y坐标(m)</label>
+                                <div class="layui-input-block" style="margin-left:130px;">
+                                    <input type="text" name="pmyzb" class="layui-input" readonly="readonly">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:100px;">高程(m)</label>
+                                <div class="layui-input-block" style="margin-left:130px;">
+                                    <input type="text" name="gc" class="layui-input" readonly="readonly">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item" style="margin-top:10px;">
+                                <label class="layui-form-label" style="width:100px;">调整系数</label>
+                                <div class="layui-input-block" style="margin-left:130px;">
+                                    <input type="text" name="monitortzxs" class="layui-input" value="1.000">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item" style="margin-top:10px;">
+                                <label class="layui-form-label" style="width:100px;padding-top:150px;">监测阈值</label>
+                                <div class="layui-input-block" style="margin-left:130px;">
+                                    <textarea name="jcyz" class="layui-textarea" style="min-height:320px!important"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item" style="margin-bottom:10px">
+                                <div style="position:absolute;right:140px;bottom:10px;">
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="monitorthresholdcalculation" style="width:100px">计算</button>
+                                </div>
+                                <div style="position:absolute;right:30px;bottom:10px;">
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="monitorthresholdsave" style="width:100px">保存</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <!--预警判据-->
+                        <div class="layui-card-body" style="padding:0px 0px;">
+                            <table id="warningcriterionid" lay-filter="warningcriterion"></table>
+
+                            <script type="text/html" id="addwarningcriterion">
+                                <div class="layui-btn-container">
+                                    <button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="addwarningcriterion">新增判据</button>
+                                </div>
+                            </script>
+
+                            <script type="text/html" id="table-toolbar-warningcriterion">
+                                <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="warningcriterionview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                                <a class="layui-btn layui-bg-blue layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="warningcriterionedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                                <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="warningcriteriondel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <!--预警模型-->
+                        <form class="layui-form" action="" lay-filter="warningmodelform" style="margin-top:5px;">
+                            <div class="layui-row">
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <label class="layui-form-label" style="width:60px;">预警模型</label>
+                                        <div class="layui-input-block" style="margin-left:90px;">
+                                            <select id="waringmodel-zht" name="zht" lay-filter="waringmodel-zht">
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <div style="position:absolute;right:0px;">
+                                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="addwarningmodel" style="width:120px;">新增预警模型</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:10px;">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">蓝色预警</li>
+                                <li>黄色预警</li>
+                                <li>橙色预警</li>
+                                <li>红色预警</li>
+                            </ul>
+
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <div class="layui-card-body" style="padding:0px 0px;">
+                                        <table id="warningmodel-blue-table" lay-filter="warningmodel-blue-table"></table>
+
+                                        <script type="text/html" id="addbluecriterion">
+                                            <div class="layui-btn-container">
+                                                <button class="layui-btn layui-btn-sm layui-btn-blue" style="font-size:14px" lay-event="addbluecriterion">添加蓝色判据</button>
+                                            </div>
+                                        </script>
+
+                                        <script type="text/html" id="table-toolbar-bluecriterion">
+                                            <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="bluecriteriondel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                                        </script>
+                                    </div>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <div class="layui-card-body" style="padding:0px 0px;">
+                                        <table id="warningmodel-yellow-table" lay-filter="warningmodel-yellow-table"></table>
+
+                                        <script type="text/html" id="addyellowcriterion">
+                                            <div class="layui-btn-container">
+                                                <button class="layui-btn layui-btn-sm layui-btn-yellow" style="font-size:14px" lay-event="addyellowcriterion">添加黄色判据</button>
+                                            </div>
+                                        </script>
+
+                                        <script type="text/html" id="table-toolbar-yellowcriterion">
+                                            <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="yellowcriteriondel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                                        </script>
+                                    </div>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <div class="layui-card-body" style="padding:0px 0px;">
+                                        <table id="warningmodel-orange-table" lay-filter="warningmodel-orange-table"></table>
+
+                                        <script type="text/html" id="addorangecriterion">
+                                            <div class="layui-btn-container">
+                                                <button class="layui-btn layui-btn-sm layui-btn-orange" style="font-size:14px" lay-event="addorangecriterion">添加橙色判据</button>
+                                            </div>
+                                        </script>
+
+                                        <script type="text/html" id="table-toolbar-orangecriterion">
+                                            <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="orangecriteriondel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                                        </script>
+                                    </div>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <div class="layui-card-body" style="padding:0px 0px;">
+                                        <table id="warningmodel-red-table" lay-filter="warningmodel-red-table"></table>
+
+                                        <script type="text/html" id="addredcriterion">
+                                            <div class="layui-btn-container">
+                                                <button class="layui-btn layui-btn-sm layui-btn-red" style="font-size:14px" lay-event="addredcriterion">添加红色判据</button>
+                                            </div>
+                                        </script>
+
+                                        <script type="text/html" id="table-toolbar-redcriterion">
+                                            <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="redcriteriondel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form class="layui-form" action="" lay-filter="">
+                            <fieldset class="layui-elem-field">
+                                <legend style="font-size:18px;">预警条件</legend>
+                                <div class="layui-field-box" style="padding:5px 20px;">
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block" style="margin-left:10px;">
+                                            <input type="radio" name="yjtj" value="0" title="预警判据触发" checked="">
+                                            <input type="radio" name="yjtj" value="1" title="多参数预警模型触发" disabled="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <!--信息发布-->
+                        <div class="layui-card-body" style="padding:0px 0px;">
+                            <table id="warninginfopushid" lay-filter="warninginfopush"></table>
+
+                            <script type="text/html" id="addwarninginfopush">
+                                <div class="layui-btn-container">
+                                    <button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="addwarninginfopush">新增预警信息发布</button>
+                                </div>
+                            </script>
+
+                            <script type="text/html" id="table-toolbar-warninginfopush">
+                                <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="warninginfopushdel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

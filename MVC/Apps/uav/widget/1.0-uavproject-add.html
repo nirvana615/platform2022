@@ -1,0 +1,30 @@
+﻿<form class="layui-form" style="margin-top:10px" lay-filter="uav-project-add">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:60px;">项目名称</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <input type="text" name="uav-project-add-xmmc" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label" style="width:60px;padding-top:105px;">备&emsp;&emsp;注</label>
+        <div class="layui-input-block" style="margin-left:90px;padding-right:5px;">
+            <textarea name="uav-project-add-bz" placeholder="请输入" class="layui-textarea" style="height:240px;padding-right:5px;"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:10px">
+        <div class="layui-row">
+            <div class="layui-col-md3 layui-col-md-offset3">
+                <div class="grid-demo grid-demo-bg1">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="uav-project-add-submit" style="width:100px">提交</button>
+                </div>
+            </div>
+            <div class="layui-col-md3 layui-col-md-offset1">
+                <div class="grid-demo">
+                    <button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

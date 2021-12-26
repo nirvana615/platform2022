@@ -1,0 +1,46 @@
+<div class="layui-tab layui-tab-brief" style="width: 300px" lay-filter="biaozhuguanli">
+    <ul class="layui-tab-title">
+        <li lay-id="1" class="layui-this" style="width:15%;padding-top: 2px;">点标注</li>
+        <li lay-id="2" style="width:40px;padding-top: 2px;">多段线</li>
+        <li lay-id="3" style="width:20px;padding-top: 2px;">面积</li>
+        <li lay-id="4" style="width:15%;padding-top: 2px;">标注列表</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <div id="pointpic" class="divborder" onclick="getPointStyle(event)" style="margin-left: 10px;"> <img id="p8" src="/Resources/img/mark/p8.png" class="pointLabelStyle" /><img id="p12" src="/Resources/img/mark/p12.png" class="pointLabelStyle" /> <img id="p13" src="/Resources/img/mark/p13.png" class="pointLabelStyle" /> <img id="p14" src="/Resources/img/mark/p14.png"
+                    class="pointLabelStyle" /> <img id="p15" src="/Resources/img/mark/p15.png" class="pointLabelStyle" /></div>
+        </div>
+        <div class="layui-tab-item"><span style="margin-left: 20px;">标注多段线</span> </div>
+        <div class="layui-tab-item"><span style="margin-left: 20px;">标注面</span> </div>
+        <div class="layui-tab-item">
+            <div id="prjbiaoZhuList"></div>
+        </div>
+    </div>
+    <divclass="yanseShoiw">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+            <legend>颜色选择</legend>
+        </fieldset>
+        <div style="margin-left: 30px"> <input type="hidden" name="color" value="" id="test-all-input">
+            <div id="test-all"></div>
+        </div>
+</div>'
+
+<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="updpointinfoform">
+    <div class="layui-form-item" style="margin-top:15px;margin-right:5px;">
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1"><label class="layui-form-label">名称</label>
+                    <div class="layui-input-block"><input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" style="width:160px;" /></div>
+                </div>
+            </div>
+            <div class="layui-col-md6" style="margin-top:15px;margin-right:5px;">
+                <div class="grid-demo"><label class="layui-form-label">描述</label>
+                    <div class="layui-input-block"><input type="text" name="remarks" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" style="width:160px;" /></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="margin-top:15px">
+        <div style="position:absolute;right:15px;"><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="updpointinfosubmit" style="width:100px">提交</button></div>
+    </div>
+</form> ;

@@ -1,0 +1,69 @@
+﻿<!--创建项目-->
+<form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="addImageprojectinfoform">
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="image_xmmc_add" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目编码</label>
+        <div class="layui-input-block">
+            <input type="text" name="image_xmbm_add" autocomplete="off" placeholder="请输入"  class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-xs6">
+            <div class="grid-demo grid-demo-bg1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">中心经度</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image_zxjd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="grid-demo">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">中心纬度</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image_zxwd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">坐标系统</label>
+        <div class="layui-input-block">
+            <select id="kjckid" name="image_kjck_add" >
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <input type="text" name="image_ms_add"  placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input type="text" name="image_bz_add"  placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:10px">
+        <div style="position:absolute;right:15px;">
+            <button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button>
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="addImageprojectinfosubmit" style="width:100px">提交</button>
+        </div>
+    </div>
+
+</form>

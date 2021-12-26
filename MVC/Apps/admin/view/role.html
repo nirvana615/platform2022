@@ -1,0 +1,399 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>角色管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--jquery-->
+    <script src="../../../Scripts/jquery-3.3.1.js"></script>
+    <!--Layui-->
+    <link href="../layuiadmin/layui2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="../layuiadmin/style/admin.css" rel="stylesheet" />
+    <script src="../layuiadmin/layui2.5.6/layui.all.js"></script>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div style="padding-bottom: 10px;">
+                    <form class="layui-form" action="" lay-filter="userroleselectform" style="margin-top:0px;border: 1px solid rgba(230,230,230,1)">
+                        <div class="layui-row" style="margin-top:5px;">
+                            <div class="layui-col-xs3">
+                                <div class="grid-demo grid-demo-bg1">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="text-align:center;">用&nbsp;&nbsp;&nbsp;&nbsp;户</label>
+                                        <div class="layui-input-block">
+                                            <select id="userselectid" name="userselect" lay-filter="userselect">
+                                                <option value="">请选择用户</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs3">
+                                <div class="grid-demo">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="text-align:center;">系&nbsp;&nbsp;&nbsp;&nbsp;统</label>
+                                        <div class="layui-input-block">
+                                            <select id="systemselectid" name="systemselect" lay-filter="systemselect">
+                                                <option value="">请选择系统</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs3">
+                                <div class="grid-demo grid-demo-bg1">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="text-align:center;">角&nbsp;&nbsp;&nbsp;&nbsp;色</label>
+                                        <div class="layui-input-block">
+                                            <select id="roleselectid" name="roleselect" lay-filter="roleselect">
+                                                <option value="">请选择角色</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs3">
+                                <div class="grid-demo" style="text-align:right;margin-right:5px;">
+                                    <button id="giveuserrole" class="layui-btn layuiadmin-btn-useradmin" data-type="add">创建角色</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <table id="LAY-role-manage" lay-filter="LAY-role-manage"></table>
+                <script type="text/html" id="table-tootbar-role">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="roledel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jQuery.support.cors = true;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+
+        var userlist = [];//用户列表
+        var systemlist = [];//系统列表
+        var rolelist = [];//角色列表
+
+        //获取用户列表
+        GetUserInfo();
+        function GetUserInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/User/GetUserInfo", type: "get",
+                success: function (data) {
+                    userlist = [];
+
+                    if (data == "") {
+                        document.getElementById("userselectid").innerHTML = '<option value="">无用户信息</option>';
+                    }
+                    else {
+                        document.getElementById("userselectid").innerHTML = '<option value="">请选择用户</option>';
+
+                        var userinfos = JSON.parse(data);
+                        for (var i in userinfos) {
+                            var user = new Object;
+                            user.id = userinfos[i].Id;
+                            user.username = userinfos[i].UserName;
+                            user.aliasname = userinfos[i].AliasName;
+                            userlist.push(user);
+
+                            if (user.aliasname != "") {
+                                document.getElementById("userselectid").innerHTML += '<option value="' + user.id + '">' + user.aliasname + '</option>';
+                            }
+                            else {
+                                document.getElementById("userselectid").innerHTML += '<option value="' + user.id + '">' + user.username + '</option>';
+                            }
+                        }
+
+                        form.render();
+                        form.render('select');
+
+                        if (systemlist.length == 0) {
+                            GetSystemInfo();//获取全部系统
+                        }
+                    }
+                }, datatype: "json"
+            });
+        }
+        //获取系统列表
+        function GetSystemInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/Role/GetSystems", type: "get",
+                success: function (data) {
+                    systemlist = [];
+
+                    if (data == "") {
+                        document.getElementById("systemselectid").innerHTML = '<option value="">无系统信息</option>';
+                    }
+                    else {
+                        document.getElementById("systemselectid").innerHTML = '<option value="">请选择系统</option>';
+
+                        var sysinfos = JSON.parse(data);
+                        for (var i in sysinfos) {
+                            var sys = new Object;
+                            sys.id = sysinfos[i].Id;
+                            sys.sysname = sysinfos[i].SysName;
+                            sys.sysalias = sysinfos[i].SysAlias;
+                            sys.syscode = sysinfos[i].SysCode;
+                            systemlist.push(sys);
+
+                            document.getElementById("systemselectid").innerHTML += '<option value="' + sys.id + '">' + sys.sysname + '</option>';
+                        }
+
+                        form.render();
+                        form.render('select');
+
+                        if (rolelist.length == 0) {
+                            GetRoleInfo();//获取全部角色
+                        }
+                    }
+                }, datatype: "json"
+            });
+        }
+        //获取角色列表
+        function GetRoleInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/Role/GetRoles", type: "get",
+                success: function (data) {
+                    rolelist = [];
+
+                    if (data == "") {
+                        document.getElementById("roleselectid").innerHTML = '<option value="">无角色信息</option>';
+                    }
+                    else {
+                        document.getElementById("roleselectid").innerHTML = ' <option value="">请选择角色</option>';
+
+                        var roleinfos = JSON.parse(data);
+                        for (var i in roleinfos) {
+                            var role = new Object;
+                            role.id = roleinfos[i].Id;
+                            role.rolename = roleinfos[i].RoleName;
+                            role.rolealias = roleinfos[i].RoleAlias;
+                            role.syscode = roleinfos[i].SysCode;
+                            role.rolecode = roleinfos[i].RoleCode;
+                            rolelist.push(role);
+                        }
+
+                        form.render();
+                        form.render('select');
+
+                        GetUserRoleInfo();//获取全部用户-角色关系
+                    }
+                }, datatype: "json"
+            });
+        }
+
+        //切换
+        var userid = "";
+        var sysid = "";
+        var roleid = "";
+
+        form.on('select(userselect)', function (data) {
+            userid = data.value;
+            sysid = null;
+            roleid = null;
+
+            document.getElementById("roleselectid").innerHTML = '<option value="">请选择角色</option>';
+
+            if (systemlist.length > 0) {
+                document.getElementById("systemselectid").innerHTML = ' <option value="">请选择系统</option>';
+
+                for (var i in systemlist) {
+                    document.getElementById("systemselectid").innerHTML += '<option value="' + systemlist[i].id + '">' + systemlist[i].sysname + '</option>';
+                }
+            }
+            else {
+                document.getElementById("systemselectid").innerHTML = '<option value="">无系统信息</option>';
+            }
+
+            form.render();
+            form.render('select');
+        });
+        form.on('select(systemselect)', function (data) {
+            sysid = data.value;
+            roleid = "";
+
+            document.getElementById("roleselectid").innerHTML = '<option value="">请选择角色</option>';
+
+            if (rolelist.length > 0) {
+                var syscode = "";
+
+                for (var i in systemlist) {
+                    if (systemlist[i].id.toString() === sysid) {
+                        syscode = systemlist[i].syscode.toString();
+                    }
+                }
+
+                for (var i in rolelist) {
+                    if (rolelist[i].syscode.toString() === syscode) {
+                        document.getElementById("roleselectid").innerHTML += '<option value="' + rolelist[i].id + '">' + rolelist[i].rolename + '</option>';
+                    }
+                }
+            }
+            else {
+                document.getElementById("roleselectid").innerHTML = '<option value="">无角色信息</option>';
+            }
+
+            form.render();
+            form.render('select');
+        });
+        form.on('select(roleselect)', function (data) {
+            roleid = data.value;
+
+            form.render();
+            form.render('select');
+        });
+
+        //添加用户角色
+        $("#giveuserrole").on("click", function () {
+            form.on('submit(userroleselectform)', function (data) {
+                if (userid == "") {
+                    layer.msg("请先选择用户！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    return false;
+                }
+                if (sysid == "") {
+                    layer.msg("请先选择系统！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    return false;
+                }
+                if (roleid == "") {
+                    layer.msg("请先选择角色！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    return false;
+                }
+
+                data.field.userid = userid;
+                data.field.sysid = sysid;
+                data.field.roleid = roleid;
+
+                $.ajax({
+                    url: window.parent.servicesurl + "/api/Role/AddUserRole", type: "post", data: data.field,
+                    success: function (data) {
+                        var result = JSON.parse(data);
+                        if (result.code == 1) {
+                            GetUserRoleInfo();//更新用户-角色表
+                        }
+
+                        layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    }, datatype: "json"
+                });
+
+                return false;
+            });
+        });
+
+        //用户角色信息
+        var userroledatas = [];
+        //渲染用户-角色表格
+        var userroletable = table.render({
+            elem: '#LAY-role-manage'
+            , id: 'userroletableid'
+            , title: '用户角色'
+            , page: true
+            , even: true
+            , limit: 20
+            , initSort: { field: 'id', type: 'asc' }
+            , toolbar: false
+            , totalRow: false
+            , cols: [[
+                { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
+                , { field: 'username', title: '账号', align: "center" }
+                , { field: 'aliasname', title: '用户名称', align: "center" }
+                , { field: 'sysname', title: '系统名称', align: "center" }
+                , { field: 'rolename', title: '角色名称', align: "center" }
+                , { field: 'cjsj', title: '创建时间', align: "center" }
+                , { fixed: 'right', width: 150, align: 'center', toolbar: '#table-tootbar-role' }
+            ]]
+            , data: userroledatas
+        });
+
+        //请求用户角色信息
+        function GetUserRoleInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/Role/GetUserRole", type: "get",
+                success: function (data) {
+                    userroledatas = [];
+                    userroletable.reload({ id: 'userroletableid', data: userroledatas });
+
+                    if (data == "") {
+                        layer.msg("无用户角色信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    }
+                    else {
+                        if (userlist.length == 0) {
+                            layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        }
+                        else {
+                            var userroles = JSON.parse(data);
+
+                            for (var i in userlist) {
+                                for (var j in userroles) {
+                                    if (userroles[j].UserId == userlist[i].id) {
+                                        var userroledata = new Object;
+                                        userroledata.id = userroles[j].Id;
+                                        userroledata.username = userlist[i].username;
+                                        userroledata.aliasname = userlist[i].aliasname;
+                                        if (rolelist.length > 0) {
+                                            for (var k in rolelist) {
+                                                if (rolelist[k].id == userroles[j].RoleId) {
+                                                    userroledata.rolename = rolelist[k].rolename;
+                                                    if (systemlist.length > 0) {
+                                                        for (var m in systemlist) {
+                                                            if (systemlist[m].syscode == rolelist[k].syscode) {
+                                                                userroledata.sysname = systemlist[m].sysname;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                    else {
+                                                        userroledata.sysname = "NAN";
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        else {
+                                            userroledata.sysname = "NAN";
+                                            userroledata.rolename = "NAN";
+                                        }
+                                        userroledata.cjsj = userroles[j].CJSJ;
+                                        userroledatas.push(userroledata);
+                                    }
+                                }
+                            }
+
+                            userroletable.reload({ id: 'userroletableid', data: userroledatas });
+                        }
+                    }
+                }, datatype: "json"
+            });
+        }
+
+        //表格操作(TODO)
+        table.on('tool(LAY-role-manage)', function (obj) {
+            if (obj.event === 'roledel') {
+                //删除用户
+                layer.confirm('是否删除？', function (index) {
+                    obj.del();
+                    layer.close(index);
+
+                    $.ajax({
+                        url: window.parent.servicesurl + "/api/Role/DeleteUserRole", type: "delete", data: { "id": obj.data.id },
+                        success: function (result) {
+                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        }, datatype: "json"
+                    });
+                });
+            }
+        });
+
+        form.render();
+        form.render('select');
+    </script>
+</body>
+</html>

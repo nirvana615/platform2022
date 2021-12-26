@@ -1,0 +1,71 @@
+﻿<form class="layui-form" style="margin-top:10px" lay-filter="adddatabaseform">
+    <div class="layui-form-item">
+        <label class="layui-form-label">数据库类型</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <select id="dblxid" name="dblx" lay-filter="dbselect" lay-verify="required">
+                <option value="">请选择</option>
+                <option value="0">SQLServer</option>
+                <option value="1">Oracle</option>
+                <option value="2">MySQL</option>
+                <option value="3">PostgreSQL</option>
+                <option value="4">SQLite</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">IP</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" id="dbipid" name="dbip" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">端口</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" id="dbportid" name="dbport" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required|number" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">数据库名称</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" id="dbnameid" name="dbname" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">账户</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" id="dbuserid" name="dbuser" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" id="dbpwid" name="dbpw" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">数据库地址</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" id="dbaddid" name="dbadd" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:30px">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="adddatabasesubmit" style="width:80px">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button>
+        </div>
+    </div>
+</form>

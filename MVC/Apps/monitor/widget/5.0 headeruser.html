@@ -1,0 +1,36 @@
+﻿<form class="layui-form" style="margin-top:10px;margin-right:5px;" lay-filter="monitor-header-user-update">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:50px;">用户名</label>
+        <div class="layui-input-block" style="margin-left:80px;margin-right:10px;">
+            <input type="text" name="username" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:50px;">旧密码</label>
+        <div class="layui-input-block" style="margin-left:80px;margin-right:10px;">
+            <input type="password" name="oldpassword" autocomplete="off" placeholder="请输入旧密码" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:50px;">新密码</label>
+        <div class="layui-input-block" style="margin-left:80px;margin-right:10px;">
+            <input type="password" name="newpassword1" autocomplete="off" placeholder="请输入新密码" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:50px;"></label>
+        <div class="layui-input-block" style="margin-left:80px;margin-right:10px;">
+            <input type="password" name="newpassword2" autocomplete="off" placeholder="请再次输入新密码" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:30px">
+        <div style="position:absolute;right:140px;">
+            <button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button>
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="monitor-header-user-update-submit" style="width:100px">提交</button>
+        </div>
+    </div>
+</form>

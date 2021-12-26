@@ -1,0 +1,128 @@
+﻿<!--创建点云项目-->
+<form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="addpointcloud_projectform">
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="xmmc" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md6" style="width:50%">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">中心经度</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="zxjd" lay-verify="required|number" autocomplete="off" placeholder="请输入" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6" style="width:50%">
+                <div class="grid-demo">
+                    <label class="layui-form-label">中心纬度</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="zxwd" lay-verify="required|number" autocomplete="off" placeholder="请输入" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">行政区划</label>
+        <div class="layui-input-inline" style="width:200px;">
+            <select id="provinceid" name="province" lay-verify="required">
+                <option value="">省/市</option>
+                <option value="0">重庆市</option>
+            </select>
+        </div>
+        <div class="layui-input-inline" style="width:200px;">
+            <select id="cityid" name="city" lay-verify="required">
+                <option value="">市辖区/县</option>
+                <option value="0">市辖区</option>
+                <option value="1">县</option>
+            </select>
+        </div>
+        <div class="layui-input-inline" style="width:200px;">
+            <select id="districtid" name="district" lay-verify="required">
+                <option value="">区/县</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目位置</label>
+        <div class="layui-input-block">
+            <input type="text" name="xmwz" autocomplete="off" placeholder="请输入" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md6" style="width:50%">
+                <div class="grid-demo grid-demo-bg1">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">创建时间</label>
+                        <div class="layui-input-inline" style="width:250px;">
+                            <input type="text" id="xmkssjid" name="xmkssj" lay-verify="date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6" style="width:50%">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">坐标系统</label>
+                    <div class="layui-input-block">
+                        <select id="kjckid" name="kjck" lay-verify="required">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md6" style="width:50%">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">是否有三维模型</label>
+                    <div class="layui-input-block">
+                        <select id="swmxid" name="swmx" lay-verify="required">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6" style="width:50%">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">是否结束</label>
+                    <div class="layui-input-block">
+                        <select id="sfjsid" name="sfjs" lay-verify="required">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:5px">
+        <div style="position:absolute;right:15px;">
+            <button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button>
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="addprojectinfosubmit" style="width:100px">提交</button>
+        </div>
+    </div>
+</form>

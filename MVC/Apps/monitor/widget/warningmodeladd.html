@@ -1,0 +1,48 @@
+﻿<!--新增预警模型-->
+<form class="layui-form" action="" lay-filter="warningmodel-form-add" style="margin-top:10px;margin-right:10px;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:90px;">预警模型名称</label>
+        <div class="layui-input-block" style="margin-left:120px;">
+            <input type="text" name="mxmc" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:90px;">灾害体</label>
+        <div class="layui-input-block" style="margin-left:120px;">
+            <select id="warningmodel-add-zht" name="zht" lay-filter="warningmodel-add-zht" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:90px;padding-top:140px;">预警判据</label>
+        <div class="layui-input-block" style="margin-left:120px;height:300px;border:solid;border-color:#e6e6e6;border-width:1px;">
+            <div id="warningmodel-add-yjpj"></div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:90px;">预警条件</label>
+        <div class="layui-input-block" style="margin-left:120px;">
+            <select id="warningmodel-add-yjtj" name="yjtj" lay-filter="warningmodel-add-yjtj" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:90px;padding-top:40px;">备注</label>
+        <div class="layui-input-block" style="margin-left:120px;">
+            <textarea name="bz" class="layui-textarea" style="min-height:100px!important;"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-bottom:10px">
+        <div style="position:absolute;right:10px;bottom:10px;">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="warningmodel-save" style="width:100px">保存</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,64 @@
+﻿<!--创建目标-->
+<form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="addImagetargetinfoform">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">目标名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="image_mbmc_add" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">目标编号</label>
+        <div class="layui-input-block">
+            <input type="text" name="image_mbbh_add" autocomplete="off" placeholder="请输入目标编号：如W01#T01" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">目标类型</label>
+        <div class="layui-input-block">
+            <select id="mblxid" name="image_mblx_add" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">X</label>
+        <div class="layui-input-block">
+            <input type="text" name="image_x_add" autocomplete="off" placeholder="请输入空间直角坐标 X" lay-verify="required|number" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">Y</label>
+        <div class="layui-input-block">
+            <input type="text" name="image_y_add" autocomplete="off" placeholder="请输入空间直角坐标 Y" lay-verify="required|number" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">Z</label>
+        <div class="layui-input-block">
+            <input type="text" name="image_z_add" autocomplete="off" placeholder="请输入空间直角坐标 Z" lay-verify="required|number" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">坐标系统</label>
+        <div class="layui-input-block">
+            <select id="kjckid" name="image_kjck_add"></select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input type="text" name="image_bz_add" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:10px">
+        <div style="position:absolute;right:15px;">
+            <button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button>
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="addImagetargetinfosubmit" style="width:100px">提交</button>
+        </div>
+    </div>
+
+</form>

@@ -1,0 +1,61 @@
+﻿<!--设置点云显示样式-->
+<form class="layui-form" action="" lay-filter="setpointdisplystyle-form" style="margin-top:10px;margin-right:10px;">
+    <div class="layui-form-item" style="margin-left:10px">
+        <div class="layui-row">
+            <div class="layui-col-xs6" style="width:90%">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">最大值(mm)</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="deformation_max" name="deformation_max" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-left:10px">
+        <div class="layui-row">
+
+
+            <div class="layui-col-xs6" style="width:90%">
+                <div class="grid-demo">
+                    <label class="layui-form-label">最小值(mm)</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="deformation_min" name="deformation_min" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-xs6" style="width:90%">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">点云大小</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="pointsize" name="pointsize" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-xs6" style="width:90%">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">颜色等级</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="colorgrade" name="colorgrade" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="margin-bottom:10px;width:90%">
+        <div style="position:absolute;right:10px;bottom:10px;">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="setpointdisplystyle-confirm" style="width:100px">确认</button>
+        </div>
+    </div>
+</form>

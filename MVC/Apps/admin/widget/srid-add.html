@@ -1,0 +1,29 @@
+﻿<form class="layui-form" style="margin-top:10px" lay-filter="addsridform">
+    <div class="layui-form-item">
+        <label class="layui-form-label">SRID</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="srid" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="name" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">WKT</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <textarea name="wkt" placeholder="请输入" class="layui-textarea" lay-verify="required" style="height:150px"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:30px">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="addsridsubmit" style="width:80px">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button>
+        </div>
+    </div>
+</form>

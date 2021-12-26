@@ -1,0 +1,82 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>无人机影像分析系统</title>
+    <!--jquery-->
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <!--CesiumJS-->
+    <link href="~/Scripts/Cesium/Widgets/widgets.css" rel="stylesheet" />
+    <script src="~/Scripts/Cesium/Cesium.js"></script>
+    <script src="~/Scripts/navigation/viewerCesiumNavigationMixin.min.js"></script>
+    <script src="~/Scripts/navigation/SpirographPositionProperty.js"></script>
+    <!--Layui-->
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.all.js"></script>
+    <!--ECharts-->
+    <script src="~/Scripts/ECharts/echarts.min.js"></script>
+    <!--EXIF-->
+    <script src="~/Scripts/exif.js"></script>
+    <!--OpenSeadragon-->
+    <script src="~/Scripts/openseadragon/openseadragon.min.js"></script>
+
+    <link href="~/Apps/image/css/main.css" rel="stylesheet" />
+    <style>
+        body {
+            overflow-y: scroll; /* 禁止刷新后出现横向滚动条 */
+        }
+    </style>
+</head>
+<body>
+    <!--顶栏-->
+    <div id="header">
+        <!--系统logo-->
+        <img id="syslogo" src="~/Resources/img/head/imagelogo.png" />
+
+        <!--当前项目-->
+        <div class="layui-inline" style="position:absolute;left:420px;top:5px;bottom:5px">
+            <div class="layui-input-inline" id="currentprojectoperate">
+                <select id="currentproject"></select>
+            </div>
+        </div>
+
+        <!--工具栏-->
+        <div style="position:absolute;top:7px;right:5px">
+            <button id="userbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-user"><span style="margin-left:5px">@ViewBag.User</span></i></button>
+            <button id="noticebtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-notice"></i></button>
+            <button id="setbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-set-fill"></i></button>
+            <a href="~/Platform/Logout">
+                <button id="exitbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-logout"></i></button>
+            </a>
+        </div>
+
+    </div>
+
+    <!--地图-->
+    <div id="map"></div>
+
+    <!--javascript-->
+    <script>
+        var servicesurl = @Html.Raw(Json.Encode(ViewBag.ServicesURL));
+        var datasurl = @Html.Raw(Json.Encode(ViewBag.DatasURL));
+    </script>
+
+    <script src="~/Apps/image/js/1.1-all.js"></script>
+    <script src="~/Apps/image/js/1.2-para.js"></script>
+    <script src="~/Apps/image/js/3.0-map.js"></script>
+    <script src="~/Apps/image/js/4.1-imageprojectlist.js"></script>
+    <script src="~/Apps/image/js/4.2-imageprojectinfo.js"></script>
+    <script src="~/Apps/image/js/4.3-targetinfo.js"></script>
+    <script src="~/Apps/image/js/4.4-multipleimageupload.js"></script>
+    <script src="~/Apps/image/js/6.0-util.js"></script>
+    <script src="~/Apps/image/js/6.1-imageresult.js"></script>
+    <script src="~/Apps/image/js/5.0-header.js"></script>
+
+</body>
+</html>

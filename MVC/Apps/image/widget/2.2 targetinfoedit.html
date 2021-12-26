@@ -1,0 +1,154 @@
+﻿<!--编辑目标-->
+
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px">
+    <ul class="layui-tab-title">
+        <li class="layui-this">基本信息</li>
+        <!--<li>首期</li>-->
+        <li>靶区</li>
+        <li>时序影像</li>
+    </ul>
+
+
+    <div class="layui-tab-content" style="margin:0px 0px">
+        <!--目标基本信息-->
+        <div class="layui-tab-item layui-show">
+
+
+            <form class="layui-form" style="margin-top:0px" lay-filter="editImagetargetinfoform">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">目标名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image_mbmc_edit" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">目标编号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image_mbbh_edit" autocomplete="off" placeholder="请输入" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">目标类型</label>
+                    <div class="layui-input-block">
+                        <select id="mblxid" name="image_mblx_edit" lay-verify="required">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">X</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image_x_edit" autocomplete="off" placeholder="请输入空间直角坐标 X" lay-verify="required|number" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Y</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image_y_edit" autocomplete="off" placeholder="请输入空间直角坐标 Y" lay-verify="required|number" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Z</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image_z_edit" autocomplete="off" placeholder="请输入空间直角坐标 Z" lay-verify="required|number" class="layui-input" />
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">坐标系统</label>
+                    <div class="layui-input-block">
+                        <select id="kjckid" name="image_kjck_edit"></select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image_bz_edit" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top:10px">
+                    <div style="position:absolute;right:15px;">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="editImagetargetinfosubmit" style="width:100px">保存</button>
+                    </div>
+                </div>
+            </form>
+
+
+
+
+        </div>
+
+
+        <!--首期影像-->
+        <!--->
+        <div class="layui-tab-item">
+
+            <form class="layui-form" style="margin-top:10px" lay-filter="viewfirstimageform">
+                <div class="layui-form-item" style="height: 220px;">
+                    <div class="layui-upload">
+                        <div class="layui-row" style="margin-top:20px;margin-left:10px;margin-right:20px">
+                            <div class="layui-col-xs6">
+                                <div class="grid-demo grid-demo-bg1">
+                                    <button type="button" class="layui-btn-fluid layui-btn layui-btn-primary layui-border-green" id="image_rois_view">查看首期影像及靶区分布</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-upload-list" style="height:420px;margin-top:10px;margin-left:10px;margin-right:10px;background-color:rgba(25,25,0,0.11)">
+                            <p style="color:green;font-size:15px;">显示首期影像，查看靶区分布</p>
+                            <img class="layui-upload-img" id="image_firstimage_img" name="image_firstimage_img" style="width:100%;height:auto;vertical-align:middle">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+        <!--靶区ROI信息-->
+        <div class="layui-tab-item">
+                <div class="layui-card-body" style="padding:0px">
+                    <!--表格-->
+                    <table id="image-roi-edit" lay-filter="image-roi-edit"></table>
+                    <!--按钮-->
+                    <script type="text/html" id="addroi">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="addroi">添加靶区</button>
+                        </div>
+                    </script>
+                    <!--数据操作项-->
+                    <script type="text/html" id="table-toolbar-roi">
+                        <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="roiview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                        <a class="layui-btn layui-bg-blue layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="roiedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                        <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="roidel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                    </script>
+                </div>
+            </div>
+
+        <!--时序影像-->
+        <div class="layui-tab-item">
+                <div class="layui-card-body" style="padding:0px">
+                    <!--表格-->
+
+                    <table id="image-timeimage-edit" lay-filter="image_timeimage-edit"></table>
+                    <!--按钮——上传目标影像-->
+                    <script type="text/html" id="addtimeimage">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="addtimeimage">添加时序影像</button>
+                        </div>
+                    </script>
+                    <!--数据操作项-->
+                    <script type="text/html" id="table-toolbar-timeimage">
+                        <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="timeimageview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                                            
+                        <a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="timeimagedel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+                    </script>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+

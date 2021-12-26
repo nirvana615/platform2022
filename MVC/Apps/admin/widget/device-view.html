@@ -1,0 +1,223 @@
+﻿<form class="layui-form" style="margin-top:10px" lay-filter="adddeviceform">
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <!--标签-->
+        <ul class="layui-tab-title">
+            <li class="layui-this" style="width:100px">设备信息</li>
+            <li style="width:100px">设备厂家</li>
+            <li style="width:100px">设备经销商</li>
+            <li style="width:100px">监测数据库</li>
+            <li style="width:100px">ETL SQL</li>
+        </ul>
+        <!--内容-->
+        <div class="layui-tab-content">
+            <!--设备信息-->
+            <div class="layui-tab-item layui-show">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">唯一编码</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="code" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">设备名称</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="sbmc" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">设备编号</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="sbbh" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">设备型号</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="sbxh" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">设备类型</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="sblx" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">供电方式</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="gdfs" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所属用户</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="bsm" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备&emsp;&emsp;注</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="bz" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+            </div>
+            <!--设备厂家-->
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">厂家名称</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="cjmc" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">厂家简称</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="cjjc" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">厂家编码</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="cjbm" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">备&emsp;&emsp;注</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <textarea name="cjbz" class="layui-textarea" readonly="readonly" style="height:250px"></textarea>
+                    </div>
+                </div>
+            </div>
+            <!--设备经销商-->
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">经销商名称</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="jxsmc" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">经销商简称</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="jxsjc" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">经销商编码</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="jxsbm" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">备&emsp;&emsp;&emsp;注</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <textarea name="jxsbz" class="layui-textarea" readonly="readonly" style="height:250px"></textarea>
+                    </div>
+                </div>
+            </div>
+            <!--监测数据库-->
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">数据库类型</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="dblx" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">IP</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="dbip" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">端&emsp;&emsp;&emsp;口</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="dbport" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">数据库名称</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="dbname" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">账&emsp;&emsp;&emsp;户</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="dbuser" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密&emsp;&emsp;&emsp;码</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="dbpw" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">数据库地址</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="dbadd" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备&emsp;&emsp;&emsp;注</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="dbbz" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+            <!--ETL SQL-->
+            <div class="layui-tab-item">
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">读取SQL</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <textarea name="readsql" class="layui-textarea" readonly="readonly" style="height:145px"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">读取备注</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="readbz" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">写入SQL</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <textarea name="writesql" class="layui-textarea" readonly="readonly" style="height:145px"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">写入备注</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="writebz" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

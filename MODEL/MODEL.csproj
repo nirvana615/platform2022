@@ -1,0 +1,313 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9A7AE117-6EE2-4D0A-B188-EB84EFD8250A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MODEL</RootNamespace>
+    <AssemblyName>MODEL</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="COM">
+      <HintPath>..\COM\COM.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.14.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.14.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="data\common\survey\BlockExtent.cs" />
+    <Compile Include="data\flzone\flzproject\FlzData.cs" />
+    <Compile Include="data\flzone\flzproject\FlzDataLayer.cs" />
+    <Compile Include="data\flzone\flzproject\FlzProject.cs" />
+    <Compile Include="data\flzone\flzproject\FlzSteepHillInfo.cs" />
+    <Compile Include="data\flzone\flzproject\FlzWindowInfo.cs" />
+    <Compile Include="data\imagemap\MapImageProjecModel.cs" />
+    <Compile Include="data\imagemap\MapImageProjecTarget.cs" />
+    <Compile Include="data\imagemap\MapTargetImageInfo.cs" />
+    <Compile Include="data\imagemap\MapTargetRoi.cs" />
+    <Compile Include="data\imagemap\MapUserImageProject.cs" />
+    <Compile Include="data\image\ImageAllResultInfo.cs" />
+    <Compile Include="data\image\ImageInfo.cs" />
+    <Compile Include="data\image\ImageProject.cs" />
+    <Compile Include="data\image\ImageProjectInfo.cs" />
+    <Compile Include="data\image\ImageResult.cs" />
+    <Compile Include="data\image\ImageXMP.cs" />
+    <Compile Include="data\image\Roi.cs" />
+    <Compile Include="data\image\SurModelInfos.cs" />
+    <Compile Include="data\image\Target.cs" />
+    <Compile Include="data\image\TargetInfos.cs" />
+    <Compile Include="data\managemap\MapUserMessage.cs" />
+    <Compile Include="data\managemap\MapUserRole.cs" />
+    <Compile Include="data\manage\Message.cs" />
+    <Compile Include="data\manage\Systems.cs" />
+    <Compile Include="data\manage\Role.cs" />
+    <Compile Include="data\modelmap\MapModelProjecTask.cs" />
+    <Compile Include="data\modelmap\MapUserModelProject.cs" />
+    <Compile Include="data\model\ModelProject.cs" />
+    <Compile Include="data\model\ModelProjectInfo.cs" />
+    <Compile Include="data\model\ModelTask.cs" />
+    <Compile Include="data\model\ModelTaskInfos.cs" />
+    <Compile Include="data\monitormap\MapDeviceInterval.cs" />
+    <Compile Include="data\monitormap\MapDisasterProperty.cs" />
+    <Compile Include="data\monitormap\MapDisasterCriterion.cs" />
+    <Compile Include="data\monitormap\MapDisasterWarning.cs" />
+    <Compile Include="data\monitormap\MapDisasterThreshold.cs" />
+    <Compile Include="data\monitormap\MapModelCriterion.cs" />
+    <Compile Include="data\monitormap\MapProjectWarningModel.cs" />
+    <Compile Include="data\monitormap\MapProjectWarningInfo.cs" />
+    <Compile Include="data\monitormap\MapMonitorThreshold.cs" />
+    <Compile Include="data\monitormap\MapUserMonitorProject.cs" />
+    <Compile Include="data\monitor\device\DeviceCountDay.cs" />
+    <Compile Include="data\monitor\device\DeviceCountResult.cs" />
+    <Compile Include="data\monitor\data\GNSSZheXian.cs" />
+    <Compile Include="data\monitor\data\Interval.cs" />
+    <Compile Include="data\monitor\data\DataStatistics.cs" />
+    <Compile Include="data\monitor\data\GNSSMonitor.cs" />
+    <Compile Include="data\monitor\data\LFMonitor.cs" />
+    <Compile Include="data\monitor\data\QJMonitor.cs" />
+    <Compile Include="data\monitor\data\SBWYMonitor.cs" />
+    <Compile Include="data\monitor\data\YL.cs" />
+    <Compile Include="data\monitor\data\LF.cs" />
+    <Compile Include="data\monitor\data\YLDelta.cs" />
+    <Compile Include="data\monitor\data\LFDelta.cs" />
+    <Compile Include="data\monitor\data\YLMonitor.cs" />
+    <Compile Include="data\monitor\data\YLValue.cs" />
+    <Compile Include="data\monitor\data\LFValue.cs" />
+    <Compile Include="data\monitor\data\SBWYValue .cs" />
+    <Compile Include="data\monitor\data\QJValue .cs" />
+    <Compile Include="data\monitor\data\QJDelta.cs" />
+    <Compile Include="data\monitor\data\QJ.cs" />
+    <Compile Include="data\monitor\data\RAIN.cs" />
+    <Compile Include="data\monitor\data\RAINDelta.cs" />
+    <Compile Include="data\monitor\data\SBWY.cs" />
+    <Compile Include="data\monitor\data\SBWYDelta.cs" />
+    <Compile Include="data\monitor\data\Value.cs" />
+    <Compile Include="data\monitor\data\GNSS.cs" />
+    <Compile Include="data\monitor\data\GNSSDelta.cs" />
+    <Compile Include="data\monitor\data\GNSSValue.cs" />
+    <Compile Include="data\monitor\data\WATER.cs" />
+    <Compile Include="data\monitor\data\WATERDelta.cs" />
+    <Compile Include="data\monitor\disaster\Disaster.cs" />
+    <Compile Include="data\monitor\disaster\DisasterProperty.cs" />
+    <Compile Include="data\monitor\disaster\DisasterString.cs" />
+    <Compile Include="data\monitor\disaster\RockfallWarning.cs" />
+    <Compile Include="data\monitor\disaster\RockfallWarningString.cs" />
+    <Compile Include="data\monitor\data\WATERMonitor.cs" />
+    <Compile Include="data\monitor\layer\CenterPoint.cs" />
+    <Compile Include="data\monitor\layer\DisasterLayer.cs" />
+    <Compile Include="data\monitor\layer\DisasterLayers.cs" />
+    <Compile Include="data\monitor\layer\Extent.cs" />
+    <Compile Include="data\monitor\layer\MonitorLayer.cs" />
+    <Compile Include="data\monitor\layer\MonitorPointLayer.cs" />
+    <Compile Include="data\monitor\layer\MonitorPointLayers.cs" />
+    <Compile Include="data\monitor\layer\MonitorSectoinLayer.cs" />
+    <Compile Include="data\monitor\layer\MonitorSectoinLayers.cs" />
+    <Compile Include="data\monitor\layer\ProjectLayer.cs" />
+    <Compile Include="data\monitor\layer\SurModels.cs" />
+    <Compile Include="data\monitor\design\Monitor.cs" />
+    <Compile Include="data\monitor\design\MonitorInfo.cs" />
+    <Compile Include="data\monitor\design\MonitorString.cs" />
+    <Compile Include="data\monitor\patrol\DianYun.cs" />
+    <Compile Include="data\monitor\patrol\DianYunChanges.cs" />
+    <Compile Include="data\monitor\patrol\DianYunUrl.cs" />
+    <Compile Include="data\monitor\patrol\PatrolEquipmentInfo.cs" />
+    <Compile Include="data\monitor\patrol\PatrolPhotoInfo.cs" />
+    <Compile Include="data\monitor\design\MonitorProject.cs" />
+    <Compile Include="data\monitor\design\MonitorProjectString.cs" />
+    <Compile Include="data\monitor\disaster\RockfallPropertyString.cs" />
+    <Compile Include="data\monitor\disaster\RockfallProperty.cs" />
+    <Compile Include="data\monitor\design\Section.cs" />
+    <Compile Include="data\monitor\design\SectionString.cs" />
+    <Compile Include="data\common\survey\SurDOM.cs" />
+    <Compile Include="data\common\survey\SurDSM.cs" />
+    <Compile Include="data\common\survey\SurMap.cs" />
+    <Compile Include="data\common\survey\SurModel.cs" />
+    <Compile Include="data\common\survey\SurPointCloud.cs" />
+    <Compile Include="data\monitor\layer\LayerList.cs" />
+    <Compile Include="data\manage\Coordinate.cs" />
+    <Compile Include="data\monitor\device\DatabaseString.cs" />
+    <Compile Include="data\monitor\device\DeviceString.cs" />
+    <Compile Include="data\monitor\device\Factory.cs" />
+    <Compile Include="data\monitor\device\Sale.cs" />
+    <Compile Include="data\monitor\device\SQLString.cs" />
+    <Compile Include="data\manage\XZQ.cs" />
+    <Compile Include="data\monitormap\MapDisasterMonitor.cs" />
+    <Compile Include="data\monitormap\MapDisasterSection.cs" />
+    <Compile Include="data\monitormap\MapMonitorDevice.cs" />
+    <Compile Include="data\monitormap\MapProjectDisaster.cs" />
+    <Compile Include="data\monitormap\MapProjectMonitor.cs" />
+    <Compile Include="data\monitormap\MapProjectSurvey.cs" />
+    <Compile Include="data\monitormap\MapSectiontMonitor.cs" />
+    <Compile Include="data\monitor\warning\MonitorThresholdString.cs" />
+    <Compile Include="data\monitor\warning\MonitorThreshold.cs" />
+    <Compile Include="data\monitor\warning\RockfallThresholdString.cs" />
+    <Compile Include="data\monitor\warning\RockfallThreshold.cs" />
+    <Compile Include="data\monitor\warning\Threshold.cs" />
+    <Compile Include="data\monitor\warning\ThresholdData.cs" />
+    <Compile Include="data\monitor\warning\WarningModel.cs" />
+    <Compile Include="data\monitor\warning\WarningCriterion.cs" />
+    <Compile Include="data\monitor\warning\WarningInfoString.cs" />
+    <Compile Include="data\monitor\warning\WarningInfo.cs" />
+    <Compile Include="data\monitor\warning\WarningModelInfo.cs" />
+    <Compile Include="data\pointcloudmap\MapUserPointCloudProject.cs" />
+    <Compile Include="data\pointcloud\layer\ChangePositions.cs" />
+    <Compile Include="data\pointcloud\layer\ChangesLayer.cs" />
+    <Compile Include="data\pointcloud\layer\HeatMapValues.cs" />
+    <Compile Include="data\pointcloud\layer\Layer.cs" />
+    <Compile Include="data\pointcloud\layer\SurPointClouds.cs" />
+    <Compile Include="data\pointcloud\pointdata\PCloudData.cs" />
+    <Compile Include="data\pointcloud\PolygonInfo.cs" />
+    <Compile Include="data\pointcloud\project\ICPPara.cs" />
+    <Compile Include="data\pointcloud\project\Overlap.cs" />
+    <Compile Include="data\pointcloud\project\PCloudProject.cs" />
+    <Compile Include="data\pointcloud\project\ProjectSetUp.cs" />
+    <Compile Include="data\pointcloud\project\Region.cs" />
+    <Compile Include="data\pointcloud\project\Shape.cs" />
+    <Compile Include="data\pointcloud\project\StatisticoutlierPara.cs" />
+    <Compile Include="data\pointcloud\task\HeatMapValue.cs" />
+    <Compile Include="data\pointcloud\task\HeatMapValue2.cs" />
+    <Compile Include="data\pointcloud\task\PointCloudChanges.cs" />
+    <Compile Include="data\pointcloud\task\PointCloudTask.cs" />
+    <Compile Include="data\pointcloud\task\RegistrationPoints.cs" />
+    <Compile Include="data\pointcloud\task\TaskMatch.cs" />
+    <Compile Include="data\rock\RockData.cs" />
+    <Compile Include="data\rock\RockDataLayer.cs" />
+    <Compile Include="data\rock\RockDesignData.cs" />
+    <Compile Include="data\rock\RockMapUserMonitorProject.cs" />
+    <Compile Include="data\rock\RockProject.cs" />
+    <Compile Include="data\rock\RockSelectLine.cs" />
+    <Compile Include="data\rock\RockWindowInfo.cs" />
+    <Compile Include="data\uavmap\MapCameraPhotoRatio.cs" />
+    <Compile Include="data\uavmap\MapRouteWayarea.cs" />
+    <Compile Include="data\uavmap\MapWaypointAction.cs" />
+    <Compile Include="data\uavmap\MapWaypointMBTXCJ.cs" />
+    <Compile Include="data\uavmap\MapRouteWaypoint.cs" />
+    <Compile Include="data\uavmap\MapRouteDrone.cs" />
+    <Compile Include="data\uavmap\MapDronePayload.cs" />
+    <Compile Include="data\uavmap\MapUavProjectSurvey.cs" />
+    <Compile Include="data\uav\app\RemoteMission.cs" />
+    <Compile Include="data\uav\drone\Camera.cs" />
+    <Compile Include="data\uav\CameraPhotoRatio.cs" />
+    <Compile Include="data\uav\drone\DroneInfo.cs" />
+    <Compile Include="data\uav\mission\UavMission.cs" />
+    <Compile Include="data\uav\prj\ModelPointClouds.cs" />
+    <Compile Include="data\uav\prj\UavProjectData.cs" />
+    <Compile Include="data\uav\prj\UavRouteInfos.cs" />
+    <Compile Include="data\uav\drone\Lidar.cs" />
+    <Compile Include="data\uav\drone\Payload.cs" />
+    <Compile Include="data\uav\UavMBTXCJ.cs" />
+    <Compile Include="data\uav\UavAction.cs" />
+    <Compile Include="data\uav\UavWayarea.cs" />
+    <Compile Include="data\uav\UavWaypoint.cs" />
+    <Compile Include="data\uav\UavCamera.cs" />
+    <Compile Include="data\uav\UavDrone.cs" />
+    <Compile Include="data\uav\waypoint\ActionInfo.cs" />
+    <Compile Include="data\uav\waypoint\adjust.cs" />
+    <Compile Include="data\uav\waypoint\blh.cs" />
+    <Compile Include="data\uav\waypoint\CornerPoint.cs" />
+    <Compile Include="data\uav\waypoint\extent.cs" />
+    <Compile Include="data\uav\waypoint\photogrammetry.cs" />
+    <Compile Include="data\uav\waypoint\WaypointInfo.cs" />
+    <Compile Include="data\uav\waypoint\xyz.cs" />
+    <Compile Include="enum\EnumModel.cs" />
+    <Compile Include="enum\EnumPointCloud.cs" />
+    <Compile Include="enum\EnumFlz.cs" />
+    <Compile Include="enum\EnumIMG.cs" />
+    <Compile Include="enum\EnumMonitor.cs" />
+    <Compile Include="parse\ParseFlzoneHelper.cs" />
+    <Compile Include="parse\ParseImageHelper.cs" />
+    <Compile Include="parse\ParseManageHelper.cs" />
+    <Compile Include="parse\ParseModelHelper.cs" />
+    <Compile Include="parse\ParseMonitorHelper.cs" />
+    <Compile Include="parse\ParsePointCloudHelper.cs" />
+    <Compile Include="parse\ParseRockHelper.cs" />
+    <Compile Include="parse\ParseUavHelper.cs" />
+    <Compile Include="data\uavmap\MapProjectRoute.cs" />
+    <Compile Include="data\uavmap\MapUserUavProject.cs" />
+    <Compile Include="data\uav\custom\CustomAction.cs" />
+    <Compile Include="data\uav\custom\CustomMission.cs" />
+    <Compile Include="data\uav\custom\CustomWayline.cs" />
+    <Compile Include="data\uav\custom\Takeoff.cs" />
+    <Compile Include="data\uav\custom\CustomWaypoint.cs" />
+    <Compile Include="data\uav\prj\UavProjectInfo.cs" />
+    <Compile Include="data\uav\UavRoute.cs" />
+    <Compile Include="data\uav\UavProject.cs" />
+    <Compile Include="enum\Enum.cs" />
+    <Compile Include="data\monitor\device\Database.cs" />
+    <Compile Include="data\monitor\device\Device.cs" />
+    <Compile Include="data\monitor\device\SQL.cs" />
+    <Compile Include="data\manage\User.cs" />
+    <Compile Include="data\monitormap\MapDeviceDatabase.cs" />
+    <Compile Include="data\monitormap\MapDeviceSql.cs" />
+    <Compile Include="data\monitormap\MapDeviceValue.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="enum\EnumEW.cs" />
+    <Compile Include="utility\DCR.cs" />
+    <Compile Include="utility\ETL.cs" />
+    <Compile Include="data\common\survey\SurveyData.cs" />
+    <Compile Include="enum\EnumUAV.cs" />
+    <Compile Include="utility\IMP.cs" />
+    <Compile Include="utility\ResponseResult.cs" />
+    <Compile Include="word\Assistance.cs" />
+    <Compile Include="word\Const.cs" />
+    <Compile Include="word\Entity\AbstractFillingContainer.cs" />
+    <Compile Include="word\Entity\AbstractInfo.cs" />
+    <Compile Include="word\Entity\CellInfo.cs" />
+    <Compile Include="word\Entity\CellOfRowInfo.cs" />
+    <Compile Include="word\Entity\CellStructureInfo.cs" />
+    <Compile Include="word\Entity\ImgInfo.cs" />
+    <Compile Include="word\Entity\ParagraphBegin.cs" />
+    <Compile Include="word\Entity\ParagraphEnd.cs" />
+    <Compile Include="word\Entity\RowInfo.cs" />
+    <Compile Include="word\Entity\RowStructureInfo.cs" />
+    <Compile Include="word\Entity\TableStructureInfo.cs" />
+    <Compile Include="word\Entity\TagInfo.cs" />
+    <Compile Include="word\Entity\TblInfo.cs" />
+    <Compile Include="word\Entity\TxtInfo.cs" />
+    <Compile Include="word\ExtensionMethod.cs" />
+    <Compile Include="word\WordMLHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="data\uav\prj\ModelPointCloud.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

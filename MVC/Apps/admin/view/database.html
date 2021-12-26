@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>自动化监测数据库</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--jquery-->
+    <script src="../../../Scripts/jquery-3.3.1.js"></script>
+    <!--Layui-->
+    <link href="../layuiadmin/layui2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="../layuiadmin/style/admin.css" rel="stylesheet" />
+    <script src="../layuiadmin/layui2.5.6/layui.all.js"></script>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div style="padding-bottom: 10px;">
+                    <button id="adddatabase" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新监测数据库</button>
+                </div>
+
+                <table id="LAY-database-manage" lay-filter="LAY-database-manage"></table>
+                <script type="text/html" id="table-toolbar-database">
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="databaseedit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="databasedel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jQuery.support.cors = true;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var databasedatas = [];
+        var adddatabaselayerindex = null;
+
+        GetDatabaseInfo();
+
+        var databasetable = table.render({
+            elem: '#LAY-database-manage'
+            , id: 'databasetableid'
+            , title: '自动化监测数据库信息'
+            , page: true
+            , even: true
+            , limit: 20
+            , initSort: { field: 'id', type: 'asc' }
+            , toolbar: false
+            , totalRow: false
+            , cols: [[
+                { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
+                , { field: 'dblx', title: '数据库类型', align: "center" }
+                , { field: 'dbip', title: 'IP', align: "center" }
+                , { field: 'dbport', title: '端口', width: 100, align: "center" }
+                , { field: 'dbname', title: '数据库名称', align: "center" }
+                , { field: 'dbuser', title: '账户', align: "center" }
+                , { field: 'dbpw', title: '密码', align: "center" }
+                , { field: 'dbadd', title: '数据库地址', align: "center" }
+                , { field: 'dbconn', title: '连接信息', align: "center" }
+                , { field: 'cjsj', title: '创建时间', width: 180, align: "center" }
+                , { field: 'bz', title: '备注', align: "center" }
+                , { fixed: 'right', width: 200, align: 'center', toolbar: '#table-toolbar-database' }
+            ]]
+            , data: databasedatas
+        });
+
+        table.on('tool(LAY-database-manage)', function (obj) {
+            var layEvent = obj.event;
+
+            if (layEvent === 'databaseedit') {
+                adddatabaselayerindex = layer.open({
+                    type: 1
+                    , title: ['编辑监测数据库信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                    , area: ['400px', '550px']
+                    , shade: [0.5, '#393D49']
+                    , offset: 'auto'
+                    , closeBtn: 1
+                    , maxmin: false
+                    , content: '<form class="layui-form" style="margin-top:10px" lay-filter="editdatabaseform"><div class="layui-form-item"><label class="layui-form-label">数据库类型</label><div class="layui-input-block" style="padding-right:10px"><select id="dblxid" name="dblx" lay-filter="dbselect"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">IP</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbipid" name="dbip" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">端口</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbportid" name="dbport" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required|number" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">数据库名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbnameid" name="dbname" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">账户</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbuserid" name="dbuser" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">密码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbpwid" name="dbpw" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">数据库地址</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbaddid" name="dbadd" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="editdatabasesubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                    , zIndex: layer.zIndex
+                    , success: function (layero) {
+                        layer.setTop(layero);
+
+                        form.val("editdatabaseform", {
+                            "dbip": obj.data.dbip
+                            , "dbport": obj.data.dbport
+                            , "dbname": obj.data.dbname
+                            , "dbuser": obj.data.dbuser
+                            , "dbpw": obj.data.dbpw
+                            , "dbadd": obj.data.dbadd
+                            , "bz": obj.data.bz
+                        });
+
+                        if (obj.data.dblx == "SQLite") {
+                            document.getElementById("dblxid").innerHTML += '<option value="0">SQLServer</option><option value="1">Oracle</option><option value="2">MySQL</option><option value="3">PostgreSQL</option><option value="4" selected>SQLite</option>';
+
+                            document.getElementById("dbipid").disabled = "disabled";
+                            document.getElementById("dbportid").disabled = "disabled";
+                            document.getElementById("dbnameid").disabled = "disabled";
+                            document.getElementById("dbuserid").disabled = "disabled";
+                            document.getElementById("dbpwid").disabled = "disabled";
+                            document.getElementById("dbaddid").disabled = "";
+                        }
+                        else {
+                            if (obj.data.dblx == "SQLServer") {
+                                document.getElementById("dblxid").innerHTML += '<option value="0" selected>SQLServer</option><option value="1">Oracle</option><option value="2">MySQL</option><option value="3">PostgreSQL</option><option value="4">SQLite</option>';
+                            }
+                            else if (obj.data.dblx == "Oracle") {
+                                document.getElementById("dblxid").innerHTML += '<option value="0">SQLServer</option><option value="1" selected>Oracle</option><option value="2">MySQL</option><option value="3">PostgreSQL</option><option value="4">SQLite</option>';
+                            }
+                            else if (obj.data.dblx == "MySQL") {
+                                document.getElementById("dblxid").innerHTML += '<option value="0">SQLServer</option><option value="1">Oracle</option><option value="2" selected>MySQL</option><option value="3">PostgreSQL</option><option value="4">SQLite</option>';
+                            }
+                            else if (obj.data.dblx == "PostgreSQL") {
+                                document.getElementById("dblxid").innerHTML += '<option value="0">SQLServer</option><option value="1">Oracle</option><option value="2">MySQL</option><option value="3" selected>PostgreSQL</option><option value="4">SQLite</option>';
+                            }
+
+                            document.getElementById("dbipid").disabled = "";
+                            document.getElementById("dbportid").disabled = "";
+                            document.getElementById("dbnameid").disabled = "";
+                            document.getElementById("dbuserid").disabled = "";
+                            document.getElementById("dbpwid").disabled = "";
+                            document.getElementById("dbaddid").disabled = "disabled";
+                        }
+
+                        form.on('select(dbselect)', function (data) {
+                            if (data.value == 4) {
+                                document.getElementById("dbipid").disabled = "disabled";
+                                document.getElementById("dbportid").disabled = "disabled";
+                                document.getElementById("dbnameid").disabled = "disabled";
+                                document.getElementById("dbuserid").disabled = "disabled";
+                                document.getElementById("dbpwid").disabled = "disabled";
+                                document.getElementById("dbaddid").disabled = "";
+                            }
+                            else {
+                                document.getElementById("dbipid").disabled = "";
+                                document.getElementById("dbportid").disabled = "";
+                                document.getElementById("dbnameid").disabled = "";
+                                document.getElementById("dbuserid").disabled = "";
+                                document.getElementById("dbpwid").disabled = "";
+                                document.getElementById("dbaddid").disabled = "disabled";
+
+                                if (data.value == 0) {
+                                    form.val("editdatabaseform", {
+                                        "dbport": 1433
+                                    });
+                                }
+                                else if (data.value == 1) {
+                                    form.val("editdatabaseform", {
+                                        "dbport": 1521
+                                    });
+                                }
+                                else if (data.value == 2) {
+                                    form.val("editdatabaseform", {
+                                        "dbport": 3306
+                                    });
+                                }
+                                else if (data.value == 3) {
+                                    form.val("editdatabaseform", {
+                                        "dbport": 5432
+                                    });
+                                }
+                            }
+                        });
+
+                        form.render();
+                        form.render('select');
+                        form.render('select', 'dbselect');
+
+                        form.on('submit(editdatabasesubmit)', function (data) {
+                            data.field.id = obj.data.id;
+                            $.ajax({
+                                url: window.parent.servicesurl + "/api/Database/UpdateDatabase", type: "put", data: data.field,
+                                success: function (result) {
+                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                    GetDatabaseInfo();
+                                }, datatype: "json"
+                            });
+
+                            layer.close(adddatabaselayerindex);
+                            return false;
+                        });
+                    }
+                    , end: function () { }
+                });
+
+            } else if (layEvent === 'databasedel') {
+                layer.confirm('是否删除？', function (index) {
+                    obj.del();
+                    layer.close(index);
+                    $.ajax({
+                        url: window.parent.servicesurl + "/api/Database/DeleteDatabase", type: "delete", data: { "id": obj.data.id },
+                        success: function (result) {
+                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        }, datatype: "json"
+                    });
+                });
+            }
+        });
+
+        $("#adddatabase").on("click", function () {
+            adddatabaselayerindex = layer.open({
+                type: 1
+                , title: ['添加新监测数据库', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['400px', '550px']
+                , shade: [0.5, '#393D49']
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: false
+                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="adddatabaseform"><div class="layui-form-item"><label class="layui-form-label">数据库类型</label><div class="layui-input-block" style="padding-right:10px"><select id="dblxid" name="dblx" lay-filter="dbselect"><option value="">请选择</option><option value="0">SQLServer</option><option value="1">Oracle</option><option value="2">MySQL</option><option value="3">PostgreSQL</option><option value="4">SQLite</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">IP</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbipid" name="dbip" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">端口</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbportid" name="dbport" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required|number" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">数据库名称</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbnameid" name="dbname" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">账户</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbuserid" name="dbuser" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">密码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbpwid" name="dbpw" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">数据库地址</label><div class="layui-input-block" style="padding-right:10px"><input type="text" id="dbaddid" name="dbadd" autocomplete="off" placeholder="请输入" class="layui-input" lay-filter="required" disabled="disabled" /></div></div><div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="adddatabasesubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+
+                    form.render();
+                    form.render('select');
+                    form.render('select', 'dbselect');
+
+                    form.on('select(dbselect)', function (data) {
+                        form.val("adddatabaseform", {
+                            "dbip": ""
+                            , "dbport": ""
+                            , "dbname": ""
+                            , "dbuser": ""
+                            , "dbpw": ""
+                            , "dbadd": ""
+                        });
+
+                        if (data.value == 4) {
+                            document.getElementById("dbipid").disabled = "disabled";
+                            document.getElementById("dbportid").disabled = "disabled";
+                            document.getElementById("dbnameid").disabled = "disabled";
+                            document.getElementById("dbuserid").disabled = "disabled";
+                            document.getElementById("dbpwid").disabled = "disabled";
+                            document.getElementById("dbaddid").disabled = "";
+                        }
+                        else {
+                            document.getElementById("dbipid").disabled = "";
+                            document.getElementById("dbportid").disabled = "";
+                            document.getElementById("dbnameid").disabled = "";
+                            document.getElementById("dbuserid").disabled = "";
+                            document.getElementById("dbpwid").disabled = "";
+                            document.getElementById("dbaddid").disabled = "disabled";
+
+                            if (data.value == 0) {
+                                form.val("adddatabaseform", {
+                                    "dbport": 1433
+                                });
+                            }
+                            else if (data.value == 1) {
+                                form.val("adddatabaseform", {
+                                    "dbport": 1521
+                                });
+                            }
+                            else if (data.value == 2) {
+                                form.val("adddatabaseform", {
+                                    "dbport": 3306
+                                });
+                            }
+                            else if (data.value == 3) {
+                                form.val("adddatabaseform", {
+                                    "dbport": 5432
+                                });
+                            }
+                        }
+
+                        form.render();
+                        form.render('select');
+                        form.render('select', 'dbselect');
+                    });
+
+                    form.on('submit(adddatabasesubmit)', function (data) {
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/Database/AddDatabase", type: "post", data: data.field,
+                            success: function (result) {
+                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                GetDatabaseInfo();
+                            }, datatype: "json"
+                        });
+
+                        layer.close(adddatabaselayerindex);
+                        return false;
+                    });
+                }
+                , end: function () { }
+            });
+        });
+
+        //获取自动化监测数据库信息
+        function GetDatabaseInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/Database/GetDatabaseInfo", type: "get",
+                success: function (data) {
+                    if (data == "") {
+                        layer.msg("无自动化监测数据库信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        databasetable.reload({ id: 'databasetableid', data: [] });
+                    }
+                    else {
+                        var databaseinfos = JSON.parse(data);
+                        databasedatas = [];
+                        for (var i in databaseinfos) {
+                            var databasedata = new Object;
+                            databasedata.id = databaseinfos[i].Id;
+                            databasedata.dblx = databaseinfos[i].DBLX;
+                            databasedata.dbip = databaseinfos[i].DBIP;
+                            databasedata.dbport = databaseinfos[i].DBPORT;
+                            databasedata.dbname = databaseinfos[i].DBNAME;
+                            databasedata.dbuser = databaseinfos[i].DBUSER;
+                            databasedata.dbpw = databaseinfos[i].DBPW;
+                            databasedata.dbadd = databaseinfos[i].DBADD;
+                            databasedata.dbconn = databaseinfos[i].DBCONN;
+                            databasedata.cjsj = databaseinfos[i].CJSJ;
+                            databasedata.bz = databaseinfos[i].BZ;
+                            databasedatas.push(databasedata);
+                        }
+                        databasetable.reload({ id: 'databasetableid', data: databasedatas });
+                    }
+                }, datatype: "json"
+            });
+        }
+
+    </script>
+</body>
+</html>

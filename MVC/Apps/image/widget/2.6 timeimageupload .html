@@ -1,0 +1,33 @@
+﻿<form class="layui-form" style="margin-top:10px" lay-filter="addtimeimageform">   
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="image_bz_add" autocomplete="off" placeholder="请输入影像参数！！！！！" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item" style="height: 220px;">
+        <div class="layui-upload">
+
+            <div class="layui-row" style="margin-top:20px;margin-left:10px;margin-right:20px">
+                <div class="layui-col-xs6">
+                    <div class="grid-demo grid-demo-bg1">
+                        <button type="button" class="layui-btn-fluid  layui-btn layui-btn-primary layui-border-green" id="image_timeimage_select">1-选择影像</button>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="grid-demo">
+                        <button type="button" class="layui-btn-fluid layui-btn layui-btn-primary layui-border-green" id="image_timeimage_upload">2-提交上传</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-upload-list" style="height:380px;margin-top:10px;margin-left:10px;margin-right:10px;background-color:rgba(25,25,0,0.11)">
+                <p style="color:green;font-size:10px;">----点击“1-选择影像”，选择该目标下某一期影像，并在此区域预览</p>
+                <p style="color:green;font-size:10px;">----点击“2-提交上传”，将该期影像上传到服务器</p>
+                <p style="color:red;font-size:15px;">        注意：点击“2-提交上传只点1次，切忌点击多次重复提交！！！   </p>
+                <img class="layui-upload-img" id="image_timeimage_img" name="image_timeimage_img" style="width:100%;height:auto;vertical-align:middle">
+            </div>
+
+        </div>
+    </div>
+
+</form>

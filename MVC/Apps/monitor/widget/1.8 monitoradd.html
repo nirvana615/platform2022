@@ -1,0 +1,160 @@
+﻿<form class="layui-form" style="margin-top:10px" lay-filter="addmonitorform">
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">监测点名称</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="jcdmc" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6">
+                <div class="grid-demo">
+                    <label class="layui-form-label">监测点编号</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="jcdbh" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">监测方法</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <select id="jcffid" name="jcff" lay-verify="required" lay-filter="jcffchange">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6">
+                <div class="grid-demo">
+                    <label class="layui-form-label">监测站类型</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <select id="jczlxid" name="jczlx" disabled="disabled">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">平面位置x</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="pmwzx" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6">
+                <div class="grid-demo">
+                    <label class="layui-form-label">平面位置y</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="pmwzy" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">坐标系</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <select id="monitorsridid" name="monitorsrid" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">高程(m)</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="gc" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md4">
+                <div class="grid-demo">
+                    <label class="layui-form-label">深度(m)</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="sd" autocomplete="off" placeholder="请输入" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md4">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">孔深(m)</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <input type="text" name="ks" autocomplete="off" placeholder="请输入" class="layui-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label">灾害体</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <select id="zhtid" name="zht">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6">
+                <div class="grid-demo">
+                    <label class="layui-form-label">监测剖面</label>
+                    <div class="layui-input-block" style="padding-right:10px">
+                        <select id="jcpmid" name="jcpm">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">自动化设备</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <select id="jcsbid" name="jcsb">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:30px">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="addmonitorsubmit" style="width:80px">保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button>
+        </div>
+    </div>
+</form>
