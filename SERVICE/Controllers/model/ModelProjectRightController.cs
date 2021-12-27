@@ -73,49 +73,49 @@ namespace SERVICE.Controllers
         [HttpGet]
         public string GetModelUserInfo(string cookie)
         {
-            //string userbsms = string.Empty;
-            //COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            //if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
-            //{
-            //    List<User> users = new List<User>();
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                List<User> users = new List<User>();
 
-            //    string usermaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_role WHERE roleid={0} AND ztm={1}", 11, (int)MODEL.Enum.State.InUse));
-            //    if (!string.IsNullOrEmpty(usermaps))
-            //    {
-            //        string[] rows = usermaps.Split(new char[] { COM.ConstHelper.rowSplit });
-            //        for (int i = 0; i < rows.Length; i++)
-            //        {
-            //            MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(rows[i]);
-            //            if (mapUserRole != null)
-            //            {
-            //                User userinfo = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE id={0} AND ztm={1}", mapUserRole.UserId, (int)MODEL.Enum.State.InUse)));
-            //                if (userinfo != null)
-            //                {
-            //                    users.Add(userinfo);
-            //                }
+                string usermaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE  ztm={0}", (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(usermaps))
+                {
+                    string[] rows = usermaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(rows[i]);
+                        if (mapUserRole != null)
+                        {
+                            User userinfo = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE id={0} AND ztm={1}", mapUserRole.UserId, (int)MODEL.Enum.State.InUse)));
+                            if (userinfo != null)
+                            {
+                                users.Add(userinfo);
+                            }
 
-            //            }
-            //        }
-            //        if (users.Count > 0)
-            //        {
-            //            return JsonHelper.ToJson(users);
-            //        }
-            //        else
-            //        {
-            //            //用户信息
-            //            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户信息！", string.Empty));
-            //        }
-            //    }
-            //    else
-            //    {
-            //        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户信息！", string.Empty));
-            //    }
-            //}
-            //else
-            //{
-            //    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户信息！", string.Empty));
-            //}
+                        }
+                    }
+                    if (users.Count > 0)
+                    {
+                        return JsonHelper.ToJson(users);
+                    }
+                    else
+                    {
+                        //用户信息
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户信息！", string.Empty));
+                    }
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户信息！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户信息！", string.Empty));
+            }
 
             return string.Empty;
         }
