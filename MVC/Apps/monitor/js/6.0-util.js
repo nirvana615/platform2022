@@ -27,9 +27,7 @@ util.fixbar({
             }
         } else if (type === 'bar2') {
             //ETL管理
-
-
-
+            LoadETLLayer();
         }
         else if (type === 'bar3') {
             //图层列表

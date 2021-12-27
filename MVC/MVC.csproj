@@ -549,8 +549,6 @@
     <Content Include="Apps\monitor\js\4.1-projectlist.js" />
     <Content Include="Apps\monitor\js\4.2-projectinfo.js" />
     <Content Include="Apps\monitor\js\5.0-header.js" />
-    <Content Include="Apps\monitor\js\5.1-message.js" />
-    <Content Include="Apps\monitor\js\5.2-setting.js" />
     <Content Include="Apps\monitor\js\6.0-util.js" />
     <Content Include="Apps\monitor\js\6.1-layerlist.js" />
     <Content Include="Apps\monitor\js\6.2-autodevice.js" />
@@ -558,9 +556,7 @@
     <Content Include="Apps\monitor\js\6.4-analysis.js" />
     <Content Include="Apps\monitor\js\6.5-warning.js" />
     <Content Include="Apps\monitor\js\6.6-measure.js" />
-    <Content Include="Apps\monitor\js\6.7-draw.js" />
-    <Content Include="Apps\monitor\js\6.8-localtool.js" />
-    <Content Include="Apps\monitor\js\6.9-report.js" />
+    <Content Include="Apps\monitor\js\6.7-etl.js" />
     <Content Include="Apps\monitor\widget\5.0 headeruser.html" />
     <Content Include="Apps\monitor\widget\1.5 disasterpropertyedit.html" />
     <Content Include="Apps\monitor\widget\1.8 monitoradd.html" />

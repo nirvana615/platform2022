@@ -1,10 +1,10 @@
-﻿//报表widget
-function LoadRepoortLayer(obj) {
+﻿//ETL widget
+function LoadETLLayer() {
 
 
-    var reportlayerindex = layer.open({
+    var etllayerindex = layer.open({
         type: 1
-        , title: ['报表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+        , title: ['ETL管理', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
         , area: ['500px', '500px']
         , shade: 0
         , offset: 'auto'

@@ -11,7 +11,7 @@
     <title>监测应用系统</title>
     <!--jquery-->
     <script src="~/Scripts/jquery-3.3.1.js"></script>
-    <link rel="stylesheet" href="~/Scripts/viewer.min.css" >
+    <link rel="stylesheet" href="~/Scripts/viewer.min.css">
     <script src="~/Scripts/viewer.min.js"></script>
     <!--CesiumJS-->
     <link href="~/Scripts/Cesium/Widgets/widgets.css" rel="stylesheet" />
@@ -53,7 +53,6 @@
                 <button id="exitbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-logout"></i></button>
             </a>
         </div>
-
     </div>
 
     <!--地图-->
@@ -63,36 +62,29 @@
     <script>
         var servicesurl = @Html.Raw(Json.Encode(ViewBag.ServicesURL));
         var datasurl = @Html.Raw(Json.Encode(ViewBag.DatasURL));
-        var ViewBag = @Html.Raw(Json.Encode(ViewBag));
     </script>
 
-
-    <!--开发-->
     <script src="~/Apps/monitor/js/1.1-all.js"></script>
     <script src="~/Apps/monitor/js/1.2-para.js"></script>
     <script src="~/Apps/monitor/js/3.0-map.js"></script>
     <script src="~/Apps/monitor/js/4.1-projectlist.js"></script>
     <script src="~/Apps/monitor/js/4.2-projectinfo.js"></script>
     <script src="~/Apps/monitor/js/5.0-header.js"></script>
-    <script src="~/Apps/monitor/js/5.1-message.js"></script>
-    <script src="~/Apps/monitor/js/5.2-setting.js"></script>
     <script src="~/Apps/monitor/js/6.0-util.js"></script>
     <script src="~/Apps/monitor/js/6.1-layerlist.js"></script>
     <script src="~/Apps/monitor/js/6.2-autodevice.js"></script>
     <script src="~/Apps/monitor/js/6.3-autodata.js"></script>
     <script src="~/Apps/monitor/js/6.4-analysis.js"></script>
     <script src="~/Apps/monitor/js/6.5-warning.js"></script>
-    <script src="~/Apps/monitor/js/6.6-measure.js"></script>
-    <script src="~/Apps/monitor/js/6.7-draw.js"></script>
-    <script src="~/Apps/monitor/js/6.8-localtool.js"></script>
-    <script src="~/Apps/monitor/js/6.9-report.js"></script>
+    <script src="~/Apps/monitor/js/6.7-etl.js"></script>
+
     <!--监测系统，导入测量工具-->
     <script src="~/Apps/rock/js/6.6-measure.js"></script>
     <script src="~/Apps/pointscloud/js/6.5.1-pointcloud-util-changelayer-heatmap.js"></script>
     <!--导入丁兰兰的显示画面-->
     <script src="~/Apps/image/js/6.1-imageresult.js"></script>
-
-    <script src="~/Apps/rock/js/6.7-draw.js"></script><!--引入标注-->
+    <!--引入标注-->
+    <script src="~/Apps/rock/js/6.7-draw.js"></script>
 
 </body>
 </html>
