@@ -409,7 +409,7 @@ namespace SERVICE.Controllers
                                                 string[] path = jsonname.Split(new string[] { "data" }, StringSplitOptions.RemoveEmptyEntries);
                                                 if (path.Last() == null)
                                                 {
-                                                    if (modelTask.RWZT == 2)
+                                                    if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.processing)
                                                     {
                                                         newModelTaskProcess.Add(modelTask); //处理中任务 
                                                     }
@@ -420,9 +420,9 @@ namespace SERVICE.Controllers
                                                 }
                                                 else
                                                 {
-                                                    if (modelTask.RWZT == 0 || modelTask.RWZT == 2) {
-                                                        modelTask.RWZT = 1;
-                                                        int updateRWZT = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", modelTask.RWZT, modelTask.Id, (int)MODEL.Enum.State.InUse));
+                                                    if (modelTask.RWZT != (int)MODEL.EnumModel.TaskStatus.Finished) {
+                                                        modelTask.RWZT = (int)MODEL.EnumModel.TaskStatus.Finished;
+                                                        int updateRWZT = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", (int)MODEL.EnumModel.TaskStatus.Finished, modelTask.Id, (int)MODEL.Enum.State.InUse)); 
 
                                                     }
                                                     newModelTaskFinished.Add(modelTask);//已完成
@@ -430,7 +430,7 @@ namespace SERVICE.Controllers
                                             }
                                             catch
                                             {
-                                                if (modelTask.RWZT == 2)
+                                                if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.processing)
                                                 {
                                                     newModelTaskProcess.Add(modelTask); //处理中任务 
                                                 }
@@ -473,11 +473,11 @@ namespace SERVICE.Controllers
         [HttpPut]
         public string UpdateModelTaskStatus()
         {
-            string rwzt = "2";//任务状态
+            
             string id = HttpContext.Current.Request.Form["Id"];
 
 
-            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}",rwzt, id, (int)MODEL.Enum.State.InUse));
+            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", (int)MODEL.EnumModel.TaskStatus.processing, id, (int)MODEL.Enum.State.InUse));
             if (updatecount == 1)
             {
                 return "更新成功";

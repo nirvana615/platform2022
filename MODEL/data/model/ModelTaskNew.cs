@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,17 +8,16 @@ namespace MODEL
 {
     public class ModelTaskStatus
     {
-        
         /// <summary>
-        /// å¾…å¤„ç†ä»»åŠ¡
+        /// ´ı´¦ÀíÈÎÎñ
         /// </summary>
         public List<ModelTask> newModelTaskPending { get; set; }
         /// <summary>
-        /// å·²å®Œæˆä»»åŠ¡
+        /// ÒÑÍê³ÉÈÎÎñ
         /// </summary>
         public List<ModelTask> newModelTaskFinished { get; set; }
         /// <summary>
-        /// å¤„ç†ä¸­ä»»åŠ¡
+        /// ´¦ÀíÖĞÈÎÎñ
         /// </summary>
         public List<ModelTask> newModelTaskProcess { get; set; }
     }

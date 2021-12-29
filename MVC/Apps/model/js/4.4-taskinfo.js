@@ -116,8 +116,7 @@ function ModelTaskInfo(id, style) {
                                 form.render();
                                 form.render('select');
                             }
-
-                            layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            
                         }, datatype: "json"
                     });
                     form.render();
@@ -210,8 +209,7 @@ function ModelTaskInfo(id, style) {
                                 form.render();
                                 form.render('select');
                             }
-
-                            layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            
                         }, datatype: "json"
                     });
 

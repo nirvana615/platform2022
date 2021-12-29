@@ -65,9 +65,7 @@ function ModelProjectInfo(id, style) {
                         , "model_bz_view": ""
                     });
                 }
-
-                //弹出消息————controller里定义的各类情况result.message
-                layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                
             }, datatype: "json"
         });
 
@@ -146,8 +144,6 @@ function ModelProjectInfo(id, style) {
                             });
                             form.render();//更新渲染
                             form.render('select');//更新渲染select  数据库枚举选项，不然显示不出来
-
-                            layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }, datatype: "json"
                     });
 

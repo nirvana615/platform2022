@@ -58,11 +58,14 @@ namespace MODEL
             [RemarkAttribute("待处理")]
             Pending = 0,
 
-            [RemarkAttribute("已完成")]
-            Finished = 1,
-
+           
             [RemarkAttribute("正在处理")]
-            processing = 2
+            processing = 1,
+
+            [RemarkAttribute("已完成")]
+            Finished = 2
+
+
         }
 
 

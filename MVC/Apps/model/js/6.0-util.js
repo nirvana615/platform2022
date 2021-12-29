@@ -102,7 +102,7 @@ $("#utilbar3").on("mouseleave", function () {
 $("#task_count").hide();//隐藏图标
 $("#utilbar4").on("mouseenter", function () {
     if (tipslayer == -1) {
-        tipslayer = layer.tips('待处理任务', '#utilbar4', {
+        tipslayer = layer.tips('任务管理', '#utilbar4', {
             tips: [4, '#78BA32']
         });
     }
