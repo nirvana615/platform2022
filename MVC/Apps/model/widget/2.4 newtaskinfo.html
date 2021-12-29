@@ -1,0 +1,29 @@
+﻿<!--编辑任务-->
+<div class="layui-tab layui-tab-brief" lay-filter="demo">
+    <ul class="layui-tab-title">
+        <li class="layui-this">待处理</li>
+        <li>处理中</li>
+        <li>已完成</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <table class="layui-hide" id="newtasktable_Pending" lay-filter="newtasktable_Pending"></table>
+            <script type="text/html" id="barDemo_Pending">
+                <a class="layui-btn  layui-btn-xs layui-icon" lay-event="Pending">&#x1005;</a>
+            </script>
+        </div>
+        <div class="layui-tab-item">
+            <table class="layui-hide" id="newtasktable_Processing" lay-filter="newtasktable_Processing"></table>
+            <script type="text/html" id="barDemo_Processing">
+                <a class="layui-btn  layui-btn-xs layui-icon" lay-event="Processing">&#xe705;</a>
+            </script>
+        </div>
+        <div class="layui-tab-item">
+            <table class="layui-hide" id="newtasktable_Finished" lay-filter="newtasktable_Finished"></table>
+            <script type="text/html" id="barDemo_Finished">
+                <a class="layui-btn  layui-btn-xs layui-icon" lay-event="Finished">&#xe705;</a>
+            </script>
+        </div>
+        
+    </div>
+</div>

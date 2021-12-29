@@ -81,29 +81,6 @@ namespace SERVICE.Controllers
         }
         
         /// <summary>
-        ///项目用途
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public string GetXMYT()
-        {
-            List<string[]> xmyts = new List<string[]>();
-            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.ProjectPurpose));
-            foreach (var value in values)
-            {
-                string[] xmyt = (EnumExtension.GetRemark((MODEL.EnumModel.ProjectPurpose)System.Enum.Parse(typeof(MODEL.EnumModel.ProjectPurpose), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
-                xmyts.Add(xmyt);
-            }
-
-            if (xmyts.Count > 0)
-            {
-                return JsonHelper.ToJson(xmyts);
-            }
-
-            return string.Empty;
-        }
-
-        /// <summary>
         ///采集设备
         /// </summary>
         /// <returns></returns>
@@ -147,7 +124,29 @@ namespace SERVICE.Controllers
 
             return string.Empty;
         }
-        
+
+        /// <summary>
+        ///任务状态
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetRWZT()
+        {
+            List<string[]> rwzts = new List<string[]>();
+            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.TaskStatus));
+            foreach (var value in values)
+            {
+                string[] rwzt = (EnumExtension.GetRemark((MODEL.EnumModel.TaskStatus)System.Enum.Parse(typeof(MODEL.EnumModel.TaskStatus), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
+                rwzts.Add(rwzt);
+            }
+
+            if (rwzts.Count > 0)
+            {
+                return JsonHelper.ToJson(rwzts);
+            }
+
+            return string.Empty;
+        }
         #endregion
 
 

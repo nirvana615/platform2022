@@ -49,7 +49,7 @@ namespace MODEL
                     XMBM = row[2].ToString(),
                     XZQBM = row[3].ToString(),
                     XMSJ = row[6].ToString(),
-                    XMYT = row[7].ToString(),
+                    XMWZ = row[7].ToString(),
                     CJSJ = row[8].ToString(),
                     BSM = row[9].ToString(),
                     BZ = row[11].ToString()
@@ -115,8 +115,9 @@ namespace MODEL
                     YXCFLJ = row[9].ToString(),
                     SRID = Convert.ToInt32(row[10].ToString()),
                     SXCG = row[11].ToString(),
-                    RWCJSJ = row[15].ToString(),
-                    BSM = row[16].ToString()
+                    RWCJSJ = row[13].ToString(),
+                    BSM = row[14].ToString(),
+                    RWZT= Convert.ToInt32(row[18].ToString()),
                 };
                 if (string.IsNullOrEmpty(row[3].ToString()))
                 {
@@ -142,37 +143,21 @@ namespace MODEL
                 {
                     modelTask.RWMS = row[12].ToString();
                 }
-                if (string.IsNullOrEmpty(row[13].ToString()))
-                {
-                    modelTask.CGXZLJ = null;
-                }
-                else
-                {
-                    modelTask.CGXZLJ = row[13].ToString();
-                }
-                if (string.IsNullOrEmpty(row[14].ToString()))
-                {
-                    modelTask.MXMS = null;
-                }
-                else
-                {
-                    modelTask.MXMS = row[14].ToString();
-                }
-                if (string.IsNullOrEmpty(row[18].ToString()))
+                if (string.IsNullOrEmpty(row[16].ToString()))
                 {
                     modelTask.BZ = null;
                 }
                 else
                 {
-                    modelTask.BZ = row[18].ToString();
+                    modelTask.BZ = row[16].ToString();
                 }
-                if (string.IsNullOrEmpty(row[19].ToString()))
+                if (string.IsNullOrEmpty(row[17].ToString()))
                 {
                     modelTask.MXSJ = null;
                 }
                 else
                 {
-                    modelTask.MXSJ = row[19].ToString();
+                    modelTask.MXSJ = row[17].ToString();
                 }
                 return modelTask;
             }

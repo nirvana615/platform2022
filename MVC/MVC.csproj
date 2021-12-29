@@ -540,6 +540,7 @@
     <Content Include="Apps\model\widget\1.3 projecteditview.html" />
     <Content Include="Apps\model\widget\2.1 taskaddview.html" />
     <Content Include="Apps\model\widget\2.2 taskview.html" />
+    <Content Include="Apps\model\widget\2.4 newtaskinfo.html" />
     <Content Include="Apps\model\widget\2.3 taskeditview.html" />
     <Content Include="Apps\model\widget\3.0 projectrigth.html" />
     <Content Include="Apps\model\widget\3.1-draw.html" />
@@ -640,6 +641,8 @@
     <Content Include="Apps\uav\widget\3.1-uavroute-mbtxcj.html" />
     <Content Include="Apps\uav\widget\2.0-uavroutetype.html" />
     <Content Include="Apps\uav\widget\1.0-uavproject-add.html" />
+    <Content Include="Resources\img\map\model.png" />
+    <Content Include="Resources\img\map\project.png" />
     <Content Include="Resources\img\mark\p19.png" />
     <Content Include="Resources\img\survey\area.png" />
     <Content Include="Resources\img\survey\areabiaozhu.png" />

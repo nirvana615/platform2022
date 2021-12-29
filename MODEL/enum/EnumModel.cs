@@ -12,24 +12,7 @@ namespace MODEL
     /// </summary>
     public static class EnumModel
     {
-        /// <summary>
-        /// 项目用途
-        /// </summary>
-        public enum ProjectPurpose
-        {
-            [RemarkAttribute("内部科研项目")]
-            NBDYPrj = 0,
-
-            [RemarkAttribute("内部生产项目")]
-            NBSCPrj = 1,
-
-            [RemarkAttribute("外部生产项目")]
-            WBSCPrj = 2,
-
-            [RemarkAttribute("其他")]
-            OtherPrj = 3
-        }
-
+        
         /// <summary>
         /// 采集设备
         /// </summary>
@@ -66,7 +49,22 @@ namespace MODEL
             [RemarkAttribute("点云LAS)")]
             LAS = 4
         }
-       
+        /// <summary>
+        /// 采集设备
+        /// </summary>
+        public enum TaskStatus
+        {
+
+            [RemarkAttribute("待处理")]
+            Pending = 0,
+
+            [RemarkAttribute("已完成")]
+            Finished = 1,
+
+            [RemarkAttribute("正在处理")]
+            processing = 2
+        }
+
 
     }
 }

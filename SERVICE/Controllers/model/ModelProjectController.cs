@@ -39,8 +39,7 @@ namespace SERVICE.Controllers
             string zxwd = HttpContext.Current.Request.Form["model_zxwd_add"];
             string xmsj = HttpContext.Current.Request.Form["model_xmsj_add"];
             string xzqbm = HttpContext.Current.Request.Form["model_district_add"];
-            string xmlx = HttpContext.Current.Request.Form["model_xmlx_add"];
-            string xmyt = HttpContext.Current.Request.Form["model_xmyt_add"];
+            string xmwz = HttpContext.Current.Request.Form["model_xmwz_add"];
             string bz = HttpContext.Current.Request.Form["model_bz_add"];
             #endregion
 
@@ -69,13 +68,13 @@ namespace SERVICE.Controllers
                     + zxwd + ","
                     + xzqbm + ","
                     + SQLHelper.UpdateString(xmsj) + ","
-                    + xmyt + ","
+                    + SQLHelper.UpdateString(xmwz) + ","
                     + SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + ","
                     + SQLHelper.UpdateString(Guid.NewGuid().ToString("D")) + ","
                     + (int)MODEL.Enum.State.InUse + ","
                     + SQLHelper.UpdateString(bz) + ")";
 
-                    int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, "INSERT INTO model_project (xmmc,xmbm,zxjd,zxwd,xzqbm,xmsj,xmyt,cjsj,bsm,ztm,bz) VALUES" + value);
+                    int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, "INSERT INTO model_project (xmmc,xmbm,zxjd,zxwd,xzqbm,xmsj,xmwz,cjsj,bsm,ztm,bz) VALUES" + value);
                     if (id != -1)
                     {
                         if (!string.IsNullOrEmpty(xmbm))
@@ -163,7 +162,7 @@ namespace SERVICE.Controllers
                                             try
                                             {
                                                 // 使用 System.IO.Directory.GetFiles() 函数获取所有文件
-                                                string modelFilePath = modeldir + @"\AllModel" + @"\" + modelProject.XMBM.ToString() + @"\" + modelTask.RWBM.ToString();
+                                                string modelFilePath = modeldir + @"\AllModel" + @"\" + modelTask.RWBM.ToString();
                                                 string jsonname = string.Empty; ;
                                                 DirectoryInfo dir = new DirectoryInfo(modelFilePath);
                                                 foreach (FileInfo file in dir.GetFiles("*.json", SearchOption.AllDirectories))
@@ -231,97 +230,7 @@ namespace SERVICE.Controllers
             }
         }
 
-        /// <summary>
-        /// 未处理任务信息
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public string GetNewModelTask(string cookie)
-        {
-            string userbsms = string.Empty;
-            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
-            {
-                List<ModelTask> newModelTask = new List<ModelTask>();//存储未处理任务
-                string projectdatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE bsm{0} AND ztm={1} ORDER BY id DESC", userbsms, (int)MODEL.Enum.State.InUse));
-                if (!string.IsNullOrEmpty(projectdatas))
-                {
-                    string[] projectrows = projectdatas.Split(new char[] { COM.ConstHelper.rowSplit });
-
-                    for (int i = 0; i < projectrows.Length; i++)
-                    {
-                        ModelProject modelProject = ParseModelHelper.ParseModelProject(projectrows[i]);
-                        if (modelProject != null)
-                        {
-                            string project_task_maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_task WHERE projectid={0} AND ztm={1} ORDER BY cjsj ASC", modelProject.Id, (int)MODEL.Enum.State.InUse));
-                            if (!string.IsNullOrEmpty(project_task_maps))
-                            {
-                                string[] maprows = project_task_maps.Split(new char[] { COM.ConstHelper.rowSplit });
-                                for (int j = 0; j < maprows.Length; j++)
-                                {
-                                    MapModelProjecTask mapModelProjecTask = ParseModelHelper.ParseMapModelProjecTask(maprows[j]);
-                                    if (mapModelProjecTask != null)
-                                    {
-
-                                        ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
-                                        if (modelTask != null)
-                                        {
-                                            try
-                                            {
-                                                // 使用 System.IO.Directory.GetFiles() 函数获取所有文件
-                                                string modelFilePath = modeldir + @"\AllModel" + @"\" + modelProject.XMBM.ToString() + @"\" + modelTask.RWBM.ToString();
-                                                string jsonname = string.Empty; ;
-                                                DirectoryInfo dir = new DirectoryInfo(modelFilePath);
-                                                foreach (FileInfo file in dir.GetFiles("*.json", SearchOption.AllDirectories))
-                                                {
-                                                    jsonname = file.FullName;
-                                                    if (jsonname.Contains(".json"))
-                                                    {
-                                                        break;
-                                                    }
-                                                }
-                                                string[] path = jsonname.Split(new string[] { "data" }, StringSplitOptions.RemoveEmptyEntries);
-                                                if (path.Last() == null)
-                                                {
-                                                    newModelTask.Add(modelTask);
-                                                }
-                                            }
-                                            catch
-                                            {
-                                                newModelTask.Add(modelTask);
-                                            }
-                                        }
-
-                                    }
-                                }
-                            }
-                            
-                        }
-                    }
-                    if (newModelTask.Count > 0)
-                    {
-                        //有项目信息
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(newModelTask)));
-                    }
-                    else
-                    {
-                        //无项目信息
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
-                    }
-                }
-                else
-                {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
-                }
-            }
-            else
-            {
-                //验证失败
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
-            }
-        }
-
+        
         /// <summary>
         /// 获取项目信息（查看+编辑项目）
         /// </summary>
@@ -369,7 +278,7 @@ namespace SERVICE.Controllers
             string zxwd = HttpContext.Current.Request.Form["model_zxwd_edit"];
             string xmsj = HttpContext.Current.Request.Form["model_xmsj_edit"];
             string xzqbm = HttpContext.Current.Request.Form["model_district_edit"];
-            string xmyt = HttpContext.Current.Request.Form["model_xmyt_edit"];
+            string xmwz = HttpContext.Current.Request.Form["model_xmwz_edit"];
             string bz = HttpContext.Current.Request.Form["model_bz_edit"];
             #endregion
 
@@ -389,13 +298,13 @@ namespace SERVICE.Controllers
                     {
                         
                         int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(
-                             "UPDATE model_project SET xmmc={0},zxjd={1},zxwd={2},xzqbm={3},xmsj={4},xmyt={5},bz={6} WHERE id={7} AND bsm{8} AND ztm={9}",
+                             "UPDATE model_project SET xmmc={0},zxjd={1},zxwd={2},xzqbm={3},xmsj={4},xmwz={5},bz={6} WHERE id={7} AND bsm{8} AND ztm={9}",
                              SQLHelper.UpdateString(xmmc),
                              zxjd,
                              zxwd,
                              xzqbm,
                              SQLHelper.UpdateString(xmsj),
-                             xmyt,
+                             SQLHelper.UpdateString(xmwz),
                              SQLHelper.UpdateString(bz),
                              id,
                              userbsms,

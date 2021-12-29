@@ -1,6 +1,14 @@
 ﻿//三维模型项目列表widget
 var newmodeltasktabledata = [];
 getNewModelTask();
+function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+// 用法
+sleep(500).then(() => {
+    LoadNewModelTask();// 这里写sleep之后需要去做的事情
+})
 function getNewModelTask() {
     newmodeltasktabledata = [];
     $.ajax({

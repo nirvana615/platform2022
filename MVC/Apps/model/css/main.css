@@ -80,3 +80,6 @@
     animation-direction: normal;
     animation-timing-function: linear;
 }
+#layui-layer1{
+    position:relative;
+}

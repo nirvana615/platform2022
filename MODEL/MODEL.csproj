@@ -80,6 +80,7 @@
     <Compile Include="data\model\ModelProject.cs" />
     <Compile Include="data\model\ModelProjectInfo.cs" />
     <Compile Include="data\model\ModelTask.cs" />
+    <Compile Include="data\model\ModelTaskNew.cs" />
     <Compile Include="data\model\ModelTaskInfos.cs" />
     <Compile Include="data\monitormap\MapDeviceInterval.cs" />
     <Compile Include="data\monitormap\MapDisasterProperty.cs" />

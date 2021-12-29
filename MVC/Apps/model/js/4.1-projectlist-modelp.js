@@ -1,5 +1,5 @@
 ﻿//三维模型项目列表widget
-layer.open({
+var layerIndex=layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
     , area: ['350px', '90%']
@@ -10,9 +10,11 @@ layer.open({
     , moveOut: true
     , content: '<!--项目列表--> <div class="layui-row" style="margin-left:10px;margin-top:10px"> <div class="layui-input-inline"> <input type="text" id="projectfilter" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="width:230px;padding-left:25px;border-radius:5px;"> </div> <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:50px;border-radius:5px;margin-left:5px"> <i class="layui-icon layui-icon-search" ></i> </button> </div><div class="layui-row" style="margin-top:10px"> <div class="layui-input-inline"> <div id="projectbyarea"></div> <!--<div class="layui-tab-item" id="projectbylayer"></div>--> </div> </div>'
     , zIndex: layer.zIndex
-    , success: function (layero) {
+    , success: function (layero,index) {
+        //置顶
         layer.setTop(layero);
-
+        //执行最小化
+        //layer.min(index); 
         //获取用户全部项目信息
         var modelprojectlist= GetUserAllModelProjects();
         //获取用户全部项目信息

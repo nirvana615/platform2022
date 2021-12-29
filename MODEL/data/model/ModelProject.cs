@@ -47,9 +47,9 @@ namespace MODEL
         public string CJSJ { get; set; }
         
         /// <summary>
-        /// 项目用途
+        /// 项目位置
         /// </summary>
-        public string XMYT { get; set; }
+        public string XMWZ { get; set; }
         /// <summary>
         /// 标识码
         /// </summary>

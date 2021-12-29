@@ -1,17 +1,56 @@
 ﻿<!--项目列表-->
-<div class="layui-row" style="margin-left:10px;margin-top:10px">
+<div class="layui-tab layui-tab-brief" lay-filter="projectListTab">
+    <!--选项卡-->
+    <ul class="layui-tab-title">
+        <li lay-id="list_1" class="layui-this" style="width:40%;padding-top: 5px;">地区</li>
+        <li lay-id="list_2" style="width:40%;padding-top: 10px;">时间</li>-->
+    </ul>
+    <!--tree-->
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show" id="projectbyarea"></div>
+        <div class="layui-tab-item" id="projectbyyear"></div>
+    </div>
+</div>
+<!--搜索-->
+<div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; ">
+    <div class="layui-input-inline">
+        <input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px">
+    </div>
+    <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px">
+        <i class="layui-icon layui-icon-search"></i>
+    </button>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<!--搜索-->
+<div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; ">
     <div class="layui-input-inline">
         <input type="text" id="projectfilter" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="width:230px;padding-left:25px;border-radius:5px;">
     </div>
     <button id="projectsearch" type="button" class="layui-btn" style="width:60px;border-radius:5px;margin-left:5px">
-            <i class="layui-icon layui-icon-search" ></i>
-        </button>
+        <i class="layui-icon layui-icon-search"></i>
+    </button>
 </div>
 
 <div class="layui-row" style="margin-left:10px;margin-top:10px">
     <div class="layui-input-inline">
         <div id="projectbyarea"></div>
-        <!--<div class="layui-tab-item" id="projectbylayer"></div>-->
+        <div class="layui-tab-item" id="projectbylayer"></div>
     </div>
 </div>
 
@@ -36,6 +75,6 @@
     <!--tree-->
     <div class="layui-tab-content">
         <div class="layui-tab-item layui-show" id="projectbyarea"></div>
-        <!--<div class="layui-tab-item" id="projectbylayer"></div>-->
+        <div class="layui-tab-item" id="projectbylayer"></div>
     </div>
-</div>
+</div>-->

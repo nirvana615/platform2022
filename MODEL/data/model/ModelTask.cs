@@ -68,14 +68,6 @@ namespace MODEL
         /// </summary>
         public string RWMS { get; set; }
         /// <summary>
-        /// 成果下载链接
-        /// </summary>
-        public string CGXZLJ { get; set; }
-        /// <summary>
-        /// 模型描述
-        /// </summary>
-        public string MXMS { get; set; }
-        /// <summary>
         /// 模型路径
         /// </summary>
         public string MXLJ { get; set; }
@@ -92,5 +84,9 @@ namespace MODEL
         /// 模型视角
         /// </summary>
         public string MXSJ{ get; set; }
+        /// <summary>
+        /// 任务状态（未存数据库）
+        /// </summary>
+        public int RWZT { get; set; }
     }
 }

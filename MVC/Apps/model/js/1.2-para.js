@@ -5,7 +5,7 @@
 var srids = [];                                     //坐标系
 var xjxzqs = [];                                    //县级行政区
 
-var xmyts = [];                                     //项目用途
+var rwzts = [];                                     //任务状态
 var cjsbs = [];                                     //采集设备
 var sxcgs = [];                                     //所需成果
 
@@ -23,29 +23,17 @@ $.ajax({
     }, datatype: "json"
 });
 
-//项目类型
+
+//任务状态
 $.ajax({
-    url: servicesurl + "/api/ModelParameter/GetXMLX", type: "get",
+    url: servicesurl + "/api/ModelParameter/GetRWZT", type: "get",
     success: function (data) {
-        var xmlxdata = JSON.parse(data);
-        for (var i in xmlxdata) {
-            var xmlx = new Object;
-            xmlx.name = xmlxdata[i][0];
-            xmlx.value = xmlxdata[i][1];
-            xmlxs.push(xmlx);
-        }
-    }, datatype: "json"
-});
-//项目用途
-$.ajax({
-    url: servicesurl + "/api/ModelParameter/GetXMYT", type: "get",
-    success: function (data) {
-        var xmytdata = JSON.parse(data);
-        for (var i in xmytdata) {
-            var xmyt = new Object;
-            xmyt.name = xmytdata[i][0];
-            xmyt.value = xmytdata[i][1];
-            xmyts.push(xmyt);
+        var rwztdata = JSON.parse(data);
+        for (var i in rwztdata) {
+            var rwzt = new Object;
+            rwzt.name = rwztdata[i][0];
+            rwzt.value = rwztdata[i][1];
+            rwzts.push(rwzt);
         }
     }, datatype: "json"
 });

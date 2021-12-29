@@ -1,4 +1,6 @@
 ﻿//三维模型项目列表widget
+var modelprojectlist = [];//按地区组织
+var modelprojectlistyear = [];//按时间组织
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
@@ -8,24 +10,24 @@ layer.open({
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
-    , content: '<!--项目列表--> <div class="layui-row" style="margin-left:10px;margin-top:10px"> <div class="layui-input-inline"> <input type="text" id="projectfilter" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="width:230px;padding-left:25px;border-radius:5px;"> </div> <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:50px;border-radius:5px;margin-left:5px"> <i class="layui-icon layui-icon-search" ></i> </button> </div><div class="layui-row" style="margin-top:10px"> <div class="layui-input-inline"> <div id="projectbyarea"></div> <!--<div class="layui-tab-item" id="projectbylayer"></div>--> </div> </div>'
+    , content: '<!--项目列表--> <div class="layui-tab layui-tab-brief" lay-filter="projectListTab"> <!--选项卡--> <ul class="layui-tab-title"> <li lay-id="list_1" class="layui-this" style="width:40%;padding-top: 5px;">地区</li> <li lay-id="list_2" style="width:40%;padding-top: 10px;">时间</li>--> </ul> <!--tree--> <div class="layui-tab-content"> <div class="layui-tab-item layui-show" id="projectbyarea"></div> <div class="layui-tab-item" id="projectbyyear"></div> </div> </div> <!--搜索--> <div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "> <div class="layui-input-inline"> <input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"> </div> <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"> <i class="layui-icon layui-icon-search"></i> </button> </div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
-
+        
         //获取用户全部项目信息
-        var modelprojectlist= GetUserAllModelProjects();
-        //获取用户全部项目信息
-
+        GetUserAllModelProjects();
+        //地区
         tree.render({
             elem: '#projectbyarea'
-            , id: 'modelprojectlistid' 
+            , id: 'areaprojectlistid' 
             , data: []
             , showCheckbox: true
             , customCheckbox: true
             , edit: ['add', 'update', 'del']    //项目操作选项
             , customOperate: true
             , accordion: false
+            ,cancelNodeFileIcon: true
             , click: function (obj) {
                 ModelProjectNodeClick(obj);
             }
@@ -58,7 +60,7 @@ layer.open({
                             }
                         }
                         //重载项目树：将项目列表数据ModelProjectlist给data
-                        tree.reload('modelprojectlistid', {
+                        tree.reload('areaprojectlistid', {
                             data: modelprojectlist
                         });
                     }
@@ -70,7 +72,62 @@ layer.open({
                 }
             }
         });
-        
+
+        //时间
+        tree.render({
+            elem: '#projectbyyear'
+            , id: 'yearprojectlistid'
+            , data: []
+            , showCheckbox: true
+            , customCheckbox: true
+            , edit: ['add', 'update', 'del']    //项目操作选项
+            , customOperate: true
+            , accordion: false
+            , cancelNodeFileIcon: true
+            , click: function (obj) {
+                ModelProjectNodeClick(obj);
+            }
+            , operate: function (obj) {
+                ModelProjectNodeOperate(obj);
+            }
+            , oncheck: function (obj) {
+                if (obj.checked) {
+                    modleInfo = obj.data;//标签
+                    if (obj.data.type == "task") {
+                        for (var i in modelprojectlistyear) {
+                            for (var j in modelprojectlistyear[i].children) {
+                                for (var k in modelprojectlistyear[i].children[j].children) {
+                                    if (modelprojectlistyear[i].children[j].children[k].id == obj.data.id) {
+                                        modelprojectlistyear[i].children[j].children[k].checked = true;
+                                        modelprojectlistyear[i].spread = true;
+                                        modelprojectlistyear[i].children[j].spread = true;
+                                        modelprojectlistyear[i].children[j].children[k].spread = true;
+                                        LoadModel(obj.data);
+
+                                    }
+                                    else {
+                                        //modelprojectlist[i].spread = false;
+                                        //modelprojectlist[i].children[j].spread = false;
+                                        //modelprojectlist[i].children[j].children[k].spread = false;
+                                        modelprojectlistyear[i].children[j].children[k].checked = false;
+
+                                    }
+                                }
+                            }
+                        }
+                        //重载项目树：将项目列表数据ModelProjectlist给data
+                        tree.reload('yearprojectlistid', {
+                            data: modelprojectlistyear
+                        });
+                    }
+                }
+                else {
+                    viewer.scene.primitives.remove(curtileset);
+                    modleInfo = null;//标签
+                    curtileset = null;
+                }
+            }
+        });
         //树搜索
         $('#projectsearch').click(function () {
             for (var i in modelprojectlist) {
@@ -85,17 +142,18 @@ layer.open({
                 }
             }
             //重载项目树：将项目列表数据ModelProjectlist给data
-            tree.reload('modelprojectlistid', {
+            tree.reload('areaprojectlistid', {
                 data: modelprojectlist
             });
-            var value = $("#projectfilter").val();
+
+            var value = $("#projectfiltersearch").val();
             //console.log('value:', value);
             if (value) {
                 //首选应将文本的颜色恢复正常
                 var node = $("#projectbyarea");
                 node.find('.layui-tree-txt').css('color', '');
 
-                tree.reload('modelprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
+                tree.reload('areaprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
                 $.each(node.find('.layui-tree-txt'), function (index, elem) {
                     elem = $(elem);
                     let textTemp = elem.text();
@@ -116,6 +174,55 @@ layer.open({
                     });
                 });
             }
+        });
+        //树搜索
+        $('#projectfiltersearch').keydown(function (e) {
+            if (e.keyCode == 13) {
+                for (var i in modelprojectlist) {
+                for (var j in modelprojectlist[i].children) {
+                    for (var k in modelprojectlist[i].children[j].children) {
+                        modelprojectlist[i].spread = false;
+                        modelprojectlist[i].children[j].spread = false;
+                        modelprojectlist[i].children[j].children[k].spread = false;
+                        modelprojectlist[i].children[j].children[k].checked = false;
+                        viewer.scene.primitives.remove(curtileset);
+                    }
+                }
+            }
+            //重载项目树：将项目列表数据ModelProjectlist给data
+            tree.reload('areaprojectlistid', {
+                data: modelprojectlist
+            });
+            var value = $("#projectfiltersearch").val();
+            //console.log('value:', value);
+            if (value) {
+                //首选应将文本的颜色恢复正常
+                var node = $("#projectbyarea");
+                node.find('.layui-tree-txt').css('color', '');
+
+                tree.reload('areaprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
+                $.each(node.find('.layui-tree-txt'), function (index, elem) {
+                    elem = $(elem);
+                    let textTemp = elem.text();
+                    if (textTemp.indexOf(value) !== -1) {//查询相当于模糊查找
+                        elem.addClass("tree-txt-active");
+                        console.log('elem:', elem);
+                        elem.filter(':contains(' + value + ')').css('color', '#FFB800'); //搜索文本并设置标志颜色
+                    }
+                });
+
+                $.each($("#projectbyarea").find('.tree-txt-active'), function (index, elem) {
+                    elem = $(elem);
+                    // 展开所有父节点
+                    elem.parents('.layui-tree-set').each(function (i, item) {
+                        if (!$(item).hasClass('layui-tree-spread')) {
+                            $(item).find('.layui-tree-iconClick:first').click();
+                        }
+                    });
+                });
+            }
+            }
+            
         });
     }
 });
@@ -156,8 +263,8 @@ layer.open({
 
 //获取用户所有项目列表
 function GetUserAllModelProjects() {
-    var modelprojectlist=[]
-
+    modelprojectlist = [];
+    modelprojectlistyear = [];
     $.ajax({
         url: servicesurl + "/api/ModelProject/GetUserModelProjectList", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
@@ -180,7 +287,6 @@ function GetUserAllModelProjects() {
 
                 }
                 //升序排序
-                years.sort();
                 areas.sort();
                 for (var x in areas) {
                     var xzq = new Object;
@@ -206,7 +312,7 @@ function GetUserAllModelProjects() {
                             prj.b = modelprojectdata[i].ModelProjects.ZXWD;
                             prj.l = modelprojectdata[i].ModelProjects.ZXJD;
                             prj.type = "project";
-
+                            prj.icon = PROJECTICON;
                             var tasks = [];
 
                             //model
@@ -216,6 +322,8 @@ function GetUserAllModelProjects() {
                                     task.id = modelprojectdata[i].ModelTasks.TaskList[j].Id;
                                     task.type = "task";
                                     task.nodeOperate = true;
+                                    task.icon = MODELICON;
+
                                     task.title = modelprojectdata[i].ModelTasks.TaskList[j].RWMC;
                                     task.path = modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
                                     task.modelView = modelprojectdata[i].ModelTasks.TaskList[j].MXSJ;
@@ -240,11 +348,71 @@ function GetUserAllModelProjects() {
                     xzq.children = projects;
                     modelprojectlist.push(xzq);
                 }
+                
+                //升序排序
+                years.sort();
+                for (var x in years) {
+                    var year = new Object;
+                     
+                    year.title = years[x];
+                    
+                    var projects = [];
+
+                    for (var i in modelprojectdata) {
+                        if (modelprojectdata[i].ModelProjects.XMSJ.split("-")[0] == years[x]) {
+                            var prj = new Object;
+                            prj.id = modelprojectdata[i].ModelProjects.Id;
+                            prj.nodeOperate = true;
+                            prj.title = modelprojectdata[i].ModelProjects.XMSJ.split("-").join("") + modelprojectdata[i].ModelProjects.XMMC;
+                            prj.b = modelprojectdata[i].ModelProjects.ZXWD;
+                            prj.l = modelprojectdata[i].ModelProjects.ZXJD;
+                            prj.type = "project";
+                            prj.icon = PROJECTICON;
+                            var tasks = [];
+
+                            //model
+                            if (modelprojectdata[i].ModelTasks != null) {
+                                for (var j in modelprojectdata[i].ModelTasks.TaskList) {
+                                    var task = new Object;
+                                    task.id = modelprojectdata[i].ModelTasks.TaskList[j].Id;
+                                    task.type = "task";
+                                    task.nodeOperate = true;
+                                    task.icon = MODELICON;
+
+                                    task.title = modelprojectdata[i].ModelTasks.TaskList[j].RWMC;
+                                    task.path = modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
+                                    task.modelView = modelprojectdata[i].ModelTasks.TaskList[j].MXSJ;
+
+                                    if (modelprojectdata[i].ModelTasks.TaskList[j].MXLJ != null) {
+                                        task.showCheckbox = true;
+                                        task.checked = false;
+                                    }
+                                    else {
+                                        task.showCheckbox = false;
+                                        task.checked = false;
+                                    }
+                                    tasks.push(task);
+                                }
+                            }
+                            prj.children = tasks;
+                            projects.push(prj);
+                        }
+
+
+                    }
+                    year.children = projects;
+                    modelprojectlistyear.push(year);
+                }
+
+
+
                 //重载项目树：将项目列表数据ModelProjectlist给data
-                tree.reload('modelprojectlistid', {
+                tree.reload('areaprojectlistid', {
                     data: modelprojectlist
                 });
-
+                tree.reload('yearprojectlistid', {
+                    data: modelprojectlistyear
+                });
                 //TODO 新增项目位置及标注
                 modelprojectentities = [];                   //项目位置及标注
                 var bs = [];//纬度集合
@@ -302,7 +470,6 @@ function GetUserAllModelProjects() {
 
         }, datatype: "json"
     });
-    return modelprojectlist;
 };
 //项目节点点击:set currentproject
 function ModelProjectNodeClick(obj) {
