@@ -83,3 +83,7 @@
 #layui-layer1{
     position:relative;
 }
+
+.layui-form-checkbox[lay-skin=primary] {
+    padding-left:20px;
+}

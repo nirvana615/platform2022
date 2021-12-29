@@ -354,11 +354,11 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
-        /// 未处理任务信息
+        /// 任务状态信息
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public string GetNewModelTask(string cookie)
+        public string GetModelTaskStatus(string cookie)
         {
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
@@ -369,95 +369,73 @@ namespace SERVICE.Controllers
                 List<ModelTask> newModelTaskPending = new List<ModelTask>();//存储待处理任务
                 List<ModelTask> newModelTaskFinished = new List<ModelTask>();//存储已完成任务
                 List<ModelTask> newModelTaskProcess = new List<ModelTask>();//存储已完成任务
-                string projectdatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE bsm{0} AND ztm={1} ORDER BY id DESC", userbsms, (int)MODEL.Enum.State.InUse));
-                if (!string.IsNullOrEmpty(projectdatas))
+                string modelTasks = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(modelTasks))
                 {
-                    string[] projectrows = projectdatas.Split(new char[] { COM.ConstHelper.rowSplit });
-
-                    for (int i = 0; i < projectrows.Length; i++)
+                    string[] maprows = modelTasks.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int j = 0; j < maprows.Length; j++)
                     {
-                        ModelProject modelProject = ParseModelHelper.ParseModelProject(projectrows[i]);
-                        if (modelProject != null)
+                        ModelTask modelTask = ParseModelHelper.ParseModelTask(maprows[j]);
+                        if (modelTask != null)
                         {
-                            string project_task_maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_task WHERE projectid={0} AND ztm={1} ORDER BY cjsj ASC", modelProject.Id, (int)MODEL.Enum.State.InUse));
-                            if (!string.IsNullOrEmpty(project_task_maps))
+                            try
                             {
-                                string[] maprows = project_task_maps.Split(new char[] { COM.ConstHelper.rowSplit });
-                                for (int j = 0; j < maprows.Length; j++)
+                                // 使用 System.IO.Directory.GetFiles() 函数获取所有文件
+                                string modelFilePath = modeldir + @"\AllModel" + @"\" + modelTask.RWBM.ToString();
+                                string jsonname = string.Empty; ;
+                                DirectoryInfo dir = new DirectoryInfo(modelFilePath);
+                                foreach (FileInfo file in dir.GetFiles("*.json", SearchOption.AllDirectories))
                                 {
-                                    MapModelProjecTask mapModelProjecTask = ParseModelHelper.ParseMapModelProjecTask(maprows[j]);
-                                    if (mapModelProjecTask != null)
+                                    jsonname = file.FullName;
+                                    if (jsonname.Contains(".json"))
                                     {
-
-                                        ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
-                                        if (modelTask != null)
-                                        {
-                                            try
-                                            {
-                                                // 使用 System.IO.Directory.GetFiles() 函数获取所有文件
-                                                string modelFilePath = modeldir + @"\AllModel" + @"\" + modelTask.RWBM.ToString();
-                                                string jsonname = string.Empty; ;
-                                                DirectoryInfo dir = new DirectoryInfo(modelFilePath);
-                                                foreach (FileInfo file in dir.GetFiles("*.json", SearchOption.AllDirectories))
-                                                {
-                                                    jsonname = file.FullName;
-                                                    if (jsonname.Contains(".json"))
-                                                    {
-                                                        break;
-                                                    }
-                                                }
-                                                string[] path = jsonname.Split(new string[] { "data" }, StringSplitOptions.RemoveEmptyEntries);
-                                                if (path.Last() == null)
-                                                {
-                                                    if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.processing)
-                                                    {
-                                                        newModelTaskProcess.Add(modelTask); //处理中任务 
-                                                    }
-                                                    else
-                                                    {
-                                                        newModelTaskPending.Add(modelTask); //未处理任务 
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (modelTask.RWZT != (int)MODEL.EnumModel.TaskStatus.Finished) {
-                                                        modelTask.RWZT = (int)MODEL.EnumModel.TaskStatus.Finished;
-                                                        int updateRWZT = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", (int)MODEL.EnumModel.TaskStatus.Finished, modelTask.Id, (int)MODEL.Enum.State.InUse)); 
-
-                                                    }
-                                                    newModelTaskFinished.Add(modelTask);//已完成
-                                                }
-                                            }
-                                            catch
-                                            {
-                                                if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.processing)
-                                                {
-                                                    newModelTaskProcess.Add(modelTask); //处理中任务 
-                                                }
-                                                else
-                                                {
-                                                    newModelTaskPending.Add(modelTask); //未处理任务 
-                                                }
-                                            }
-                                        }
-
+                                        break;
                                     }
                                 }
-                            }
+                                string[] path = jsonname.Split(new string[] { "data" }, StringSplitOptions.RemoveEmptyEntries);
+                                if (path.Last() == null)
+                                {
+                                    if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.processing)
+                                    {
+                                        newModelTaskProcess.Add(modelTask); //处理中任务 
+                                    }
+                                    else
+                                    {
+                                        newModelTaskPending.Add(modelTask); //未处理任务 
+                                    }
+                                }
+                                else
+                                {
+                                    if (modelTask.RWZT != (int)MODEL.EnumModel.TaskStatus.Finished)
+                                    {
+                                        modelTask.RWZT = (int)MODEL.EnumModel.TaskStatus.Finished;
+                                        int updateRWZT = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", (int)MODEL.EnumModel.TaskStatus.Finished, modelTask.Id, (int)MODEL.Enum.State.InUse));
 
+                                    }
+                                    newModelTaskFinished.Add(modelTask);//已完成
+                                }
+                            }
+                            catch
+                            {
+                                if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.processing)
+                                {
+                                    newModelTaskProcess.Add(modelTask); //处理中任务 
+                                }
+                                else
+                                {
+                                    newModelTaskPending.Add(modelTask); //未处理任务 
+                                }
+                            }
                         }
                     }
-                    modelTaskStatus.newModelTaskPending = newModelTaskPending;
-                    modelTaskStatus.newModelTaskFinished = newModelTaskFinished;
-                    modelTaskStatus.newModelTaskProcess = newModelTaskProcess;
-                    
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(modelTaskStatus)));
-                    
                 }
-                else
-                {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无信息！", string.Empty));
-                }
+
+                modelTaskStatus.newModelTaskPending = newModelTaskPending;
+                modelTaskStatus.newModelTaskFinished = newModelTaskFinished;
+                modelTaskStatus.newModelTaskProcess = newModelTaskProcess;
+
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(modelTaskStatus)));
+
             }
             else
             {

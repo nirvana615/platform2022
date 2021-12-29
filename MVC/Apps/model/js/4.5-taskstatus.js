@@ -8,7 +8,7 @@ function getNewModelTask() {
     newmodeltasktableProcess = [];
     newmodeltasktableFinished = [];
     $.ajax({
-        url: servicesurl + "/api/ModelTask/GetNewModelTask", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/ModelTask/GetModelTaskStatus", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             var result = JSON.parse(data);
             if (result.code == 1) {
@@ -44,7 +44,7 @@ function LoadNewModelTask() {
             , anim: 0
             , maxmin: true
             , moveOut: true
-            , content: '<!--任务管理--> <div class="layui-tab layui-tab-brief" lay-filter="demo"> <ul class="layui-tab-title"> <li class="layui-this">待处理</li> <li>处理中</li> <li>已完成</li> </ul> <div class="layui-tab-content"> <div class="layui-tab-item layui-show"> <table class="layui-hide" id="newtasktable_Pending" lay-filter="newtasktable_Pending"></table> <script type="text/html" id="barDemo_Pending"> <a class="layui-btnlayui-btn-xs" lay-event="Pending"><svg t="1640753958799" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2454" width="30" height="30"><path d="M512 954.88c-243.712 0-442.88-199.168-442.88-442.88s199.168-442.88 442.88-442.88 442.88 199.168 442.88 442.88-199.168 442.88-442.88 442.88z m0-63.488c208.896 0 379.392-170.496 379.392-379.392s-170.496-379.392-379.392-379.392-379.392 170.496-379.392 379.392 170.496 379.392 379.392 379.392z m23.04-203.776l155.648-152.064c12.288-11.776 12.288-31.232 0.512-43.52l-152.064-155.648c-11.776-12.288-31.232-12.288-43.52-0.512s-12.288 31.232-0.512 43.52l100.352 102.4-294.912-3.584c-16.896 0-30.72 13.312-31.232 30.208 0 16.896 13.312 30.72 30.208 31.232l294.912 3.584-102.4 100.352c-6.144 6.144-9.216 13.824-9.216 21.504s3.072 15.872 8.704 22.016c12.288 12.288 31.744 12.8 43.52 0.512z" p-id="2455" fill="#707070"></path></svg></a> </script> </div> <div class="layui-tab-item"> <table class="layui-hide" id="newtasktable_Processing" lay-filter="newtasktable_Processing"></table> <script type="text/html" id="barDemo_Processing"> <a class="layui-btnlayui-btn-xs layui-icon" lay-event="Processing">&#xe705;</a> </script> </div> <div class="layui-tab-item"> <table class="layui-hide" id="newtasktable_Finished" lay-filter="newtasktable_Finished"></table> <script type="text/html" id="barDemo_Finished"> <a class="layui-btnlayui-btn-xs layui-icon" lay-event="Finished">&#xe705;</a> </script> </div> </div> </div>'
+            , content: '<!--任务管理--> <div class="layui-tab layui-tab-card" lay-filter="demo"> <ul class="layui-tab-title"> <li class="layui-this">待处理</li> <li>处理中</li> <li>已完成</li> </ul> <div class="layui-tab-content"> <div class="layui-tab-item layui-show"> <table class="layui-hide" id="newtasktable_Pending" lay-filter="newtasktable_Pending"></table> <script type="text/html" id="barDemo_Pending"> <a class="layui-btnlayui-btn-xs layui-icon" lay-event="Pending"><svg t="1640763008247" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5323" width="18" height="18"><path d="M512 954.88c-243.712 0-442.88-199.168-442.88-442.88s199.168-442.88 442.88-442.88 442.88 199.168 442.88 442.88-199.168 442.88-442.88 442.88z m0-63.488c208.896 0 379.392-170.496 379.392-379.392s-170.496-379.392-379.392-379.392-379.392 170.496-379.392 379.392 170.496 379.392 379.392 379.392z m23.04-203.776l155.648-152.064c12.288-11.776 12.288-31.232 0.512-43.52l-152.064-155.648c-11.776-12.288-31.232-12.288-43.52-0.512s-12.288 31.232-0.512 43.52l100.352 102.4-294.912-3.584c-16.896 0-30.72 13.312-31.232 30.208 0 16.896 13.312 30.72 30.208 31.232l294.912 3.584-102.4 100.352c-6.144 6.144-9.216 13.824-9.216 21.504s3.072 15.872 8.704 22.016c12.288 12.288 31.744 12.8 43.52 0.512z" p-id="5324" fill="#8a8a8a"></path></svg></a> </script> </div> <div class="layui-tab-item"> <table class="layui-hide" id="newtasktable_Processing" lay-filter="newtasktable_Processing"></table> <script type="text/html" id="barDemo_Processing"> <a class="layui-btnlayui-btn-xs layui-icon" lay-event="Processing">&#xe705;</a> </script> </div> <div class="layui-tab-item"> <table class="layui-hide" id="newtasktable_Finished" lay-filter="newtasktable_Finished"></table> <script type="text/html" id="barDemo_Finished"> <a class="layui-btnlayui-btn-xs layui-icon" lay-event="Finished">&#xe705;</a> </script> </div> </div> </div>'
             , zIndex: layer.zIndex
             , success: function (layero) {
                 layer.setTop(layero);
@@ -65,8 +65,8 @@ function LoadNewModelTask() {
                     , cols: [[
                         { field: 'Id', title: 'ID', width: 50, sort: true, align: "center" }
                         , { field: 'RWMC', title: '任务名称', sort: true, width: 200, align: "center" }
+                        , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 150, align: "center" }
                         , { field: 'RWZT', title: '任务状态', width: 150, align: "center" }
-                        , { field: 'RWCJSJ', title: '时间', sort: true, width: 150, align: "center" }
                         , { fixed: 'right', title: '操作', width: 200, align: "center", toolbar: '#barDemo_Pending'}
                     ]]
                     , data: []
@@ -108,8 +108,8 @@ function LoadNewModelTask() {
                     , cols: [[
                         { field: 'Id', title: 'ID', width: 50, sort: true, align: "center" }
                         , { field: 'RWMC', title: '任务名称', sort: true, width: 200, align: "center" }
+                        , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 150, align: "center" }
                         , { field: 'RWZT', title: '任务状态', width: 150, align: "center" }
-                        , { field: 'RWCJSJ', title: '时间', sort: true, width: 150, align: "center" }
                         , { fixed: 'right', title: '操作', width: 200, align: "center", toolbar: '#barDemo_Processing' }
                     ]]
                     , data: []
@@ -145,8 +145,8 @@ function LoadNewModelTask() {
                     , cols: [[
                         { field: 'Id', title: 'ID', width: 50, sort: true, align: "center" }
                         , { field: 'RWMC', title: '任务名称', sort: true, width: 200, align: "center" }
+                        , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 150, align: "center" }
                         , { field: 'RWZT', title: '任务状态', width: 150, align: "center" }
-                        , { field: 'RWCJSJ', title: '时间', sort: true, width: 150, align: "center" }
                         , { fixed: 'right', title: '操作', width: 200, align: "center", toolbar: '#barDemo_Finished' }
                     ]]
                     , data: []

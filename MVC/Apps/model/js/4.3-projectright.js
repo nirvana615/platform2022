@@ -117,7 +117,7 @@ function GetModelUserInfo() {
             else {
                 var userinfodatas = JSON.parse(data);
                 for (var i in userinfodatas) {
-                    document.getElementById('usersid').innerHTML += '<option value="' + userinfodatas[i].Id + '">' + userinfodatas[i].UserName + '</option>';
+                    document.getElementById('usersid').innerHTML += '<option value="' + userinfodatas[i].Id + '">' + userinfodatas[i].AliasName + '</option>';
                 }
 
                 form.render();

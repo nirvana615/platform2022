@@ -523,8 +523,8 @@
     <Content Include="Apps\model\js\4.4-taskinfo-modelp.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelv.js" />
     <Content Include="Apps\model\js\4.4-taskinfo.js" />
-    <Content Include="Apps\model\js\4.5-newtaskinfo-modelp.js" />
-    <Content Include="Apps\model\js\4.5-newtaskinfo.js" />
+    <Content Include="Apps\model\js\4.5-taskstatus-modelp.js" />
+    <Content Include="Apps\model\js\4.5-taskstatus.js" />
     <Content Include="Apps\model\js\5.0-header.js" />
     <Content Include="Apps\model\js\5.1-message.js" />
     <Content Include="Apps\model\js\5.2-setting.js" />
@@ -540,7 +540,7 @@
     <Content Include="Apps\model\widget\1.3 projecteditview.html" />
     <Content Include="Apps\model\widget\2.1 taskaddview.html" />
     <Content Include="Apps\model\widget\2.2 taskview.html" />
-    <Content Include="Apps\model\widget\2.4 newtaskinfo.html" />
+    <Content Include="Apps\model\widget\2.4 taskstatus.html" />
     <Content Include="Apps\model\widget\2.3 taskeditview.html" />
     <Content Include="Apps\model\widget\3.0 projectrigth.html" />
     <Content Include="Apps\model\widget\3.1-draw.html" />
