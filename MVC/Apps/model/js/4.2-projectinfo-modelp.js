@@ -6,14 +6,14 @@ function ModelProjectInfo(id, style) {
             modelprojectinfoviewlayerindex = layer.open({
                 type: 1
                 , title: ['查看项目信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['560px', '400px']
+                , area: ['420px', '390px']
                 , shade: 0
                 , offset: 'auto'
                 , closeBtn: 1
                 , anim: 0
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--查看项目信息--> <form class="layui-form" style="margin-top:5px;margin-right:10px;" lay-filter="viewModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称</label> <div class="layui-input-block"> <input type="text" name="model_xmmc_view" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目编码</label> <div class="layui-input-block"> <input type="text" name="model_xmbm_view" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目位置</label> <div class="layui-input-block"> <input type="text" name="model_xmwz_view" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md6"> <div class="grid-demo grid-demo-bg1"> <label class="layui-form-label">中心经度</label> <div class="layui-input-block"> <input type="text" name="model_zxjd_view" readonly="readonly" class="layui-input" /> </div> </div> </div> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label">中心纬度</label> <div class="layui-input-block"> <input type="text" name="model_zxwd_view" readonly="readonly" class="layui-input" /> </div> </div> </div> </div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md6"> <div class="grid-demo grid-demo-bg1"> <label class="layui-form-label">项目时间</label> <div class="layui-input-block"> <input type="text" name="model_xmsj_view" readonly="readonly" class="layui-input" /> </div> </div> </div> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label">项目用途</label> <div class="layui-input-block"> <input type="text" name="model_xmyt_view" readonly="readonly" class="layui-input" /> </div> </div> </div> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;注</label> <div class="layui-input-block"> <input type="text" name="model_bz_view" readonly="readonly" class="layui-input"> </div> </div></form>'
+                , content: '<!--查看项目信息--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="viewModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称</label> <div class="layui-input-block"> <input type="text" name="model_xmmc_view" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目编码</label> <div class="layui-input-block"> <input type="text" name="model_xmbm_view" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目位置</label> <div class="layui-input-block"> <input type="text" name="model_xmwz_view" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">中心经度</label> <div class="layui-input-block"> <input type="text" name="model_zxjd_view" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">中心纬度</label> <div class="layui-input-block"> <input type="text" name="model_zxwd_view" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目时间</label> <div class="layui-input-block"> <input type="text" name="model_xmsj_view" readonly="readonly" class="layui-input" /> </div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"> <input type="text" name="model_bz_view" readonly="readonly" class="layui-input"> </div> </div> </form>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -39,31 +39,9 @@ function ModelProjectInfo(id, style) {
                         , "model_zxjd_view": modelprojectinfo.ZXJD
                         , "model_zxwd_view": modelprojectinfo.ZXWD
                         , "model_xmsj_view": modelprojectinfo.XMSJ
+                        , "model_xmwz_view": modelprojectinfo.XMWZ
                         , "model_bz_view": modelprojectinfo.BZ
                     });
-
-                    //翻译项目位置
-                    if (xjxzqs.length > 0) {
-                        for (var i in xjxzqs) {
-                            if (xjxzqs[i].value == modelprojectinfo.XZQBM) {
-                                var xmwz = "重庆市" + xjxzqs[i].name;
-                                form.val("viewModelprojectinfoform", {
-                                    "model_xmwz_view": xmwz
-                                });
-                            }
-                        }
-                    }
-                    //翻译项目用途
-                    if (xmyts.length > 0) {
-                        for (var i in xmyts) {
-                            if (xmyts[i].value == modelprojectinfo.XMYT) {
-                                form.val("viewModelprojectinfoform", {
-                                    "model_xmyt_view": xmyts[i].name
-                                });
-                            }
-                        }
-                    }
-
                 }
                 else {
                     form.val("viewModelprojectinfoform", {
@@ -73,13 +51,10 @@ function ModelProjectInfo(id, style) {
                         , "model_zxjd_view": ""
                         , "model_zxwd_view": ""
                         , "model_xmsj_view": ""
-                        , "model_xmyt_view": ""
                         , "model_bz_view": ""
                     });
                 }
 
-                //弹出消息————controller里定义的各类情况result.message
-                layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
             }, datatype: "json"
         });
 
@@ -91,13 +66,13 @@ function ModelProjectInfo(id, style) {
             modelprojectinfoeditlayerindex = layer.open({
                 type: 1
                 , title: ['编辑项目信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['560px', '400px']
+                , area: ['420px', '490px']
                 , shade: 0
                 , offset: 'auto'
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--编辑项目--> <form class="layui-form" style="margin-top:5px;margin-right:10px;" lay-filter="editModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label" >*项目名称</label> <div class="layui-input-block"><input type="text" name="model_xmmc_edit" autocomplete="off" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label" >*项目编码</label> <div class="layui-input-block"> <input type="text" name="model_xmbm_edit" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label" >*项目位置</label> <div class="layui-input-inline" style="width:200px;"><select id="province1id" name="model_province_edit" lay-verify="required"><option value="">省/市</option><option value="0" selected>重庆市</option></select></div> <div class="layui-input-inline" style="width:200px;"><select id="district1id" name="model_district_edit" disabled="disabled" lay-verify="required"><option value="">区/县</option></select></div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md6"> <div class="grid-demo grid-demo-bg1"> <label class="layui-form-label" >*中心经度</label> <div class="layui-input-block"><input type="text" name="model_zxjd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label" >*中心纬度</label> <div class="layui-input-block"><input type="text" name="model_zxwd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> </div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md6"> <div class="grid-demo grid-demo-bg1"> <label class="layui-form-label" >*项目时间</label> <div class="layui-input-block"><input type="text" id="xmsjid" name="model_xmsj_edit" lay-verify="date" placeholder="YYYY-MM-DD"class="layui-input" /></div> </div> </div> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label" >*项目用途</label> <div class="layui-input-block"><select id="xmytid" name="model_xmyt_edit" lay-verify="required"><option value="">请选择</option></select></div> </div> </div> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"><input type="text" name="model_bz_edit" class="layui-input"></div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="position:absolute;right:15px;"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editModelprojectinfosubmit" style="width:100px">提交</button> </div> </div> </form>'
+                , content: '<!--编辑项目--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="editModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称</label> <div class="layui-input-block"><input type="text" name="model_xmmc_edit" autocomplete="off" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目编码</label> <div class="layui-input-block"> <input type="text" name="model_xmbm_edit" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">行政区划</label> <div class="layui-input-block"><select id="province1id" name="model_province_edit" lay-verify="required"><option value="">省/市</option><option value="0" selected>重庆市</option></select></div></div> <div class="layui-form-item"> <label class="layui-form-label"></label> <div class="layui-input-block"><select id="district1id" name="model_district_edit" disabled="disabled" lay-verify="required"><option value="">区/县</option></select></div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">项目位置</label> <div class="layui-input-block"><input type="text" name="model_xmwz_edit" autocomplete="off" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo grid-demo-bg1"> <label class="layui-form-label">中心经度</label> <div class="layui-input-block"><input type="text" name="model_zxjd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">中心纬度</label> <div class="layui-input-block"><input type="text" name="model_zxwd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">项目时间</label> <div class="layui-input-block"><input type="text" id="xmsjid" name="model_xmsj_edit" lay-verify="date" placeholder="YYYY-MM-DD" class="layui-input" /></div> </div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"><input type="text" name="model_bz_edit" class="layui-input"></div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="position:absolute;right:20px;"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editModelprojectinfosubmit" style="width:100px">提交</button> </div> </div> </form> '
                 , success: function (layero) {
                     layer.setTop(layero);
 
@@ -110,9 +85,10 @@ function ModelProjectInfo(id, style) {
                                 var modelprojectinfo = JSON.parse(result.data);
                                 form.val("editModelprojectinfoform", {
                                     "model_xmmc_edit": modelprojectinfo.XMMC
-                                    ,"model_xmbm_edit": modelprojectinfo.XMBM
+                                    , "model_xmbm_edit": modelprojectinfo.XMBM
                                     , "model_zxjd_edit": modelprojectinfo.ZXJD
                                     , "model_zxwd_edit": modelprojectinfo.ZXWD
+                                    , "model_xmwz_edit": modelprojectinfo.XMWZ
                                     , "model_xmsj_edit": modelprojectinfo.XMSJ
                                     , "model_bz_edit": modelprojectinfo.BZ
                                 })
@@ -128,17 +104,6 @@ function ModelProjectInfo(id, style) {
                                         }
                                     }
                                 }
-                                if (xmyts.length > 0) {
-                                    for (var i in xmyts) {
-                                        if (xmyts[i].value == modelprojectinfo.XMYT) {
-                                            document.getElementById("xmytid").innerHTML += '<option value="' + xmyts[i].value + '" selected>' + xmyts[i].name + '</option>';
-                                        }
-                                        else {
-                                            document.getElementById("xmytid").innerHTML += '<option value="' + xmyts[i].value + '">' + xmyts[i].name + '</option>';
-                                        }
-                                    }
-                                }
-
 
                             }
                             else {
@@ -149,7 +114,6 @@ function ModelProjectInfo(id, style) {
                                     , "model_zxjd_edit": ""
                                     , "model_zxwd_edit": ""
                                     , "model_xmsj_edit": ""
-                                    , "model_xmyt_edit": ""
                                     , "model_bz_edit": ""
                                 })
                             }
@@ -159,8 +123,6 @@ function ModelProjectInfo(id, style) {
                             });
                             form.render();//更新渲染
                             form.render('select');//更新渲染select  数据库枚举选项，不然显示不出来
-
-                            layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }, datatype: "json"
                     });
 
@@ -188,7 +150,6 @@ function ModelProjectInfo(id, style) {
             })
         }
     }
-    
 };
 
 

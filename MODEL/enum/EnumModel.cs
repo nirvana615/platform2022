@@ -60,7 +60,7 @@ namespace MODEL
 
            
             [RemarkAttribute("正在处理")]
-            processing = 1,
+            Processing = 1,
 
             [RemarkAttribute("已完成")]
             Finished = 2

@@ -360,7 +360,6 @@ function LoadModel(obj) {
     if (obj.modelView != null && obj.modelView.length > 0) {
         var home = JSON.parse(obj.modelView);
         viewer.scene.camera.setView(home);
-        console.log(home);
     } else {
         viewer.zoomTo(curtileset);
     }

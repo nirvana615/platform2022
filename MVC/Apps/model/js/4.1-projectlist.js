@@ -4,7 +4,7 @@ var modelprojectlistyear = [];//按时间组织
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-    , area: ['350px', '90%']
+    , area: ['340px', '90%']
     , shade: 0
     , offset: ['60px', '10px']
     , closeBtn: 0
@@ -17,7 +17,7 @@ layer.open({
         
         //获取用户全部项目信息
         GetUserAllModelProjects();
-        //地区
+        //地区树
         tree.render({
             elem: '#projectbyarea'
             , id: 'areaprojectlistid' 
@@ -38,6 +38,7 @@ layer.open({
                 if (obj.checked) {
                     modleInfo = obj.data;//标签
                     if (obj.data.type == "task") {
+
                         for (var i in modelprojectlist) {
                             for (var j in modelprojectlist[i].children) {
                                 for (var k in modelprojectlist[i].children[j].children) {
@@ -46,8 +47,7 @@ layer.open({
                                         modelprojectlist[i].spread = true;
                                         modelprojectlist[i].children[j].spread = true;
                                         modelprojectlist[i].children[j].children[k].spread = true;
-                                        LoadModel(obj.data);
-                                        
+                                         
                                     }
                                     else {
                                         //modelprojectlist[i].spread = false;
@@ -59,6 +59,7 @@ layer.open({
                                 }
                             }
                         }
+                        LoadModel(obj.data);//加载模型
                         //重载项目树：将项目列表数据ModelProjectlist给data
                         tree.reload('areaprojectlistid', {
                             data: modelprojectlist
@@ -73,7 +74,7 @@ layer.open({
             }
         });
 
-        //时间
+        //时间树
         tree.render({
             elem: '#projectbyyear'
             , id: 'yearprojectlistid'
@@ -128,23 +129,23 @@ layer.open({
                 }
             }
         });
-        //树搜索
+        //点击按钮树搜索
         $('#projectsearch').click(function () {
             elem.tabChange('projectListTab', 'list_2');
-            for (var i in modelprojectlist) {
-                for (var j in modelprojectlist[i].children) {
-                    for (var k in modelprojectlist[i].children[j].children) {
-                        modelprojectlist[i].spread = false;
-                        modelprojectlist[i].children[j].spread = false;
-                        modelprojectlist[i].children[j].children[k].spread = false;
-                        modelprojectlist[i].children[j].children[k].checked = false;
+            for (var i in modelprojectlistyear) {
+                for (var j in modelprojectlistyear[i].children) {
+                    for (var k in modelprojectlistyear[i].children[j].children) {
+                        modelprojectlistyear[i].spread = false;
+                        modelprojectlistyear[i].children[j].spread = false;
+                        modelprojectlistyear[i].children[j].children[k].spread = false;
+                        modelprojectlistyear[i].children[j].children[k].checked = false;
                         viewer.scene.primitives.remove(curtileset);
                     }
                 }
             }
             //重载项目树：将项目列表数据ModelProjectlist给data
             tree.reload('yearprojectlistid', {
-                data: modelprojectlist
+                data: modelprojectlistyear
             });
 
             var value = $("#projectfiltersearch").val();
@@ -176,24 +177,24 @@ layer.open({
                 });
             }
         });
-        //树搜索
+        //点击回车树搜索
         $('#projectfiltersearch').keydown(function (e) {
             if (e.keyCode == 13) {
                 elem.tabChange('projectListTab', 'list_2');
-                for (var i in modelprojectlist) {
-                    for (var j in modelprojectlist[i].children) {
-                        for (var k in modelprojectlist[i].children[j].children) {
-                            modelprojectlist[i].spread = false;
-                            modelprojectlist[i].children[j].spread = false;
-                            modelprojectlist[i].children[j].children[k].spread = false;
-                            modelprojectlist[i].children[j].children[k].checked = false;
+                for (var i in modelprojectlistyear) {
+                    for (var j in modelprojectlistyear[i].children) {
+                        for (var k in modelprojectlistyear[i].children[j].children) {
+                            modelprojectlistyear[i].spread = false;
+                            modelprojectlistyear[i].children[j].spread = false;
+                            modelprojectlistyear[i].children[j].children[k].spread = false;
+                            modelprojectlistyear[i].children[j].children[k].checked = false;
                             viewer.scene.primitives.remove(curtileset);
                         }
                     }
                 }
                 //重载项目树：将项目列表数据ModelProjectlist给data
                 tree.reload('yearprojectlistid', {
-                    data: modelprojectlist
+                    data: modelprojectlistyear
                 });
                 var value = $("#projectfiltersearch").val();
                 //console.log('value:', value);
@@ -261,7 +262,7 @@ layer.open({
 //        });
 //    }
 //});
-
+////
 
 //获取用户所有项目列表
 function GetUserAllModelProjects() {
@@ -702,7 +703,7 @@ function CloseAllLayer() {
     }
     //TODO更多关闭图层
 };
-//关闭任务信息相关图层
+//关闭项目信息相关图层
 function CloseModelProjectInfoLayer() {
     if (modelprojectinfoviewlayerindex != null) {
         layer.close(modelprojectinfoviewlayerindex);

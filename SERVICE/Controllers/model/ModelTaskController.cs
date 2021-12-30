@@ -67,7 +67,7 @@ namespace SERVICE.Controllers
                     return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无此项目！", string.Empty));
                 }
                 string rwbm = CreateTaskCode(modelProject.XMBM, modelProject.BSM);//项目编码
-                string rwzt = "0";
+                int rwzt = (int)MODEL.EnumModel.TaskStatus.Pending;
                 if (
                     (!string.IsNullOrEmpty(rwmc))
                     && (!string.IsNullOrEmpty(yxcjry))
@@ -155,14 +155,31 @@ namespace SERVICE.Controllers
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
             {
-                ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM model_task WHERE id={0} AND ztm={1} AND bsm{2}", id, (int)MODEL.Enum.State.InUse, userbsms)));
-                if (modelTask != null)
+                MapModelProjecTask mapModelProjecTask = ParseModelHelper.ParseMapModelProjecTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_task WHERE taskid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (mapModelProjecTask != null)
                 {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(modelTask)));
+                    ModelProject modelProject = ParseModelHelper.ParseModelProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE id={0} AND ztm={1}", mapModelProjecTask.ModelProjectId, (int)MODEL.Enum.State.InUse)));
+                    if (modelProject != null)
+                    {
+                        ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM model_task WHERE id={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                        if (modelTask != null)
+                        {
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, JsonHelper.ToJson(modelProject), JsonHelper.ToJson(modelTask)));
+                        }
+                        else
+                        {
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无此任务！", string.Empty));
+                        }
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无此任务！", string.Empty));
+                    }
+
                 }
                 else
                 {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无此目标！", string.Empty));
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无此任务！", string.Empty));
                 }
             }
             else
@@ -395,7 +412,7 @@ namespace SERVICE.Controllers
                                 string[] path = jsonname.Split(new string[] { "data" }, StringSplitOptions.RemoveEmptyEntries);
                                 if (path.Last() == null)
                                 {
-                                    if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.processing)
+                                    if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
                                     {
                                         newModelTaskProcess.Add(modelTask); //处理中任务 
                                     }
@@ -417,7 +434,7 @@ namespace SERVICE.Controllers
                             }
                             catch
                             {
-                                if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.processing)
+                                if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
                                 {
                                     newModelTaskProcess.Add(modelTask); //处理中任务 
                                 }
@@ -455,7 +472,7 @@ namespace SERVICE.Controllers
             string id = HttpContext.Current.Request.Form["Id"];
 
 
-            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", (int)MODEL.EnumModel.TaskStatus.processing, id, (int)MODEL.Enum.State.InUse));
+            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", (int)MODEL.EnumModel.TaskStatus.Processing, id, (int)MODEL.Enum.State.InUse));
             if (updatecount == 1)
             {
                 return "更新成功";

@@ -15,7 +15,7 @@ util.fixbar({
 
             biaozhuMangan();//标注
         }
-        
+
         else if (type === 'bar7') {
             //本地工具
             LoadLocalToolLayer();
@@ -27,7 +27,6 @@ util.fixbar({
 
 
 //提示
-
 $("#utilbar5").on("mouseenter", function () {
     if (tipslayer == -1) {
         tipslayer = layer.tips('测量', '#utilbar5', {

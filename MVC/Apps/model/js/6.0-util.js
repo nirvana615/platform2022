@@ -26,6 +26,8 @@ util.fixbar({
         } else if (type === 'bar2') {
             //新建任务
             ModelTaskInfo(currentprojectid, "add");
+            
+
         }
         else if (type === 'bar3') {
             //项目权限

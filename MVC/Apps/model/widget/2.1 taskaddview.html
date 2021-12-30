@@ -1,7 +1,7 @@
 ﻿<!--创建任务-->
-<form class="layui-form" style="margin-top:5px;margin-right:10px;" lay-filter="addModeltaskinfoform">
+<form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="addModeltaskinfoform">
     <div class="layui-form-item">
-        <label class="layui-form-label">*任务名称</label>
+        <label class="layui-form-label">任务名称</label>
         <div class="layui-input-block">
             <input type="text" name="model_rwmc_add" autocomplete="off" placeholder="航测对象具体描述，如：XX镇XX滑坡" lay-verify="required" class="layui-input" />
         </div>
@@ -10,7 +10,7 @@
         <div class="layui-row">
             <div class="layui-col-md6">
                 <div class="grid-demo">
-                    <label class="layui-form-label">*采集时间</label>
+                    <label class="layui-form-label">采集时间</label>
                     <div class="layui-input-block">
                         <input type="text" id="yxcjsjid" name="model_yxcjsj_add" lay-verify="required|date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />
                     </div>
@@ -18,7 +18,7 @@
             </div>
             <div class="layui-col-md6">
                 <div class="grid-demo">
-                    <label class="layui-form-label">*影像数量</label>
+                    <label class="layui-form-label">影像数量</label>
                     <div class="layui-input-block">
                         <input type="text" name="model_yxsl_add" autocomplete="off" placeholder="请输入数字" lay-verify="required|number" class="layui-input" />
                     </div>
@@ -30,7 +30,7 @@
         <div class="layui-row">
             <div class="layui-col-md6">
                 <div class="grid-demo">
-                    <label class="layui-form-label">*坐标系统</label>
+                    <label class="layui-form-label">坐标系统</label>
                     <div class="layui-input-block">
                         <select id="kjckid" name="model_kjck_add" lay-verify="required"></select>
                     </div>
@@ -38,7 +38,7 @@
             </div>
             <div class="layui-col-md6">
                 <div class="grid-demo">
-                    <label class="layui-form-label">*采集设备</label>
+                    <label class="layui-form-label">采集设备</label>
                     <div class="layui-input-block">
                         <select id="yxcjsbid" name="model_yxcjsb_add" lay-verify="required"></select>
                     </div>
@@ -47,36 +47,31 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">*目标成果</label>
+        <label class="layui-form-label">目标成果</label>
         <div class="layui-input-block" id="sxcgid">
 
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label" >控制点</label>
-        <div class="layui-input-block">
-            <input type="text" name="model_yxkzd_add" autocomplete="off" placeholder="请输入txt格式" class="layui-input" />
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">范&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;围</label>
-        <div class="layui-input-block">
-            <input type="text" name="model_yxfw_add" autocomplete="off" placeholder="请输入kml格式" class="layui-input" />
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">*影像链接</label>
+        <label class="layui-form-label">影像链接</label>
         <div class="layui-input-block">
             <input type="text" name="model_yxcflj_add" autocomplete="off" lay-verify="required" placeholder="请输入影像链接" class="layui-input" />
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label" >任务描述</label>
+        <label class="layui-form-label">控制点</label>
         <div class="layui-input-block">
-            <textarea name="model_rwms_add" class="layui-textarea" placeholder="请输入任务描述信息"></textarea>
+            <textarea name="model_yxkzd_add" class="layui-textarea" placeholder="请输入txt格式"></textarea>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label">任务描述</label>
+        <div class="layui-input-block">
+            <input type="text" name="model_rwms_add" autocomplete="off" placeholder="请输入任务描述信息" class="layui-input" />
         </div>
     </div>
     <div class="layui-form-item" style="margin-top:10px">
-        <div style="position:absolute;right:15px;"><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="addModeltaskinfosubmit" style="width:100px">提交</button></div>
+        <div style="position:absolute;right:20px;"><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="addModeltaskinfosubmit" style="width:100px">提交</button></div>
     </div>
 </form>'

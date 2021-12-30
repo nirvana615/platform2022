@@ -39,21 +39,10 @@ function ModelProjectInfo(id, style) {
                         , "model_zxjd_view": modelprojectinfo.ZXJD
                         , "model_zxwd_view": modelprojectinfo.ZXWD
                         , "model_xmsj_view": modelprojectinfo.XMSJ
+                        , "model_xmwz_view": modelprojectinfo.XMWZ
                         , "model_bz_view": modelprojectinfo.BZ
                     });
                 }
-                //翻译项目位置
-                if (xjxzqs.length > 0) {
-                    for (var i in xjxzqs) {
-                        if (xjxzqs[i].value == modelprojectinfo.XZQBM) {
-                            var xmwz = "重庆市" + xjxzqs[i].name + modelprojectinfo.XMWZ;
-                            form.val("viewModelprojectinfoform", {
-                                "model_xmwz_view": xmwz
-                            });
-                        }
-                    }
-                }
-
                 else {
                     form.val("viewModelprojectinfoform", {
                         "model_xmmc_view": ""
@@ -83,7 +72,7 @@ function ModelProjectInfo(id, style) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--编辑项目--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="editModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">*项目名称</label> <div class="layui-input-block"><input type="text" name="model_xmmc_edit" autocomplete="off" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">*项目编码</label> <div class="layui-input-block"> <input type="text" name="model_xmbm_edit" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">*行政区划</label> <div class="layui-input-block"><select id="province1id" name="model_province_edit" lay-verify="required"><option value="">省/市</option><option value="0" selected>重庆市</option></select></div></div> <div class="layui-form-item"> <label class="layui-form-label"></label> <div class="layui-input-block"><select id="district1id" name="model_district_edit" disabled="disabled" lay-verify="required"><option value="">区/县</option></select></div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">*项目位置</label> <div class="layui-input-block"><input type="text" name="model_xmwz_edit" autocomplete="off" lay-verify="required" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo grid-demo-bg1"> <label class="layui-form-label">*中心经度</label> <div class="layui-input-block"><input type="text" name="model_zxjd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">*中心纬度</label> <div class="layui-input-block"><input type="text" name="model_zxwd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">*项目时间</label> <div class="layui-input-block"><input type="text" id="xmsjid" name="model_xmsj_edit" lay-verify="date" placeholder="YYYY-MM-DD" class="layui-input" /></div> </div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"><input type="text" name="model_bz_edit" class="layui-input"></div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="position:absolute;right:20px;"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editModelprojectinfosubmit" style="width:100px">提交</button> </div> </div> </form>'
+                , content: '<!--编辑项目--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="editModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称</label> <div class="layui-input-block"><input type="text" name="model_xmmc_edit" autocomplete="off" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目编码</label> <div class="layui-input-block"> <input type="text" name="model_xmbm_edit" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">行政区划</label> <div class="layui-input-block"><select id="province1id" name="model_province_edit" lay-verify="required"><option value="">省/市</option><option value="0" selected>重庆市</option></select></div></div> <div class="layui-form-item"> <label class="layui-form-label"></label> <div class="layui-input-block"><select id="district1id" name="model_district_edit" disabled="disabled" lay-verify="required"><option value="">区/县</option></select></div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">项目位置</label> <div class="layui-input-block"><input type="text" name="model_xmwz_edit" autocomplete="off" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo grid-demo-bg1"> <label class="layui-form-label">中心经度</label> <div class="layui-input-block"><input type="text" name="model_zxjd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">中心纬度</label> <div class="layui-input-block"><input type="text" name="model_zxwd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">项目时间</label> <div class="layui-input-block"><input type="text" id="xmsjid" name="model_xmsj_edit" lay-verify="date" placeholder="YYYY-MM-DD" class="layui-input" /></div> </div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"><input type="text" name="model_bz_edit" class="layui-input"></div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="position:absolute;right:20px;"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editModelprojectinfosubmit" style="width:100px">提交</button> </div> </div> </form> '
                 , success: function (layero) {
                     layer.setTop(layero);
 
@@ -99,7 +88,7 @@ function ModelProjectInfo(id, style) {
                                     ,"model_xmbm_edit": modelprojectinfo.XMBM
                                     , "model_zxjd_edit": modelprojectinfo.ZXJD
                                     , "model_zxwd_edit": modelprojectinfo.ZXWD
-                                    , "model_zxwz_edit": modelprojectinfo.ZXWZ
+                                    , "model_xmwz_edit": modelprojectinfo.XMWZ
                                     , "model_xmsj_edit": modelprojectinfo.XMSJ
                                     , "model_bz_edit": modelprojectinfo.BZ
                                 })
@@ -115,17 +104,7 @@ function ModelProjectInfo(id, style) {
                                         }
                                     }
                                 }
-                                //翻译项目位置
-                                if (xjxzqs.length > 0) {
-                                    for (var i in xjxzqs) {
-                                        if (xjxzqs[i].value == modelprojectinfo.XZQBM) {
-                                            var xmwz = "重庆市" + xjxzqs[i].name + modelprojectinfo.XMWZ;
-                                            form.val("editModelprojectinfoform", {
-                                                "model_xmwz_edit": xmwz
-                                            });
-                                        }
-                                    }
-                                }
+                               
                             }
                             else {
                                 var modelprojectinfo = JSON.parse(resule.data);
@@ -184,7 +163,7 @@ function ModelProjectInfo(id, style) {
                 , maxmin: true
                 , moveOut: true
                 , scrollbar: false
-                , content: '<!--创建项目--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="addModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">*项目名称</label> <div class="layui-input-block"><input type="text" name="model_xmmc_add" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">*行政区划</label> <div class="layui-input-block"><select id="province1id" name="model_province_add" lay-verify="required"><option value="">省/市</option><option value="0">重庆市</option></select></div> </div> <div class="layui-form-item"> <label class="layui-form-label"></label> <div class="layui-input-block"><select id="district1id_add" name="model_district_add" lay-verify="required"><option value="">区/县</option></select></div> </div> <div class="layui-form-item"> <label class="layui-form-label">*项目位置</label> <div class="layui-input-block"><input type="text" id="model_xmwz_add" name="model_xmwz_add" autocomplete="off" placeholder="详细位置(乡镇村)" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">*中心经度</label> <div class="layui-input-block"><input type="text" name="model_zxjd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">*中心纬度</label> <div class="layui-input-block"><input type="text" name="model_zxwd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">*项目时间</label> <div class="layui-input-block"><input type="text" id="xmsjid" name="model_xmsj_add" lay-verify="required|date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" /></div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"><input type="text" name="model_bz_add" placeholder="请输入" autocomplete="off" class="layui-input"></div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="position:absolute;right:20px;"><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="addModelprojectinfosubmit" style="width:100px">提交</button></div> </div> </form>' 
+                , content: '<!--创建项目--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="addModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称</label> <div class="layui-input-block"><input type="text" name="model_xmmc_add" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">行政区划</label> <div class="layui-input-block"><select id="province1id" name="model_province_add" lay-verify="required"><option value="">省/市</option><option value="0">重庆市</option></select></div> </div> <div class="layui-form-item"> <label class="layui-form-label"></label> <div class="layui-input-block"><select id="district1id_add" name="model_district_add" lay-verify="required"><option value="">区/县</option></select></div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目位置</label> <div class="layui-input-block"><input type="text" id="model_xmwz_add" name="model_xmwz_add" autocomplete="off" placeholder="详细位置(乡镇村)" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">中心经度</label> <div class="layui-input-block"><input type="text" name="model_zxjd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">中心纬度</label> <div class="layui-input-block"><input type="text" name="model_zxwd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目时间</label> <div class="layui-input-block"><input type="text" id="xmsjid" name="model_xmsj_add" lay-verify="required|date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" /></div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"><input type="text" name="model_bz_add" placeholder="请输入" autocomplete="off" class="layui-input"></div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="position:absolute;right:20px;"><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="addModelprojectinfosubmit" style="width:100px">提交</button></div> </div> </form>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     //置顶

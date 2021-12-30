@@ -187,7 +187,7 @@ function GetModelProjectInfo() {
                     for (var i in modelprojectdatas) {
                         var modelproject = new Object;
                         modelproject.id = modelprojectdatas[i].Id;
-                        modelproject.title = modelprojectdatas[i].XMMC;
+                        modelproject.title = modelprojectdatas[i].XMSJ.split("-").join("") +" "+ modelprojectdatas[i].XMMC;
                         modelproject.checked = false;
                         modelprojects.push(modelproject);
                     }
