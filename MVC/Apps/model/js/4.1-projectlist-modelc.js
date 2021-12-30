@@ -353,7 +353,7 @@ function GetUserAllModelProjects() {
                 }
                 
                 //升序排序
-                years.sort();
+                //years.sort();
                 for (var x in years) {
                     var year = new Object;
                      

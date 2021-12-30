@@ -56,82 +56,7 @@ function ModelTaskInfo(id, style) {
                 , success: function (layero) {
                     //置顶
                     layer.setTop(layero);
-                    //异步获取目标基本信息
-                    $.ajax({
-                        url: servicesurl + "/api/ModelTask/GetTaskInfo", type: "get", data: { "id": id, "cookie": document.cookie },
-                        success: function (data) {
-                            var result = JSON.parse(data);
-                            if (result.code == 1) {
-                                var taskinfo = JSON.parse(result.data);
-                                var projectinfo = JSON.parse(result.message)
 
-                                form.val("viewModeltaskinfoform", {
-                                    "model_xmmc_view": projectinfo.XMMC
-                                    , "model_rwmc_view": taskinfo.RWMC
-                                    , "model_rwbm_view": taskinfo.RWBM
-                                    , "model_yxcjry_view": taskinfo.YXCJRY
-                                    , "model_yxcjsj_view": taskinfo.YXCJSJ
-                                    , "model_yxsl_view": taskinfo.YXSL
-                                    , "model_yxkzd_view": taskinfo.YXKZD
-                                    , "model_yxfw_view": taskinfo.YXFW
-                                    , "model_yxcflj_view": taskinfo.YXCFLJ
-                                    , "model_rwms_view": taskinfo.RWMS
-
-                                });
-                                //翻译项目位置
-                                if (xjxzqs.length > 0) {
-                                    for (var i in xjxzqs) {
-                                        if (xjxzqs[i].value == projectinfo.XZQBM) {
-                                            var xzqh = "重庆市" + xjxzqs[i].name;
-                                            form.val("viewModeltaskinfoform", {
-                                                "model_xzqh_view": xzqh
-                                            });
-                                        }
-                                    }
-                                }
-                                //采集设备
-                                if (cjsbs.length > 0) {
-                                    for (var i in cjsbs) {
-                                        if (cjsbs[i].value == taskinfo.YXCJSB) {
-                                            form.val("viewModeltaskinfoform", {
-                                                "model_yxcjsb_view": cjsbs[i].name
-                                            });
-                                        }
-                                    }
-                                }
-                                //翻译目标类型、空间参考
-                                if (srids.length > 0) {
-                                    for (var i in srids) {
-                                        if (srids[i].value == taskinfo.SRID) {
-                                            form.val("viewModeltaskinfoform", {
-                                                "model_kjck_view": srids[i].name
-                                            });
-                                        }
-                                    }
-                                }
-                                //所需成果
-                                if (sxcgs.length > 0) {
-                                    var Sxcg = taskinfo.SXCG.trim().split(",");
-                                    var sxcgdata = "";
-                                    for (var i in Sxcg) {
-                                        for (var j in sxcgs) {
-                                            if (sxcgs[j].value == Sxcg[i]) {
-
-                                                sxcgdata += sxcgs[j].name + "；";
-                                            }
-                                        }
-                                    }
-                                    form.val("viewModeltaskinfoform", {
-                                        "model_sxcg_view": sxcgdata
-                                    });
-                                }
-
-                                form.render();
-                                form.render('select');
-                            }
-
-                        }, datatype: "json"
-                    });
                     form.render();
                 }
                 , end: function () {
@@ -140,6 +65,82 @@ function ModelTaskInfo(id, style) {
                 }
             });
         }
+        //异步获取目标基本信息
+        $.ajax({
+            url: servicesurl + "/api/ModelTask/GetTaskInfo", type: "get", data: { "id": id, "cookie": document.cookie },
+            success: function (data) {
+                var result = JSON.parse(data);
+                if (result.code == 1) {
+                    var taskinfo = JSON.parse(result.data);
+                    var projectinfo = JSON.parse(result.message);
+
+                    form.val("viewModeltaskinfoform", {
+                        "model_xmmc_view": projectinfo.XMMC
+                        , "model_rwmc_view": taskinfo.RWMC
+                        , "model_rwbm_view": taskinfo.RWBM
+                        , "model_yxcjry_view": taskinfo.YXCJRY
+                        , "model_yxcjsj_view": taskinfo.YXCJSJ
+                        , "model_yxsl_view": taskinfo.YXSL
+                        , "model_yxkzd_view": taskinfo.YXKZD
+                        , "model_yxfw_view": taskinfo.YXFW
+                        , "model_yxcflj_view": taskinfo.YXCFLJ
+                        , "model_rwms_view": taskinfo.RWMS
+
+                    });
+                    //翻译项目位置
+                    if (xjxzqs.length > 0) {
+                        for (var i in xjxzqs) {
+                            if (xjxzqs[i].value == projectinfo.XZQBM) {
+                                var xzqh = "重庆市" + xjxzqs[i].name;
+                                form.val("viewModeltaskinfoform", {
+                                    "model_xzqh_view": xzqh
+                                });
+                            }
+                        }
+                    }
+                    //采集设备
+                    if (cjsbs.length > 0) {
+                        for (var i in cjsbs) {
+                            if (cjsbs[i].value == taskinfo.YXCJSB) {
+                                form.val("viewModeltaskinfoform", {
+                                    "model_yxcjsb_view": cjsbs[i].name
+                                });
+                            }
+                        }
+                    }
+                    //翻译目标类型、空间参考
+                    if (srids.length > 0) {
+                        for (var i in srids) {
+                            if (srids[i].value == taskinfo.SRID) {
+                                form.val("viewModeltaskinfoform", {
+                                    "model_kjck_view": srids[i].name
+                                });
+                            }
+                        }
+                    }
+                    //所需成果
+                    if (sxcgs.length > 0) {
+                        var Sxcg = taskinfo.SXCG.trim().split(",");
+                        var sxcgdata = "";
+                        for (var i in Sxcg) {
+                            for (var j in sxcgs) {
+                                if (sxcgs[j].value == Sxcg[i]) {
+
+                                    sxcgdata += sxcgs[j].name + "；";
+                                }
+                            }
+                        }
+                        form.val("viewModeltaskinfoform", {
+                            "model_sxcg_view": sxcgdata
+                        });
+                    }
+
+                    form.render();
+                    form.render('select');
+                }
+
+            }, datatype: "json"
+        });
     }
     else if (style == "edit") {
 

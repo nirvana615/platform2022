@@ -1,7 +1,7 @@
 ﻿//三维模型项目列表widget
 var modelprojectlist = [];//按地区组织
 var modelprojectlistyear = [];//按时间组织
-layer.open({
+var toIndex=layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
     , area: ['340px', '90%']
@@ -24,7 +24,7 @@ layer.open({
             , data: []
             , showCheckbox: true
             , customCheckbox: true
-            , edit: ['add', 'update']    //项目操作选项
+            , edit: ['add']    //项目操作选项
             , customOperate: true
             , accordion: true
             , cancelNodeFileIcon: true
@@ -81,7 +81,7 @@ layer.open({
             , data: []
             , showCheckbox: true
             , customCheckbox: true
-            , edit: ['add', 'update']    //项目操作选项
+            , edit: ['add']    //项目操作选项
             , customOperate: true
             , accordion: false
             , cancelNodeFileIcon: true
@@ -229,6 +229,12 @@ layer.open({
         });
     }
 });
+///
+//弹出层最小
+////
+layer.min(toIndex);
+////
+////
 
 ////树搜索
 //$('#projectsearch').click(function () {
@@ -269,7 +275,7 @@ function GetUserAllModelProjects() {
     modelprojectlist = [];
     modelprojectlistyear = [];
     $.ajax({
-        url: servicesurl + "/api/ModelProject/GetUserModelProjectList", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/ModelProject/GetAllModelProjectList", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             var result = JSON.parse(data);
             if (result.code == 1) {
@@ -352,8 +358,7 @@ function GetUserAllModelProjects() {
                     modelprojectlist.push(xzq);
                 }
 
-                //升序排序
-                years.sort();
+                //倒序排序
                 for (var x in years) {
                     var year = new Object;
 
@@ -543,38 +548,6 @@ function ModelProjectNodeOperate(obj) {
                 });
             }
         }
-    }
-    else if (obj.type == 'update') {
-        //编辑
-        if (obj.data.type == 'project') {
-            //项目编辑操作
-            if ((modelprojectinfoaddlayerindex == null) && (modelprojectinfoviewlayerindex == null)) {
-                ModelProjectInfo(obj.data.id, "edit");
-            }
-            else {
-                layer.confirm('是否打开新的模块?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
-                    CloseModelProjectInfoLayer();
-                    ModelProjectInfo(obj.data.id, "edit");
-
-                    layer.close(index);
-                });
-            }
-        }
-        else if (obj.data.type == 'task') {
-            //目标的编辑操作
-            if ((modeltaskinfoaddlayerindex == null) && (modeltaskinfoviewlayerindex == null)) {
-                ModelTaskInfo(obj.data.id, "edit");
-
-            }
-            else {
-                layer.confirm('是否打开新的模块?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
-                    CloseModelTaskInfoLayer();
-                    ModelTaskInfo(obj.data.id, "edit");
-                    layer.close(index);
-                });
-            }
-        }
-
     }
     
 };
