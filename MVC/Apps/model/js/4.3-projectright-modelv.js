@@ -14,6 +14,7 @@ function LoadProjectRight() {
             , maxmin: true
             , closeBtn: 1
             , moveOut: true
+            , resize: false
             , content: '<!--项目授权--> <form class="layui-form" action="" lay-filter="projectrightuserform" style="margin-top:10px;"> <div class="layui-row"> <div class="layui-col-md10"> <div class="grid-demo grid-demo-bg1"> <label class="layui-form-label" style="font-weight:bold">选择用户</label> <div class="layui-input-block"> <select id="usersid" name="users" lay-filter="selectuser"> <option value="">请选择</option> </select> </div> </div> </div><div class="layui-col-md2"> <div class="grid-demo" style="margin-left:20px;"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="authusersubmit" style="font-weight:bold;">授权</button> </div> </div> </div> <div class="layui-form-item" style="margin-top:10px;margin-right:20px;height:500px;"> <label class="layui-form-label" style="font-weight:bold;line-height: 500px;">模型项目</label> <div class="layui-input-block" style="border:1px solid #e6e6e6"> <div id="modelprojectid" style="height: 500px;overflow: auto;"></div> </div> </div> </form>'
             , zIndex: layer.zIndex
             , success: function (layero) {

@@ -10,7 +10,8 @@ layer.open({
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
-    , content: '<!--项目列表--> <div class="layui-tab layui-tab-brief" lay-filter="projectListTab"> <!--选项卡--> <ul class="layui-tab-title"> <li lay-id="list_1" class="layui-this" style="width:40%;padding-top: 10px;">地区</li> <li lay-id="list_2" style="width:40%;padding-top: 10px;">时间</li> </ul> <!--tree--> <div class="layui-tab-content"> <div class="layui-tab-item layui-show" > <div id="projectbyarea"></div> </div> <div class="layui-tab-item" > <div id="projectbyyear"></div> </div> </div> </div> <!--搜索--> <div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "> <div class="layui-input-inline"> <input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"> </div> <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"> <i class="layui-icon layui-icon-search"></i> </button> </div>  '
+    , resize: false
+    , content: '<!--项目列表--> <div class="layui-tab layui-tab-brief" style="margin:0px;" lay-filter="projectListTab"> <!--选项卡--> <ul class="layui-tab-title" style="margin:0;"> <li lay-id="list_1" class="layui-this" style="width:40%;">地区</li> <li lay-id="list_2" style="width:40%;">时间</li> </ul> <!--tree--> <div class="layui-tab-content"> <div class="layui-tab-item layui-show" > <div id="projectbyarea"></div> </div> <div class="layui-tab-item" > <div id="projectbyyear"></div> </div> </div> </div> <!--搜索--> <div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "> <div class="layui-input-inline"> <input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"> </div> <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"> <i class="layui-icon layui-icon-search"></i> </button> </div>  '
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
@@ -36,7 +37,7 @@ layer.open({
             }
             , oncheck: function (obj) {
                 if (obj.checked) {
-                    modleInfo = obj.data;//标签
+                    modleInfo = obj.data;//标注获取模型数据标签
                     if (obj.data.type == "task") {
 
                         for (var i in modelprojectlist) {
@@ -50,27 +51,29 @@ layer.open({
                                          
                                     }
                                     else {
-                                        //modelprojectlist[i].spread = false;
-                                        //modelprojectlist[i].children[j].spread = false;
-                                        //modelprojectlist[i].children[j].children[k].spread = false;
+                                        
                                         modelprojectlist[i].children[j].children[k].checked = false;
 
                                     }
                                 }
                             }
                         }
+                        
                         LoadModel(obj.data);//加载模型
-                        //重载项目树：将项目列表数据ModelProjectlist给data
-                        tree.reload('areaprojectlistid', {
-                            data: modelprojectlist
-                        });
+                        DelEntitiesInViewer(modelprojectentities);//移除项目标注图标
+                        
                     }
+                    //重载项目树：将项目列表数据ModelProjectlist给data
+                    tree.reload('areaprojectlistid', {
+                            data: modelprojectlist
+                        });    
                 }
                 else {
                     viewer.scene.primitives.remove(curtileset);
                     modleInfo = null;//标签
                     curtileset = null;
                 }
+                
             }
         });
 
@@ -103,24 +106,25 @@ layer.open({
                                         modelprojectlistyear[i].spread = true;
                                         modelprojectlistyear[i].children[j].spread = true;
                                         modelprojectlistyear[i].children[j].children[k].spread = true;
-                                        LoadModel(obj.data);
+                                        
 
                                     }
                                     else {
-                                        //modelprojectlist[i].spread = false;
-                                        //modelprojectlist[i].children[j].spread = false;
-                                        //modelprojectlist[i].children[j].children[k].spread = false;
+                                        
                                         modelprojectlistyear[i].children[j].children[k].checked = false;
 
                                     }
                                 }
                             }
                         }
-                        //重载项目树：将项目列表数据ModelProjectlist给data
+                        LoadModel(obj.data);
+                        DelEntitiesInViewer(modelprojectentities);//移除项目标注图标
+                        
+                    }
+                    //重载项目树：将项目列表数据ModelProjectlist给data
                         tree.reload('yearprojectlistid', {
                             data: modelprojectlistyear
                         });
-                    }
                 }
                 else {
                     viewer.scene.primitives.remove(curtileset);
@@ -426,7 +430,7 @@ function GetUserAllModelProjects() {
                         id: "PROJECTCENTER_" + modelprojectdata[i].ModelProjects.Id,
                         position: Cesium.Cartesian3.fromDegrees(modelprojectdata[i].ModelProjects.ZXJD, modelprojectdata[i].ModelProjects.ZXWD),
                         billboard: {
-                            image: '../../Resources/img/map/marker.png',
+                            image: '../../Resources/img/mark/p19.png',
                             verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             width: 40,
@@ -478,33 +482,87 @@ function GetUserAllModelProjects() {
 function ModelProjectNodeClick(obj) {
     if (obj.data.type == "project") {
         if (currentprojectid == null || obj.data.id != currentprojectid) {
-            if (JSON.stringify(obj.data.id) != currentprojectid) {
-                currentprojectid = JSON.stringify(obj.data.id);                             //更新当前项目id
+            layer.confirm('<p style="font-size:16px">是否确定将以下项目作为系统当前项目？</p><br/><p style="font-size:24px;font-weight:bold;text-align:center;">' + JSON.stringify(obj.data.title).replace(/\"/g, "") + '</p>', { title: ['消息提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei;background-color:#68bc80'], area: ['400px', '250px'], shade: 0.5, shadeClose: true, closeBtn: 0, resize: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } }, function (index) {
 
-                document.getElementById("currentproject").style.visibility = "visible";
-                document.getElementById("currentproject").innerHTML = "<option>" + JSON.stringify(obj.data.title).replace(/\"/g, "") + "</option><option>清除当前项目</option>";
+                if (JSON.stringify(obj.data.id) != currentprojectid) {
+                    currentprojectid = JSON.stringify(obj.data.id);                             //更新当前项目id
 
-                //监听清除当前项目操作
-                $(() => {
-                    $('#currentprojectoperate select').change(() => {
-                        if ($('#currentprojectoperate select').val() == "清除当前项目") {
-                            document.getElementById("currentproject").innerHTML = "";
-                            document.getElementById("currentproject").style.visibility = "hidden";
-                            currentprojectid = null;
+                    document.getElementById("currentproject").style.visibility = "visible";
+                    document.getElementById("currentproject").innerHTML = "<option>" + JSON.stringify(obj.data.title).replace(/\"/g, "") + "</option><option>清除当前项目</option>";
 
-                            CloseAllLayer();                               //关闭弹出图层
-                            viewer.entities.removeAll();
-                            AddEntitiesInViewer(modelprojectentities);
-                        }
+                    //监听清除当前项目操作
+                    $(() => {
+                        $('#currentprojectoperate select').change(() => {
+                            if ($('#currentprojectoperate select').val() == "清除当前项目") {
+                                document.getElementById("currentproject").innerHTML = "";
+                                document.getElementById("currentproject").style.visibility = "hidden";
+                                currentprojectid = null;
+
+                                CloseAllLayer();                               //关闭弹出图层
+                                viewer.entities.removeAll();                  
+                                viewer.scene.primitives.remove(curtileset);//关闭模型
+                                AddEntitiesInViewer(modelprojectentities);
+                            }
+                        });
                     });
+
+                }
+                
+                
+                for (var i in modelprojectlist) {
+                    modelprojectlist[i].spread = false;
+                    for (var j in modelprojectlist[i].children) {
+                        if (modelprojectlist[i].children[j].id != obj.data.id) {
+                            for (var k in modelprojectlist[i].children[j].children) {
+                                modelprojectlist[i].children[j].spread = false;
+                                modelprojectlist[i].children[j].children[k].spread = false;
+                                modelprojectlist[i].children[j].children[k].checked = false;
+
+                            }
+                        }
+                        else {
+                            modelprojectlist[i].spread = true;
+                            modelprojectlist[i].children[j].spread = true;
+                        }
+                        
+                    }
+                }
+                tree.reload('areaprojectlistid', {
+                            data: modelprojectlist
                 });
 
-            }
 
+                for (var i in modelprojectlistyear) {
+                    modelprojectlistyear[i].spread = false;
+                    for (var j in modelprojectlistyear[i].children) {
+                        if (modelprojectlistyear[i].children[j].id != obj.data.id) {
+                            for (var k in modelprojectlistyear[i].children[j].children) {
+                                modelprojectlistyear[i].children[j].spread = false;
+                                modelprojectlistyear[i].children[j].children[k].spread = false;
+                                modelprojectlistyear[i].children[j].children[k].checked = false;
 
-            FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
+                            }
+                        }
+                        else {
+                            modelprojectlistyear[i].spread = true;
+                            modelprojectlistyear[i].children[j].spread = true;
+                        }
 
+                    }
+                }
+                tree.reload('yearprojectlistid', {
+                    data: modelprojectlistyear
+                });
+                
+
+                FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
+                layer.close(index);
+                viewer.scene.primitives.remove(curtileset);//关闭模型
+                AddEntitiesInViewer(modelprojectentities);
+            });
+            
         }
+        
     }
     else {
         //TODO
@@ -666,7 +724,18 @@ function AddEntitiesInViewer(entities) {
         //viewer.flyTo(entities, { duration: 1, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 0) });
     }
 };
+//向viewer移除entity集合
+function DelEntitiesInViewer(entities) {
+    if (entities.length > 0) {
+        for (var i in entities) {
+            if (entities[i] != null) {
+                viewer.entities.remove(entities[i]);
+            }
+        }
 
+        //viewer.flyTo(entities, { duration: 1, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 0) });
+    }
+};
 //关闭所有弹出图层
 function CloseAllLayer() {
     //关闭项目信息图层

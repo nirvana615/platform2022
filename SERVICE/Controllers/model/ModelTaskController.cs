@@ -107,23 +107,23 @@ namespace SERVICE.Controllers
                         }
                         else
                         {
-                            string modelFilePath = modeldir + @"\Allmodel" + @"\" + rwbm;
-                            if (Directory.Exists(modelFilePath))//判断文件夹是否存在
-                            {
-                                Console.WriteLine("文件夹"+modelFilePath+"在，无需创建！");
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    Directory.CreateDirectory(modelFilePath);
-                                    Console.WriteLine("文件夹" + modelFilePath + "创建成功！");
-                                }
-                                catch(Exception ex)
-                                {
-                                    Console.WriteLine("文件夹创建失败，原因：" +ex.ToString());
-                                }
-                            }
+                            //string modelFilePath = modeldir + @"\Allmodel" + @"\" + rwbm;
+                            //if (Directory.Exists(modelFilePath))//判断文件夹是否存在
+                            //{
+                            //    Console.WriteLine("文件夹"+modelFilePath+"在，无需创建！");
+                            //}
+                            //else
+                            //{
+                            //    try
+                            //    {
+                            //        Directory.CreateDirectory(modelFilePath);
+                            //        Console.WriteLine("文件夹" + modelFilePath + "创建成功！");
+                            //    }
+                            //    catch(Exception ex)
+                            //    {
+                            //        Console.WriteLine("文件夹创建失败，原因：" +ex.ToString());
+                            //    }
+                            //}
                             return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", string.Empty));
 
                         }
