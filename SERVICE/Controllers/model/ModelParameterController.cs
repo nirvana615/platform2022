@@ -22,35 +22,6 @@ namespace SERVICE.Controllers
 
         #region 管理参数
         /// <summary>
-        /// 坐标系统
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public string GetSRID()
-        {
-            string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_coordinate WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
-            if (!string.IsNullOrEmpty(data))
-            {
-                List<Coordinate> coordinates = new List<Coordinate>();
-                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    Coordinate coordinate = ParseManageHelper.ParseCoordinate(rows[i]);
-                    if (coordinate != null)
-                    {
-                        coordinates.Add(coordinate);
-                    }
-                }
-
-                if (coordinates.Count > 0)
-                {
-                    return JsonHelper.ToJson(coordinates);
-                }
-            }
-
-            return string.Empty;
-        }
-        /// <summary>
         /// 县级行政区
         /// </summary>
         /// <returns></returns>

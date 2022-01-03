@@ -11,7 +11,7 @@ var sxcgs = [];                                     //所需成果
 
 //空间参考
 $.ajax({
-    url: servicesurl + "/api/ModelParameter/GetSRID", type: "get",
+    url: servicesurl + "/api/Srid/GetSridInfo", type: "get",
     success: function (data) {
         var sriddata = JSON.parse(data);
         for (var i in sriddata) {

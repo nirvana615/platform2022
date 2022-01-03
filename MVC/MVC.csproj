@@ -765,6 +765,7 @@
     <Content Include="Resources\pic\bg\bg6.jpg" />
     <Content Include="Resources\pic\bg\bg7.JPG" />
     <Content Include="Resources\pic\bg\bg_admin.jpg" />
+    <Content Include="Resources\pic\bg_image\1.jpg" />
     <Content Include="Resources\pic\bg_model\1.jpg" />
     <Content Include="Resources\pic\bg_model\2.png" />
     <Content Include="Resources\pic\bg_model\3.jpg" />

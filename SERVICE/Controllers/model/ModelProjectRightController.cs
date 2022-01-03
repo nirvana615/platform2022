@@ -116,8 +116,6 @@ namespace SERVICE.Controllers
             {
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户信息！", string.Empty));
             }
-
-            return string.Empty;
         }
 
         //获取用户-模型项目映射

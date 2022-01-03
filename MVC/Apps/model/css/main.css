@@ -87,3 +87,9 @@
 .layui-form-checkbox[lay-skin=primary] {
     padding-left:20px;
 }
+
+div {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}

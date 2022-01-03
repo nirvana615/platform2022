@@ -23,7 +23,7 @@ namespace SERVICE.Controllers
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
         //service 的Web.config中定义modeldir,绝对路径
         private static string modeldir = ConfigurationManager.AppSettings["modeldir"] != null ? ConfigurationManager.AppSettings["modeldir"].ToString() : string.Empty;
-       
+
         /// <summary>
         /// 新建项目
         /// </summary>
@@ -111,7 +111,7 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "验证用户失败！", string.Empty));
             }
         }
-        
+
         /// <summary>
         /// 获取当前用户所有项目，以及各项目下的任务实景模型
         /// </summary>
@@ -126,7 +126,7 @@ namespace SERVICE.Controllers
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
             {
                 List<ModelProjectInfo> modelProjectInfos = new List<ModelProjectInfo>();
-                
+
                 string projectdatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE bsm{0} AND ztm={1} ORDER BY xmsj DESC", userbsms, (int)MODEL.Enum.State.InUse));
                 if (!string.IsNullOrEmpty(projectdatas))
                 {
@@ -146,6 +146,7 @@ namespace SERVICE.Controllers
                             {
                                 ModelTaskInfos modelTaskInfos = new ModelTaskInfos();
                                 modelTaskInfos.Title = "任务";
+
                                 #region 项目对应任务
                                 List<ModelTask> Tasks = new List<ModelTask>();
 
@@ -155,43 +156,70 @@ namespace SERVICE.Controllers
                                     MapModelProjecTask mapModelProjecTask = ParseModelHelper.ParseMapModelProjecTask(maprows[j]);
                                     if (mapModelProjecTask != null)
                                     {
-                                        
+
                                         ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
                                         if (modelTask != null)
                                         {
                                             try
                                             {
-                                                // 使用 System.IO.Directory.GetFiles() 函数获取所有文件
-                                                string modelFilePath = modeldir + @"\AllModel" + @"\" + modelTask.RWBM.ToString();
-                                                string jsonname = string.Empty; ;
-                                                DirectoryInfo dir = new DirectoryInfo(modelFilePath);
-                                                foreach (FileInfo file in dir.GetFiles("*.json", SearchOption.AllDirectories))
+                                                string taskdirname = modeldir + modelTask.RWBM;
+
+                                                if (Directory.Exists(taskdirname))
                                                 {
-                                                    jsonname = file.FullName;
-                                                    if (jsonname.Contains(".json"))
+                                                    #region 任务已建模
+                                                    DirectoryInfo taskdir = new DirectoryInfo(taskdirname);
+                                                    FileInfo[] fileInfos = taskdir.GetFiles("*.json", SearchOption.AllDirectories);
+                                                    if (fileInfos.Length > 0)
                                                     {
-                                                        break;
+                                                        modelTask.MXLJ = fileInfos[0].ToString();
                                                     }
-                                                }
-                                                string[] path = jsonname.Split(new string[] { "data" }, StringSplitOptions.RemoveEmptyEntries);
-                                                if (path.Last() == null)
-                                                {
-                                                    modelTask.MXLJ = null;
+                                                    else
+                                                    {
+                                                        modelTask.MXLJ = null;
+                                                    }
+
+                                                    #endregion
                                                 }
                                                 else
                                                 {
-                                                    modelTask.MXLJ = path.Last().Replace("\\", "/");
+                                                    #region 任务未建模
+                                                    modelTask.MXLJ = null;
+                                                    #endregion
                                                 }
-                                               
+
+                                                //// 使用 System.IO.Directory.GetFiles() 函数获取所有文件
+                                                //string modelFilePath = modeldir + @"\AllModel" + @"\" + modelTask.RWBM.ToString();
+                                                //string jsonname = string.Empty; ;
+                                                //DirectoryInfo dir = new DirectoryInfo(modelFilePath);
+                                                //foreach (FileInfo file in dir.GetFiles("*.json", SearchOption.AllDirectories))
+                                                //{
+                                                //    jsonname = file.FullName;
+                                                //    if (jsonname.Contains(".json"))
+                                                //    {
+                                                //        break;
+                                                //    }
+                                                //}
+                                                //string[] path = jsonname.Split(new string[] { "data" }, StringSplitOptions.RemoveEmptyEntries);
+                                                //if (path.Last() == null)
+                                                //{
+                                                //    modelTask.MXLJ = null;
+                                                //}
+                                                //else
+                                                //{
+                                                //    modelTask.MXLJ = path.Last().Replace("\\", "/");
+                                                //}
+
                                             }
                                             catch (Exception ex)
                                             {
-                                                logger.Error("读取JSON文件错误原因:"+ ex.ToString());
+                                                logger.Error("读取JSON文件错误原因:" + ex.ToString());
                                                 modelTask.MXLJ = null;
                                             }
+
                                             Tasks.Add(modelTask);
+
                                         }
-                                        
+
                                     }
                                 }
                                 #endregion
@@ -245,7 +273,7 @@ namespace SERVICE.Controllers
             {
                 List<ModelProjectInfo> modelProjectInfos = new List<ModelProjectInfo>();
 
-                string projectdatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE ztm={0} ORDER BY xmsj DESC",(int)MODEL.Enum.State.InUse));
+                string projectdatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE ztm={0} ORDER BY xmsj DESC", (int)MODEL.Enum.State.InUse));
                 if (!string.IsNullOrEmpty(projectdatas))
                 {
                     string[] projectrows = projectdatas.Split(new char[] { COM.ConstHelper.rowSplit });
@@ -378,7 +406,7 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
             }
         }
-        
+
         /// <summary>
         /// 更新项目信息（编辑后保存）
         /// </summary>
@@ -413,7 +441,7 @@ namespace SERVICE.Controllers
                     && (!string.IsNullOrEmpty(zxwd))
                     )
                     {
-                        
+
                         int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(
                              "UPDATE model_project SET xmmc={0},zxjd={1},zxwd={2},xzqbm={3},xmsj={4},xmwz={5},bz={6} WHERE id={7} AND bsm{8} AND ztm={9}",
                              SQLHelper.UpdateString(xmmc),
@@ -429,7 +457,7 @@ namespace SERVICE.Controllers
 
                         if (updatecount == 1)
                         {
-                            
+
                             if (!string.IsNullOrEmpty(bz))
                             {
                                 PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_project SET bz={0} WHERE id={1} AND bsm{2} AND ztm={3}", bz, id, userbsms, (int)MODEL.Enum.State.InUse));
@@ -542,7 +570,7 @@ namespace SERVICE.Controllers
                 return string.Empty;
             }
         }
-        
+
         #endregion
     }
 }
