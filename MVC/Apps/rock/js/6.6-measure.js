@@ -759,228 +759,291 @@ function areaMeasure2() {
             if (viewer.entities.getById("line_temp9998") != null) {
                 viewer.entities.removeById("line_temp9998");
             }
-            //if (handler != undefined) {
-            //    handler.destroy();
+            //if (viewer.entities.getById("line_linshi9999") != null) {
+            //    viewer.entities.removeById("line_linshi9999");
             //}
-            var cartesian3s = [];
-            var newcartesian3s = [];
-            var maxHeight = Cesium.Cartographic.fromCartesian(points[0]).height;
-            var minHeight = Cesium.Cartographic.fromCartesian(points[0]).height;
-            var bSum = 0;
-            var lSum = 0;
-            var hSum = 0;
-            for (var i = 0; i < points.length; i++) {
-                var cartesian3 = points[i];
-                cartesian3s.push(cartesian3);
-                var rblh = Cesium.Cartographic.fromCartesian(points[i]);
-                var blh = new Cesium.Cartesian3(rblh.latitude * 180 / Math.PI, rblh.longitude * 180 / Math.PI, rblh.height);
-                newcartesian3s.push(blh);
-                bSum += rblh.latitude * 180 / Math.PI;
-                lSum += rblh.longitude * 180 / Math.PI;
-                hSum += rblh.height;
-                if (rblh.height < minHeight) {
-                    minHeight = rblh.height;
+
+            //viewer.entities.add({
+            //    id: "line_linshi9999",
+            //    polyline: {
+            //        positions: points,
+            //        width: 2,
+            //        arcType: Cesium.ArcType.RHUMB,
+            //        material: Cesium.Color.RED,
+            //        depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+            //            color: Cesium.Color.RED,
+            //        }),
+            //    }
+            //});
+            //var xyzzz = getChanzhuang(points);
+            //console.log(xyzzz);
+           // viewer.zoomTo(viewer.entities.getById("line_linshi9999"), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(xyzzz.qingXiang) - 180)), Cesium.Math.toRadians(parseFloat(xyzzz.qingJiao)-90)));
+           // var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                var cartesian3s = [];
+                var newcartesian3s = [];
+                var maxHeight = Cesium.Cartographic.fromCartesian(points[0]).height;
+                var minHeight = Cesium.Cartographic.fromCartesian(points[0]).height;
+                var bSum = 0;
+                var lSum = 0;
+                var hSum = 0;
+                for (var i = 0; i < points.length; i++) {
+                    var cartesian3 = points[i];
+                    cartesian3s.push(cartesian3);
+                    var rblh = Cesium.Cartographic.fromCartesian(points[i]);
+                    var blh = new Cesium.Cartesian3(rblh.latitude * 180 / Math.PI, rblh.longitude * 180 / Math.PI, rblh.height);
+                    newcartesian3s.push(blh);
+                    bSum += rblh.latitude * 180 / Math.PI;
+                    lSum += rblh.longitude * 180 / Math.PI;
+                    hSum += rblh.height;
+                    if (rblh.height < minHeight) {
+                        minHeight = rblh.height;
+                    }
+                    if (rblh.height > maxHeight) {
+                        maxHeight = rblh.height;
+                    }
                 }
-                if (rblh.height > maxHeight) {
-                    maxHeight = rblh.height;
+
+
+                viewer.entities.add({
+                    name: "plMeasue" + NewGuidCL(),
+                    polyline: {
+                        positions: [points[0], points[points.length - 1]],
+                        width: 2,
+                        arcType: Cesium.ArcType.RHUMB,
+                        material: Cesium.Color.RED,
+                        depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                            color: Cesium.Color.RED,
+                        }),
+                    }
+                });
+
+                //计算面积
+
+
+                var maxX = viewer.scene.cartesianToCanvasCoordinates(points[0]).x;
+                var minX = viewer.scene.cartesianToCanvasCoordinates(points[0]).x;
+                var maxY = viewer.scene.cartesianToCanvasCoordinates(points[0]).y;
+                var minY = viewer.scene.cartesianToCanvasCoordinates(points[0]).y;
+                var xSum = 0;//求一个平均点，用于定位
+                var ySum = 0;
+                var zSum = 0;
+
+                for (var i in points) {
+                    xSum = xSum + parseFloat(points[i].x);
+                    ySum = ySum + parseFloat(points[i].y);
+                    zSum = zSum + parseFloat(points[i].z);
+                    if (viewer.scene.cartesianToCanvasCoordinates(points[i]).x > maxX) {
+                        maxX = viewer.scene.cartesianToCanvasCoordinates(points[i]).x;
+                    }
+                    if (viewer.scene.cartesianToCanvasCoordinates(points[i]).x < minX) {
+                        minX = viewer.scene.cartesianToCanvasCoordinates(points[i]).x;
+                    }
+                    if (viewer.scene.cartesianToCanvasCoordinates(points[i]).y > maxY) {
+                        maxY = viewer.scene.cartesianToCanvasCoordinates(points[i]).y;
+                    }
+                    if (viewer.scene.cartesianToCanvasCoordinates(points[i]).y < minY) {
+                        minY = viewer.scene.cartesianToCanvasCoordinates(points[i]).y;
+                    }
+
                 }
-            }
 
+                var pointcenter = new Cesium.Cartesian3(xSum / points.length, ySum / points.length, zSum / points.length);
 
-            viewer.entities.add({
-                name: "plMeasue" + NewGuidCL(),
-                polyline: {
-                    positions: [points[0], points[points.length - 1]],
-                    width: 2,
-                    arcType: Cesium.ArcType.RHUMB,
-                    material: Cesium.Color.RED,
-                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                        color: Cesium.Color.RED,
-                    }),
+                //viewer.entities.add({
+                //    name: "ptMeasue" + NewGuidCL(),
+                //    position: pointcenter,
+                //    point: {
+                //        pixelSize: 10,
+                //        color: Cesium.Color.RED,
+                //        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                //    },
+
+                //});
+
+                var juli1 = Cesium.Cartesian3.distance(points[0], points[points.length - 1]);
+                var juli2 = Cesium.Cartesian3.distance(points[0], pointcenter);
+                var juli3 = Cesium.Cartesian3.distance(pointcenter, points[points.length - 1]);
+
+                var p = (juli1 + juli2 + juli3) / 2;
+                var mianji=Math.sqrt(p * (p - juli1) * (p - juli2) * (p - juli3));
+                var sum = Cesium.Cartesian3.distance(points[0], points[points.length - 1]);
+                for (var j = 0; j < points.length - 1; j++) {
+                    juli1 = Cesium.Cartesian3.distance(points[j], points[j+1]);
+                    juli2 = Cesium.Cartesian3.distance(points[j], pointcenter);
+                    juli3 = Cesium.Cartesian3.distance(pointcenter, points[j+1]);
+
+                    p = (juli1 + juli2 + juli3) / 2;
+                    mianji = mianji + Math.sqrt(p * (p - juli1) * (p - juli2) * (p - juli3));
+                    sum = sum + Cesium.Cartesian3.distance(points[j], points[j + 1]);
                 }
-            });
+                console.log(mianji);
 
-            //计算面积
+                viewer.entities.add({
+                    name: "pylMeasue" + NewGuidCL(),
+                    position: pointcenter,
+                    label: {
+                        text: '面积：' + mianji.toFixed(2) + '平方米  \n  周长：' + sum.toFixed(2) + '米',
+                        showBackground: true,
+                        backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                        font: '16px Times New Roman',
+                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                        verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                        // pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                    }
+                });
+
+                showCeliang = " 面积:" + mianji.toFixed(2) + '平方米   ' + "\n" + " 周长:" + sum.toFixed(2) + '米';
+                if (showCeliang != null) {
+                    form.val("celianginfoform", {
+                        "desc": showCeliang
+                    });
+                }
+               
+                points = [];
+                eyepostionList = [];
+
+                //var sendDate = {};
+
+                //var xSume = 0;//求一个平均点，用于定位
+                //var ySume = 0;
+                //var zSume = 0;
+                //for (var m in eyepostionList) {
+                //    xSume = xSume + parseFloat(eyepostionList[m].x);
+                //    ySume = ySume + parseFloat(eyepostionList[m].y);
+                //    zSume = zSume + parseFloat(eyepostionList[m].z);
+                //}
+                //var eyecenter = new Cesium.Cartesian3(xSume / eyepostionList.length, ySume / eyepostionList.length, zSume / eyepostionList.length);
+                // 最大100个点
+                //var xxishu = (maxX - minX) / 10;
+                //var yxishu = (maxY - minY) / 10;
+                //var jimiList = [];
+                //for (var x = 0; x < 11; x++) {
+                //    for (var m = 0; m < 11; m++) {
+
+                //        var temp = new Cesium.Cartesian2(minX + xxishu * x, minY + yxishu * m);//b点，加了5.
+                //        if (scene.pickPosition(temp)) {
+                //            jimiList.push(scene.pickPosition(temp));
+                //            viewer.entities.add({
+                //                name: "ptMeasue----" +x+"y"+m,// NewGuidCL(),
+                //                position: scene.pickPosition(temp),
+                //                point: {
+                //                    pixelSize: 2,
+                //                    color: Cesium.Color.YELLOW,
+                //                    disableDepthTestDistance: Number.POSITIVE_INFINITY
+                //                },
+
+                //            });
+                //        }
+
+                //    }
+                //}
+                //console.log(jimiList);
+                ////sendDate.bpsList = JSON.stringify(points);
+                ////sendDate.eyesList = JSON.stringify(eyepostionList);
+                ////sendDate.spsList = JSON.stringify(jimiList);
+                //var sum = Cesium.Cartesian3.distance(points[0], points[points.length - 1]);
+                //for (var j = 0; j < points.length - 1; j++) {
+                //    sum = sum + Cesium.Cartesian3.distance(points[j], points[j + 1]);
+                //}
+                //sendDate.target = JSON.stringify(pointcenter);
+                ////sendDate.eye = JSON.stringify(eyepostionList[0]);
+                //sendDate.eye = JSON.stringify(new Cesium.Cartesian3(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z));
+                //sendDate.sps = JSON.stringify(jimiList);
+                //sendDate.w = sum / 4;
+                //sendDate.h = sum / 4;
+
+                //sendDate.cookie = document.cookie;
+                //console.log(sendDate);
 
 
-            var maxX = viewer.scene.cartesianToCanvasCoordinates(points[0]).x;
-            var minX = viewer.scene.cartesianToCanvasCoordinates(points[0]).x;
-            var maxY = viewer.scene.cartesianToCanvasCoordinates(points[0]).y;
-            var minY = viewer.scene.cartesianToCanvasCoordinates(points[0]).y;
-            var xSum = 0;//求一个平均点，用于定位
-            var ySum = 0;
-            var zSum = 0;
+
+
+
+             
+                //$.ajax({
+                //    url: servicesurl + "/api/FlzWindowInfo/getRockWindowInfo", type: "post", data: sendDate,//后台发送请求
+                //    success: function (result) {
+
+
+                //        layer.close(loadingceindex);
+                //        //关闭
+                //        var windowInfos = JSON.parse(result);
+                //        console.log(windowInfos);
+
+                //        if (windowInfos == "") {
+
+                //            // viewer.Scene.sampleHeight();
+
+                //        } else {
+
+                //            console.log(windowInfos);
+                //            var tempLista = {};
+                //            tempLista.xyzs = JSON.stringify(points);
+                //            tempLista.mw = result;
+
+                //            //
+
+
+                //            var point2sList = [];
+                //            var loadingjieliindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                //            for (var i in points) {
+
+                //            }
+
+                //            $.ajax({
+                //                url: servicesurl + "/api/FlzData/GetXYZ2sxy", type: "get", data: tempLista,
+                //                success: function (res) {
+                //                    layer.close(loadingjieliindex);
+                //                    point2sList = JSON.parse(res);
+                //                    if (point2sList.length == 0) {
+                //                        layer.msg('二维坐标转换失败');
+                //                        return;
+                //                    }
+
+                //                    var area = 0;
+
+                //                    for (var i = 0; i < point2sList.length - 1; i++) {
+                //                        area += (point2sList[i].x - point2sList[0].x) * (point2sList[i + 1].y - point2sList[0].y) - (point2sList[i].y - point2sList[0].y) * (point2sList[i + 1].x - point2sList[0].x);
+                //                    }
+                //                    area = Math.abs(area) / 2;
+                //                    console.log(area);
+                //                    //计算重心
+                //                    viewer.entities.add({
+                //                        name: "pylMeasue" + NewGuidCL(),
+                //                        position: Cesium.Cartesian3.fromDegrees(lSum / points.length, bSum / points.length, hSum / points.length),
+                //                        label: {
+                //                            text: '面积：' + area.toFixed(2) + '平方米  \n  周长：' + sum.toFixed(2) + '米',
+                //                            showBackground: true,
+                //                            backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                //                            font: '16px Times New Roman',
+                //                            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                //                            verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                //                            disableDepthTestDistance: Number.POSITIVE_INFINITY
+                //                            // pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                //                        }
+                //                    });
+
+                //                    showCeliang = " 面积:" + area.toFixed(2) + '平方米   ' + "\n" + " 周长:" + sum.toFixed(2) + '米';
+                //                    if (showCeliang != null) {
+                //                        form.val("celianginfoform", {
+                //                            "desc": showCeliang
+                //                        });
+                //                    }
+                //                    //isRedo = true;
+                //                    points = [];
+                //                    eyepostionList = [];
+                //                }, datatype: "json"
+                //            });
+                //        }
+
+                //    }, datatype: "json"
+                //});
+
+
           
-            for (var i in points) {
-                xSum = xSum + parseFloat(points[i].x);
-                ySum = ySum + parseFloat(points[i].y);
-                zSum = zSum + parseFloat(points[i].z);
-                if (viewer.scene.cartesianToCanvasCoordinates(points[i]).x > maxX) {
-                    maxX = viewer.scene.cartesianToCanvasCoordinates(points[i]).x;
-                }
-                if (viewer.scene.cartesianToCanvasCoordinates(points[i]).x < minX) {
-                    minX = viewer.scene.cartesianToCanvasCoordinates(points[i]).x;
-                }
-                if (viewer.scene.cartesianToCanvasCoordinates(points[i]).y > maxY) {
-                    maxY = viewer.scene.cartesianToCanvasCoordinates(points[i]).y;
-                }
-                if (viewer.scene.cartesianToCanvasCoordinates(points[i]).y < minY) {
-                    minY = viewer.scene.cartesianToCanvasCoordinates(points[i]).y;
-                }
-            }
-
-            var pointcenter = new Cesium.Cartesian3(xSum / points.length, ySum / points.length, zSum / points.length);
-
-            viewer.entities.add({
-                name: "ptMeasue" + NewGuidCL(),
-                position: pointcenter,
-                point: {
-                    pixelSize: 10,
-                    color: Cesium.Color.RED,
-                    disableDepthTestDistance: Number.POSITIVE_INFINITY
-                },
-
-            });
-
-            //var xSume = 0;//求一个平均点，用于定位
-            //var ySume = 0;
-            //var zSume = 0;
-            //for (var m in eyepostionList) {
-            //    xSume = xSume + parseFloat(eyepostionList[m].x);
-            //    ySume = ySume + parseFloat(eyepostionList[m].y);
-            //    zSume = zSume + parseFloat(eyepostionList[m].z);
-            //}
-            //var eyecenter = new Cesium.Cartesian3(xSume / eyepostionList.length, ySume / eyepostionList.length, zSume / eyepostionList.length);
-            // 最大100个点
-            var xxishu = (maxX - minX) / 10;
-            var yxishu = (maxY - minY) / 10;
-            var jimiList = [];
-            for (var x = 0; x < 11; x++) {
-                for (var m = 0; m < 11; m++) {
-
-                    var temp = new Cesium.Cartesian2(minX + xxishu * x, minY + yxishu * m);//b点，加了5.
-                    if (scene.pickPosition(temp)) {
-                        jimiList.push(scene.pickPosition(temp));
-                        viewer.entities.add({
-                            name: "ptMeasue" + NewGuidCL(),
-                            position: scene.pickPosition(temp),
-                            point: {
-                                pixelSize: 2,
-                                color: Cesium.Color.YELLOW,
-                                disableDepthTestDistance: Number.POSITIVE_INFINITY
-                            },
-
-                        });
-                    }
-                    
-                }
-            }
-            console.log(jimiList);
-            var sendDate = {};
-
-
-            //sendDate.bpsList = JSON.stringify(points);
-            //sendDate.eyesList = JSON.stringify(eyepostionList);
-            //sendDate.spsList = JSON.stringify(jimiList);
-            var sum = Cesium.Cartesian3.distance(points[0], points[points.length-1]);
-            for (var j = 0; j < points.length - 1; j++) {
-                sum = sum + Cesium.Cartesian3.distance(points[j], points[j + 1]);
-            }
-            sendDate.target = JSON.stringify(pointcenter);
-            sendDate.eye = JSON.stringify(eyepostionList[0]);
-            sendDate.sps = JSON.stringify(jimiList);
-            sendDate.w = sum/4;
-            sendDate.h = sum/4;
-            
-            sendDate.cookie = document.cookie;
-            console.log(sendDate);
-
-
-
-            
-            
-            var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
-
-            $.ajax({
-                url: servicesurl + "/api/FlzWindowInfo/getRockWindowInfo", type: "post", data: sendDate,//后台发送请求
-                success: function (result) {
-
-
-                    layer.close(loadingceindex);
-                    //关闭
-                    var windowInfos = JSON.parse(result);
-                    console.log(windowInfos);
-                   
-                    if (windowInfos == "") {
-                        
-                        // viewer.Scene.sampleHeight();
-
-                    } else {
-
-                        console.log(windowInfos);
-                        var tempLista = {};
-                        tempLista.xyzs = JSON.stringify(points);
-                        tempLista.mw = result;
-
-                        //
-
-
-                        var point2sList = [];
-                        var loadingjieliindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
-
-                        for (var i in points) {
-
-                        }
-
-                        $.ajax({
-                            url: servicesurl + "/api/FlzData/GetXYZ2sxy", type: "get", data: tempLista,
-                            success: function (res) {
-                                layer.close(loadingjieliindex);
-                                point2sList = JSON.parse(res);
-                                if (point2sList.length == 0) {
-                                    layer.msg('二维坐标转换失败');
-                                    return;
-                                }
-
-                                var area = 0;
-                                
-                                for (var i = 0; i < point2sList.length - 1; i++) {
-                                    area += (point2sList[i].x - point2sList[0].x) * (point2sList[i + 1].y - point2sList[0].y) - (point2sList[i].y - point2sList[0].y) * (point2sList[i + 1].x - point2sList[0].x);
-                                }
-                                area = Math.abs(area) / 2;
-                                console.log(area);
-                                //计算重心
-                                viewer.entities.add({
-                                    name: "pylMeasue" + NewGuidCL(),
-                                    position: Cesium.Cartesian3.fromDegrees(lSum / points.length, bSum / points.length, hSum / points.length),
-                                    label: {
-                                        text: '面积：' + area.toFixed(2) + '平方米  \n  周长：' + sum.toFixed(2) + '米',
-                                        showBackground: true,
-                                        backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                                        font: '16px Times New Roman',
-                                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                                        verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                                        disableDepthTestDistance: Number.POSITIVE_INFINITY
-                                        // pixelOffset: new Cesium.Cartesian2(0.0, -60),
-                                    }
-                                });
-
-                                showCeliang = " 面积:" + area.toFixed(2) + '平方米   ' + "\n" + " 周长:" + sum.toFixed(2) + '米';
-                                if (showCeliang != null) {
-                                    form.val("celianginfoform", {
-                                        "desc": showCeliang
-                                    });
-                                }
-                                //isRedo = true;
-                                points = [];
-                                eyepostionList = [];
-                            }, datatype: "json"
-                        });
-                    }
-
-                }, datatype: "json"
-            });
-
 
 
            // var area = jisuarea(points);
@@ -1696,6 +1759,9 @@ function ClearCeliangTemp() {
     }
     if (viewer.entities.getById("line_temp9998") != null) {
         viewer.entities.removeById("line_temp9998");
+    }
+    if (viewer.entities.getById("line_linshi9999") != null) {
+        viewer.entities.removeById("line_linshi9999");
     }
     form.val("celianginfoform", {
         "desc": "",

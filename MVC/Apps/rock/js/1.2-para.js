@@ -80,33 +80,33 @@ $.ajax({
 }); 
 //获取用户信息
 
-$.ajax({
-    url: servicesurl + "/api/User/GetRockUserInfo", type: "get",
-    success: function (data) {
-        if (data == "") {
-            layer.msg("无陡崖用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-            curuserid = null;
-        }
-        else {
-            userList = JSON.parse(data);
-            console.log(userList);
-        }
-    }, datatype: "json"
-});
-//获取魔心路劲
-$.ajax({
-    url: servicesurl + "/api/RockDesign/getModelurl", type: "get", data: { "windowName": "CCXJ6-2" },
-    success: function (data) {
-        console.log(data);
-        if (data == "") {
-            console.log(111111);
-        }
-        else {
-            console.log(222222); 
+//$.ajax({
+//    url: servicesurl + "/api/User/GetRockUserInfo", type: "get",
+//    success: function (data) {
+//        if (data == "") {
+//            layer.msg("无陡崖用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+//            curuserid = null;
+//        }
+//        else {
+//            userList = JSON.parse(data);
+//            console.log(userList);
+//        }
+//    }, datatype: "json"
+//});
+////获取魔心路劲
+//$.ajax({
+//    url: servicesurl + "/api/RockDesign/getModelurl", type: "get", data: { "windowName": "CCXJ6-2" },
+//    success: function (data) {
+//        console.log(data);
+//        if (data == "") {
+//            console.log(111111);
+//        }
+//        else {
+//            console.log(222222); 
 
-        }
-    }, datatype: "json"
-});
+//        }
+//    }, datatype: "json"
+//});
 
 
 layer.close(loadingceindex);
