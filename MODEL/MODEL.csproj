@@ -76,6 +76,7 @@
     <Compile Include="data\manage\Systems.cs" />
     <Compile Include="data\manage\Role.cs" />
     <Compile Include="data\modelmap\MapModelProjecTask.cs" />
+    <Compile Include="data\modelmap\MapDataUserModelProtect.cs" />
     <Compile Include="data\modelmap\MapUserModelProject.cs" />
     <Compile Include="data\model\ModelProject.cs" />
     <Compile Include="data\model\ModelProjectInfo.cs" />

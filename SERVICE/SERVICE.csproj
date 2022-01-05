@@ -173,7 +173,6 @@
     <Compile Include="Controllers\image\ImageTargetController.cs" />
     <Compile Include="Controllers\image\ImageUploadController.cs" />
     <Compile Include="Controllers\manage\UserController.cs" />
-    <Compile Include="Controllers\model\ModelParameterController.cs" />
     <Compile Include="Controllers\model\ModelProjectController.cs" />
     <Compile Include="Controllers\model\ModelProjectRightController.cs" />
     <Compile Include="Controllers\model\ModelTaskController.cs" />

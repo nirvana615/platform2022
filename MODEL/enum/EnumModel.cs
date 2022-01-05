@@ -59,7 +59,7 @@ namespace MODEL
             Pending = 0,
 
            
-            [RemarkAttribute("正在处理")]
+            [RemarkAttribute("处理中")]
             Processing = 1,
 
             [RemarkAttribute("已完成")]

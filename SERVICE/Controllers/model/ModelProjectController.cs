@@ -171,7 +171,11 @@ namespace SERVICE.Controllers
                                                     FileInfo[] fileInfos = taskdir.GetFiles("*.json", SearchOption.AllDirectories);
                                                     if (fileInfos.Length > 0)
                                                     {
-                                                        modelTask.MXLJ = fileInfos[0].ToString();
+                                                        //modelTask.MXLJ = fileInfos[0].ToString();
+                                                        string jsonName = fileInfos[0].FullName;
+                                                        string[] path = jsonName.Split(new string[] { modelTask.RWBM.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+                                                        
+                                                        modelTask.MXLJ = path.Last().Replace("\\", "/");
                                                     }
                                                     else
                                                     {
@@ -307,26 +311,33 @@ namespace SERVICE.Controllers
                                         {
                                             try
                                             {
-                                                // 使用 System.IO.Directory.GetFiles() 函数获取所有文件
-                                                string modelFilePath = modeldir + @"\AllModel" + @"\" + modelTask.RWBM.ToString();
-                                                string jsonname = string.Empty; ;
-                                                DirectoryInfo dir = new DirectoryInfo(modelFilePath);
-                                                foreach (FileInfo file in dir.GetFiles("*.json", SearchOption.AllDirectories))
+                                                string taskdirname = modeldir + modelTask.RWBM;
+
+                                                if (Directory.Exists(taskdirname))
                                                 {
-                                                    jsonname = file.FullName;
-                                                    if (jsonname.Contains(".json"))
+                                                    #region 任务已建模
+                                                    DirectoryInfo taskdir = new DirectoryInfo(taskdirname);
+                                                    FileInfo[] fileInfos = taskdir.GetFiles("*.json", SearchOption.AllDirectories);
+                                                    if (fileInfos.Length > 0)
                                                     {
-                                                        break;
+                                                        //modelTask.MXLJ = fileInfos[0].ToString();
+                                                        string jsonName = fileInfos[0].FullName;
+                                                        string[] path = jsonName.Split(new string[] { modelTask.RWBM.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+
+                                                        modelTask.MXLJ = path.Last().Replace("\\", "/");
                                                     }
-                                                }
-                                                string[] path = jsonname.Split(new string[] { "data" }, StringSplitOptions.RemoveEmptyEntries);
-                                                if (path.Last() == null)
-                                                {
-                                                    modelTask.MXLJ = null;
+                                                    else
+                                                    {
+                                                        modelTask.MXLJ = null;
+                                                    }
+
+                                                    #endregion
                                                 }
                                                 else
                                                 {
-                                                    modelTask.MXLJ = path.Last().Replace("\\", "/");
+                                                    #region 任务未建模
+                                                    modelTask.MXLJ = null;
+                                                    #endregion
                                                 }
 
                                             }
@@ -500,12 +511,29 @@ namespace SERVICE.Controllers
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
             {
+                //0del-project
                 int updateprojectcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_project SET ztm={0} WHERE id={1}", (int)MODEL.Enum.State.NoUse, id));
                 if (updateprojectcount == 1)
                 {
-                    //①map_user_project
+                    //1del-map_user_project
                     int updatemapusercount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_map_user_project SET ztm={0} WHERE userid={1} AND projectid={2}", (int)MODEL.Enum.State.NoUse, user.Id, id));
-
+                    //2del-map_project_task
+                    int updatemapprojectcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_map_project_task SET ztm={0} WHERE projectid={1}", (int)MODEL.Enum.State.NoUse, id));
+                    //3del-task
+                    string mapprojecttask = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM model_map_project_task WHERE projectid={0} AND ztm={1}", id, (int)MODEL.Enum.State.NoUse));
+                    if (!string.IsNullOrEmpty(mapprojecttask))
+                    {
+                        string[] rows = mapprojecttask.Split(new char[] { COM.ConstHelper.rowSplit });
+                        for (int i = 0; i < rows.Length; i++)
+                        {
+                            MapModelProjecTask mapModelProjecTask = ParseModelHelper.ParseMapModelProjecTask(rows[i]);
+                            if (mapModelProjecTask != null)
+                            {
+                                int updatetaskcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET ztm={0} WHERE id={1}", (int)MODEL.Enum.State.NoUse, mapModelProjecTask.TaskId));
+                                
+                            }
+                        }
+                    }
                     if (updatemapusercount == 1)
                     {
                         return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", string.Empty));

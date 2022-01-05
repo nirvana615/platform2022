@@ -334,7 +334,7 @@ namespace SERVICE.Controllers
                             MapModelProjecTask mapModelProjecTask = ParseModelHelper.ParseMapModelProjecTask(mapprojecttaskrows[i]);
                             if (mapModelProjecTask != null)
                             {
-                                //同一个项目，需要数据隔离？后台需要多个操作员
+                                //同一个项目
                                 ModelTask task = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1} ", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
 
                                 if (task != null)
@@ -395,54 +395,80 @@ namespace SERVICE.Controllers
                         ModelTask modelTask = ParseModelHelper.ParseModelTask(maprows[j]);
                         if (modelTask != null)
                         {
-                            try
+                            if(modelTask.RWZT== (int)MODEL.EnumModel.TaskStatus.Pending)
                             {
-                                // 使用 System.IO.Directory.GetFiles() 函数获取所有文件
-                                string modelFilePath = modeldir + @"\AllModel" + @"\" + modelTask.RWBM.ToString();
-                                string jsonname = string.Empty; ;
-                                DirectoryInfo dir = new DirectoryInfo(modelFilePath);
-                                foreach (FileInfo file in dir.GetFiles("*.json", SearchOption.AllDirectories))
-                                {
-                                    jsonname = file.FullName;
-                                    if (jsonname.Contains(".json"))
-                                    {
-                                        break;
-                                    }
-                                }
-                                string[] path = jsonname.Split(new string[] { "data" }, StringSplitOptions.RemoveEmptyEntries);
-                                if (path.Last() == null)
-                                {
-                                    if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
-                                    {
-                                        newModelTaskProcess.Add(modelTask); //处理中任务 
-                                    }
-                                    else
-                                    {
-                                        newModelTaskPending.Add(modelTask); //未处理任务 
-                                    }
-                                }
-                                else
-                                {
-                                    if (modelTask.RWZT != (int)MODEL.EnumModel.TaskStatus.Finished)
-                                    {
-                                        modelTask.RWZT = (int)MODEL.EnumModel.TaskStatus.Finished;
-                                        int updateRWZT = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", (int)MODEL.EnumModel.TaskStatus.Finished, modelTask.Id, (int)MODEL.Enum.State.InUse));
+                                newModelTaskPending.Add(modelTask);
+                            }
+                            else if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
+                            {
+                                newModelTaskProcess.Add(modelTask);
+                            }
+                            else
+                            {
+                                newModelTaskFinished.Add(modelTask);
+                            }
+                            ////try
+                            //{
+                            //    string taskdirname = modeldir + modelTask.RWBM;
 
-                                    }
-                                    newModelTaskFinished.Add(modelTask);//已完成
-                                }
-                            }
-                            catch
-                            {
-                                if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
-                                {
-                                    newModelTaskProcess.Add(modelTask); //处理中任务 
-                                }
-                                else
-                                {
-                                    newModelTaskPending.Add(modelTask); //未处理任务 
-                                }
-                            }
+                            //    if (Directory.Exists(taskdirname))
+                            //    {
+                            //        #region 任务已建模
+                            //        DirectoryInfo taskdir = new DirectoryInfo(taskdirname);
+                            //        FileInfo[] fileInfos = taskdir.GetFiles("*.json", SearchOption.AllDirectories);
+                            //        if (fileInfos.Length > 0)
+                            //        {
+                            //            if (modelTask.RWZT != (int)MODEL.EnumModel.TaskStatus.Finished)
+                            //            {
+                            //                modelTask.RWZT = (int)MODEL.EnumModel.TaskStatus.Finished;
+                            //                //int updateRWZT = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", (int)MODEL.EnumModel.TaskStatus.Finished, modelTask.Id, (int)MODEL.Enum.State.InUse));
+
+                            //            }
+                            //            newModelTaskFinished.Add(modelTask);//已完成
+                            //        }
+                            //        else
+                            //        {
+                            //            #region 任务未建模
+                            //            if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
+                            //            {
+                            //                newModelTaskProcess.Add(modelTask); //处理中任务 
+                            //            }
+                            //            else
+                            //            {
+                            //                newModelTaskPending.Add(modelTask); //未处理任务 
+                            //            }
+                            //            #endregion
+                            //        }
+
+                            //        #endregion
+                            //    }
+                            //    else
+                            //    {
+                            //        #region 任务未建模
+                            //        if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
+                            //        {
+                            //            newModelTaskProcess.Add(modelTask); //处理中任务 
+                            //        }
+                            //        else
+                            //        {
+                            //            newModelTaskPending.Add(modelTask); //未处理任务 
+                            //        }
+                            //        #endregion
+                            //    }
+
+                            //}
+                            //catch (Exception ex)
+                            //{
+                            //    logger.Error("读取JSON文件错误原因:" + ex.ToString());
+                            //    if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
+                            //    {
+                            //        newModelTaskProcess.Add(modelTask); //处理中任务 
+                            //    }
+                            //    else
+                            //    {
+                            //        newModelTaskPending.Add(modelTask); //未处理任务 
+                            //    }
+                            ////}
                         }
                     }
                 }
@@ -470,9 +496,9 @@ namespace SERVICE.Controllers
         {
             
             string id = HttpContext.Current.Request.Form["Id"];
+            string Status = HttpContext.Current.Request.Form["RWZT"];
 
-
-            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", (int)MODEL.EnumModel.TaskStatus.Processing, id, (int)MODEL.Enum.State.InUse));
+            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", Status, id, (int)MODEL.Enum.State.InUse));
             if (updatecount == 1)
             {
                 return "更新成功";

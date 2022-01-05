@@ -68,7 +68,7 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
             }
         }
-        
+
         //获取实景模型系统用户列表
         [HttpGet]
         public string GetModelUserInfo(string cookie)
@@ -80,19 +80,31 @@ namespace SERVICE.Controllers
             {
                 List<User> users = new List<User>();
 
-                string usermaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE  ztm={0}", (int)MODEL.Enum.State.InUse));
-                if (!string.IsNullOrEmpty(usermaps))
+                string roles = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_roles WHERE  syscode={0}", (int)MODEL.Enum.System.Model));
+                if (!string.IsNullOrEmpty(roles))
                 {
-                    string[] rows = usermaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                    string[] rows = roles.Split(new char[] { COM.ConstHelper.rowSplit });
                     for (int i = 0; i < rows.Length; i++)
                     {
-                        MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(rows[i]);
-                        if (mapUserRole != null)
+                        Role roleinfo = ParseManageHelper.ParseRole(rows[i]);
+                        if (roleinfo != null)
                         {
-                            User userinfo = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE id={0} AND ztm={1}", mapUserRole.UserId, (int)MODEL.Enum.State.InUse)));
-                            if (userinfo != null)
+                            string mapUserRole= PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE roleid={0}", roleinfo.Id));
+                            
+                            if (!string.IsNullOrEmpty(mapUserRole))
                             {
-                                users.Add(userinfo);
+                                string[] maprows = mapUserRole.Split(new char[] { COM.ConstHelper.rowSplit });
+                                for (int j = 0; j < maprows.Length; j++)
+                                {
+                                    MapUserRole userRoleinfo = ParseManageHelper.ParseMapUserRole(maprows[j]);
+                                    if (userRoleinfo != null)
+                                    {
+                                        User userinfo = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE id={0} AND ztm={1}", userRoleinfo.UserId, (int)MODEL.Enum.State.InUse)));
+                                        users.Add(userinfo);
+                                    }
+                                }
+                                
+                                
                             }
 
                         }
@@ -118,7 +130,51 @@ namespace SERVICE.Controllers
             }
         }
 
-        //获取用户-模型项目映射
+        //获取所有用户列表
+        [HttpGet]
+        public string GetAllUserInfo(string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                List<User> users = new List<User>();
+
+                string usermaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE  ztm={0}", (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(usermaps))
+                {
+                    string[] rows = usermaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        User userinfo = ParseManageHelper.ParseUser(rows[i]);
+                        if (userinfo != null)
+                        {
+                            users.Add(userinfo);
+                        }
+                    }
+                    if (users.Count > 0)
+                    {
+                        return JsonHelper.ToJson(users);
+                    }
+                    else
+                    {
+                        //用户信息
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户信息！", string.Empty));
+                    }
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户信息！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户信息！", string.Empty));
+            }
+        }
+
+        //获取模型用户-模型项目映射
         [HttpGet]
         public string GetMapUserModelProject(int id)
         {
@@ -151,7 +207,41 @@ namespace SERVICE.Controllers
                 }
             }
         }
-        
+
+        //获取数据用户-模型项目映射
+        [HttpGet]
+        public string GetMapDataUserModelProject(int id)
+        {
+            string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_data_user WHERE userid={0} AND ztm={1} ORDER BY id ASC", id, (int)MODEL.Enum.State.InUse));
+            if (string.IsNullOrEmpty(maps))
+            {
+                return string.Empty;
+            }
+            else
+            {
+                List<MapDataUserModelProject> mapDataUserModelProjects = new List<MapDataUserModelProject>();
+
+                string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    MapDataUserModelProject mapDataUserModelProject = ParseModelHelper.ParseMapDataUserModelProject(rows[i]);
+                    if (mapDataUserModelProject != null)
+                    {
+                        mapDataUserModelProjects.Add(mapDataUserModelProject);
+                    }
+                }
+
+                if (mapDataUserModelProjects.Count > 0)
+                {
+                    return JsonHelper.ToJson(mapDataUserModelProjects);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+        //项目授权
         // 更新用户-项目映射
         [HttpPut]
         public string UpdateMapUserModelProject()
@@ -234,5 +324,88 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
 
+
+        //数据授权
+        // 更新用户-项目映射
+        [HttpPut]
+        public string UpdateMapDataUserModelProject()
+        {
+            string userid = HttpContext.Current.Request.Form["userid"];
+            string modelprojectids = HttpContext.Current.Request.Form["modelprojectids"];
+
+            if (string.IsNullOrEmpty(modelprojectids))
+            {
+                int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM model_map_data_user WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
+                if (count > 0)
+                {
+                    int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_map_data_user SET ztm={0} WHERE userid={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, userid, (int)MODEL.Enum.State.InUse));
+                    if (updatecount > 0)
+                    {
+                        return "更新用户授权成功！";
+                    }
+                    else
+                    {
+                        return "更新用户授权失败！";
+                    }
+                }
+            }
+            else
+            {
+                List<string> newmodelprojectidlist = modelprojectids.Split(new char[] { ',' }).ToList();
+
+                List<string> delmodelprojectidlist = new List<string>();
+                List<string> modelprojectidlist = new List<string>();
+
+                string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_data_user WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(maps))
+                {
+                    string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        MapDataUserModelProject mapDataUserModelProject = ParseModelHelper.ParseMapDataUserModelProject(rows[i]);
+                        if (mapDataUserModelProject != null)
+                        {
+                            if (newmodelprojectidlist.Contains(mapDataUserModelProject.ModelProjectId.ToString()))
+                            {
+                                modelprojectidlist.Add(mapDataUserModelProject.ModelProjectId.ToString());
+                            }
+                            else
+                            {
+                                delmodelprojectidlist.Add(mapDataUserModelProject.ModelProjectId.ToString());
+                            }
+                        }
+                    }
+                }
+
+                if (delmodelprojectidlist.Count > 0)
+                {
+                    for (int i = 0; i < delmodelprojectidlist.Count; i++)
+                    {
+                        int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_map_data_user SET ztm={0} WHERE userid={1} AND projectid={2} AND ztm={3}", (int)MODEL.Enum.State.NoUse, userid, delmodelprojectidlist[i], (int)MODEL.Enum.State.InUse));
+                        if (updatecount != 1)
+                        {
+                            return "更新用户授权（删除原有授权）失败！";
+                        }
+                    }
+                }
+
+                for (int i = 0; i < newmodelprojectidlist.Count; i++)
+                {
+                    if (modelprojectidlist.Count > 0)
+                    {
+                        if (modelprojectidlist.Contains(newmodelprojectidlist[i]))
+                        {
+                            continue;
+                        }
+                    }
+
+                    PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO model_map_data_user (userid,projectid,cjsj,ztm) VALUES({0},{1},{2},{3})", userid, newmodelprojectidlist[i], SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
+                }
+
+                return "更新用户授权成功！";
+            }
+
+            return string.Empty;
+        }
     }
 }

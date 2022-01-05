@@ -512,6 +512,7 @@
     <Content Include="Apps\model\css\main.css" />
     <Content Include="Apps\model\js\1.1-all.js" />
     <Content Include="Apps\model\js\1.2-para.js" />
+    <Content Include="Apps\model\js\3.1-loadmodel.js" />
     <Content Include="Apps\model\js\3.0-map.js" />
     <Content Include="Apps\model\js\4.1-projectlist-modelp.js" />
     <Content Include="Apps\model\js\4.1-projectlist-modelv.js" />
@@ -519,7 +520,8 @@
     <Content Include="Apps\model\js\4.2-projectinfo-modelp.js" />
     <Content Include="Apps\model\js\4.2-projectinfo-modelv.js" />
     <Content Include="Apps\model\js\4.2-projectinfo-modelc.js" />
-    <Content Include="Apps\model\js\4.3-projectright-modelv.js" />
+    <Content Include="Apps\model\js\4.3-projectright-modelc.js" />
+    <Content Include="Apps\model\js\3.2-modelview.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelp.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelv.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelc.js" />

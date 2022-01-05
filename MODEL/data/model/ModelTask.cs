@@ -87,6 +87,6 @@ namespace MODEL
         /// <summary>
         /// 任务状态（未存数据库）
         /// </summary>
-        public int RWZT { get; set; }
+        public int? RWZT { get; set; }
     }
 }

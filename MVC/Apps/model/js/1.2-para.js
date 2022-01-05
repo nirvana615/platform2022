@@ -11,7 +11,7 @@ var sxcgs = [];                                     //所需成果
 
 //空间参考
 $.ajax({
-    url: servicesurl + "/api/Srid/GetSridInfo", type: "get",
+    url: servicesurl + "/api/Parameter/GetSRID", type: "get",
     success: function (data) {
         var sriddata = JSON.parse(data);
         for (var i in sriddata) {
@@ -26,7 +26,7 @@ $.ajax({
 
 //任务状态
 $.ajax({
-    url: servicesurl + "/api/ModelParameter/GetRWZT", type: "get",
+    url: servicesurl + "/api/Parameter/GetRWZT", type: "get",
     success: function (data) {
         var rwztdata = JSON.parse(data);
         for (var i in rwztdata) {
@@ -39,7 +39,7 @@ $.ajax({
 });
 //县级行政区划
 $.ajax({
-    url: servicesurl + "/api/ModelParameter/GetXJXZQ", type: "get",
+    url: servicesurl + "/api/Parameter/GetXJXZQ", type: "get",
     success: function (data) {
         var xjxzqdata = JSON.parse(data);
         for (var i in xjxzqdata) {
@@ -52,7 +52,7 @@ $.ajax({
 });
 //采集设备
 $.ajax({
-    url: servicesurl + "/api/ModelParameter/GetCJSB", type: "get",
+    url: servicesurl + "/api/Parameter/GetCJSB", type: "get",
     success: function (data) {
         var cjsbdata = JSON.parse(data);
         for (var i in cjsbdata) {
@@ -66,7 +66,7 @@ $.ajax({
 
 //所需成果
 $.ajax({
-    url: servicesurl + "/api/ModelParameter/GetSXCG", type: "get",
+    url: servicesurl + "/api/Parameter/GetSXCG", type: "get",
     success: function (data) {
         var sxcgdata = JSON.parse(data);
         for (var i in sxcgdata) {

@@ -1087,6 +1087,76 @@ namespace SERVICE.Controllers
 
         #endregion
 
+        #region 三维模型参数
+        /// <summary>
+        ///采集设备
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetCJSB()
+        {
+            List<string[]> cjsbs = new List<string[]>();
+            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.AircrafType));
+            foreach (var value in values)
+            {
+                string[] cjsb = (EnumExtension.GetRemark((MODEL.EnumModel.AircrafType)System.Enum.Parse(typeof(MODEL.EnumModel.AircrafType), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
+                cjsbs.Add(cjsb);
+            }
+
+            if (cjsbs.Count > 0)
+            {
+                return JsonHelper.ToJson(cjsbs);
+            }
+
+            return string.Empty;
+        }
+        /// <summary>
+        ///所需成果
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetSXCG()
+        {
+            List<string[]> sxcgs = new List<string[]>();
+            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.ResultType));
+            foreach (var value in values)
+            {
+                string[] sxcg = (EnumExtension.GetRemark((MODEL.EnumModel.ResultType)System.Enum.Parse(typeof(MODEL.EnumModel.ResultType), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
+                sxcgs.Add(sxcg);
+            }
+
+            if (sxcgs.Count > 0)
+            {
+                return JsonHelper.ToJson(sxcgs);
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        ///任务状态
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetRWZT()
+        {
+            List<string[]> rwzts = new List<string[]>();
+            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.TaskStatus));
+            foreach (var value in values)
+            {
+                string[] rwzt = (EnumExtension.GetRemark((MODEL.EnumModel.TaskStatus)System.Enum.Parse(typeof(MODEL.EnumModel.TaskStatus), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
+                rwzts.Add(rwzt);
+            }
+
+            if (rwzts.Count > 0)
+            {
+                return JsonHelper.ToJson(rwzts);
+            }
+
+            return string.Empty;
+        }
+        #endregion
+
 
     }
 }

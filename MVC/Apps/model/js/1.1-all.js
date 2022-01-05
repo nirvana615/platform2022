@@ -3,6 +3,8 @@
  */
 var viewer = null;
 
+
+
 var tree = layui.tree;              //layui初始化
 var form = layui.form;              //layui初始化
 var table = layui.table;            //layui初始化
@@ -13,7 +15,10 @@ var colorpicker = layui.colorpicker;//
 layui.use(['element'], function () {
     layui.element.init();//手动调用初始化方法
 })
-//var role = "";                     //用户功能权限
+
+
+
+
 
 var modelprojectinfoviewlayerindex = null;                           //项目信息模块（查看）
 var modelprojectinfoaddlayerindex = null;                            //项目信息模块（新建）
@@ -39,7 +44,7 @@ var modelprojectentities = [];//项目位置及标注
 //*model
 var currentprojectid = null;//当前项目id
 //*model
-var currentprojectdisastertype = null;//当前项目类型
+
 
 
 var curtileset = null;//当前模型

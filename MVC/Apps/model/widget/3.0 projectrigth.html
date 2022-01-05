@@ -1,4 +1,98 @@
 ﻿<!--项目授权-->
+<div class="layui-tab layui-tab-brief" lay-filter="demo" style="margin:0px;">
+    <ul class="layui-tab-title">
+        <li class="layui-this" style="width:45%;padding-top: 0px;">项目授权</li>
+        <li style="width:45%;padding-top: 0px;">数据授权</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" action="" lay-filter="projectrightuserform" style="margin-top:10px;">
+                <div class="layui-row">
+                    <div class="layui-col-md10">
+                        <div class="grid-demo grid-demo-bg1">
+                            <label class="layui-form-label" style="font-weight:bold">选择用户</label>
+                            <div class="layui-input-block">
+                                <select id="modelusersid" name="modelusers" lay-filter="modelselectuser">
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md2">
+                        <div class="grid-demo" style="margin-left:5px;">
+                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="modelusersubmit" style="font-weight:bold;">确认授权</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top:10px;margin-right:20px;height:500px;">
+                    <label class="layui-form-label" style="font-weight:bold;line-height: 500px;">模型项目</label>
+                    <div class="layui-input-block" style="border:1px solid #e6e6e6">
+                        <div id="modelprojectid" style="height: 500px;overflow: auto;"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+        <div class="layui-tab-item">
+            <form class="layui-form" action="" lay-filter="dataprojectrightuserform" style="margin-top:10px;">
+                <div class="layui-row">
+                    <div class="layui-col-md10">
+                        <div class="grid-demo grid-demo-bg1">
+                            <label class="layui-form-label" style="font-weight:bold">选择用户</label>
+                            <div class="layui-input-block">
+                                <select id="datausersid" name="datausers" lay-filter="dataselectuser">
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md2">
+                        <div class="grid-demo" style="margin-left:5px;">
+                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="datausersubmit" style="font-weight:bold;">确认授权</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top:10px;margin-right:20px;height:500px;">
+                    <label class="layui-form-label" style="font-weight:bold;line-height: 500px;">模型项目</label>
+                    <div class="layui-input-block" style="border:1px solid #e6e6e6">
+                        <div id="dataprojectid" style="height: 500px;overflow: auto;"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <form class="layui-form" action="" lay-filter="projectrightuserform" style="margin-top:10px;">
     <div class="layui-row">
         <div class="layui-col-md10">

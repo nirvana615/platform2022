@@ -211,9 +211,49 @@ namespace MODEL
                 return null;
             }
         }
-
         /// <summary>
-        /// 2---模型项目-任务映射
+        /// 数据用户项目映射
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="c"></param>
+        /// <param name="r"></param>
+        /// <returns></returns>
+        public static MapDataUserModelProject ParseMapDataUserModelProject(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("用户-实景模型项目映射数据为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("用户-实景模型项目映射不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                MapDataUserModelProject mapDataUserModelProject = new MapDataUserModelProject()
+                {
+                    Id = Convert.ToInt32(row[0].ToString()),
+                    UserId = Convert.ToInt32(row[1].ToString()),
+                    ModelProjectId = Convert.ToInt32(row[2].ToString()),
+                    CJSJ = row[3].ToString()
+                };
+
+                return mapDataUserModelProject;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("MapDataUserModelProject解析失败：" + data, ex);
+                return null;
+            }
+        }
+        /// <summary>
+        /// 模型项目-任务映射
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>

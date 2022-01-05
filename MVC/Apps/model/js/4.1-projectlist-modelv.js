@@ -1,6 +1,7 @@
 ﻿//三维模型项目列表widget
 var modelprojectlist = [];//按地区组织
 var modelprojectlistyear = [];//按时间组织
+
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
@@ -70,6 +71,7 @@ layer.open({
                 }
                 else {
                     viewer.scene.primitives.remove(curtileset);
+                    AddEntitiesInViewer(modelprojectentities);
                     modleInfo = null;//标签
                     curtileset = null;
                 }
@@ -270,6 +272,10 @@ layer.open({
 
 //获取用户所有项目列表
 function GetUserAllModelProjects() {
+    //TODO 新增项目位置及标注
+    DelEntitiesInViewer(modelprojectentities);//移除项目标注图标
+    modelprojectentities = [];
+
     modelprojectlist = [];
     modelprojectlistyear = [];
     $.ajax({
@@ -332,7 +338,7 @@ function GetUserAllModelProjects() {
                                     task.icon = MODELICON;
 
                                     task.title = modelprojectdata[i].ModelTasks.TaskList[j].RWMC;
-                                    task.path = modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
+                                    task.path = modelprojectdata[i].ModelTasks.TaskList[j].RWBM + modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
                                     task.modelView = modelprojectdata[i].ModelTasks.TaskList[j].MXSJ;
 
                                     if (modelprojectdata[i].ModelTasks.TaskList[j].MXLJ != null) {
@@ -387,7 +393,7 @@ function GetUserAllModelProjects() {
                                     task.icon = MODELICON;
 
                                     task.title = modelprojectdata[i].ModelTasks.TaskList[j].RWMC;
-                                    task.path = modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
+                                    task.path = modelprojectdata[i].ModelTasks.TaskList[j].RWBM + modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
                                     task.modelView = modelprojectdata[i].ModelTasks.TaskList[j].MXSJ;
 
                                     if (modelprojectdata[i].ModelTasks.TaskList[j].MXLJ != null) {
@@ -420,8 +426,7 @@ function GetUserAllModelProjects() {
                 tree.reload('yearprojectlistid', {
                     data: modelprojectlistyear
                 });
-                //TODO 新增项目位置及标注
-                modelprojectentities = [];                   //项目位置及标注
+                //项目位置及标注
                 var bs = [];//纬度集合
                 var ls = [];//经度集合
 
@@ -449,7 +454,7 @@ function GetUserAllModelProjects() {
                             horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                            pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                            pixelOffset: new Cesium.Cartesian2(0.0, -60)
                         }
                     });
 
@@ -467,7 +472,7 @@ function GetUserAllModelProjects() {
                     //缩放至项目范围
                     setTimeout(() => {
                         FlytoExtent(Math.min.apply(null, ls) - 0.5, Math.min.apply(null, bs) - 0.5, Math.max.apply(null, ls) + 0.5, Math.max.apply(null, bs) + 0.5)
-                    }, 3000);
+                    }, 5);
                 };
 
             }
@@ -602,6 +607,7 @@ function ModelProjectNodeOperate(obj) {
             }
         }
     }
+    
 };
 
 //缩放至当前项目范围
