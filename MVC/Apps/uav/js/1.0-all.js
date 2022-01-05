@@ -12,6 +12,8 @@ var date = layui.laydate;
 var elem = layui.element;
 
 
+var tipslayer = -1;//全局提示层
+
 var uavprojectaddlayerindex = null;     //项目（新建）模块
 var uavprojectviewlayerindex = null;    //项目（查看）模块
 var uavprojecteditlayerindex = null;    //项目（编辑）模块
@@ -112,17 +114,7 @@ var level = true;              //是否水平
 
 
 
-//GUID
-function NewGuid() {
-    return ((((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1));
-};
+
 
 //高亮节点
 function MarkNode() {
@@ -142,12 +134,7 @@ function MarkNode() {
     }
 };
 
-//清除string中html元素
-function ClearHtml(str) {
-    if (str == undefined || str == null) return '';
-    return str.replace(/&nbsp&#59/g, '').replace(/<br \/>/g, '\n').replace(/<br>/g, '\n').replace(/&nbsp;/g, " ").replace(/&rdquo/g, '').replace(/&ldquo/g, '').replace(/&rarr/g, '').replace(/&hellip;/g, '').replace(/&#59;/g, '').replace(/&mdash/g, '').replace(/&alpha/g, 'α').replace(/<p>/g, '').
-        replace('</p>', '').replace(/<br\/>/g, '\n').replace(/<.+?>/g, '');
-};
+
 
 //关闭指定图层
 function CloseLayer(layerindex) {

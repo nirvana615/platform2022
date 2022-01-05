@@ -297,6 +297,9 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">
       <Project>{a475d9dd-3dd2-4c9a-b503-dce9dfcf2a7e}</Project>
       <Name>DAL</Name>
@@ -305,9 +308,6 @@
       <Project>{9a7ae117-6ee2-4d0a-b188-eb84efd8250a}</Project>
       <Name>MODEL</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

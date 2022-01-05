@@ -462,6 +462,7 @@
     <Content Include="Apps\admin\widget\factory-add.html" />
     <Content Include="Apps\admin\widget\user-role-edit.html" />
     <Content Include="Apps\admin\widget\user-add.html" />
+    <Content Include="Apps\common\common.js" />
     <Content Include="Apps\common\measure.js" />
     <Content Include="Apps\flz\css\main.css" />
     <Content Include="Apps\flz\js\1.1-all.js" />
