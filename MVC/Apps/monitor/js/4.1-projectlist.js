@@ -2,13 +2,13 @@
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-    , area: ['350px', '450px']
+    , area: ['350px', '600px']
     , shade: 0
     , offset: ['60px', '10px']
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
-    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px"><!--选项卡--><ul class="layui-tab-title"><li class="layui-this" style="width:40%;padding-top: 10px;">地区</li><li style="width:40%;padding-top: 10px;">时间</li></ul><!--tree--><div class="layui-tab-content"><div class="layui-tab-item layui-show" id="projectbyarea"></div><div class="layui-tab-item" id="projectbytime"></div></div></div>'
+    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px"><!--选项卡--><ul class="layui-tab-title"><li class="layui-this" style="width:40%;padding-top: 0px;">地区</li><li style="width:40%;padding-top: 0px;">时间</li></ul><!--tree--><div class="layui-tab-content"><div class="layui-tab-item layui-show" id="projectbyarea"></div><div class="layui-tab-item" id="projectbytime"></div></div></div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);

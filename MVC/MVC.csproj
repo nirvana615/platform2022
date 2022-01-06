@@ -462,6 +462,7 @@
     <Content Include="Apps\admin\widget\factory-add.html" />
     <Content Include="Apps\admin\widget\user-role-edit.html" />
     <Content Include="Apps\admin\widget\user-add.html" />
+    <Content Include="Apps\common\common.js" />
     <Content Include="Apps\common\measure.js" />
     <Content Include="Apps\flz\css\main.css" />
     <Content Include="Apps\flz\js\1.1-all.js" />
@@ -566,13 +567,13 @@
     <Content Include="Apps\monitor\widget\1.7 sectionadd.html" />
     <Content Include="Apps\monitor\widget\1.6 disasteradd.html" />
     <Content Include="Apps\monitor\widget\1.4 disasterpropertyview.html" />
+    <Content Include="Apps\monitor\widget\etl.html" />
     <Content Include="Apps\monitor\widget\partol.html" />
     <Content Include="Apps\monitor\widget\warningmodelcriterionadd.html" />
     <Content Include="Apps\monitor\widget\warningmodeladd.html" />
     <Content Include="Apps\monitor\widget\warningcriterionedit.html" />
     <Content Include="Apps\monitor\widget\warningcriterionview.html" />
     <Content Include="Apps\monitor\widget\warningcriterionadd.html" />
-    <Content Include="Apps\monitor\widget\HtmlPage1.html" />
     <Content Include="Apps\monitor\widget\warning.html" />
     <Content Include="Apps\monitor\widget\warninginfoedit.html" />
     <Content Include="Apps\monitor\widget\warninginfoview.html" />
