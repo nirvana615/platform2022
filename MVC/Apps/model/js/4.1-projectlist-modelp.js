@@ -473,7 +473,7 @@ function GetUserAllModelProjects() {
                     //缩放至项目范围
                     setTimeout(() => {
                         FlytoExtent(Math.min.apply(null, ls) - 0.5, Math.min.apply(null, bs) - 0.5, Math.max.apply(null, ls) + 0.5, Math.max.apply(null, bs) + 0.5)
-                    }, 3000);
+                    }, 1000);
                 };
 
             }

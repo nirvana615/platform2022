@@ -472,7 +472,7 @@ function GetUserAllModelProjects() {
                     //缩放至项目范围
                     setTimeout(() => {
                         FlytoExtent(Math.min.apply(null, ls) - 0.5, Math.min.apply(null, bs) - 0.5, Math.max.apply(null, ls) + 0.5, Math.max.apply(null, bs) + 0.5)
-                    }, 5);
+                    }, 1000);
                 };
 
             }
@@ -628,7 +628,7 @@ function FlytoExtent(west, south, east, north) {
     if (modelprojectentities.length > 0) {
         setTimeout(() => {
             AddEntitiesInViewer(modelprojectentities)
-        }, 3000);
+        }, 100);
     }
 };
 

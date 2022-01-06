@@ -4,14 +4,10 @@ var newmodeltasktableProcess = [];//正在处理任务
 var newmodeltasktableFinished = [];//已完成任务
 getNewModelTask();
 
-function sleep(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
+setTimeout(() => {
+    LoadNewModelTask();
+}, 4000);
 
-// 用法
-sleep(4000).then(() => {
-    LoadNewModelTask();// 这里写sleep之后需要去做的事情
-});
 function getNewModelTask() {
     newmodeltasktablePending = [];
     newmodeltasktableProcess = [];
