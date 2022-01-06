@@ -1,0 +1,43 @@
+﻿
+<div class="layui-tab layui-tab-brief" lay-filter="celianglayer">
+    <ul class="layui-tab-title">
+        <li lay-id="111" class="layui-this" style="width:40%;padding-top: 5px;line-height: normal;">地形测量</li>
+        <li lay-id="222" style="width:40%;padding-top: 5px;line-height:20px">模型测量</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+        </div>
+        <div class="layui-tab-item">
+        </div>
+
+        <form class="layui-form" style="margin-top:5px;margin-left:5px;" lay-filter="celianginfoform">
+            <div class="layui-row">
+                <div class="layui-col-md3">
+                    <label class="layui-form-label" style="width:60px;">多次测量</label>
+                </div>
+                <div class="layui-col-md9">
+                    <div class="layui-input-block" style="margin-left:40px">
+                        <input type="checkbox" style="padding-left:0px;width:80%" name="close" lay-filter="lieFengswitch-type" lay-skin="switch" lay-text="是|否">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                 <div class="layui-input-block" style="margin-left:5px;width:80%;padding-right: 5px;padding-top: 5px;">
+                      <textarea name="desc" placeholder="请选择您的测量项" class="layui-textarea" style="height:200px;width: 118%;"></textarea>
+                 </div>
+
+            </div>
+
+        </form>
+        <div class="layui-btn-container" style="margin-top:15px;text-align:center ">
+            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" onclick="pointMeasure2()">坐标</button>
+            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" onclick="heightMeasure()">距离</button>
+            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" onclick="areaMeasure2()">面积</button>
+            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" onclick="">方位角</button>
+        </div>
+
+        <div style="text-align:center;margin-top:10px;" >
+            <button type="button" style="width:80%" class="layui-btn layui-btn-radius layui-btn-fluid layui-btn-danger" onclick="ClearCeliangTemp()">清除</button>
+        </div>
+    </div>
+</div>								
