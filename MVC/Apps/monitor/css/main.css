@@ -48,3 +48,11 @@
     border-color: rgba(48, 51, 54, 1);
     visibility:hidden
 }
+
+/*解决数据表格列固定无效问题*/
+.layui-table-fixed .layui-table-body {
+    height: auto !important;
+}
+.layui-table-fixed.layui-hide {
+    display: block !important;
+}

@@ -61,7 +61,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">控制点</label>
         <div class="layui-input-block">
-            <textarea name="model_yxkzd_add" class="layui-textarea" placeholder="请输入txt格式"></textarea>
+            <textarea name="model_yxkzd_add" class="layui-textarea" rows="6" style="resize:none"  autocomplete="off" placeholder="请输入txt格式"></textarea>
         </div>
     </div>
     
@@ -72,6 +72,10 @@
         </div>
     </div>
     <div class="layui-form-item" style="margin-top:10px">
-        <div style="position:absolute;right:20px;"><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="addModeltaskinfosubmit" style="width:100px">提交</button></div>
+        <div style="text-align:center">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="addModeltaskinfosubmit" style="width:30%;border-radius:5px;">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" style="width:30%;border-radius:5px;">重置</button>
+
+        </div>
     </div>
 </form>'
