@@ -1,15 +1,16 @@
 ﻿var newprojectentities = [];
+var handler;
 //地图选点
-function mapPosition(style) {
-    var type = style;
-    var scene = viewer.scene;
-    var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+function mapPosition(type) {
+    if (handler != undefined) {
+        handler.destroy();
+    }
+    handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
     if (newprojectentities != null) {
         //删除地图选点标注
         DelEntitiesInViewer(newprojectentities);
-        
     }
-
+    
     //左击
     handler.setInputAction(function (leftclick) {
         DelEntitiesInViewer(newprojectentities);
@@ -45,15 +46,32 @@ function mapPosition(style) {
                     }
                 });
                 newprojectentities.push(projectentity);
+                //针对移动设备
+                if (isMobile.any()) {
+                    if (handler != undefined) {
+                        handler.destroy();
+                    }
+                }
             }
             
         }
         AddEntitiesInViewer(newprojectentities);
         
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    
 
 };
-
+//清除地图选点
+function ClearMapPoint() {
+    //删除地图选点标注
+    DelEntitiesInViewer(newprojectentities);
+    newprojectentities = [];
+    if (handler != undefined) {
+        handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);//移除事件
+        handler.destroy();
+    }
+    
+}
 
 //项目信息
 function ModelProjectInfo(id, style) {
@@ -136,14 +154,14 @@ function ModelProjectInfo(id, style) {
             modelprojectinfoeditlayerindex = layer.open({
                 type: 1
                 , title: ['编辑项目信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['500px', '490px']
+                , area: ['500px', '495px']
                 , shade: 0
                 , offset: 'auto'
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
                 , resize: false
-                , content: '<!--编辑项目--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="editModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称</label> <div class="layui-input-block"><input type="text" name="model_xmmc_edit" autocomplete="off" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目编码</label> <div class="layui-input-block"> <input type="text" name="model_xmbm_edit" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">行政区划</label> <div class="layui-input-block"><select id="province1id" name="model_province_edit" disabled="disabled" lay-verify="required"><option value="">省/市</option><option value="0" selected>重庆市</option></select></div></div> <div class="layui-form-item"> <label class="layui-form-label"></label> <div class="layui-input-block"><select id="district1id" name="model_district_edit" disabled="disabled" lay-verify="required"><option value="">区/县</option></select></div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">项目位置</label> <div class="layui-input-block"><input type="text" name="model_xmwz_edit" autocomplete="off" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md9"> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">中心经度</label> <div class="layui-input-block"><input type="text" name="model_zxjd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">中心纬度</label> <div class="layui-input-block"><input type="text" name="model_zxwd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> </div><div class="layui-col-md3"> <div class="grid-demo" style="width:90%;height:90%;margin-left:10px;"> <div class="layui-input-inline" style="width:100%;height:100%;"> <button type="button" id="map_position_edit" class="layui-btn layui-btn-primary" title="地图选点" style="width:100%;height:100%;border-radius:10px;"> <svg t="1641451887073" class="icon" style="position:relative;top:8px;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7602" width="100%" height="100%"><path d="M512 621.696l-150.848-150.826667 30.165333-30.186666L512 561.365333l120.682667-120.682666 30.165333 30.165333L512 621.696z m150.848-150.826667l-30.165333-30.186666a170.666667 170.666667 0 1 0-241.365334 0L361.173333 470.826667c-83.306667-83.306667-83.306667-218.389333 0-301.696 83.306667-83.306667 218.389333-83.306667 301.696 0 83.306667 83.306667 83.306667 218.389333 0 301.696zM512 362.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z m-134.186667 365.290666a21.333333 21.333333 0 1 1 30.144-30.165333l110.634667 110.613333L857.664 469.333333H768v-42.666666h106.538667A63.936 63.936 0 0 1 938.666667 490.474667V874.88A64 64 0 0 1 874.602667 938.666667H149.397333A63.914667 63.914667 0 0 1 85.333333 874.858667V490.453333A63.808 63.808 0 0 1 149.461333 426.666667H256v42.666666H149.461333A21.141333 21.141333 0 0 0 128 490.474667v302.208l200.042667-200.042667a21.205333 21.205333 0 0 1 30.058666 0.128c8.32 8.32 8.192 21.973333 0.106667 30.037333L130.474667 850.56a21.333333 21.333333 0 0 1-2.474667 2.133333v22.186667c0 11.669333 9.536 21.141333 21.397333 21.141333h396.437334l-168.042667-168.042666zM874.581333 896A21.333333 21.333333 0 0 0 896 874.858667V491.050667a21.973333 21.973333 0 0 1-1.984 2.261333L548.757333 838.592l54.186667 54.186667c1.002667 1.002667 1.898667 2.090667 2.666667 3.221333h269.013333z" fill="#8a8a8a" p-id="7603"></path></svg> </button> </div> </div> </div> </div> </div><div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">项目时间</label> <div class="layui-input-block"><input type="text" id="xmsjid" name="model_xmsj_edit" lay-verify="date" placeholder="YYYY-MM-DD" class="layui-input" /></div> </div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"><input type="text" name="model_bz_edit" class="layui-input"></div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editModelprojectinfosubmit" style="width:100px;float:right">提交</button> </div> </div> </form> '
+                , content: '<!--编辑项目--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="editModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称</label> <div class="layui-input-block"><input type="text" name="model_xmmc_edit" autocomplete="off" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目编码</label> <div class="layui-input-block"> <input type="text" name="model_xmbm_edit" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">行政区划</label> <div class="layui-input-block"><select id="province1id" name="model_province_edit" disabled="disabled" lay-verify="required"><option value="">省/市</option><option value="0" selected>重庆市</option></select></div></div> <div class="layui-form-item"> <label class="layui-form-label"></label> <div class="layui-input-block"><select id="district1id" name="model_district_edit" disabled="disabled" lay-verify="required"><option value="">区/县</option></select></div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">项目位置</label> <div class="layui-input-block"><input type="text" name="model_xmwz_edit" autocomplete="off" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md9"> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">中心经度</label> <div class="layui-input-block"><input type="text" name="model_zxjd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">中心纬度</label> <div class="layui-input-block"><input type="text" name="model_zxwd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div> </div> </div> </div><div class="layui-col-md3"> <div class="grid-demo" style="width:90%;height:90%;margin-left:10px;"> <div class="layui-input-inline" style="width:100%;height:100%;"> <button type="button" id="map_position_edit" class="layui-btn layui-btn-primary" title="地图选点" style="width:100%;height:100%;border-radius:10px;"> <svg t="1641451887073" class="icon" style="position:relative;top:8px;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7602" width="100%" height="100%"><path d="M512 621.696l-150.848-150.826667 30.165333-30.186666L512 561.365333l120.682667-120.682666 30.165333 30.165333L512 621.696z m150.848-150.826667l-30.165333-30.186666a170.666667 170.666667 0 1 0-241.365334 0L361.173333 470.826667c-83.306667-83.306667-83.306667-218.389333 0-301.696 83.306667-83.306667 218.389333-83.306667 301.696 0 83.306667 83.306667 83.306667 218.389333 0 301.696zM512 362.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z m-134.186667 365.290666a21.333333 21.333333 0 1 1 30.144-30.165333l110.634667 110.613333L857.664 469.333333H768v-42.666666h106.538667A63.936 63.936 0 0 1 938.666667 490.474667V874.88A64 64 0 0 1 874.602667 938.666667H149.397333A63.914667 63.914667 0 0 1 85.333333 874.858667V490.453333A63.808 63.808 0 0 1 149.461333 426.666667H256v42.666666H149.461333A21.141333 21.141333 0 0 0 128 490.474667v302.208l200.042667-200.042667a21.205333 21.205333 0 0 1 30.058666 0.128c8.32 8.32 8.192 21.973333 0.106667 30.037333L130.474667 850.56a21.333333 21.333333 0 0 1-2.474667 2.133333v22.186667c0 11.669333 9.536 21.141333 21.397333 21.141333h396.437334l-168.042667-168.042666zM874.581333 896A21.333333 21.333333 0 0 0 896 874.858667V491.050667a21.973333 21.973333 0 0 1-1.984 2.261333L548.757333 838.592l54.186667 54.186667c1.002667 1.002667 1.898667 2.090667 2.666667 3.221333h269.013333z" fill="#8a8a8a" p-id="7603"></path></svg> </button> </div> </div> </div> </div> </div> <div class="layui-form-item"> <div class="grid-demo"> <label class="layui-form-label">项目时间</label> <div class="layui-input-block"><input type="text" id="xmsjid" name="model_xmsj_edit" lay-verify="date" placeholder="YYYY-MM-DD" class="layui-input" /></div> </div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"><input type="text" name="model_bz_edit" class="layui-input"></div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editModelprojectinfosubmit" style="width:50%;border-radius:5px;">提交</button> </div> </div> </form>'
                 , success: function (layero) {
                     layer.setTop(layero);
 
@@ -152,11 +170,11 @@ function ModelProjectInfo(id, style) {
                 }
                 , end: function () {
                     modelprojectinfoeditlayerindex = null;
-                    DelEntitiesInViewer(newprojectentities);
+                    ClearMapPoint();
                 }
                 , cancel: function () {
                     modelprojectinfoeditlayerindex = null;
-                    DelEntitiesInViewer(newprojectentities);
+                    ClearMapPoint();
                 }
             })
         }
@@ -222,7 +240,7 @@ function ModelProjectInfo(id, style) {
                     layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     layer.close(modelprojectinfoeditlayerindex);  //关闭模块
                     //删除地图选点标注
-                    DelEntitiesInViewer(newprojectentities);
+                    ClearMapPoint();
                     //刷新项目列表
                     GetUserAllModelProjects();
                 }, datatype: "json"
@@ -251,7 +269,7 @@ function ModelProjectInfo(id, style) {
                 , moveOut: true
                 , scrollbar: false
                 , resize: false
-                , content: '<!--创建项目--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="addModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称</label> <div class="layui-input-block"><input type="text" name="model_xmmc_add" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">行政区划</label> <div class="layui-input-block"><select id="province1id" name="model_province_add" lay-verify="required"><option value="">省/市</option><option value="0">重庆市</option></select></div> </div> <div class="layui-form-item"> <label class="layui-form-label"></label> <div class="layui-input-block"><select id="district1id_add" name="model_district_add" lay-verify="required"><option value="">区/县</option></select></div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目位置</label> <div class="layui-input-block"><input type="text" id="model_xmwz_add" name="model_xmwz_add" autocomplete="off" placeholder="详细位置(乡镇村)" class="layui-input" /></div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md9"> <div class="layui-form-item"> <label class="layui-form-label">中心经度</label> <div class="layui-input-block"><input type="text" name="model_zxjd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">中心纬度</label> <div class="layui-input-block"><input type="text" name="model_zxwd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div> </div> </div><div class="layui-col-md3"> <div class="grid-demo" style="width:90%;height:90%;margin-left:10px;"> <div class="layui-input-inline" style="width:100%;height:100%;"> <button type="button" id="map_position_add" class="layui-btn layui-btn-primary" title="地图选点" style="width:100%;height:100%;border-radius:10px;"> <svg t="1641451887073" class="icon" style="position:relative;top:8px;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7602" width="100%" height="100%"><path d="M512 621.696l-150.848-150.826667 30.165333-30.186666L512 561.365333l120.682667-120.682666 30.165333 30.165333L512 621.696z m150.848-150.826667l-30.165333-30.186666a170.666667 170.666667 0 1 0-241.365334 0L361.173333 470.826667c-83.306667-83.306667-83.306667-218.389333 0-301.696 83.306667-83.306667 218.389333-83.306667 301.696 0 83.306667 83.306667 83.306667 218.389333 0 301.696zM512 362.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z m-134.186667 365.290666a21.333333 21.333333 0 1 1 30.144-30.165333l110.634667 110.613333L857.664 469.333333H768v-42.666666h106.538667A63.936 63.936 0 0 1 938.666667 490.474667V874.88A64 64 0 0 1 874.602667 938.666667H149.397333A63.914667 63.914667 0 0 1 85.333333 874.858667V490.453333A63.808 63.808 0 0 1 149.461333 426.666667H256v42.666666H149.461333A21.141333 21.141333 0 0 0 128 490.474667v302.208l200.042667-200.042667a21.205333 21.205333 0 0 1 30.058666 0.128c8.32 8.32 8.192 21.973333 0.106667 30.037333L130.474667 850.56a21.333333 21.333333 0 0 1-2.474667 2.133333v22.186667c0 11.669333 9.536 21.141333 21.397333 21.141333h396.437334l-168.042667-168.042666zM874.581333 896A21.333333 21.333333 0 0 0 896 874.858667V491.050667a21.973333 21.973333 0 0 1-1.984 2.261333L548.757333 838.592l54.186667 54.186667c1.002667 1.002667 1.898667 2.090667 2.666667 3.221333h269.013333z" fill="#8a8a8a" p-id="7603"></path></svg> </button> </div> </div> </div> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目时间</label> <div class="layui-input-block"><input type="text" id="xmsjid" name="model_xmsj_add" lay-verify="required|date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" /></div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"><input type="text" name="model_bz_add" placeholder="请输入" autocomplete="off" class="layui-input"></div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="position:absolute;right:20px;"> <button type="reset" id="model_reset_add" class="layui-btn layui-btn-primary" style="width:100px;border-radius:5px;">重置</button> <button type="submit" class="layui-btn" lay-submit="" lay-filter="addModelprojectinfosubmit" style="width:100px;border-radius:5px;">提交</button> </div> </div> </form>' 
+                , content: '<!--创建项目--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="addModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称</label> <div class="layui-input-block"><input type="text" name="model_xmmc_add" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">行政区划</label> <div class="layui-input-block"><select id="province1id" name="model_province_add" lay-verify="required"><option value="">省/市</option><option value="0">重庆市</option></select></div> </div> <div class="layui-form-item"> <label class="layui-form-label"></label> <div class="layui-input-block"><select id="district1id_add" name="model_district_add" lay-verify="required"><option value="">区/县</option></select></div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目位置</label> <div class="layui-input-block"><input type="text" id="model_xmwz_add" name="model_xmwz_add" autocomplete="off" placeholder="详细位置(乡镇村)" class="layui-input" /></div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md9"> <div class="layui-form-item"> <label class="layui-form-label">中心经度</label> <div class="layui-input-block"><input type="text" name="model_zxjd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div> </div> <div class="layui-form-item"> <label class="layui-form-label">中心纬度</label> <div class="layui-input-block"><input type="text" name="model_zxwd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div> </div> </div><div class="layui-col-md3"> <div class="grid-demo" style="width:90%;height:90%;margin-left:10px;"> <div class="layui-input-inline" style="width:100%;height:100%;"> <button type="button" id="map_position_add" class="layui-btn layui-btn-primary" title="地图选点" style="width:100%;height:100%;border-radius:10px;"> <svg t="1641451887073" class="icon" style="position:relative;top:8px;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7602" width="100%" height="100%"><path d="M512 621.696l-150.848-150.826667 30.165333-30.186666L512 561.365333l120.682667-120.682666 30.165333 30.165333L512 621.696z m150.848-150.826667l-30.165333-30.186666a170.666667 170.666667 0 1 0-241.365334 0L361.173333 470.826667c-83.306667-83.306667-83.306667-218.389333 0-301.696 83.306667-83.306667 218.389333-83.306667 301.696 0 83.306667 83.306667 83.306667 218.389333 0 301.696zM512 362.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z m-134.186667 365.290666a21.333333 21.333333 0 1 1 30.144-30.165333l110.634667 110.613333L857.664 469.333333H768v-42.666666h106.538667A63.936 63.936 0 0 1 938.666667 490.474667V874.88A64 64 0 0 1 874.602667 938.666667H149.397333A63.914667 63.914667 0 0 1 85.333333 874.858667V490.453333A63.808 63.808 0 0 1 149.461333 426.666667H256v42.666666H149.461333A21.141333 21.141333 0 0 0 128 490.474667v302.208l200.042667-200.042667a21.205333 21.205333 0 0 1 30.058666 0.128c8.32 8.32 8.192 21.973333 0.106667 30.037333L130.474667 850.56a21.333333 21.333333 0 0 1-2.474667 2.133333v22.186667c0 11.669333 9.536 21.141333 21.397333 21.141333h396.437334l-168.042667-168.042666zM874.581333 896A21.333333 21.333333 0 0 0 896 874.858667V491.050667a21.973333 21.973333 0 0 1-1.984 2.261333L548.757333 838.592l54.186667 54.186667c1.002667 1.002667 1.898667 2.090667 2.666667 3.221333h269.013333z" fill="#8a8a8a" p-id="7603"></path></svg> </button> </div> </div> </div> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目时间</label> <div class="layui-input-block"><input type="text" id="xmsjid" name="model_xmsj_add" lay-verify="required|date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" /></div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label> <div class="layui-input-block"><input type="text" name="model_bz_add" placeholder="请输入" autocomplete="off" class="layui-input"></div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="addModelprojectinfosubmit" style="width:20%;border-radius:5px;">提交</button> <button type="reset" id="model_reset_add" class="layui-btn layui-btn-primary" style="width:20%;border-radius:5px;">重置</button></div> </div> </form>' 
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     //置顶
@@ -284,7 +302,7 @@ function ModelProjectInfo(id, style) {
                                     layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                                     layer.close(modelprojectinfoaddlayerindex);
                                     //删除地图选点标注
-                                    DelEntitiesInViewer(newprojectentities);
+                                    ClearMapPoint();
                                     //刷新项目列表
                                     GetUserAllModelProjects();
                                 }
@@ -300,11 +318,11 @@ function ModelProjectInfo(id, style) {
                 }
                 , end: function () {
                     modelprojectinfoaddlayerindex = null;
-                    DelEntitiesInViewer(newprojectentities);
+                    ClearMapPoint();
                 }
                 , cancel: function () {
                     modelprojectinfoaddlayerindex = null;
-                    DelEntitiesInViewer(newprojectentities);
+                    ClearMapPoint();
                 }
 
             });

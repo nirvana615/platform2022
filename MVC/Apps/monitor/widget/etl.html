@@ -8,10 +8,26 @@
         <li style="display: block;">设备经销商</li>
     </ul>
 
-    <div class="layui-tab-content" style="width:80%;float: left;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;">
+    <div class="layui-tab-content" style="width:80%;height:98%;float: right;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;">
         <div class="layui-tab-item layui-show">
             <!--监测设备-->
+            <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <div style="padding-bottom:10px;">
+                            <button id="adddevice" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新监测设备</button>
+                            <button id="adddevices" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新监测设备(批量)</button>
+                        </div>
 
+                        <table id="LAY-device-manage" lay-filter="LAY-device-manage"></table>
+                        <script type="text/html" id="table-toolbar-device">
+                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="deviceview"><i class="layui-icon layui-icon-read"></i>详情</a>
+                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="deviceedit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="devicedel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="layui-tab-item">
@@ -35,17 +51,59 @@
 
         <div class="layui-tab-item">
             <!--ETL SQL-->
+            <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <div style="padding-bottom:10px;">
+                            <button id="addsql" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新SQL</button>
+                        </div>
 
+                        <table id="LAY-sql-manage" lay-filter="LAY-sql-manage"></table>
+                        <script type="text/html" id="table-toolbar-sql">
+                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="sqledit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="sqldel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="layui-tab-item">
             <!--设备厂家-->
+            <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <div style="padding-bottom: 10px;">
+                            <button id="addfactory" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新设备厂家</button>
+                        </div>
 
+                        <table id="LAY-factory-manage" lay-filter="LAY-factory-manage"></table>
+                        <script type="text/html" id="table-toolbar-factory">
+                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="factoryedit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="factorydel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="layui-tab-item">
             <!--设备经销商-->
+            <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <div style="padding-bottom: 10px;">
+                            <button id="addsale" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新设备经销商</button>
+                        </div>
 
+                        <table id="LAY-sale-manage" lay-filter="LAY-sale-manage"></table>
+                        <script type="text/html" id="table-toolbar-sale">
+                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="saleedit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="saledel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
