@@ -31,7 +31,7 @@ util.fixbar({
         }
         else if (type === 'bar6') {
             //测量工具
-            celiang();
+            measure();
         }
     }
 });
