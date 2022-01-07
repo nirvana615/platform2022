@@ -608,6 +608,7 @@
     <Content Include="Apps\pointcloud\widget\2.4 pointcloud_util_tool.html" />
     <Content Include="Apps\pointcloud\widget\2.5 pointcloud_util_changelayer.html" />
     <Content Include="Apps\pointcloud\widget\6.51 pointcloud_pointdisplystyle.html" />
+    <Content Include="Apps\pointcloud\widget\measure.html" />
     <Content Include="Apps\rock\css\main.css" />
     <Content Include="Apps\rock\js\1.1-all.js" />
     <Content Include="Apps\rock\js\1.2-para.js" />
