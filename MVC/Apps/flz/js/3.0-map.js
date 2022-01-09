@@ -206,11 +206,13 @@ function LoadModel(obj) {
     //var modelurl = "../Data/SurModel" + obj.path;
     console.log(obj);
     var modelurl =''
-    if (currentprojectid == 28 || currentprojectid == 30) {//
-        modelurl = datasurl + "/SurModel" + obj.path;
+    if (currentprojectid == 23 || currentprojectid == 24|| currentprojectid ==25|| currentprojectid == 26
+	|| currentprojectid == 29|| currentprojectid == 1) {//
+        //modelurl = datasurl + "/SurModel" + obj.path;
+		modelurl = datasurl + "/GeoModel" + obj.path;
     } else {
-
-        modelurl = datasurl + "/GeoModel" + obj.path;
+		modelurl = datasurl + "/SurModel" + obj.path;
+        
     }
    
     //if (obj.MXST != null) {
