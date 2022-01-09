@@ -21,6 +21,7 @@ util.fixbar({
         }
         else if (type === 'bar3') {
             //测量
+            measure();
         }
         else if (type === 'bar4') {
 

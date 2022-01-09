@@ -522,6 +522,8 @@ function AddUavRoute(type) {
                                         entities_avoid_label = [];
                                         entities_avoid_line = [];
 
+
+
                                         //重新添加避障几何
                                         for (var i in uav_route_add_waypoint) {
                                             if (uav_route_add_waypoint[i].type == "avoid") {

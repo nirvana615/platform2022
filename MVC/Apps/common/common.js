@@ -1,4 +1,6 @@
-﻿//CGCS2000坐标系空间直角坐标转大地坐标
+﻿/*
+ * CGCS2000坐标系空间直角坐标转大地坐标
+ */
 function CGCS2000XYZ2BLH(X, Y, Z) {
     var a = 6378137.0;
     var b = 6356752.314140356;
@@ -38,7 +40,9 @@ function CGCS2000XYZ2BLH(X, Y, Z) {
 
     return new Cesium.Cartesian3(B, L, H);
 };
-//CGCS2000坐标系大地坐标转空间直角坐标
+/*
+ * CGCS2000坐标系大地坐标转空间直角坐标
+ */
 function CGCS2000BLH2XYZ(B, L, H) {
     var X;
     var Y;
@@ -58,6 +62,109 @@ function CGCS2000BLH2XYZ(B, L, H) {
 
     return new Cesium.Cartesian3(X, Y, Z);
 };
+
+/*
+ * CGCS2000坐标系经纬度转平面坐标
+ * b-->纬度（十进制度）
+ * l-->经度（十进制度）
+ * zonewidth-->带宽（3/6）
+ * cm-->中央经度
+ * assumedCoord-->是否包含带号
+ */
+function bl2xy(b, l, zonewidth, cm, assumedCoord) {
+    var a = 6378137.0;
+    var f = 1 / 298.257222101;
+
+    l -= cm - (zonewidth == 6 ? 3 : 0);
+    var xy = bl2xy0(b, l, a, 1 / f);
+    var x = xy.split(' ')[0];
+    var y = xy.split(' ')[1];
+    if (assumedCoord) {
+        y += cm * 1000000 / zonewidth;
+    }
+    y = Number(y) + 500000;
+    x = Number(x);
+    var xy = new Object;
+    xy.x = y;
+    xy.y = x;
+    return xy;
+}
+function bl2xy0(B, L, a, f) {
+    var ee = (2 * f - 1) / f / f;
+    var ee2 = ee / (1 - ee);
+    var rB, tB, m;
+    rB = B * Math.PI / 180;
+    tB = Math.tan(rB);
+    m = Math.cos(rB) * L * Math.PI / 180;
+    var N = a / Math.sqrt(1 - ee * Math.sin(rB) * Math.sin(rB));
+    var it2 = ee2 * Math.pow(Math.cos(rB), 2);
+    x = m * m / 2 + (5 - tB * tB + 9 * it2 + 4 * it2 * it2) * Math.pow(m, 4) / 24 + (61 - 58 * tB * tB + Math.pow(tB, 4)) * Math.pow(m, 6) / 720;
+    x = MeridianLength(B, a, f) + N * tB * x;
+    y = N * (m + (1 - tB * tB + it2) * Math.pow(m, 3) / 6 + (5 - 18 * tB * tB + Math.pow(tB, 4) + 14 * it2 - 58 * tB * tB * it2) * Math.pow(m, 5) / 120);
+    return x + " " + y;
+}
+function MeridianLength(B, a, f) {
+    var ee = (2 * f - 1) / f / f;
+    var rB = B * Math.PI / 180;
+    var cA, cB, cC, cD, cE;
+    cA = 1 + 3 * ee / 4 + 45 * Math.pow(ee, 2) / 64 + 175 * Math.pow(ee, 3) / 256 + 11025 * Math.pow(ee, 4) / 16384;
+    cB = 3 * ee / 4 + 15 * Math.pow(ee, 2) / 16 + 525 * Math.pow(ee, 3) / 512 + 2205 * Math.pow(ee, 4) / 2048;
+    cC = 15 * Math.pow(ee, 2) / 64 + 105 * Math.pow(ee, 3) / 256 + 2205 * Math.pow(ee, 4) / 4096;
+    cD = 35 * Math.pow(ee, 3) / 512 + 315 * Math.pow(ee, 4) / 2048;
+    cE = 315 * Math.pow(ee, 4) / 131072;
+    return a * (1 - ee) * (cA * rB - cB * Math.sin(2 * rB) / 2 + cC * Math.sin(4 * rB) / 4 - cD * Math.sin(6 * rB) / 6 + cE * Math.sin(8 * rB) / 8);
+}
+
+/*
+ * CGCS2000坐标系平面坐标转经纬度
+ * x-->平面坐标x
+ * y-->平面坐标y
+ * zonewidth-->带宽（3/6）
+ * cm-->中央经度
+ * assumedCoord-->是否包含带号
+ */
+function xy2bl(x, y, zonewidth, cm, assumedCoord) {
+    var a = 6378137.0;
+    var f = 1 / 298.257222101;
+
+    if (assumedCoord) {
+        x -= cm * 1000000 / zonewidth;
+    }
+    x = Number(x) - 500000;
+    var bl = xy2bl0(y, x, a, 1 / f);
+    var b = Number(bl.split(' ')[0]);
+    var l = Number(bl.split(' ')[1]) + cm;
+    var xy = new Object;
+    xy.b = b;
+    xy.l = l;
+    return xy;
+}
+function xy2bl0(x, y, a, f) {
+    var ee = (2 * f - 1) / f / f;
+    var ee2 = ee / (1 - ee);
+    var cA, cB, cC, cD, cE;
+    cA = 1 + 3 * ee / 4 + 45 * ee * ee / 64 + 175 * Math.pow(ee, 3) / 256 + 11025 * Math.pow(ee, 4) / 16384;
+    cB = 3 * ee / 4 + 15 * ee * ee / 16 + 525 * Math.pow(ee, 3) / 512 + 2205 * Math.pow(ee, 4) / 2048;
+    cC = 15 * ee * ee / 64 + 105 * Math.pow(ee, 3) / 256 + 2205 * Math.pow(ee, 4) / 4096;
+    cD = 35 * Math.pow(ee, 3) / 512 + 315 * Math.pow(ee, 4) / 2048;
+    cE = 315 * Math.pow(ee, 4) / 131072;
+    var Bf = x / (a * (1 - ee) * cA);
+    do {
+        B = Bf;
+        Bf = (x + a * (1 - ee) * (cB * Math.sin(2 * Bf) / 2 - cC * Math.sin(4 * Bf) / 4 + cD * Math.sin(6 * Bf) / 6) - cE * Math.sin(8 * Bf) / 8) / (a * (1 - ee) * cA);
+    }
+    while (Math.abs(B - Bf) > 0.00000000001);
+    var N = a / Math.sqrt(1 - ee * Math.pow(Math.sin(Bf), 2));
+    var V2 = 1 + ee2 * Math.pow(Math.cos(Bf), 2);
+    var it2 = ee2 * Math.pow(Math.cos(Bf), 2);
+    var tB2 = Math.pow(Math.tan(Bf), 2);
+    B = Bf - V2 * Math.tan(Bf) / 2 * (Math.pow(y / N, 2) - (5 + 3 * tB2 + it2 - 9 * it2 * tB2) * Math.pow(y / N, 4) / 12 + (61 + 90 * tB2 + 45 * tB2 * tB2) * Math.pow(y / N, 6) / 360);
+    L = (y / N - (1 + 2 * tB2 + it2) * Math.pow(y / N, 3) / 6 + (5 + 28 * tB2 + 24 * tB2 * tB2 + 6 * it2 + 8 * it2 * tB2) * Math.pow(y / N, 5) / 120) / Math.cos(Bf);
+    B = B * 180 / Math.PI;
+    L = L * 180 / Math.PI;
+    return B + " " + L;
+};
+
 
 
 //生成GUID
@@ -79,6 +186,9 @@ function ClearHtml(str) {
     return str.replace(/&nbsp&#59/g, '').replace(/<br \/>/g, '\n').replace(/<br>/g, '\n').replace(/&nbsp;/g, " ").replace(/&rdquo/g, '').replace(/&ldquo/g, '').replace(/&rarr/g, '').replace(/&hellip;/g, '').replace(/&#59;/g, '').replace(/&mdash/g, '').replace(/&alpha/g, 'α').replace(/<p>/g, '').
         replace('</p>', '').replace(/<br\/>/g, '\n').replace(/<.+?>/g, '');
 };
+
+
+
 /*
  *获取加密点 
  * positList 点数据组
@@ -285,4 +395,11 @@ function getChanzhuang(positList) {
     tenp.qingJiao = qingJiao;
     return tenp;
 }
+
+
+
+/*
+ * 采样
+ * 
+ */
 

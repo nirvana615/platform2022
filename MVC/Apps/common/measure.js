@@ -1,203 +1,256 @@
-﻿
+﻿/*
+ * 必须先引用layui
+ * 必须先创建viewer变量
+ * 必须先创建handler变量
+ */
+var measurewidgetlayerindex = null;
+var depthTestAgainstTerrain = null;//深度监测初始值
+var multimeasure = false;//连续测量
+var measurerresult = "";//测量结果
+
+var isRedo = false;
+
+var points = [];
+
 //测量widget
-var projectlayerlistceliangindex = null;   //测量弹出层
-var handler;
-var scene = viewer.scene;
-var canvas = scene.canvas;
-var isRedo = false;  
-var points = [];          
-var measurecontent = null;
-var showbtn = null;
-var multimeasure = false;
-//测量
 function measure() {
-    if (projectlayerlistceliangindex != null) {
-        layer.msg('已打开测量窗口');
+    if (measurewidgetlayerindex != null) {
+        layer.setTop(measurewidgetlayerindex);
         return;
     }
-    //添加点标注，弹出框
-    projectlayerlistceliangindex = layer.open({
+
+    measurewidgetlayerindex = layer.open({
         type: 1
-        , title: ['测量工具', 'font-weight:bold;font-size:small;font-family:	Microsoft YaHei']
-        , area: ['320px', '475px']
+        , title: ['测量', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+        , area: ['400px', '430px']
         , shade: 0
         , offset: ['85px', '1530px']
         , closeBtn: 1
         , moveOut: true
         , resize: false
-        , content:'<div class="layui-tab layui-tab-brief" lay-filter="measurelayer">    <ul class="layui-tab-title">        <li lay-id="111" class="layui-this" style="width:40%;padding-top: 5px;line-height: normal;">地形测量</li>        <li lay-id="222" style="width:40%;padding-top: 5px;line-height:20px">模型测量</li>    </ul>    <div class="layui-tab-content">        <div class="layui-tab-item layui-show">        </div>        <div class="layui-tab-item">        </div>        <form class="layui-form" style="margin-top:5px;margin-left:5px;" lay-filter="measureinfoform">            <div class="layui-row">                <div class="layui-col-md3">                    <label class="layui-form-label" style="width:60px;">多次测量</label>                </div>                <div class="layui-col-md9">                    <div class="layui-input-block" style="margin-left:40px">                        <input type="checkbox" style="padding-left:0px;width:80%" name="close" lay-filter="multiMeasureswitch-type" lay-skin="switch" lay-text="是|否">                    </div>                </div>            </div>            <div class="layui-row">                 <div class="layui-input-block" style="margin-left:5px;width:80%;padding-right: 5px;padding-top: 5px;">                      <textarea name="desc" placeholder="请选择您的测量项" class="layui-textarea" style="height:200px;width: 118%;"></textarea>                 </div>            </div>        </form>        <div class="layui-btn-container" style="margin-top:15px;text-align:center ">            <button type="button" name="coordiration_measure" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" onclick="pointMeasure()">坐标</button>            <button type="button" name="distance_measure" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" onclick="distanceMeasure()">距离</button>            <button type="button" name="area_measure" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" onclick="areaMeasure()">面积</button>            <button type="button" name="azimuth_measure" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" onclick="azimuthMeasure()">方位角</button>        </div>        <div style="text-align:center;margin-top:10px;" >            <button type="button" style="width:80%" class="layui-btn layui-btn-radius layui-btn-fluid layui-btn-danger" onclick="ClearCeliangTemp()">新测量</button>        </div>    </div></div>								'
+        , content: '<div class="layui-tab layui-tab-brief" lay-filter="measurelayer" style="margin:0px;"><ul class="layui-tab-title"><li lay-id="111" class="layui-this" style="width:40%;padding-top: 10px;line-height: normal;">地形测量</li><li lay-id="222" style="width:40%;padding-top:10px;line-height:20px">模型测量</li></ul><div class="layui-tab-content" style="padding:0px;"><form class="layui-form" style="margin-top:0px;margin-left:0px;" lay-filter="measureinfoform"><div class="layui-row"><div class="layui-col-md3"><label class="layui-form-label" style="width:60px;">连续测量</label></div><div class="layui-col-md9"><div class="layui-input-block" style="margin-left:0px"><input type="checkbox" style="padding-left:0px;width:80%" name="close" lay-filter="multiMeasureswitch-type" lay-skin="switch" lay-text="是|否"></div></div></div><div class="layui-row"><div class="layui-input-block" style="margin:5px;"><textarea name="desc" placeholder="请先选择测量方式后开始测量。" class="layui-textarea" style="height:200px;width: 100%;font-size: 15px;line-height:25px;"></textarea></div></div></form><div class="layui-btn-container" style="margin-top:10px;text-align:center "><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_point_id" onclick="pointMeasure()">坐标</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_height_id" onclick="heightMeasure()">高差</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_distance_id" onclick="distanceMeasure()">距离</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_area_id" onclick="areaMeasure()">面积</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_azimuth_id" onclick="azimuthMeasure()">方位角</button></div><div style="text-align:center;margin-top:5px;"><button type="button" style="width:90%" class="layui-btn layui-btn-radius layui-btn-fluid layui-btn-danger" onclick="ClearCeliangTemp()">清除</button></div></div></div>'
         , zIndex: layer.zIndex
         , success: function (layero) {
-            //地形测量把深度监测设置为TRUE
+            layer.setTop(layero);
+
+            //记录当前深度检测值
+            depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
+
+            //默认地形测量
             viewer.scene.globe.depthTestAgainstTerrain = true;
-            // 默认地形测量
-            form.render();
-            form.val("measureinfoform", {
-                "desc": "",
-            });
+
+            layui.form.render();
         }
         , end: function () {
-            viewer.scene.globe.depthTestAgainstTerrain = false;
-            projectlayerlistceliangindex = null;
+            //还原当前深度检测值
+            viewer.scene.globe.depthTestAgainstTerrain = depthTestAgainstTerrain;
+            measurewidgetlayerindex = null;
+            ClearCeliangTemp();
         }
     });
 };
 
-//多次测量监听
-form.on('switch(multiMeasureswitch-type)', function (data) {  
-    if (data.elem.checked) {
-        multimeasure = true;
-    } else {
-        multimeasure = false;
-    }
+
+//是否连续测量
+layui.form.on('switch(multiMeasureswitch-type)', function (data) {
+    multimeasure = data.elem.checked;
     return false;
 });
-//地形、模型选项卡监听
-elem.on('tab(measurelayer)', function (data) {
-    if (this.getAttribute('lay-id') == "222") {
-        ClearCeliangTemp();
-        if (curtileset == null) {
-            layer.msg('请先选择模型');
-            elem.tabChange('measurelayer', 111); 
-            return;
-        }
-        viewer.scene.globe.depthTestAgainstTerrain = false;
-    } else {
-        ClearCeliangTemp();
+
+//切换地形/模型测量
+layui.element.on('tab(measurelayer)', function (data) {
+    //清除测量结果
+    layui.form.val("measureinfoform", {
+        "desc": "",
+    });
+
+    //清除临时图形
+    ClearCeliangTemp();
+
+    //还原按钮样式
+    unselectMeasureOperate();
+
+    //恢复鼠标模式
+
+    if (data.index == 0) {
+        //地形测量
         viewer.scene.globe.depthTestAgainstTerrain = true;
+    }
+    else if (data.index == 1) {
+        //判断是否包含模型数据
+        if (viewer.scene.primitives.length > 1) {
+            //模型测量
+            viewer.scene.globe.depthTestAgainstTerrain = false;
+        }
+        else {
+            layer.msg('请先加载模型数据！');
+            layui.element.tabChange('measurelayer', 111);
+        }
     }
 });
 
-//坐标量测
+
+function MeasureGuid() {
+    return ((((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+        + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+        + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+        + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1));
+};
+
+
+//坐标测量
 function pointMeasure() {
+    //标识当前选中工具
+    selectMeasureOperate("widget_measure_point_id");
+    //清除临时图形
     ClearCeliangTemp();
-    showbtn = "coordiration_measure";
-    showBtnStyle(showbtn);
-    if (viewer.scene.globe.depthTestAgainstTerrain) {
-        form.val("measureinfoform", {
-            "desc": "\n\n单击地形选择位置",
-        });
+
+    //if (viewer.scene.globe.depthTestAgainstTerrain) {
+    //    form.val("measureinfoform", {
+    //        "desc": "\n\n单击地形选择位置",
+    //    });
+    //}
+    //else {
+    //    form.val("measureinfoform", {
+    //        "desc": "\n\n单击模型选择位置",
+    //    });
+    //}
+
+    if (handler != undefined) {
+        handler.destroy();
     }
-    else {
-        form.val("measureinfoform", {
-            "desc": "\n\n单击模型选择位置",
-        });
-    }
-    if (handler != undefined) {handler.destroy();}
-    handler = new Cesium.ScreenSpaceEventHandler(canvas);
+    handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
     //左击
     handler.setInputAction(function (leftclick) {
-        var pickedOject
-            if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
-                pickedOject = scene.pickPosition(leftclick.position);
-                if (multimeasure == false) {
-                    ClearCeliangTemp();
-                }
-            }else {
-                pickedOject = scene.pick(leftclick.position);
-                if (multimeasure == false) {
-                    ClearCeliangTemp();
-                }
+        var pickedOject;
+
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            //地形测量
+            pickedOject = viewer.scene.pickPosition(leftclick.position);
+            if (multimeasure == false) {
+                ClearCeliangTemp();
+                measurerresult = "";
             }
-            if (pickedOject != undefined) {
-                var position = scene.pickPosition(leftclick.position);
-                if (position != undefined) {
-                    var cartesian3 = Cesium.Cartographic.fromCartesian(position);                        //笛卡尔XYZ
-                    var longitude = Cesium.Math.toDegrees(cartesian3.longitude);                         //经度
-                    var latitude = Cesium.Math.toDegrees(cartesian3.latitude);                           //纬度
-                    var height = cartesian3.height;
-                    if (height > 0) {
-                        measurecontent = "\n" + "经度： " + ToDegress(longitude) + "\n\n" + "纬度： " + ToDegress(latitude) + "\n\n" + "高程： " + (height).toFixed(2);
-                        if (Cesium.defined(position)) {
-                            viewer.entities.add({
-                                name: "ptMeasue" + NewGuid(),
-                                position: position,
-                                billboard: {
-                                    image: "../Resources/img/mark/p19.png",
-                                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                                    width: 25,
-                                    height: 25,
-                                    disableDepthTestDistance: Number.POSITIVE_INFINITY
-                                }
-                            });
-                            viewer.entities.add({
-                                name: "ptlMeasue" + NewGuid(),
-                                position: Cesium.Cartesian3.fromDegrees(longitude, latitude, height),
-                                label: {
-                                    text: longitude.toFixed(6) + '，' + latitude.toFixed(6) + '，' + (height).toFixed(2),
-                                    showBackground: true,
-                                    fillColor: Cesium.Color.AQUA,
-                                    backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                                    font: '18px Times New Roman',
-                                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                                    pixelOffset: new Cesium.Cartesian2(0.0, -50),
-                                    scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
-                                }
-                            });
-                            if (measurecontent != null) {
-                                form.val("measureinfoform", {
-                                    "desc": measurecontent
-                                });
+        } else {
+            //模型测量
+            pickedOject = viewer.scene.pick(leftclick.position);
+            if (multimeasure == false) {
+                ClearCeliangTemp();
+                measurerresult = "";
+            }
+        }
+
+        if (pickedOject != undefined) {
+            var position = viewer.scene.pickPosition(leftclick.position);
+            if (position != undefined) {
+                var cartesian3 = Cesium.Cartographic.fromCartesian(position);                        //笛卡尔XYZ
+                var longitude = Cesium.Math.toDegrees(cartesian3.longitude);                         //经度
+                var latitude = Cesium.Math.toDegrees(cartesian3.latitude);                           //纬度
+                var height = cartesian3.height;
+                if (height > 0) {
+                    measurerresult = "经 度： " + longitude.toFixed(6) + "\n纬 度： " + longitude.toFixed(6) + "\n高 程： " + (height).toFixed(3) + "\n\n" + measurerresult;
+
+                    if (Cesium.defined(position)) {
+                        viewer.entities.add({
+                            name: "ptMeasue" + MeasureGuid(),
+                            position: position,
+                            billboard: {
+                                image: "../Resources/img/mark/p19.png",
+                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                                width: 25,
+                                height: 25,
+                                disableDepthTestDistance: Number.POSITIVE_INFINITY
                             }
-                            //针对移动设备
-                            if (isMobile.any()) {
-                                if (handler != undefined) {
-                                    handler.destroy();
-                                }
+                        });
+                        viewer.entities.add({
+                            name: "ptMeasue_label" + MeasureGuid(),
+                            position: position,
+                            label: {
+                                text: longitude.toFixed(6) + '，' + latitude.toFixed(6) + '，' + (height).toFixed(3),
+                                showBackground: true,
+                                fillColor: Cesium.Color.AQUA,
+                                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                font: '18px Times New Roman',
+                                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                pixelOffset: new Cesium.Cartesian2(0.0, -50),
+                                scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+                            }
+                        });
+
+                        if (measurerresult != "") {
+                            layui.form.val("measureinfoform", {
+                                "desc": measurerresult
+                            });
+                        }
+                        //针对移动设备
+                        if (isMobile.any()) {
+                            if (handler != undefined) {
+                                handler.destroy();
                             }
                         }
                     }
                 }
             }
-             
-
-    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);      
+        }
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 };
-//距离量测
-function distanceMeasure() {
-    ClearCeliangTemp(); 
-    showbtn = "distance_measure";
-    showBtnStyle(showbtn);
-    if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
-        form.val("measureinfoform", {
-            "desc": "\n\n单击地图两个点求距离",
-        });
-    }
-    else {
-        form.val("measureinfoform", {
-            "desc": "\n\n单击模型两个点求距离",
-        });
-    }
-    
-    if (handler != undefined) { handler.destroy(); }
+//高差测量
+function heightMeasure() {
+    //标识当前选中工具
+    selectMeasureOperate("widget_measure_height_id");
+    //清除临时图形
+    ClearCeliangTemp();
 
-    handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+    //if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
+    //    form.val("measureinfoform", {
+    //        "desc": "\n\n单击地图两个点求距离",
+    //    });
+    //}
+    //else {
+    //    form.val("measureinfoform", {
+    //        "desc": "\n\n单击模型两个点求距离",
+    //    });
+    //}
+
+    if (handler != undefined) {
+        handler.destroy();
+    }
+    handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
     //左击
     handler.setInputAction(function (leftclik) {
-        var pickedOject 
-            if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
-                pickedOject = scene.pickPosition(leftclik.position);
-                if (multimeasure == false & isRedo==true) {
-                    ClearCeliangSingle();
-                    isRedo = false;
-                }
+        var pickedOject;
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            //地形测量
+            pickedOject = viewer.scene.pickPosition(leftclik.position);
+            if (multimeasure == false & isRedo == true) {
+                ClearCeliangSingle();
+                isRedo = false;
             }
-            else {
-                pickedOject = scene.pick(leftclik.position);
-                if (multimeasure == false & isRedo == true) {
-                    ClearCeliangSingle();
-                    isRedo = false;
-                }
+        }
+        else {
+            //模型测量
+            pickedOject = viewer.scene.pick(leftclik.position);
+            if (multimeasure == false & isRedo == true) {
+                ClearCeliangSingle();
+                isRedo = false;
             }
-           
+        }
+
         if (pickedOject != undefined) {
-            var xyz = scene.pickPosition(leftclik.position);
+            var xyz = viewer.scene.pickPosition(leftclik.position);
+
             if (xyz != undefined) {
                 var rblh = Cesium.Cartographic.fromCartesian(xyz);
                 viewer.entities.add({
-                    name: "pt_Measue_single" + NewGuid(),
+                    name: "pt_Measue_single" + MeasureGuid(),
                     position: xyz,
                     point: {
                         pixelSize: 10,
@@ -209,7 +262,7 @@ function distanceMeasure() {
                 if (points.length == 2) {
                     var point = points[0];
                     viewer.entities.add({
-                        name: "pl_Measue_single" + NewGuid(),
+                        name: "pl_Measue_single" + MeasureGuid(),
                         polyline: {
                             positions: [point, xyz],
                             width: 2,
@@ -226,7 +279,7 @@ function distanceMeasure() {
                         var h = rblh.height;
 
                         viewer.entities.add({
-                            name: "pl_Measue_single" + NewGuid(),
+                            name: "pl_Measue_single" + MeasureGuid(),
                             polyline: {
                                 positions: [point, Cesium.Cartesian3.fromDegrees(l, b, rblh1.height)],
                                 width: 2,
@@ -239,7 +292,7 @@ function distanceMeasure() {
                             }
                         });
                         viewer.entities.add({
-                            name: "pl_Measue_single" + NewGuid(),
+                            name: "pl_Measue_single" + MeasureGuid(),
                             polyline: {
                                 positions: [xyz, Cesium.Cartesian3.fromDegrees(l, b, rblh1.height)],
                                 width: 2,
@@ -253,7 +306,7 @@ function distanceMeasure() {
                         });
 
                         viewer.entities.add({
-                            name: "pll_Measue_single" + NewGuid(),
+                            name: "pll_Measue_single" + MeasureGuid(),
                             position: Cesium.Cartesian3.fromDegrees(l, b, (rblh1.height + h) / 2),
                             label: {
                                 text: '高差：' + (rblh1.height - h).toFixed(2) + 'm',
@@ -267,7 +320,7 @@ function distanceMeasure() {
                         });
                         var sum = Cesium.Cartesian3.distance(points[0], points[1]);
                         viewer.entities.add({
-                            name: "pll_Measue_single" + NewGuid(),
+                            name: "pll_Measue_single" + MeasureGuid(),
                             position: Cesium.Cartesian3.fromDegrees((l + rblh1.longitude * 180 / Math.PI) / 2, (b + rblh1.latitude * 180 / Math.PI) / 2, (rblh1.height + h) / 2),
 
                             label: {
@@ -281,10 +334,10 @@ function distanceMeasure() {
                             }
                         });
                         var pingju = Math.sqrt(Math.pow(sum, 2) - Math.pow(rblh1.height - h, 2));
-                            viewer.entities.add({
-                                name: "pll_Measue_single" + NewGuid(),
-                                position: points[0],
-                                label: {
+                        viewer.entities.add({
+                            name: "pll_Measue_single" + MeasureGuid(),
+                            position: points[0],
+                            label: {
                                 text: '倾角：' + (Math.acos(pingju / sum) * 180 / Math.PI).toFixed(2) + '°',
                                 showBackground: true,
                                 backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
@@ -295,10 +348,10 @@ function distanceMeasure() {
                                 pixelOffset: new Cesium.Cartesian2(0.0, -60),
                             }
                         });
-                        measurecontent = " 距离：" + sum.toFixed(2) + "  米\n\n" + " 平距：" + pingju.toFixed(2) + "  米\n\n" + " 高差：" + (rblh1.height - h).toFixed(2) + "  米\n\n" + " 倾角：" + (Math.acos(pingju / sum) * 180 / Math.PI).toFixed(2) + ' °';
-                        if (measurecontent != null) {
-                            form.val("measureinfoform", {
-                                "desc": measurecontent
+                        measureresult = " 距离：" + sum.toFixed(2) + "  米\n\n" + " 平距：" + pingju.toFixed(2) + "  米\n\n" + " 高差：" + (rblh1.height - h).toFixed(2) + "  米\n\n" + " 倾角：" + (Math.acos(pingju / sum) * 180 / Math.PI).toFixed(2) + ' °';
+                        if (measureresult != "") {
+                            layui.form.val("measureinfoform", {
+                                "desc": measureresult
                             });
                         }
                         isRedo = true;
@@ -310,7 +363,7 @@ function distanceMeasure() {
                         var h = rblh1.height;
 
                         viewer.entities.add({
-                            name: "pl_Measue_single" + NewGuid(),
+                            name: "pl_Measue_single" + MeasureGuid(),
                             polyline: {
                                 positions: [point, Cesium.Cartesian3.fromDegrees(l, b, rblh.height)],
                                 width: 2,
@@ -324,7 +377,7 @@ function distanceMeasure() {
                         });
 
                         viewer.entities.add({
-                            name: "pl_Measue_single" + NewGuid(),
+                            name: "pl_Measue_single" + MeasureGuid(),
                             polyline: {
                                 positions: [xyz, Cesium.Cartesian3.fromDegrees(l, b, rblh.height)],
                                 width: 2,
@@ -337,7 +390,7 @@ function distanceMeasure() {
                             }
                         });
                         viewer.entities.add({
-                            name: "pll_Measue_single" + NewGuid(),
+                            name: "pll_Measue_single" + MeasureGuid(),
                             position: Cesium.Cartesian3.fromDegrees(l, b, (rblh.height + h) / 2),
                             label: {
                                 text: '高差：' + (rblh.height - h).toFixed(2) + 'm',
@@ -351,7 +404,7 @@ function distanceMeasure() {
                         });
                         var sum = Cesium.Cartesian3.distance(points[0], points[1]);
                         viewer.entities.add({
-                            name: "pll_Measue_single" + NewGuid(),
+                            name: "pll_Measue_single" + MeasureGuid(),
                             position: Cesium.Cartesian3.fromDegrees((l + rblh.longitude * 180 / Math.PI) / 2, (b + rblh.latitude * 180 / Math.PI) / 2, (rblh.height + h) / 2),
 
                             label: {
@@ -366,7 +419,7 @@ function distanceMeasure() {
                         });
                         var pingju = Math.sqrt(Math.pow(sum, 2) - Math.pow(rblh.height - h, 2));
                         viewer.entities.add({
-                            name: "pll_Measue_single" + NewGuid(),
+                            name: "pll_Measue_single" + MeasureGuid(),
                             position: points[1],
 
                             label: {
@@ -381,10 +434,10 @@ function distanceMeasure() {
                             }
                         });
 
-                        measurecontent = " 距离:" + sum.toFixed(2) + "  米\n\n" + " 平距:" + pingju.toFixed(2) + "  米\n\n" + " 高差:" + (rblh.height - h).toFixed(2) + "  米\n\n" + " 倾角:" + (Math.acos(pingju / sum) * 180 / Math.PI).toFixed(2) + '°';
-                        if (measurecontent != null) {
-                            form.val("measureinfoform", {
-                                "desc": measurecontent
+                        measureresult = " 距离:" + sum.toFixed(2) + "  米\n\n" + " 平距:" + pingju.toFixed(2) + "  米\n\n" + " 高差:" + (rblh.height - h).toFixed(2) + "  米\n\n" + " 倾角:" + (Math.acos(pingju / sum) * 180 / Math.PI).toFixed(2) + '°';
+                        if (measureresult != "") {
+                            layui.form.val("measureinfoform", {
+                                "desc": measureresult
                             });
                         }
                         isRedo = true;
@@ -400,53 +453,76 @@ function distanceMeasure() {
             }
         }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-    
+
 };
-//面积测量
-function areaMeasure() {
+//距离测量
+function distanceMeasure() {
+    //标识当前选中工具
+    selectMeasureOperate("widget_measure_distance_id");
+    //清除临时图形
     ClearCeliangTemp();
-    if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
-        form.val("measureinfoform", {
-            "desc": "\n\n左击地图定义曲面，右击完成",
-        });
-        showbtn = "area_measure";
-        showBtnStyle(showbtn);
-    } else {
-        form.val("measureinfoform", {
-            "desc": "\n\n左击模型定义曲面，右击完成",
-        });
-    }
+
     if (handler != undefined) {
         handler.destroy();
     }
+    handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
-    handler = new Cesium.ScreenSpaceEventHandler(canvas);
+
+}
+
+//面积测量
+function areaMeasure() {
+    //标识当前选中工具
+    selectMeasureOperate("widget_measure_area_id");
+    //清除临时图形
+    ClearCeliangTemp();
+
+    //if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
+    //    form.val("measureinfoform", {
+    //        "desc": "\n\n左击地图定义曲面，右击完成",
+    //    });
+    //    showbtn = "area_measure";
+    //    showBtnStyle(showbtn);
+    //} else {
+    //    form.val("measureinfoform", {
+    //        "desc": "\n\n左击模型定义曲面，右击完成",
+    //    });
+    //}
+
+    if (handler != undefined) {
+        handler.destroy();
+    }
+    handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+
     //左击
     handler.setInputAction(function (leftclik) {
-        form.val("measureinfoform", {
-            "desc": "\n\n\n\n右击完成操作",
-        });
-        var pickedOject
-        if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
-            pickedOject = scene.pickPosition(leftclik.position);
+        //form.val("measureinfoform", {
+        //    "desc": "\n\n\n\n右击完成操作",
+        //});
+        var pickedOject;
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            //地形测量
+            pickedOject = viewer.scene.pickPosition(leftclik.position);
             if (multimeasure == false & isRedo == true) {
                 ClearCeliangSingle();
                 isRedo = false;
             }
         } else {
-            pickedOject = scene.pick(leftclik.position);
+            //模型测量
+            pickedOject = viewer.scene.pick(leftclik.position);
             if (multimeasure == false & isRedo == true) {
                 ClearCeliangSingle();
                 isRedo = false;
             }
         }
         if (pickedOject != undefined) {
-            var position = scene.pickPosition(leftclik.position);
+            var position = viewer.scene.pickPosition(leftclik.position);
             if (position != undefined) {
 
                 if (Cesium.defined(position)) {
                     viewer.entities.add({
-                        name: "pt_Measue_single" + NewGuid(),
+                        name: "pt_Measue_single" + MeasureGuid(),
                         position: position,
                         point: {
                             pixelSize: 10,
@@ -460,7 +536,7 @@ function areaMeasure() {
                 if (points.length > 1) {
                     var point = points[points.length - 2];
                     viewer.entities.add({
-                        name: "pl_Measue_single" + NewGuid(),
+                        name: "pl_Measue_single" + MeasureGuid(),
                         polyline: {
                             positions: [point, position],
                             width: 2,
@@ -480,10 +556,12 @@ function areaMeasure() {
     handler.setInputAction(function (move) {
         if (points.length > 0) {
 
-            var pick
-            if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
-                pick = scene.pickPosition(move.endPosition);
+            var pick;
+            if (viewer.scene.globe.depthTestAgainstTerrain) {
+                //地形测量
+                pick = viewer.scene.pickPosition(move.endPosition);
             } else {
+                //模型测量
                 pick = viewer.scene.pick(move.endPosition);
             }
             if (pick != undefined) {
@@ -542,7 +620,7 @@ function areaMeasure() {
             }
 
             viewer.entities.add({
-                name: "pl_Measue_single" + NewGuid(),
+                name: "pl_Measue_single" + MeasureGuid(),
                 polyline: {
                     positions: [points[0], points[points.length - 1]],
                     width: 2,
@@ -601,7 +679,7 @@ function areaMeasure() {
             }
 
             viewer.entities.add({
-                name: "pyl_Measue_single" + NewGuid(),
+                name: "pyl_Measue_single" + MeasureGuid(),
                 position: pointcenter,
                 label: {
                     text: '面积：' + mianji.toFixed(2) + '平方米  \n 周长：' + sum.toFixed(2) + '米',
@@ -614,10 +692,10 @@ function areaMeasure() {
                 }
             });
 
-            measurecontent = " 面积：" + mianji.toFixed(2) + ' 平方米' + "\n\n" + " 周长：" + sum.toFixed(2) + ' 米';
-            if (measurecontent != null) {
-                form.val("measureinfoform", {
-                    "desc": measurecontent
+            measureresult = " 面积：" + mianji.toFixed(2) + ' 平方米' + "\n\n" + " 周长：" + sum.toFixed(2) + ' 米';
+            if (measureresult != "") {
+                layui.form.val("measureinfoform", {
+                    "desc": measureresult
                 });
             }
             isRedo = true;
@@ -626,38 +704,43 @@ function areaMeasure() {
     }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 
 };
-//方位角量测
+//方位角测量
 function azimuthMeasure() {
+    //标识当前选中工具
+    selectMeasureOperate("widget_measure_azimuth_id");
+    //清除临时图形
     ClearCeliangTemp();
-    if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
-        form.val("measureinfoform", {
-            "desc": "\n\n单击地形两个点求方位角",
-        });
-        showbtn = "azimuth_measure";
-        showBtnStyle(showbtn);
-    } else {
-        form.val("measureinfoform", {
-            "desc": "\n\n单击模型两个点求方位角",
-        });
-    }
+
+    //if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
+    //    form.val("measureinfoform", {
+    //        "desc": "\n\n单击地形两个点求方位角",
+    //    });
+    //    showbtn = "azimuth_measure";
+    //    showBtnStyle(showbtn);
+    //} else {
+    //    form.val("measureinfoform", {
+    //        "desc": "\n\n单击模型两个点求方位角",
+    //    });
+    //}
+
     if (handler != undefined) {
         handler.destroy();
     }
+    handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
-    handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
     var pickedOject;
     //左击
     handler.setInputAction(function (leftclik) {
 
         if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
-            pickedOject = scene.pickPosition(leftclik.position);
+            pickedOject = viewer.scene.pickPosition(leftclik.position);
             if (multimeasure == false & isRedo == true) {
                 ClearCeliangSingle();
                 isRedo = false;
             }
         }
         else {
-            pickedOject = scene.pick(leftclik.position);
+            pickedOject = viewer.scene.pick(leftclik.position);
             if (multimeasure == false & isRedo == true) {
                 ClearCeliangSingle();
                 isRedo = false;
@@ -665,10 +748,10 @@ function azimuthMeasure() {
         }
 
         if (pickedOject != undefined) {
-            var xyz = scene.pickPosition(leftclik.position);
+            var xyz = viewer.scene.pickPosition(leftclik.position);
             if (xyz != undefined) {
                 viewer.entities.add({
-                    name: "pt_Measue_single" + NewGuid(),
+                    name: "pt_Measue_single" + MeasureGuid(),
                     position: xyz,
                     point: {
                         pixelSize: 10,
@@ -680,18 +763,18 @@ function azimuthMeasure() {
                 if (points.length == 2) {
                     var point = points[0];
                     viewer.entities.add({
-                            name: "pl_Measue_single" + NewGuid(),
-                            polyline: {
-                                positions: points,
-                                width: 2,
-                                arcType: Cesium.ArcType.RHUMB,
-                                material: Cesium.Color.RED,
-                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                    color: Cesium.Color.RED,
-                                }),
-                            }
-                        });
-                      
+                        name: "pl_Measue_single" + MeasureGuid(),
+                        polyline: {
+                            positions: points,
+                            width: 2,
+                            arcType: Cesium.ArcType.RHUMB,
+                            material: Cesium.Color.RED,
+                            depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                color: Cesium.Color.RED,
+                            }),
+                        }
+                    });
+
                     var rblh1 = Cesium.Cartographic.fromCartesian(point);//第一个点
                     var rblh2 = Cesium.Cartographic.fromCartesian(xyz);//第二个点
 
@@ -722,7 +805,7 @@ function azimuthMeasure() {
                     }
 
                     viewer.entities.add({
-                        name: "al_Measue_single" + NewGuid(),
+                        name: "al_Measue_single" + MeasureGuid(),
                         position: Cesium.Cartesian3.fromElements((point.x + xyz.x) / 2, (point.y + xyz.y) / 2, (point.z + xyz.z) / 2),
                         label: {
                             text: '方位角：' + r.toFixed(2) + '°',
@@ -735,10 +818,10 @@ function azimuthMeasure() {
                             disableDepthTestDistance: Number.POSITIVE_INFINITY
                         }
                     });
-                    measurecontent = " 方位角：" + r.toFixed(2) + '度';
-                    if (measurecontent != null) {
-                        form.val("measureinfoform", {
-                            "desc": measurecontent
+                    measureresult = " 方位角：" + r.toFixed(2) + '度';
+                    if (measureresult != null) {
+                        layui.form.val("measureinfoform", {
+                            "desc": measureresult
                         });
                     }
                     isRedo = true;
@@ -746,44 +829,34 @@ function azimuthMeasure() {
                 }
             }
         }
-         
-        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-}
-//修改测量项按钮样式
-function showBtnStyle(showbtn) {
-    var btnstyleclicked = "layui-btn  layui-btn-radius layui-btn-s";
-    var btnstyleunclicked = "layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm";
-    if (showbtn == "coordiration_measure") {
-        window.document.getElementsByName("coordiration_measure")[0].className = btnstyleclicked;
-        window.document.getElementsByName("distance_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("area_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("azimuth_measure")[0].className = btnstyleunclicked;
-    }
-    if (showbtn == null) {
-        window.document.getElementsByName("coordiration_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("distance_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("area_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("azimuth_measure")[0].className = btnstyleunclicked;
-    }
-    if (showbtn == "distance_measure") {
-        window.document.getElementsByName("coordiration_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("distance_measure")[0].className = btnstyleclicked;
-        window.document.getElementsByName("area_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("azimuth_measure")[0].className = btnstyleunclicked;
-    }
-    if (showbtn == "area_measure") {
-        window.document.getElementsByName("coordiration_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("distance_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("area_measure")[0].className = btnstyleclicked;
-        window.document.getElementsByName("azimuth_measure")[0].className = btnstyleunclicked;
-    }
-    if (showbtn == "azimuth_measure") {
-        window.document.getElementsByName("coordiration_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("distance_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("area_measure")[0].className = btnstyleunclicked;
-        window.document.getElementsByName("azimuth_measure")[0].className = btnstyleclicked;
-    }
-}
+
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+};
+
+
+
+//选中测量操作按钮
+function selectMeasureOperate(id) {
+    unselectMeasureOperate();
+    document.getElementById(id).style = "color:#FFFFFF;background-color:#009688;width:65px;";
+};
+//取消测量操作按钮
+function unselectMeasureOperate() {
+    document.getElementById("widget_measure_point_id").style = "width:65px;";
+    document.getElementById("widget_measure_height_id").style = "width:65px;";
+    document.getElementById("widget_measure_distance_id").style = "width:65px;";
+    document.getElementById("widget_measure_area_id").style = "width:65px;";
+    document.getElementById("widget_measure_azimuth_id").style = "width:65px;";
+    document.getElementById("widget_measure_point_id").className = "layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm";
+    document.getElementById("widget_measure_height_id").className = "layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm";
+    document.getElementById("widget_measure_distance_id").className = "layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm";
+    document.getElementById("widget_measure_area_id").className = "layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm";
+    document.getElementById("widget_measure_azimuth_id").className = "layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm";
+};
+
+
+
+
 
 //清除临时图形
 function ClearCeliangTemp() {
@@ -793,7 +866,7 @@ function ClearCeliangTemp() {
             if ((viewer.entities._entities._array[i]._name) && ((viewer.entities._entities._array[i]._name.indexOf("temppoint") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("temppolygon") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("ptMeasue") > -1)
-                || (viewer.entities._entities._array[i]._name.indexOf("ptlMeasue") > -1)
+                || (viewer.entities._entities._array[i]._name.indexOf("ptMeasue_label") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("plMeasue") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("pllMeasue") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("pyMeasue") > -1)
@@ -813,9 +886,7 @@ function ClearCeliangTemp() {
     if (viewer.entities.getById("line_temp9998") != null) {
         viewer.entities.removeById("line_temp9998");
     }
-    form.val("measureinfoform", {
-        "desc": "",
-    });
+
     points = [];
     ClearCeliangSingle();
 }
@@ -847,7 +918,7 @@ function ClearCeliangSingle() {
     if (viewer.entities.getById("line_temp9998") != null) {
         viewer.entities.removeById("line_temp9998");
     }
-    form.val("measureinfoform", {
+    layui.form.val("measureinfoform", {
         "desc": "   ",
     });
     points = [];
@@ -855,7 +926,7 @@ function ClearCeliangSingle() {
 }
 
 function ToDegress(val) {
-    if (typeof (val) == "undefined"|| val =="") {
+    if (typeof (val) == "undefined" || val == "") {
         return ""
     }
     val = val + "";
@@ -875,5 +946,5 @@ function ToDegress(val) {
         strMiao = strMiao.substring(0, j + 4);
         strMiao = parseFloat(strMiao).toFixed(2);
     }
-    return strDu + "°" + strFen + "′" + strMiao+"″"
+    return strDu + "°" + strFen + "′" + strMiao + "″"
 }

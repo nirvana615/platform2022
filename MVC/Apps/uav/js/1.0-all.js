@@ -5,11 +5,11 @@ var viewer = null;
 var handler = null;
 
 var tree = layui.tree;
-var form = layui.form;
+//var form = layui.form;
 var table = layui.table;
 var util = layui.util;
 var date = layui.laydate;
-var elem = layui.element;
+//var elem = layui.element;
 
 
 var tipslayer = -1;//全局提示层
