@@ -746,7 +746,7 @@ namespace SERVICE.Controllers
                     }
 
 
-                    file.SaveAs(ImageFilePath + DateTime.Now.ToString("yyyyMMddHHmm")+file.FileName);// +".txt");
+                    file.SaveAs(ImageFilePath +file.FileName);// +".txt");//DateTime.Now.ToString("yyyyMMddHHmm")
                     string lujin = "/SurImage/const/" + file.FileName;
                     string value = "("
                         + SQLHelper.UpdateString(lujin) + ","

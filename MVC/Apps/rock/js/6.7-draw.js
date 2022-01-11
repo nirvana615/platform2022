@@ -1385,7 +1385,7 @@ function LoadBiaozhunListLayer() {
                                                         position: data.children[i].postion,
                                                         label: {
                                                             text: data.children[i].title,
-                                                            font: '16px Times New Roman',
+                                                            font: '24px Times New Roman',
                                                             showBackground: true,
                                                             backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                                                             fillColor: Cesium.Color.fromCssColorString(data.children[i].colour),
@@ -1437,10 +1437,11 @@ function LoadBiaozhunListLayer() {
 
                                                     viewer.entities.add({
                                                         id: data.children[i].id + "_LABEL",
-                                                        position: new Cesium.Cartesian3(data.children[i].Centerx, data.children[i].Centery, data.children[i].Centerz),
+                                                       // position: new Cesium.Cartesian3(data.children[i].Centerx, data.children[i].Centery, data.children[i].Centerz),
+                                                        position: data.children[i].pointList[0],
                                                         label: {
                                                             text: data.children[i].title + '-长度：' + sum.toFixed(2) + '米',
-                                                            font: '12px Times New Roman',
+                                                            font: '24px Times New Roman',
                                                             showBackground: true,
                                                             backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                                                             fillColor: Cesium.Color.fromCssColorString(data.children[i].colour),
@@ -1486,12 +1487,13 @@ function LoadBiaozhunListLayer() {
                                                     //计算重心
                                                     viewer.entities.add({
                                                         id: data.children[i].id + "_LABEL",
-                                                        position: new Cesium.Cartesian3(data.children[i].Centerx, data.children[i].Centery, data.children[i].Centerz),
+                                                       // position: new Cesium.Cartesian3(data.children[i].Centerx, data.children[i].Centery, data.children[i].Centerz),
+                                                        position: data.children[i].pointList[0],
                                                         label: {
-                                                            text: data.children[i].title + '面积：' + areamianji.toFixed(2) + '平方米',
+                                                            text: data.children[i].title,// + '面积：' + areamianji.toFixed(2) + '平方米',
                                                             showBackground: true,
                                                             backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                                                            font: '12px Times New Roman',
+                                                            font: '24px Times New Roman',
                                                             fillColor: Cesium.Color.fromCssColorString(data.children[i].colour),
                                                             horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                                                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
@@ -1537,7 +1539,7 @@ function LoadBiaozhunListLayer() {
                                                     position: data.postion,
                                                     label: {
                                                         text: data.title,
-                                                        font: '16px Times New Roman',
+                                                        font: '24px Times New Roman',
                                                         showBackground: true,
                                                         backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                                                         horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
@@ -1589,10 +1591,10 @@ function LoadBiaozhunListLayer() {
 
                                                 viewer.entities.add({
                                                     id: data.id + "_LABEL",
-                                                    position: new Cesium.Cartesian3(data.Centerx, data.Centery, data.Centerz),
+                                                    position: data.pointList[0],
                                                     label: {
                                                         text: data.title + '-长度：' + sum.toFixed(2) + '米',
-                                                        font: '12px Times New Roman',
+                                                        font: '24px Times New Roman',
                                                         showBackground: true,
                                                         backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                                                         fillColor: Cesium.Color.fromCssColorString(data.colour),
@@ -1627,13 +1629,6 @@ function LoadBiaozhunListLayer() {
                                                             color: Cesium.Color.fromCssColorString(data.colour)
                                                         }),
                                                     }
-                                                    //polygon: {
-                                                    //    hierarchy: {
-                                                    //        positions: points
-                                                    //    },
-                                                    //    material: Cesium.Color.fromCssColorString(data.colour).withAlpha(data.lineType),
-
-                                                    //}
                                                 });
 
 
@@ -1644,12 +1639,13 @@ function LoadBiaozhunListLayer() {
                                                 //计算重心
                                                 viewer.entities.add({
                                                     id: data.id + "_LABEL",
-                                                    position: new Cesium.Cartesian3(data.Centerx, data.Centery, data.Centerz),
+                                                   // position: new Cesium.Cartesian3(data.Centerx, data.Centery, data.Centerz),
+                                                    position: data.pointList[0],
                                                     label: {
-                                                        text: data.title + '面积：' + areamianji.toFixed(2) + '平方米',
+                                                        text: data.title,// + '面积：' + areamianji.toFixed(2) + '平方米',
                                                         showBackground: true,
                                                         backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                                                        font: '15px Times New Roman',
+                                                        font: '24px Times New Roman',
                                                         fillColor: Cesium.Color.fromCssColorString(data.colour),
                                                         horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                                                         verticalOrigin: Cesium.VerticalOrigin.CENTER,
