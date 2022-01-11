@@ -716,7 +716,70 @@ namespace SERVICE.Controllers
            
 
 
-        }    
+        }
+        /// <summary>
+        /// 1---施工图片上传（表单提交、图片上传至服务器）  陈小飞
+        /// </summary>
+        [HttpPost]
+        public string UploadConstImage()
+        {
+            //string step = null;
+            try
+            {
+                string ImageFilePath = imgdir + "/SurImage/const/";        //   ".../SurImage"
+                HttpPostedFile file = HttpContext.Current.Request.Files["upload"];
+                string projectId = HttpContext.Current.Request.Form["projectId"];
+                string type = HttpContext.Current.Request.Form["type"];
+                string constTime = HttpContext.Current.Request.Form["constTime"];
+                string patrolTtypeime = HttpContext.Current.Request.Form["type"];
+                string monitorId = HttpContext.Current.Request.Form["monitorId"];
+
+
+                if (file != null)
+                {
+                    Stream sr = file.InputStream;
+                    Bitmap bitmap = (Bitmap)Bitmap.FromStream(sr);
+
+                    if (!Directory.Exists(ImageFilePath))//判断文件夹是否存在
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "影像存储路径不存在！", string.Empty));
+                    }
+
+
+                    file.SaveAs(ImageFilePath + DateTime.Now.ToString("yyyyMMddHHmm")+file.FileName);// +".txt");
+                    string lujin = "/SurImage/const/" + file.FileName;
+                    string value = "("
+                        + SQLHelper.UpdateString(lujin) + ","
+                        + SQLHelper.UpdateString(projectId) + ","
+                        + SQLHelper.UpdateString(monitorId) + ","
+                        + SQLHelper.UpdateString(type) + ","
+                        + SQLHelper.UpdateString(constTime) + ")";
+                    int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, "INSERT INTO const_photo_info (photo_url,project_id,monitor_id,type,const_time) VALUES" + value);
+                    if (id != -1)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "上传成功！", id + ""));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "数据库插入失败", ""));
+                    }
+
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "影像存储失败！", string.Empty));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+
+        }
 
     }
 }

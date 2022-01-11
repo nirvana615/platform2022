@@ -402,8 +402,55 @@ namespace SERVICE.Controllers
                    return "删除照片失败！";
                 }
          }
-           
-        
+        /// <summary>
+        /// 获取巡视的照片信息
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="monitorId">验证信息</param>
+        /// <returns></returns>
+        [HttpGet]
+        public string getConstPhotoInfo(string projectId, string monitorId)
+        {
+
+
+            string sql = "SELECT * FROM const_photo_info WHERE project_id ={0}";
+            if (!string.IsNullOrEmpty(monitorId))
+            {
+                sql = sql + " and monitor_id = " + SQLHelper.UpdateString(monitorId);
+            }
+
+            sql = sql + "ORDER BY type ";
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(projectId)));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<ConstPhotoInfo> constPhotoInfoList = new List<ConstPhotoInfo>();
+
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    ConstPhotoInfo constPhotoInfo = ParseMonitorHelper.ParseConstPhotoInfo(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+                    if (constPhotoInfo != null)
+                    {
+                        constPhotoInfoList.Add(constPhotoInfo);
+
+                    }
+                }
+
+                if (constPhotoInfoList.Count > 0)
+                {
+                    return JsonHelper.ToJson(constPhotoInfoList);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
 
 
     }

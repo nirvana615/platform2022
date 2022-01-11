@@ -4632,6 +4632,46 @@ namespace MODEL
                 return null;
             }
         }
+
+        /// 施工照片表
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static ConstPhotoInfo ParseConstPhotoInfo(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析施工照片数据为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("Project不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                ConstPhotoInfo constPhotoInfo = new ConstPhotoInfo()
+                {
+                    id = Convert.ToInt32(row[0].ToString()),
+                    photoUrl = row[1].ToString(),
+                    projectId = row[2].ToString(),
+                    monitorId = row[3].ToString(),
+                    type = row[4].ToString(),
+                    constTime = row[4].ToString(),
+                };
+                return constPhotoInfo;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("为施工照片信息表解析失败：" + data, ex);
+                return null;
+            }
+        }
         #endregion
 
         /// <summary>
