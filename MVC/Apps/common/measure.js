@@ -4,13 +4,16 @@
  * 必须先创建handler变量
  */
 var measurewidgetlayerindex = null;
-var depthTestAgainstTerrain = null;//深度监测初始值
-var multimeasure = false;//连续测量
-var measurerresult = "";//测量结果
+var depthTestAgainstTerrain = null;     //深度检测初始值
+var multimeasure = false;               //连续测量
+var measureresult = "";                 //测量结果
+var tipsentity;                         //操作提示
 
 var isRedo = false;
-
 var points = [];
+
+
+
 
 //测量widget
 function measure() {
@@ -21,7 +24,7 @@ function measure() {
 
     measurewidgetlayerindex = layer.open({
         type: 1
-        , title: ['测量', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+        , title: ['测量工具', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
         , area: ['400px', '430px']
         , shade: 0
         , offset: ['85px', '1530px']
@@ -32,6 +35,19 @@ function measure() {
         , zIndex: layer.zIndex
         , success: function (layero) {
             layer.setTop(layero);
+
+            tipsentity = viewer.entities.add({
+                label: {
+                    show: false,
+                    showBackground: true,
+                    font: "14px monospace",
+                    horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                    pixelOffset: new Cesium.Cartesian2(20, 20),
+                    scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+                },
+            });
 
             //记录当前深度检测值
             depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
@@ -46,6 +62,7 @@ function measure() {
             viewer.scene.globe.depthTestAgainstTerrain = depthTestAgainstTerrain;
             measurewidgetlayerindex = null;
             ClearCeliangTemp();
+            viewer.entities.remove(tipsentity);
         }
     });
 };
@@ -108,52 +125,42 @@ function pointMeasure() {
     selectMeasureOperate("widget_measure_point_id");
     //清除临时图形
     ClearCeliangTemp();
-
-    //if (viewer.scene.globe.depthTestAgainstTerrain) {
-    //    form.val("measureinfoform", {
-    //        "desc": "\n\n单击地形选择位置",
-    //    });
-    //}
-    //else {
-    //    form.val("measureinfoform", {
-    //        "desc": "\n\n单击模型选择位置",
-    //    });
-    //}
+    //修改鼠标样式
+    viewer._container.style.cursor = "crosshair";
 
     if (handler != undefined) {
         handler.destroy();
     }
     handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
-    //左击
+    //左键（开始测量）
     handler.setInputAction(function (leftclick) {
         var pickedOject;
-
         if (viewer.scene.globe.depthTestAgainstTerrain) {
             //地形测量
             pickedOject = viewer.scene.pickPosition(leftclick.position);
             if (multimeasure == false) {
                 ClearCeliangTemp();
-                measurerresult = "";
+                measureresult = "";
             }
         } else {
             //模型测量
             pickedOject = viewer.scene.pick(leftclick.position);
             if (multimeasure == false) {
                 ClearCeliangTemp();
-                measurerresult = "";
+                measureresult = "";
             }
         }
 
         if (pickedOject != undefined) {
             var position = viewer.scene.pickPosition(leftclick.position);
             if (position != undefined) {
-                var cartesian3 = Cesium.Cartographic.fromCartesian(position);                        //笛卡尔XYZ
-                var longitude = Cesium.Math.toDegrees(cartesian3.longitude);                         //经度
-                var latitude = Cesium.Math.toDegrees(cartesian3.latitude);                           //纬度
+                var cartesian3 = Cesium.Cartographic.fromCartesian(position);
+                var longitude = Cesium.Math.toDegrees(cartesian3.longitude);
+                var latitude = Cesium.Math.toDegrees(cartesian3.latitude);
                 var height = cartesian3.height;
                 if (height > 0) {
-                    measurerresult = "经 度： " + longitude.toFixed(6) + "\n纬 度： " + longitude.toFixed(6) + "\n高 程： " + (height).toFixed(3) + "\n\n" + measurerresult;
+                    measureresult = "经  度： " + longitude.toFixed(6) + "\n纬  度： " + latitude.toFixed(6) + "\n高  程： " + (height).toFixed(3) + "\n\n" + measureresult;
 
                     if (Cesium.defined(position)) {
                         viewer.entities.add({
@@ -184,9 +191,9 @@ function pointMeasure() {
                             }
                         });
 
-                        if (measurerresult != "") {
+                        if (measureresult != "") {
                             layui.form.val("measureinfoform", {
-                                "desc": measurerresult
+                                "desc": measureresult
                             });
                         }
                         //针对移动设备
@@ -200,6 +207,41 @@ function pointMeasure() {
             }
         }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+    //右键（取消工具）
+    handler.setInputAction(function (rightclik) {
+        cancelMeasureTool();
+    }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+
+    //移动（操作提示）
+    handler.setInputAction(function (move) {
+        var pickedOject;
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            //地形测量
+            pickedOject = viewer.scene.pickPosition(move.endPosition);
+
+        } else {
+            //模型测量
+            pickedOject = viewer.scene.pick(move.endPosition);
+        }
+
+        if (pickedOject != undefined) {
+            var position = viewer.scene.pickPosition(move.endPosition);
+            if (position != undefined) {
+                tipsentity.position = position;;
+                tipsentity.label.show = true;
+                tipsentity.label.text = "左键开始测量，右键取消工具";
+            }
+            else {
+                tipsentity.label.show = false;
+                tipsentity.label.text = "";
+            }
+        }
+        else {
+            tipsentity.label.show = false;
+            tipsentity.label.text = "";
+        }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 };
 //高差测量
 function heightMeasure() {
@@ -207,24 +249,15 @@ function heightMeasure() {
     selectMeasureOperate("widget_measure_height_id");
     //清除临时图形
     ClearCeliangTemp();
-
-    //if (viewer.scene.globe.depthTestAgainstTerrain) {//地形测量
-    //    form.val("measureinfoform", {
-    //        "desc": "\n\n单击地图两个点求距离",
-    //    });
-    //}
-    //else {
-    //    form.val("measureinfoform", {
-    //        "desc": "\n\n单击模型两个点求距离",
-    //    });
-    //}
+    //修改鼠标样式
+    viewer._container.style.cursor = "crosshair";
 
     if (handler != undefined) {
         handler.destroy();
     }
     handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
-    //左击
+    //左键
     handler.setInputAction(function (leftclik) {
         var pickedOject;
         if (viewer.scene.globe.depthTestAgainstTerrain) {
@@ -454,6 +487,41 @@ function heightMeasure() {
         }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
+    //右键（取消工具）
+    handler.setInputAction(function (rightclik) {
+        cancelMeasureTool();
+        //TODO 绘制一个点
+    }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+
+    //移动（操作提示）
+    handler.setInputAction(function (move) {
+        var pickedOject;
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            //地形测量
+            pickedOject = viewer.scene.pickPosition(move.endPosition);
+
+        } else {
+            //模型测量
+            pickedOject = viewer.scene.pick(move.endPosition);
+        }
+
+        if (pickedOject != undefined) {
+            var position = viewer.scene.pickPosition(move.endPosition);
+            if (position != undefined) {
+                tipsentity.position = position;;
+                tipsentity.label.show = true;
+                tipsentity.label.text = "左键开始测量，右键取消工具";
+            }
+            else {
+                tipsentity.label.show = false;
+                tipsentity.label.text = "";
+            }
+        }
+        else {
+            tipsentity.label.show = false;
+            tipsentity.label.text = "";
+        }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 };
 //距离测量
 function distanceMeasure() {
@@ -854,6 +922,17 @@ function unselectMeasureOperate() {
     document.getElementById("widget_measure_azimuth_id").className = "layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm";
 };
 
+//取消测量工具
+function cancelMeasureTool() {
+    if (handler != undefined) {
+        handler.destroy();
+    }
+
+    viewer._container.style.cursor = "default";//还原鼠标样式
+    unselectMeasureOperate();//还原工具按钮样式
+    tipsentity.label.show = false;
+    tipsentity.label.text = "";
+};
 
 
 

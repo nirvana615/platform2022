@@ -2756,9 +2756,9 @@ function ProjectInfo(id, style) {
                             if (srids[i].name == "China Geodetic Coordinate System 2000") {
                                 document.getElementById("kjckid").innerHTML += '<option value="' + srids[i].value + '" selected>' + srids[i].name + '</option>';
                             }
-                            //else {
-                            //    document.getElementById("kjckid").innerHTML += '<option value="' + srids[i].value + '">' + srids[i].name + '</option>';
-                            //}
+                            else {
+                                document.getElementById("kjckid").innerHTML += '<option value="' + srids[i].value + '">' + srids[i].name + '</option>';
+                            }
                         }
                     }
                     if (xjxzqs.length > 0) {
