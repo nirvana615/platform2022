@@ -451,10 +451,12 @@ function GetUserAllModelProjects() {
                         label: {
                             text: modelprojectdata[i].ModelProjects.XMMC,
                             font: '20px Times New Roman',
+                            backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                             horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                            pixelOffset: new Cesium.Cartesian2(0.0, -60)
+                            pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                            disableDepthTestDistance: Number.POSITIVE_INFINITY,
                         }
                     });
 

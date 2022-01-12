@@ -1,7 +1,8 @@
 ﻿//三维模型项目列表widget
 var modelprojectlist = [];//按地区组织
 var modelprojectlistyear = [];//按时间组织
-var toIndex=layer.open({
+
+var toIndex =layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
     , area: ['340px', '90%']
@@ -234,12 +235,14 @@ var toIndex=layer.open({
         });
     }
 });
+
 ///
 //弹出层最小
 ////
 layer.min(toIndex);
 ////
 ////
+
 ////树搜索
 //$('#projectsearch').click(function () {
 
@@ -276,6 +279,10 @@ layer.min(toIndex);
 
 //获取用户所有项目列表
 function GetUserAllModelProjects() {
+    //TODO 新增项目位置及标注
+    DelEntitiesInViewer(modelprojectentities);//移除项目标注图标
+    modelprojectentities = [];
+
     modelprojectlist = [];
     modelprojectlistyear = [];
     $.ajax({
@@ -426,8 +433,7 @@ function GetUserAllModelProjects() {
                 tree.reload('yearprojectlistid', {
                     data: modelprojectlistyear
                 });
-                //TODO 新增项目位置及标注
-                modelprojectentities = [];                   //项目位置及标注
+                //项目位置及标注
                 var bs = [];//纬度集合
                 var ls = [];//经度集合
 
@@ -452,10 +458,12 @@ function GetUserAllModelProjects() {
                         label: {
                             text: modelprojectdata[i].ModelProjects.XMMC,
                             font: '20px Times New Roman',
+                            backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                             horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
                             pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                            disableDepthTestDistance: Number.POSITIVE_INFINITY,
                         }
                     });
 
@@ -608,7 +616,6 @@ function ModelProjectNodeOperate(obj) {
             }
         }
     }
-    
    
 };
 
@@ -630,7 +637,7 @@ function FlytoExtent(west, south, east, north) {
     if (modelprojectentities.length > 0) {
         setTimeout(() => {
             AddEntitiesInViewer(modelprojectentities)
-        }, 3000);
+        }, 100);
     }
 };
 

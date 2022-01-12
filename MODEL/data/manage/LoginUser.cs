@@ -28,6 +28,10 @@ namespace MODEL
         /// </summary>
         public string TIMES { get; set; }
         /// <summary>
+        /// 系统code
+        /// </summary>
+        public int SYSCODE { get; set; }
+        /// <summary>
         /// 登录次数
         /// </summary>
         public int COUNT { get; set; }
