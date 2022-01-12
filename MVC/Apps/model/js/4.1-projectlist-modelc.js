@@ -451,6 +451,7 @@ function GetUserAllModelProjects() {
                         label: {
                             text: modelprojectdata[i].ModelProjects.XMMC,
                             font: '20px Times New Roman',
+                            backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                             horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             verticalOrigin: Cesium.VerticalOrigin.CENTER,

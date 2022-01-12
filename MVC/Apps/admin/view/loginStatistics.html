@@ -1,0 +1,449 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户授权</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--jquery-->
+    <script src="../../../Scripts/jquery-3.3.1.js"></script>
+    <!--Layui-->
+    <link href="../layuiadmin/layui2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="../layuiadmin/style/admin.css" rel="stylesheet" />
+    <script src="../layuiadmin/layui2.5.6/layui.all.js"></script>
+    <!--ECharts-->
+    <script src="../layuiadmin/lib/echarts.min.js"></script>
+    <!--<script src="../../../Scripts/ECharts/echarts.min.js"></script>-->
+    <!--CSS样式-->
+    <link href="../layuiadmin/style/loginStatistics.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header"><i class="fa fa-warning icon"></i>数据统计</div>
+            <div class="layui-card-body">
+                <div class="welcome-module">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-xs3">
+                            <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
+                                <div class="panel-body" style="margin:5px 5px;">
+                                    <div class="panel-title">
+                                        <span class="label layui-bg-blue" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
+                                        <h5>总登录次数</h5>
+                                    </div>
+                                    <div class="panel-content">
+                                        <h1 id="count_all" class="no-margins" style="color:red">1234</h1>
+                                        <small>当前分类总记录数</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3">
+                            <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
+                                <div class="panel-body" style="margin:5px 5px;">
+                                    <div class="panel-title">
+                                        <span class="label layui-bg-cyan" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
+                                        <h5>本年登录次数</h5>
+                                    </div>
+                                    <div class="panel-content">
+                                        <h1 id="count_year" class="no-margins" style="color:red">1234</h1>
+                                        <small>当前分类总记录数</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3">
+                            <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
+                                <div class="panel-body" style="margin:5px 5px;">
+                                    <div class="panel-title">
+                                        <span class="label layui-bg-orange" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
+                                        <h5>本月登录次数</h5>
+                                    </div>
+                                    <div class="panel-content">
+                                        <h1 id="count_month" class="no-margins" style="color:red">1234</h1>
+                                        <small>当前分类总记录数</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3">
+                            <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
+                                <div class="panel-body" style="margin:5px 5px;">
+                                    <div class="panel-title">
+                                        <span class="label layui-bg-green" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
+                                        <h5>今日登录次数</h5>
+                                    </div>
+                                    <div class="panel-content">
+                                        <h1 id="count_day" class="no-margins" style="color:red">1234</h1>
+                                        <small>当前分类总记录数</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card">
+            <div class="layui-card-header">报表统计</div>
+            <div class="layui-card-body">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <div class="layui-row">
+                            <div class="layui-col-md6" style="position:relative">
+                                <div id="login_allusersort" style="width: 100%;height:500px;"></div>
+                                <div style="position:absolute; top:10px;right:100px;">
+                                    <button id="login_topten" type="button" class="layui-btn layui-btn-xs layui-bg-gray "  style="width:100px;height:20px; ">前十名</button>
+                                    <button id="login_lastten" type="button" class="layui-btn layui-btn-xs layui-bg-gray" style="width:100px;height:20px;">后十名</button>
+                                    <select id="login_year" name="login_year" style="border:1px solid #e6e6e6">
+                                        
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="layui-col-md6">
+                                <div id="login_allcount" style="width: 95%;height:500px;"></div>
+                                <div style="position:absolute; top:10px;right:100px;">
+                                    <select id="login_month" name="login_month" style="border:1px solid #e6e6e6">
+                                        <option value="2022">2022</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+               
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <div class="layui-row">
+                            <div class="layui-col-md6">
+                                <div class="layui-row">
+                                    <div id="login_system_piechart" style="width: 95%;height:400px;"></div>
+                                    <div style="position:absolute; top:10px;right:100px;">
+                                        <select id="year" name="year" style="border:1px solid #e6e6e6">
+                                            <option value="2022">2022</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-row">
+                                    <div id="login_system_linechart" style="width: 95%;height:400px;"></div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div id="login_allcount" style="width: 95%;height:800px;"></div>
+                                <div style="position:absolute; top:10px;right:100px;">
+                                    <select id="year" name="year" style="border:1px solid #e6e6e6">
+                                        <option value="2022">2022</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jQuery.support.cors = true;
+        var now = new Date();
+        var year = now.getFullYear(); //得到年份
+        var month = now.getMonth();//得到月份
+        var day = now.getDate();//得到日期
+        var years = [];
+        //年度
+        $.ajax({
+            url: window.parent.servicesurl + "/api/LoginUser/GetLoginUserYearInfo", type: "get", data: {},
+            success: function (data) {
+                if (data == "") {
+                    layer.msg("无数据信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    databasetable.reload({ id: 'databasetableid', data: [] });
+                }
+                else {
+                    var result = JSON.parse(data);
+                    if (result.code == 1) {
+                        var databasedatas = JSON.parse(result.data);
+                        for (var i in databasedatas) {
+                            if (years.indexOf(databasedatas[i].TIMES)==-1) {
+                                years.push(databasedatas[i].TIMES);
+                            }
+                        }
+                        //
+                        if (years.length > 0) {
+                            for (var i in years) {
+                                if (years[i] == year) {
+                                    document.getElementById("login_year").innerHTML += '<option value="' + years[i] + '" selected>' + years[i] + '</option>';
+                                }
+                                else {
+                                    document.getElementById("login_year").innerHTML += '<option value="' + years[i] + '">' + years[i] + '</option>';
+                                }
+                            }
+                        };
+                        var yearsdata = [];
+                        var yearslabel = [];
+                        var title = '登录系统次数前十名';
+                        for (var i in databasedatas) {
+                            if (databasedatas[i].TIMES == year) {
+                                yearsdata.push(databasedatas[i].COUNT);
+                                yearslabel.push(databasedatas[i].AliasName);
+                            }
+                        }
+                        LoginAlluserSort(title,yearslabel.slice(0, 10), yearsdata.slice(0, 10));
+                        $("#login_topten").on("click", function () {
+                            title = '登录系统次数前十名';
+                            LoginAlluserSort(title,yearslabel.slice(0, 10), yearsdata.slice(0, 10));
+                        });
+                        $("#login_lastten").on("click", function () {
+                            title = '登录系统次数后十名';
+                            LoginAlluserSort(title,yearslabel.slice(yearslabel.length - 10, yearslabel.length).reverse(), yearsdata.slice(yearsdata.length - 10, yearsdata.length).reverse());
+                        });
+
+
+                        $("#login_year").bind("change", function () {
+                            var typeId = $(this).val();
+                            var yearsdata = [];
+                            var yearslabel = [];
+                            for (var i in databasedatas) {
+                                if (databasedatas[i].TIMES == typeId) {
+                                    yearsdata.push(databasedatas[i].COUNT);
+                                    yearslabel.push(databasedatas[i].AliasName);
+                                }
+                            }
+                            title = '登录系统次数前十名';
+                            LoginAlluserSort(title, yearslabel.slice(0, 10), yearsdata.slice(0, 10));
+                        });
+                        
+                    }
+
+
+                }
+            }, datatype: "json"
+        });
+        
+        //
+        LoginAllCount();
+        LoginAllCount();
+        SystemPieChart();
+        SystemLineChart();
+
+        
+
+
+        //年前十、后十，柱状图
+        function LoginAlluserSort(title,lables, datas) {
+
+            var chartDom = document.getElementById('login_allusersort');
+            var myChart = echarts.init(chartDom);
+           
+            var option;
+
+            option = {
+                title: {
+                    text: title
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: lables
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        data: datas,
+                        type: 'bar'
+                    }
+                ]
+            };
+
+            option && myChart.setOption(option);
+
+        }
+
+        //年登录系统堆积面积图
+        function LoginAllCount(lables, datas) {
+            
+            var chartDom = document.getElementById('login_allcount');
+            var myChart = echarts.init(chartDom);
+            var option;
+            
+            option = {
+                color: ['#ffd400'],
+                title: {
+                    text: '各月份登录系统次数'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: lables
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: 'Email',
+                        type: 'line',
+                        smooth: true,
+                        data: datas
+                    }
+                ]
+            };
+            
+            option && myChart.setOption(option);
+        }
+
+        //各系统统计饼状图
+        function SystemPieChart() {
+            var chartDom = document.getElementById('login_system_piechart');
+            var myChart = echarts.init(chartDom);
+            var option;
+            
+            option = {
+                title: {
+                    text: '分系统登录次数百分比',
+                    subtext: 'Fake Data',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left'
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        radius: '50%',
+                        data: [
+                            { value: 1048, name: 'Admin' },
+                            { value: 735, name: 'Model' },
+                            { value: 580, name: 'Monitor' },
+                            { value: 484, name: 'Uav' },
+                            { value: 300, name: 'Geology' },
+                            { value: 300, name: 'Image' },
+                            { value: 300, name: 'Pointcloud' }
+                        ],
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            option && myChart.setOption(option);
+        }
+
+        //各系统统计折线图
+        function SystemLineChart(label,data) {
+            var chartDom = document.getElementById('login_system_linechart');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['Admin', 'Model', 'Monitor', 'Uav', 'Geology', 'Image', 'Pointcloud']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: 'Admin',
+                        type: 'line',
+                        data: [120, 132, 101, 134, 90, 230, 210]
+                    },
+                    {
+                        name: 'Model',
+                        type: 'line',
+                        data: [220, 182, 191, 234, 290, 330, 310]
+                    },
+                    {
+                        name: 'Monitor',
+                        type: 'line',
+                        data: [150, 232, 201, 154, 190, 330, 410]
+                    },
+                    {
+                        name: 'Uav',
+                        type: 'line',
+                        stack: 'Total',
+                        data: [320, 332, 301, 334, 390, 330, 320]
+                    },
+                    {
+                        name: 'Geology',
+                        type: 'line',
+                        data: [150, 232, 201, 154, 190, 330, 410]
+                    },
+                    {
+                        name: 'Image',
+                        type: 'line',
+                        data: [153, 252, 305, 254, 398, 457, 275]
+                    },
+                    {
+                        name: 'Pointcloud',
+                        type: 'line',
+                        data: [154, 232, 251, 156, 190, 310, 419]
+                    }
+                ]
+            };
+
+            option && myChart.setOption(option);
+        }
+
+        //
+       
+
+    </script>
+</body>
+</html>

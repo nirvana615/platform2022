@@ -49,10 +49,15 @@
     visibility:hidden
 }
 
-/*解决数据表格列固定无效问题*/
+/*解决多个数据表格出现列固定无效问题*/
 .layui-table-fixed .layui-table-body {
     height: auto !important;
 }
 .layui-table-fixed.layui-hide {
     display: block !important;
+}
+
+/*解决table 固定列后重复问题*/
+.layui-table-main table tbody tr td:last-child {
+    display: none !important;
 }

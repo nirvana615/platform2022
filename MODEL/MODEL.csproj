@@ -75,6 +75,7 @@
     <Compile Include="data\manage\Message.cs" />
     <Compile Include="data\manage\Systems.cs" />
     <Compile Include="data\manage\Role.cs" />
+    <Compile Include="data\manage\LoginUser.cs" />
     <Compile Include="data\modelmap\MapModelProjecTask.cs" />
     <Compile Include="data\modelmap\MapDataUserModelProtect.cs" />
     <Compile Include="data\modelmap\MapUserModelProject.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="data\monitor\design\Monitor.cs" />
     <Compile Include="data\monitor\design\MonitorInfo.cs" />
     <Compile Include="data\monitor\design\MonitorString.cs" />
+    <Compile Include="data\monitor\patrol\ConstPhotoInfo.cs" />
     <Compile Include="data\monitor\patrol\DianYun.cs" />
     <Compile Include="data\monitor\patrol\DianYunChanges.cs" />
     <Compile Include="data\monitor\patrol\DianYunUrl.cs" />

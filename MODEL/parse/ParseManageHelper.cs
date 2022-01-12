@@ -273,6 +273,46 @@ namespace MODEL
                 return null;
             }
         }
+        /// <summary>
+        /// 用户登录
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="c">列分割符</param>
+        /// <param name="r">行分割符</param>
+        /// <returns></returns>
+        public static LoginUser ParseLoginUser(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析用户数据为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("用户不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                LoginUser loginuser = new LoginUser()
+                {
+                    UserId = Convert.ToInt32(row[0].ToString()),
+                    TIMES = row[1].ToString(),
+                    COUNT = Convert.ToInt32(row[2].ToString())
+                };
+
+                return loginuser;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("loginuser解析失败：" + data, ex);
+                return null;
+            }
+        }
         #endregion
 
 

@@ -409,6 +409,7 @@
     <Content Include="Apps\admin\layuiadmin\layui\lay\modules\upload.js" />
     <Content Include="Apps\admin\layuiadmin\layui\lay\modules\util.js" />
     <Content Include="Apps\admin\layuiadmin\lib\admin.js" />
+    <Content Include="Apps\admin\layuiadmin\lib\echarts.min.js" />
     <Content Include="Apps\admin\layuiadmin\lib\extend\echarts.js" />
     <Content Include="Apps\admin\layuiadmin\lib\extend\echartsTheme.js" />
     <Content Include="Apps\admin\layuiadmin\lib\index.js" />
@@ -425,6 +426,7 @@
     <Content Include="Apps\admin\layuiadmin\modules\user.js" />
     <Content Include="Apps\admin\layuiadmin\modules\useradmin.js" />
     <Content Include="Apps\admin\layuiadmin\modules\workorder.js" />
+    <Content Include="Apps\admin\layuiadmin\style\loginStatistics.css" />
     <Content Include="Apps\admin\layuiadmin\style\admin.css" />
     <Content Include="Apps\admin\layuiadmin\style\login.css" />
     <Content Include="Apps\admin\layuiadmin\style\res\bg-none.jpg" />
@@ -442,6 +444,7 @@
     <Content Include="Apps\admin\layuiadmin\tpl\system\theme.html" />
     <Content Include="Apps\admin\layuiadmin\tpl\system\说明.txt" />
     <Content Include="Apps\admin\layuiadmin\tpl\说明.txt" />
+    <Content Include="Apps\admin\view\loginStatistics.html" />
     <Content Include="Apps\admin\view\home.html" />
     <Content Include="Apps\admin\view\device.html" />
     <Content Include="Apps\admin\view\role.html" />

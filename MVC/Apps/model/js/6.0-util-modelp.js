@@ -14,8 +14,8 @@ util.fixbar({
 
         }
         else if (type === 'bar5') {
-            //测量
-            LoadMeasureLayer();
+            //测量工具
+            measure();
         }
         else if (type === 'bar6') {
 

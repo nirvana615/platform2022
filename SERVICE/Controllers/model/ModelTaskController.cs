@@ -27,6 +27,7 @@ namespace SERVICE.Controllers
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
         //service 的Web.config中定义modeldir,绝对路径
         private static string modeldir = ConfigurationManager.AppSettings["modeldir"] != null ? ConfigurationManager.AppSettings["modeldir"].ToString() : string.Empty;
+        
 
 
         /// <summary>
@@ -107,23 +108,27 @@ namespace SERVICE.Controllers
                         }
                         else
                         {
-                            //string modelFilePath = modeldir + @"\Allmodel" + @"\" + rwbm;
-                            //if (Directory.Exists(modelFilePath))//判断文件夹是否存在
-                            //{
-                            //    Console.WriteLine("文件夹"+modelFilePath+"在，无需创建！");
-                            //}
-                            //else
-                            //{
-                            //    try
-                            //    {
-                            //        Directory.CreateDirectory(modelFilePath);
-                            //        Console.WriteLine("文件夹" + modelFilePath + "创建成功！");
-                            //    }
-                            //    catch(Exception ex)
-                            //    {
-                            //        Console.WriteLine("文件夹创建失败，原因：" +ex.ToString());
-                            //    }
-                            //}
+                            //企业微信推送消息
+                            string message="实景模型任务提醒："+ user.AliasName +"创建新的模型任务，请尽快处理!";
+                            //企业微信推送地址
+                            string webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=3d834562-2dd6-47dd-ab58-c6ae8f0a2fc4";
+
+                            if (!string.IsNullOrEmpty(message))
+                            {
+                                if (string.IsNullOrEmpty(webhook))
+                                {
+                                    logger.Error("企业微信webhook不存在！");
+                                }
+                                else
+                                {
+                                    string result = COM.WeComHelper.Push(webhook, message);
+                                    if (!string.IsNullOrEmpty(result))
+                                    {
+                                        logger.Error("企业微信信息推送出现异常：" + result);
+                                    }
+                                }
+                            }
+
                             return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", string.Empty));
 
                         }
@@ -522,7 +527,7 @@ namespace SERVICE.Controllers
             string id = HttpContext.Current.Request.Form["id"];
 
 
-            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET mxsj={0} WHERE id={1} ", SQLHelper.UpdateString(mxsj), SQLHelper.UpdateString(id)));
+            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET mxsj={0} WHERE id={1} ", SQLHelper.UpdateString(mxsj), id));
             if (updatecount == 1)
             {
                 return "更新成功";

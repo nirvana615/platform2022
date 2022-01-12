@@ -10,13 +10,13 @@ function LoadETLLayer() {
     var etllayerindex = layer.open({
         type: 1
         , title: ['ETL管理', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-        , area: ['1000px', '820px']
+        , area: ['1000px', '800px']
         , shade: 0
         , offset: 'auto'
         , closeBtn: 1
         , maxmin: true
         , moveOut: true
-        , content: '<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBriefitem" style="margin:0px;width:100%;height:100%;"><ul class="layui-tab-title" style="float: left;width:18%;border-color:white;"> <li class="layui-this" style="display: block;">监测设备</li> <li style="display: block;">监测数据库</li> <li style="display: block;">ETL SQL</li> <li style="display: block;">设备厂家</li> <li style="display: block;">设备经销商</li> </ul><div class="layui-tab-content" style="width:80%;height:98%;float: right;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;"> <div class="layui-tab-item layui-show"> <!--监测设备--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <div style="padding-bottom:10px;"> <button id="adddevice" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新监测设备</button> <button id="adddevices" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新监测设备(批量)</button> </div><table id="LAY-device-manage" lay-filter="LAY-device-manage"></table> <script type="text/html" id="table-toolbar-device"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="deviceview"><i class="layui-icon layui-icon-read"></i>详情</a> <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="deviceedit"><i class="layui-icon layui-icon-edit"></i>编辑</a> <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="devicedel"><i class="layui-icon layui-icon-delete"></i>删除</a> </script> </div> </div> </div> </div><div class="layui-tab-item"> <!--监测数据库--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <div style="padding-bottom: 10px;"> <button id="adddatabase" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新监测数据库</button> </div><table id="LAY-database-manage" lay-filter="LAY-database-manage"></table> <script type="text/html" id="table-toolbar-database"> <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="databaseedit"><i class="layui-icon layui-icon-edit"></i>编辑</a> <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="databasedel"><i class="layui-icon layui-icon-delete"></i>删除</a> </script> </div> </div> </div> </div><div class="layui-tab-item"> <!--ETL SQL--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <div style="padding-bottom:10px;"> <button id="addsql" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新SQL</button> </div><table id="LAY-sql-manage" lay-filter="LAY-sql-manage"></table> <script type="text/html" id="table-toolbar-sql"> <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="sqledit"><i class="layui-icon layui-icon-edit"></i>编辑</a> <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="sqldel"><i class="layui-icon layui-icon-delete"></i>删除</a> </script> </div> </div> </div> </div><div class="layui-tab-item"> <!--设备厂家--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <div style="padding-bottom: 10px;"> <button id="addfactory" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新设备厂家</button> </div><table id="LAY-factory-manage" lay-filter="LAY-factory-manage"></table> <script type="text/html" id="table-toolbar-factory"> <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="factoryedit"><i class="layui-icon layui-icon-edit"></i>编辑</a> <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="factorydel"><i class="layui-icon layui-icon-delete"></i>删除</a> </script> </div> </div> </div> </div><div class="layui-tab-item"> <!--设备经销商--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <div style="padding-bottom: 10px;"> <button id="addsale" class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加新设备经销商</button> </div><table id="LAY-sale-manage" lay-filter="LAY-sale-manage"></table> <script type="text/html" id="table-toolbar-sale"> <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="saleedit"><i class="layui-icon layui-icon-edit"></i>编辑</a> <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="saledel"><i class="layui-icon layui-icon-delete"></i>删除</a> </script> </div> </div> </div> </div> </div> </div>'
+        , content: '<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBriefitem" style="margin:0px;width:100%;height:100%;"><ul class="layui-tab-title" style="float: left;width:18%;border-color:white;"> <li class="layui-this" style="display: block;">监测设备</li> <li style="display: block;">监测数据库</li> <li style="display: block;">ETL SQL</li> <li style="display: block;">设备厂家</li> <li style="display: block;">设备经销商</li> </ul><div class="layui-tab-content" style="width:80%;height:98%;float: right;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;"> <div class="layui-tab-item layui-show"> <!--监测设备--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body" style="position:relative;"> <div style="padding-bottom:10px;position:absolute;top:16px;left:25px;z-index:99999"> <button id="adddevice" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新监测设备</button> </div> <table id="LAY-device-manage" lay-filter="LAY-device-manage"></table> <script type="text/html" id="table-toolbar-device"> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="deviceview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="deviceedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="devicedel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> </script> </div> </div> </div> </div><div class="layui-tab-item"> <!--监测数据库--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body" style="position:relative;"> <div style="padding-bottom: 10px;position:absolute;top:16px;left:25px;z-index:99999"> <button id="adddatabase" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新监测数据库</button> </div><table id="LAY-database-manage" lay-filter="LAY-database-manage"></table> <script type="text/html" id="table-toolbar-database"> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="databaseedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="databasedel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> </div> </div> </div><div class="layui-tab-item"> <!--ETL SQL--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body" style="position:relative;"> <div style="padding-bottom:10px;position:absolute;top:16px;left:25px;z-index:99999"> <button id="addsql" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新SQL</button> </div><table id="LAY-sql-manage" lay-filter="LAY-sql-manage"></table> <script type="text/html" id="table-toolbar-sql"> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="sqledit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="sqldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> </div> </div> </div><div class="layui-tab-item"> <!--设备厂家--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body" style="position:relative;"> <div style="padding-bottom: 10px;position:absolute;top:16px;left:25px;z-index:99999"> <button id="addfactory" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新设备厂家</button> </div><table id="LAY-factory-manage" lay-filter="LAY-factory-manage"></table> <script type="text/html" id="table-toolbar-factory"> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="factoryedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="factorydel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> </div> </div> </div><div class="layui-tab-item"> <!--设备经销商--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body" style="position:relative;"> <div style="padding-bottom: 10px;position:absolute;top:16px;left:25px;z-index:99999"> <button id="addsale" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新设备经销商</button> </div><table id="LAY-sale-manage" lay-filter="LAY-sale-manage"></table> <script type="text/html" id="table-toolbar-sale"> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="saleedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="saledel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> </div> </div> </div> </div> </div>'
         , zIndex: layer.zIndex
         , success: function (layero) {
             //置顶
@@ -161,20 +161,20 @@ function DeviceData() {
         , even: true
         , limit: 15
         , initSort: { field: 'id', type: 'asc' }
-        , toolbar: false
+        , toolbar: true
         , totalRow: false
         , cols: [[
-            { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
-            , { field: 'code', title: '唯一编码', align: "center" }
-            , { field: 'sbmc', title: '设备名称', align: "center" }
-            , { field: 'sbbh', title: '设备编号', align: "center" }
-            , { field: 'sbxh', title: '设备型号', align: "center" }
-            , { field: 'sblx', title: '设备类型', align: "center" }
-            , { field: 'gdfs', title: '供电方式', align: "center" }
-            , { field: 'cjsj', title: '创建时间', align: "center" }
-            , { field: 'bsm', title: '标识码', align: "center" }
-            , { field: 'bz', title: '备注', align: "center" }
-            , { fixed: 'right', width: 220, align: 'center', toolbar: '#table-toolbar-device' }
+            { field: 'id', title: 'ID', width: 52, fixed: 'left', align: "center" }
+            , { field: 'code', title: '唯一编码', width: 130, align: "center" }
+            , { field: 'sbmc', title: '设备名称', width: 150, align: "center" }
+            , { field: 'sbbh', title: '设备编号', width: 100, align: "center" }
+            , { field: 'sbxh', title: '设备型号', hide: 'false', align: "center" }
+            , { field: 'sblx', title: '设备类型', width: 100, align: "center" }
+            , { field: 'gdfs', title: '供电方式', width: 80, align: "center" }
+            , { field: 'cjsj', title: '创建时间', width: 150, hide: 'false', align: "center" }
+            , { field: 'bsm', title: '标识码', width: 280, hide: 'false', align: "center" }
+            , { field: 'bz', title: '备注', width: 100, hide: 'false', align: "center" }
+            , { fixed: 'right', width: 120, align: 'center', toolbar: '#table-toolbar-device' }
         ]]
         , data: devicedatas
     });
@@ -754,21 +754,21 @@ function DataBase() {
         , even: true
         , limit: 15
         , initSort: { field: 'id', type: 'asc' }
-        , toolbar: false
+        , toolbar: true
         , totalRow: false
         , cols: [[
-            { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
-            , { field: 'dblx', title: '数据库类型', align: "center" }
-            , { field: 'dbip', title: 'IP', align: "center" }
-            , { field: 'dbport', title: '端口', align: "center" }
-            , { field: 'dbname', title: '数据库名称', align: "center" }
-            , { field: 'dbuser', title: '账户', align: "center" }
-            , { field: 'dbpw', title: '密码', align: "center" }
-            , { field: 'dbadd', title: '数据库地址', align: "center" }
-            , { field: 'dbconn', title: '连接信息', align: "center" }
-            , { field: 'cjsj', title: '创建时间', align: "center" }
-            , { field: 'bz', title: '备注', align: "center" }
-            , { fixed: 'right', width: 200, align: 'center', toolbar: '#table-toolbar-database' }
+            { field: 'id', title: 'ID', width: 52, fixed: 'left', align: "center" }
+            , { field: 'dblx', title: '数据库类型', width: 100,  align: "center" }
+            , { field: 'dbip', title: 'IP', width: 120,  align: "center" }
+            , { field: 'dbport', title: '端口', width: 60,  align: "center" }
+            , { field: 'dbname', title: '数据库名称', width: 120,  hide: 'false', align: "center" }
+            , { field: 'dbuser', title: '账户', width: 100,  align: "center" }
+            , { field: 'dbpw', title: '密码', width: 200,  align: "center" }
+            , { field: 'dbadd', title: '数据库地址', width: 100,  hide: 'false', align: "center" }
+            , { field: 'dbconn', title: '连接信息', width: 100,  hide: 'false', align: "center" }
+            , { field: 'cjsj', title: '创建时间', width: 150,  hide: 'false', align: "center" }
+            , { field: 'bz', title: '备注', width: 100,  hide: 'false', align: "center" }
+            , { fixed: 'right', width: 100, align: 'center', toolbar: '#table-toolbar-database' }
         ]]
         , data: databasedatas
     });
@@ -1044,15 +1044,15 @@ function SqlData() {
         , even: true
         , limit: 15
         , initSort: { field: 'id', type: 'asc' }
-        , toolbar: false
+        , toolbar: true
         , totalRow: false
         , cols: [[
-            { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
+            { field: 'id', title: 'ID', width: 52, fixed: 'left', align: "center" }
             , { field: 'type', title: '类型', width: 100, align: "center" }
-            , { field: 'sql', title: 'SQL', align: "left" }
-            , { field: 'cjsj', title: '创建时间', width: 170, align: "center" }
+            , { field: 'sql', title: 'SQL', width: 180, align: "center" }
+            , { field: 'cjsj', title: '创建时间', width: 150, align: "center" }
             , { field: 'bz', title: '备注', width: 150, align: "center" }
-            , { fixed: 'right', width: 200, align: 'center', toolbar: '#table-toolbar-sql' }
+            , { fixed: 'right', width: 100, align: 'center', toolbar: '#table-toolbar-sql' }
         ]]
         , data: sqldatas
     });
@@ -1204,16 +1204,16 @@ function FactoryData(){
         , even: true
         , limit: 15
         , initSort: { field: 'id', type: 'asc' }
-        , toolbar: false
+        , toolbar: true
         , totalRow: false
         , cols: [[
-            { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
-            , { field: 'cjmc', title: '厂家名称', align: "center" }
-            , { field: 'cjjc', title: '厂家简称', align: "center" }
-            , { field: 'cjbm', title: '厂家编码', align: "center" }
-            , { field: 'cjsj', title: '创建时间',width:152, align: "center" }
-            , { field: 'bz', title: '备注', align: "center" }
-            , { fixed: 'right', width: 200, align: 'center', toolbar: '#table-toolbar-factory' }
+            { field: 'id', title: 'ID', width: 52, fixed: 'left', align: "center" }
+            , { field: 'cjmc', title: '厂家名称', width: 130, align: "center" }
+            , { field: 'cjjc', title: '厂家简称', width: 100, align: "center" }
+            , { field: 'cjbm', title: '厂家编码', width: 100, align: "center" }
+            , { field: 'cjsj', title: '创建时间',width:150, align: "center" }
+            , { field: 'bz', title: '备注', width: 100, align: "center" }
+            , { fixed: 'right', width: 100, align: 'center', toolbar: '#table-toolbar-factory' }
         ]]
         , data: factorydatas
     });
@@ -1356,16 +1356,16 @@ function SaleData() {
         , even: true
         , limit: 15
         , initSort: { field: 'id', type: 'asc' }
-        , toolbar: false
+        , toolbar: true
         , totalRow: false
         , cols: [[
-            { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
-            , { field: 'jxsmc', title: '经销商名称', align: "center" }
-            , { field: 'jxsjc', title: '经销商简称', align: "center" }
-            , { field: 'jxsbm', title: '经销商编码', align: "center" }
-            , { field: 'cjsj', title: '创建时间', width:172, align: "center" }
-            , { field: 'bz', title: '备注', align: "center" }
-            , { fixed: 'right', width: 200, align: 'center', toolbar: '#table-toolbar-sale' }
+            { field: 'id', title: 'ID', width: 52, fixed: 'left', align: "center" }
+            , { field: 'jxsmc', title: '经销商名称', width: 130, align: "center" }
+            , { field: 'jxsjc', title: '经销商简称', width: 100, align: "center" }
+            , { field: 'jxsbm', title: '经销商编码', width: 100, align: "center" }
+            , { field: 'cjsj', title: '创建时间', width:150, align: "center" }
+            , { field: 'bz', title: '备注', width: 100, align: "center" }
+            , { fixed: 'right', width: 100, align: 'center', toolbar: '#table-toolbar-sale' }
         ]]
         , data: saledatas
     });
