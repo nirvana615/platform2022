@@ -63,6 +63,7 @@ function measure() {
             measurewidgetlayerindex = null;
             ClearCeliangTemp();
             viewer.entities.remove(tipsentity);
+            viewer._container.style.cursor = "default";//还原鼠标样式
         }
     });
 };
@@ -84,10 +85,8 @@ layui.element.on('tab(measurelayer)', function (data) {
     //清除临时图形
     ClearCeliangTemp();
 
-    //还原按钮样式
-    unselectMeasureOperate();
-
-    //恢复鼠标模式
+    //清除当前工具
+    cancelMeasureTool()
 
     if (data.index == 0) {
         //地形测量

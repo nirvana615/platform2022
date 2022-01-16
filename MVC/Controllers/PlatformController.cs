@@ -115,6 +115,7 @@ namespace MVC.Controllers
                     #region 验证角色成功
                     return RedirectToAction(role.RoleAlias.ToString(), "App");
                     #endregion
+
                 }
                 else
                 {

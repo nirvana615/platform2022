@@ -48,7 +48,6 @@ namespace MVC
             [RemarkAttribute("验证失败")]
             Failure = 6
         }
-
         /// <summary>
         /// 角色验证结果
         /// </summary>
@@ -79,6 +78,7 @@ namespace MVC
         /// <param name="password"></param>
         /// <param name="user"></param>
         /// <returns></returns>
+
         public static LoginResult UserLogin(this HttpContextBase context, string username, string password, ref User user)
         {
             #region 参数检查
@@ -123,7 +123,7 @@ namespace MVC
                     //用户写入cookie
                     COM.CookieHelper.WriteCookie(context, user.UserName, COM.CookieHelper.CreateCookie(user.UserName, user.AliasName, user.PassWord, hour), "User", hour);
                     PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET dlsj={0} WHERE id={1}", SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), user.Id));//更新用户登录时间
-                    PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO manage_user_login (userid,type,time) VALUES({0},{1},{2})", user.Id, (int)MODEL.Enum.LoginWay.Web, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))));//记录用户登录时间
+                    //PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO manage_user_login (userid,type,time) VALUES({0},{1},{2})", user.Id, (int)MODEL.Enum.LoginWay.Web, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))));//记录用户登录时间
 
                     return LoginResult.Success;
                 }
@@ -134,8 +134,6 @@ namespace MVC
                 return LoginResult.Failure;
             }
         }
-
-
         /// <summary>
         /// 角色验证
         /// </summary>
@@ -180,6 +178,8 @@ namespace MVC
                         COM.CookieHelper.WriteCookie(context, user.UserName, systemRole.RoleAlias, "Role", hour);
                         #endregion
 
+                        PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO manage_user_login (userid,type,time,syscode) VALUES({0},{1},{2},{3})", user.Id, (int)MODEL.Enum.LoginWay.Web, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), syscode));//记录用户登录时间
+
                         role = systemRole;
                         return RoleResult.Success;
                     }
@@ -188,86 +188,6 @@ namespace MVC
 
             return RoleResult.NoRole;
         }
-
-
-        ///// <summary>
-        ///// 权限验证
-        ///// </summary>
-        ///// <param name="context"></param>
-        ///// <param name="user"></param>
-        ///// <returns></returns>
-        //public static MODEL.Enum.SystemRole UserRole(this HttpContextBase context, User user)
-        //{
-        //    //根据用户id获取用户角色
-        //    MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_role WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse)));
-        //    if (mapUserRole == null)
-        //    {
-        //        return MODEL.Enum.SystemRole.Null;//无角色
-        //    }
-        //    else
-        //    {
-        //        Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE id={0} AND ztm={1}", mapUserRole.RoleId, (int)MODEL.Enum.State.InUse)));
-        //        if (role == null)
-        //        {
-        //            return MODEL.Enum.SystemRole.Null;//无角色
-        //        }
-        //        else
-        //        {
-        //            #region cookie {角色}
-        //            COM.CookieHelper.WriteCookie(context, user.UserName, role.RoleName, "Role", hour);
-        //            #endregion
-
-        //            #region 角色
-        //            if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.Admin.ToString().ToUpper())
-        //            {
-        //                return MODEL.Enum.SystemRole.Admin;
-        //            }
-        //            else if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.Monitor.ToString().ToUpper())
-        //            {
-        //                return MODEL.Enum.SystemRole.Monitor;
-        //            }
-        //            else if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.Display.ToString().ToUpper())
-        //            {
-        //                //未开发
-        //                return MODEL.Enum.SystemRole.Display;
-        //            }
-        //            else if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.Owner.ToString().ToUpper())
-        //            {
-        //                //未开发
-        //                return MODEL.Enum.SystemRole.Owner;
-        //            }
-        //            else if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.Uav.ToString().ToUpper())
-        //            {
-        //                return MODEL.Enum.SystemRole.Uav;
-        //            }
-        //            else if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.Flz.ToString().ToUpper())
-        //            {
-        //                return MODEL.Enum.SystemRole.Flz;
-        //            }
-        //            else if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.pointsCloud.ToString().ToUpper())
-        //            {
-        //                return MODEL.Enum.SystemRole.pointsCloud;
-        //            }
-        //            else if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.Image.ToString().ToUpper())
-        //            {
-        //                return MODEL.Enum.SystemRole.Image;
-        //            }
-        //            else if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.Rock.ToString().ToUpper())
-        //            {
-        //                return MODEL.Enum.SystemRole.Rock;
-        //            }
-        //            else if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.Model.ToString().ToUpper())
-        //            {
-        //                return MODEL.Enum.SystemRole.Model;
-        //            }
-        //            else
-        //            {
-        //                return MODEL.Enum.SystemRole.Null;
-        //            }
-        //            #endregion
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// 解密cookie
