@@ -109,7 +109,7 @@ namespace SERVICE.Controllers
                         else
                         {
                             //企业微信推送消息
-                            string message="实景模型任务提醒："+ user.AliasName +"创建新的模型任务，请尽快处理!";
+                            string message= "任务提醒：\n" + user.AliasName +"创建新的模型任务，请处理人员及时处理!";
                             //企业微信推送地址
                             string webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=3d834562-2dd6-47dd-ab58-c6ae8f0a2fc4";
 
@@ -129,7 +129,7 @@ namespace SERVICE.Controllers
                                 }
                             }
 
-                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", string.Empty));
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", rwbm));
 
                         }
                     } 
@@ -258,7 +258,7 @@ namespace SERVICE.Controllers
                                (int)MODEL.Enum.State.InUse));
                         if (updatecount == 1)
                         {
-                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "更新成功！", string.Empty));
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "更新成功！", rwbm));
                         }
                         else
                         {
@@ -391,7 +391,7 @@ namespace SERVICE.Controllers
                 List<ModelTask> newModelTaskPending = new List<ModelTask>();//存储待处理任务
                 List<ModelTask> newModelTaskFinished = new List<ModelTask>();//存储已完成任务
                 List<ModelTask> newModelTaskProcess = new List<ModelTask>();//存储已完成任务
-                string modelTasks = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
+                string modelTasks = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE ztm={0} ORDER BY RWCJSJ DESC", (int)MODEL.Enum.State.InUse));
                 if (!string.IsNullOrEmpty(modelTasks))
                 {
                     string[] maprows = modelTasks.Split(new char[] { COM.ConstHelper.rowSplit });
@@ -412,68 +412,7 @@ namespace SERVICE.Controllers
                             {
                                 newModelTaskFinished.Add(modelTask);
                             }
-                            ////try
-                            //{
-                            //    string taskdirname = modeldir + modelTask.RWBM;
-
-                            //    if (Directory.Exists(taskdirname))
-                            //    {
-                            //        #region 任务已建模
-                            //        DirectoryInfo taskdir = new DirectoryInfo(taskdirname);
-                            //        FileInfo[] fileInfos = taskdir.GetFiles("*.json", SearchOption.AllDirectories);
-                            //        if (fileInfos.Length > 0)
-                            //        {
-                            //            if (modelTask.RWZT != (int)MODEL.EnumModel.TaskStatus.Finished)
-                            //            {
-                            //                modelTask.RWZT = (int)MODEL.EnumModel.TaskStatus.Finished;
-                            //                //int updateRWZT = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_task SET rwzt={0} WHERE id={1} AND ztm={2}", (int)MODEL.EnumModel.TaskStatus.Finished, modelTask.Id, (int)MODEL.Enum.State.InUse));
-
-                            //            }
-                            //            newModelTaskFinished.Add(modelTask);//已完成
-                            //        }
-                            //        else
-                            //        {
-                            //            #region 任务未建模
-                            //            if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
-                            //            {
-                            //                newModelTaskProcess.Add(modelTask); //处理中任务 
-                            //            }
-                            //            else
-                            //            {
-                            //                newModelTaskPending.Add(modelTask); //未处理任务 
-                            //            }
-                            //            #endregion
-                            //        }
-
-                            //        #endregion
-                            //    }
-                            //    else
-                            //    {
-                            //        #region 任务未建模
-                            //        if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
-                            //        {
-                            //            newModelTaskProcess.Add(modelTask); //处理中任务 
-                            //        }
-                            //        else
-                            //        {
-                            //            newModelTaskPending.Add(modelTask); //未处理任务 
-                            //        }
-                            //        #endregion
-                            //    }
-
-                            //}
-                            //catch (Exception ex)
-                            //{
-                            //    logger.Error("读取JSON文件错误原因:" + ex.ToString());
-                            //    if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Processing)
-                            //    {
-                            //        newModelTaskProcess.Add(modelTask); //处理中任务 
-                            //    }
-                            //    else
-                            //    {
-                            //        newModelTaskPending.Add(modelTask); //未处理任务 
-                            //    }
-                            ////}
+                           
                         }
                     }
                 }

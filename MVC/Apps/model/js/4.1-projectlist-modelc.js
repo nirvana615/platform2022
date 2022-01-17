@@ -1,6 +1,8 @@
 ﻿//三维模型项目列表widget
 var modelprojectlist = [];//按地区组织
 var modelprojectlistyear = [];//按时间组织
+var newprojecttype = false;
+
 
 layer.open({
     type: 1
@@ -41,37 +43,37 @@ layer.open({
                     modleInfo = obj.data;//标注获取模型数据标签
                     if (obj.data.type == "task") {
 
-                        for (var i in modelprojectlist) {
-                            for (var j in modelprojectlist[i].children) {
-                                for (var k in modelprojectlist[i].children[j].children) {
-                                    if (modelprojectlist[i].children[j].children[k].id == obj.data.id) {
-                                        modelprojectlist[i].children[j].children[k].checked = true;
-                                        modelprojectlist[i].spread = true;
-                                        modelprojectlist[i].children[j].spread = true;
-                                        modelprojectlist[i].children[j].children[k].spread = true;
+                        //for (var i in modelprojectlist) {
+                        //    for (var j in modelprojectlist[i].children) {
+                        //        for (var k in modelprojectlist[i].children[j].children) {
+                        //            if (modelprojectlist[i].children[j].children[k].id == obj.data.id) {
+                        //                modelprojectlist[i].children[j].children[k].checked = true;
+                        //                modelprojectlist[i].spread = true;
+                        //                modelprojectlist[i].children[j].spread = true;
+                        //                modelprojectlist[i].children[j].children[k].spread = true;
                                          
-                                    }
-                                    else {
+                        //            }
+                        //            else {
                                         
-                                        modelprojectlist[i].children[j].children[k].checked = false;
+                        //                modelprojectlist[i].children[j].children[k].checked = false;
 
-                                    }
-                                }
-                            }
-                        }
+                        //            }
+                        //        }
+                        //    }
+                        //}
                         
                         LoadModel(obj.data);//加载模型
-                        DelEntitiesInViewer(modelprojectentities);//移除项目标注图标
+                        DelEntitiesInViewer(projectentities);//移除项目标注图标
                         
                     }
                     //重载项目树：将项目列表数据ModelProjectlist给data
-                    tree.reload('areaprojectlistid', {
-                            data: modelprojectlist
-                        });    
+                    //tree.reload('areaprojectlistid', {
+                    //        data: modelprojectlist
+                    //    });    
                 }
                 else {
                     viewer.scene.primitives.remove(curtileset);
-                    AddEntitiesInViewer(modelprojectentities);
+                    AddEntitiesInViewer(projectentities);
                     modleInfo = null;//标签
                     curtileset = null;
                 }
@@ -100,33 +102,33 @@ layer.open({
                 if (obj.checked) {
                     modleInfo = obj.data;//标签
                     if (obj.data.type == "task") {
-                        for (var i in modelprojectlistyear) {
-                            for (var j in modelprojectlistyear[i].children) {
-                                for (var k in modelprojectlistyear[i].children[j].children) {
-                                    if (modelprojectlistyear[i].children[j].children[k].id == obj.data.id) {
-                                        modelprojectlistyear[i].children[j].children[k].checked = true;
-                                        modelprojectlistyear[i].spread = true;
-                                        modelprojectlistyear[i].children[j].spread = true;
-                                        modelprojectlistyear[i].children[j].children[k].spread = true;
+                        //for (var i in modelprojectlistyear) {
+                        //    for (var j in modelprojectlistyear[i].children) {
+                        //        for (var k in modelprojectlistyear[i].children[j].children) {
+                        //            if (modelprojectlistyear[i].children[j].children[k].id == obj.data.id) {
+                        //                modelprojectlistyear[i].children[j].children[k].checked = true;
+                        //                modelprojectlistyear[i].spread = true;
+                        //                modelprojectlistyear[i].children[j].spread = true;
+                        //                modelprojectlistyear[i].children[j].children[k].spread = true;
                                         
 
-                                    }
-                                    else {
+                        //            }
+                        //            else {
                                         
-                                        modelprojectlistyear[i].children[j].children[k].checked = false;
+                        //                modelprojectlistyear[i].children[j].children[k].checked = false;
 
-                                    }
-                                }
-                            }
-                        }
+                        //            }
+                        //        }
+                        //    }
+                        //}
                         LoadModel(obj.data);
-                        DelEntitiesInViewer(modelprojectentities);//移除项目标注图标
+                        DelEntitiesInViewer(projectentities);//移除项目标注图标
                         
                     }
                     //重载项目树：将项目列表数据ModelProjectlist给data
-                        tree.reload('yearprojectlistid', {
-                            data: modelprojectlistyear
-                        });
+                        //tree.reload('yearprojectlistid', {
+                        //    data: modelprojectlistyear
+                        //});
                 }
                 else {
                     viewer.scene.primitives.remove(curtileset);
@@ -271,10 +273,12 @@ layer.open({
 ////
 
 //获取用户所有项目列表
-function GetUserAllModelProjects() {
+function GetUserAllModelProjects(newprojectcode) {
     //TODO 新增项目位置及标注
-    DelEntitiesInViewer(modelprojectentities);//移除项目标注图标
-    modelprojectentities = []; 
+    var newprojectzxjd = null;
+    var newprojectzxwd = null;
+    DelEntitiesInViewer(projectentities);//移除项目标注图标
+    projectentities = []; 
 
     modelprojectlist = [];
     modelprojectlistyear = [];
@@ -325,6 +329,15 @@ function GetUserAllModelProjects() {
                             prj.b = modelprojectdata[i].ModelProjects.ZXWD;
                             prj.l = modelprojectdata[i].ModelProjects.ZXJD;
                             prj.type = "project";
+                            if (newprojectcode != null) {
+                                if (modelprojectdata[i].ModelProjects.XMBM == newprojectcode.substr(0,10)) {
+                                    prj.spread = true;
+                                    newprojectzxjd = prj.l;
+                                    newprojectzxwd = prj.b;
+                                    xzq.spread = true;
+                                }
+                            }
+                            
                             //prj.icon = PROJECTICON;
                             var tasks = [];
 
@@ -416,9 +429,7 @@ function GetUserAllModelProjects() {
                     year.children = projects;
                     modelprojectlistyear.push(year);
                 }
-
-
-
+                
                 //重载项目树：将项目列表数据ModelProjectlist给data
                 tree.reload('areaprojectlistid', {
                     data: modelprojectlist
@@ -443,7 +454,7 @@ function GetUserAllModelProjects() {
                             disableDepthTestDistance: Number.POSITIVE_INFINITY, //深度检测，解决图标、标注与模型遮挡冲突
                         }
                     });
-                    modelprojectentities.push(modelprojectentity);
+                    projectentities.push(modelprojectentity);
 
                     var modelprojectentitylabel = new Cesium.Entity({
                         id: "PROJECTCENTER_" + modelprojectdata[i].ModelProjects.Id + "_LABEL",
@@ -460,22 +471,24 @@ function GetUserAllModelProjects() {
                         }
                     });
 
-                    modelprojectentities.push(modelprojectentitylabel);
+                    projectentities.push(modelprojectentitylabel);
 
                     bs.push(modelprojectdata[i].ModelProjects.ZXWD);
                     ls.push(modelprojectdata[i].ModelProjects.ZXJD);
                 };
-
-
-
-
-
-                if ((bs.length > 0) && (ls.length > 0)) {
-                    //缩放至项目范围
-                    setTimeout(() => {
-                        FlytoExtent(Math.min.apply(null, ls) - 0.5, Math.min.apply(null, bs) - 0.5, Math.max.apply(null, ls) + 0.5, Math.max.apply(null, bs) + 0.5)
-                    },1000);
-                };
+                if (newprojectcode == null) {
+                    if ((bs.length > 0) && (ls.length > 0)) {
+                        //缩放至项目范围
+                        setTimeout(() => {
+                            FlytoExtent(Math.min.apply(null, ls) - 0.5, Math.min.apply(null, bs) - 0.5, Math.max.apply(null, ls) + 0.5, Math.max.apply(null, bs) + 0.5)
+                        }, 1000);
+                    };
+                }
+                else {
+                    AddEntitiesInViewer(projectentities);
+                    FlytoCurrentProjectExtent(newprojectzxjd, newprojectzxwd, 8000.0);
+                }
+                
 
             }
             else {
@@ -489,6 +502,7 @@ function GetUserAllModelProjects() {
 function ModelProjectNodeClick(obj) {
     if (obj.data.type == "project") {
         if (currentprojectid == null || obj.data.id != currentprojectid) {
+           
             layer.confirm('<p style="font-size:16px">是否确定将以下项目作为系统当前项目？</p><br/><p style="font-size:24px;font-weight:bold;text-align:center;">' + JSON.stringify(obj.data.title).replace(/\"/g, "") + '</p>', { title: ['消息提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei;background-color:#68bc80'], area: ['400px', '250px'], shade: 0.5, shadeClose: true, closeBtn: 0, resize: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } }, function (index) {
 
                 if (JSON.stringify(obj.data.id) != currentprojectid) {
@@ -508,7 +522,7 @@ function ModelProjectNodeClick(obj) {
                                 CloseAllLayer();                               //关闭弹出图层
                                 viewer.entities.removeAll();                  
                                 viewer.scene.primitives.remove(curtileset);//关闭模型
-                                AddEntitiesInViewer(modelprojectentities);
+                                AddEntitiesInViewer(projectentities);
                             }
                         });
                     });
@@ -565,16 +579,16 @@ function ModelProjectNodeClick(obj) {
                 FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
                 layer.close(index);
                 viewer.scene.primitives.remove(curtileset);//关闭模型
-                AddEntitiesInViewer(modelprojectentities);
+                AddEntitiesInViewer(projectentities);
             });
             
         }
-        
+        else {
+            //
+            FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
+        }
     }
-    else {
-        //TODO
-
-    }
+   
 };
 
 //项目树（项目列表+目标）节点操作：add\update\del
@@ -693,10 +707,8 @@ function ModelProjectNodeOperate(obj) {
 function FlytoCurrentProjectExtent(l, b, h) {
     viewer.camera.flyTo({
         destination: Cesium.Cartesian3.fromDegrees(l, b, h)
-    }, { duration: 3 });
+    }, { duration: 1 });
 };
-
-
 
 //缩放至所有项目范围
 function FlytoExtent(west, south, east, north) {
@@ -704,13 +716,12 @@ function FlytoExtent(west, south, east, north) {
         destination: new Cesium.Rectangle.fromDegrees(west, south, east, north)
     }, { duration: 3 });
 
-    if (modelprojectentities.length > 0) {
+    if (projectentities.length > 0) {
         setTimeout(() => {
-            AddEntitiesInViewer(modelprojectentities)
+            AddEntitiesInViewer(projectentities)
         }, 100);
     }
 };
-
 
 //向viewer添加entity
 function AddEntityInViewer(entity) {

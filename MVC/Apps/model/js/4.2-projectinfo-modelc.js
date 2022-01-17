@@ -250,7 +250,7 @@ function ModelProjectInfo(id, style) {
                     //删除地图选点标注
                     ClearMapPoint();
                     //刷新项目列表
-                    GetUserAllModelProjects();
+                    GetUserAllModelProjects(result.data);
                 }, datatype: "json"
             });
             return false;
@@ -312,7 +312,8 @@ function ModelProjectInfo(id, style) {
                                     //删除地图选点标注
                                     ClearMapPoint();
                                     //刷新项目列表
-                                    GetUserAllModelProjects();
+                                    GetUserAllModelProjects(info.data);
+                                    
                                 }
                                 else {
                                     //创建失败

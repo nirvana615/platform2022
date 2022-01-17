@@ -40,7 +40,7 @@ var tipslayer = -1;//全局提示层
 
 
 //*model
-var modelprojectentities = [];//项目位置及标注
+var projectentities = [];//项目位置及标注
 //*model
 var currentprojectid = null;//当前项目id
 //*model

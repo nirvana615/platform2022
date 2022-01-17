@@ -274,13 +274,13 @@ namespace MODEL
             }
         }
         /// <summary>
-        /// 用户登录信息(年分组)
+        /// 用户登录信息
         /// </summary>
         /// <param name="data"></param>
         /// <param name="c">列分割符</param>
         /// <param name="r">行分割符</param>
         /// <returns></returns>
-        public static LoginUser ParseLoginYearUser(string data)
+        public static LoginUser ParseLoginUser(string data)
         {
             if (string.IsNullOrEmpty(data))
             {
@@ -301,89 +301,17 @@ namespace MODEL
                 LoginUser loginuser = new LoginUser()
                 {
                     UserId = Convert.ToInt32(row[0].ToString()),
-                    TIMES = row[1].ToString(),
-                    COUNT = Convert.ToInt32(row[2].ToString())
+                    TIME = row[1].ToString(),
+                    COUNT = Convert.ToInt32(row[3].ToString())
                 };
-
-                return loginuser;
-            }
-            catch (Exception ex)
-            {
-                logger.Error("loginuser解析失败：" + data, ex);
-                return null;
-            }
-        }
-        /// <summary>
-        /// 用户登录信息(年月分组)
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="c">列分割符</param>
-        /// <param name="r">行分割符</param>
-        /// <returns></returns>
-        public static LoginUser ParseLoginMonthUser(string data)
-        {
-            if (string.IsNullOrEmpty(data))
-            {
-                logger.Warn("解析用户数据为空！");
-                return null;
-            }
-
-            try
-            {
-                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
-                if (rows.Length != 1)
+                if (string.IsNullOrEmpty(row[2].ToString()))
                 {
-                    logger.Warn("用户不唯一！");
-                    return null;
+                    loginuser.SYSCODE = null;
                 }
-
-                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
-                LoginUser loginuser = new LoginUser()
+                else
                 {
-                    TIMES = row[0].ToString(),
-                    COUNT = Convert.ToInt32(row[1].ToString())
-                };
-
-                return loginuser;
-            }
-            catch (Exception ex)
-            {
-                logger.Error("loginuser解析失败：" + data, ex);
-                return null;
-            }
-        }
-        /// <summary>
-        /// 用户登录信息(分系统和年月分组)
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="c">列分割符</param>
-        /// <param name="r">行分割符</param>
-        /// <returns></returns>
-        public static LoginUser ParseLoginSysMonthUser(string data)
-        {
-            if (string.IsNullOrEmpty(data))
-            {
-                logger.Warn("解析用户数据为空！");
-                return null;
-            }
-
-            try
-            {
-                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
-                if (rows.Length != 1)
-                {
-                    logger.Warn("用户不唯一！");
-                    return null;
+                    loginuser.SYSCODE = Convert.ToInt32(row[2].ToString());
                 }
-
-                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
-                LoginUser loginuser = new LoginUser()
-                {
-                    TIMES = row[0].ToString(),
-                    COUNT = Convert.ToInt32(row[1].ToString()),
-                    SYSCODE=  Convert.ToInt32(row[2].ToString())
-                };
-
                 return loginuser;
             }
             catch (Exception ex)

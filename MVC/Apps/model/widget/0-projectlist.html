@@ -459,7 +459,7 @@ function GetUserAllModelProjects() {
                     data: modelprojectlistyear
                 });
                 //TODO 新增项目位置及标注
-                modelprojectentities = [];                   //项目位置及标注
+                projectentities = [];                   //项目位置及标注
                 var bs = [];//纬度集合
                 var ls = [];//经度集合
 
@@ -476,7 +476,7 @@ function GetUserAllModelProjects() {
                             disableDepthTestDistance: Number.POSITIVE_INFINITY, //深度检测，解决图标、标注与模型遮挡冲突
                         }
                     });
-                    modelprojectentities.push(modelprojectentity);
+                    projectentities.push(modelprojectentity);
 
                     var modelprojectentitylabel = new Cesium.Entity({
                         id: "PROJECTCENTER_" + modelprojectdata[i].ModelProjects.Id + "_LABEL",
@@ -491,7 +491,7 @@ function GetUserAllModelProjects() {
                         }
                     });
 
-                    modelprojectentities.push(modelprojectentitylabel);
+                    projectentities.push(modelprojectentitylabel);
 
                     bs.push(modelprojectdata[i].ModelProjects.ZXWD);
                     ls.push(modelprojectdata[i].ModelProjects.ZXJD);
@@ -537,7 +537,7 @@ function ModelProjectNodeClick(obj) {
 
                             CloseAllLayer();                               //关闭弹出图层
                             viewer.entities.removeAll();
-                            AddEntitiesInViewer(modelprojectentities);
+                            AddEntitiesInViewer(projectentities);
                         }
                     });
                 });
@@ -605,9 +605,9 @@ function FlytoExtent(west, south, east, north) {
         destination: new Cesium.Rectangle.fromDegrees(west, south, east, north)
     }, { duration: 3 });
 
-    if (modelprojectentities.length > 0) {
+    if (projectentities.length > 0) {
         setTimeout(() => {
-            AddEntitiesInViewer(modelprojectentities)
+            AddEntitiesInViewer(projectentities)
         }, 3000);
     }
 };

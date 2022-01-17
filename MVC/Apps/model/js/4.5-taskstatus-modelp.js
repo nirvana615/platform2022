@@ -6,7 +6,7 @@ getNewModelTask();
 
 setTimeout(() => {
     LoadNewModelTask();
-}, 4000);
+}, 5000);
 
 function getNewModelTask() {
     newmodeltasktablePending = [];
@@ -88,7 +88,13 @@ function LoadNewModelTask() {
                         layer.confirm('是否开始处理?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
                             //同步更新缓存对应的值
                             data.RWZT = "处理中";
-                            newmodeltasktableProcess.push(data);
+                            for (var i in newmodeltasktablePending) {
+                                if (newmodeltasktablePending[i].Id == data.Id) {
+                                    newmodeltasktablePending.splice(i,1);
+                                }
+                            }
+                            newmodeltasktableProcess.unshift(data);
+                            newTaskTablePending.reload({ id: 'newTaskTablePendingid', data: newmodeltasktablePending });
                             newTaskTableProcessing.reload({ id: 'newTaskTableProcessingid', data: newmodeltasktableProcess });
                             ModelTaskInfo(obj.data.Id, "view");
                             obj.del();
@@ -138,7 +144,13 @@ function LoadNewModelTask() {
                         layer.confirm('是否确认完成?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
                             //同步更新缓存对应的值
                             data.RWZT = "已完成";
-                            newmodeltasktableFinished.push(data);
+                            for (var i in newmodeltasktableProcess) {
+                                if (newmodeltasktableProcess[i].Id == data.Id) {
+                                    newmodeltasktableProcess.splice(i, 1);
+                                }
+                            }
+                            newmodeltasktableFinished.unshift(data);
+                            newTaskTableProcessing.reload({ id: 'newTaskTableProcessingid', data: newmodeltasktableProcess });
                             newTaskTableFinished.reload({ id: 'newTaskTableFinishedid', data: newmodeltasktableFinished });
                             obj.del();
                             //更新任务状态

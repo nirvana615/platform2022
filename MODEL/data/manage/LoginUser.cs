@@ -26,15 +26,14 @@ namespace MODEL
         /// <summary>
         /// 时间
         /// </summary>
-        public string TIMES { get; set; }
+        public string TIME { get; set; }
         /// <summary>
         /// 系统code
         /// </summary>
-        public int SYSCODE { get; set; }
+        public int? SYSCODE { get; set; }
         /// <summary>
-        /// 登录次数
+        /// 数量
         /// </summary>
         public int COUNT { get; set; }
-       
     }
 }

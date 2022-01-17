@@ -295,7 +295,7 @@ viewer.baseLayerPicker.viewModel.toggleDropDown.afterExecute.addEventListener(fu
 viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) {
     e.cancel = true;
     if (projectentities.length > 0) {
-        viewer.flyTo(projectentities, { duration: 5, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 3000) });
+        viewer.flyTo(projectentities, { duration: 5, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 8000) });
     }
     else {
         //缩放至中国

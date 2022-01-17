@@ -5,7 +5,7 @@ function ModelTaskInfo(id, style) {
         if (modeltaskinfoviewlayerindex == null) {
             modeltaskinfoviewlayerindex = layer.open({
                 type: 1
-                , title: ['查看任务', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , title: ['任务信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
                 , area: ['750px', '540px']
                 , shade: 0
                 , offset: 'auto'

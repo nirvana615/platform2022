@@ -93,7 +93,7 @@ namespace SERVICE.Controllers
                         }
                         else
                         {
-                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", string.Empty));
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", xmbm));
                         }
                     }
                     else
@@ -428,7 +428,7 @@ namespace SERVICE.Controllers
             #region 参数
             string id = HttpContext.Current.Request.Form["id"];
             string cookie = HttpContext.Current.Request.Form["cookie"];
-
+            string xmbm = HttpContext.Current.Request.Form["model_xmbm_edit"];
             string xmmc = HttpContext.Current.Request.Form["model_xmmc_edit"];// 获取页面表单元素
             string zxjd = HttpContext.Current.Request.Form["model_zxjd_edit"];
             string zxwd = HttpContext.Current.Request.Form["model_zxwd_edit"];
@@ -474,7 +474,7 @@ namespace SERVICE.Controllers
                                 PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_project SET bz={0} WHERE id={1} AND bsm{2} AND ztm={3}", bz, id, userbsms, (int)MODEL.Enum.State.InUse));
                             }
 
-                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "更新成功！", string.Empty));
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "更新成功！", xmbm));
                         }
                         else
                         {

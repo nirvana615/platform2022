@@ -41,37 +41,37 @@ layer.open({
                     modleInfo = obj.data;//标注获取模型数据标签
                     if (obj.data.type == "task") {
 
-                        for (var i in modelprojectlist) {
-                            for (var j in modelprojectlist[i].children) {
-                                for (var k in modelprojectlist[i].children[j].children) {
-                                    if (modelprojectlist[i].children[j].children[k].id == obj.data.id) {
-                                        modelprojectlist[i].children[j].children[k].checked = true;
-                                        modelprojectlist[i].spread = true;
-                                        modelprojectlist[i].children[j].spread = true;
-                                        modelprojectlist[i].children[j].children[k].spread = true;
+                        //for (var i in modelprojectlist) {
+                        //    for (var j in modelprojectlist[i].children) {
+                        //        for (var k in modelprojectlist[i].children[j].children) {
+                        //            if (modelprojectlist[i].children[j].children[k].id == obj.data.id) {
+                        //                modelprojectlist[i].children[j].children[k].checked = true;
+                        //                modelprojectlist[i].spread = true;
+                        //                modelprojectlist[i].children[j].spread = true;
+                        //                modelprojectlist[i].children[j].children[k].spread = true;
 
-                                    }
-                                    else {
+                        //            }
+                        //            else {
 
-                                        modelprojectlist[i].children[j].children[k].checked = false;
+                        //                modelprojectlist[i].children[j].children[k].checked = false;
 
-                                    }
-                                }
-                            }
-                        }
+                        //            }
+                        //        }
+                        //    }
+                        //}
 
                         LoadModel(obj.data);//加载模型
-                        DelEntitiesInViewer(modelprojectentities);//移除项目标注图标
+                        DelEntitiesInViewer(projectentities);//移除项目标注图标
 
                     }
                     //重载项目树：将项目列表数据ModelProjectlist给data
-                    tree.reload('areaprojectlistid', {
-                        data: modelprojectlist
-                    });
+                    //tree.reload('areaprojectlistid', {
+                    //    data: modelprojectlist
+                    //});
                 }
                 else {
                     viewer.scene.primitives.remove(curtileset);
-                    AddEntitiesInViewer(modelprojectentities);
+                    AddEntitiesInViewer(projectentities);
                     modleInfo = null;//标签
                     curtileset = null;
                 }
@@ -100,33 +100,33 @@ layer.open({
                 if (obj.checked) {
                     modleInfo = obj.data;//标签
                     if (obj.data.type == "task") {
-                        for (var i in modelprojectlistyear) {
-                            for (var j in modelprojectlistyear[i].children) {
-                                for (var k in modelprojectlistyear[i].children[j].children) {
-                                    if (modelprojectlistyear[i].children[j].children[k].id == obj.data.id) {
-                                        modelprojectlistyear[i].children[j].children[k].checked = true;
-                                        modelprojectlistyear[i].spread = true;
-                                        modelprojectlistyear[i].children[j].spread = true;
-                                        modelprojectlistyear[i].children[j].children[k].spread = true;
+                        //for (var i in modelprojectlistyear) {
+                        //    for (var j in modelprojectlistyear[i].children) {
+                        //        for (var k in modelprojectlistyear[i].children[j].children) {
+                        //            if (modelprojectlistyear[i].children[j].children[k].id == obj.data.id) {
+                        //                modelprojectlistyear[i].children[j].children[k].checked = true;
+                        //                modelprojectlistyear[i].spread = true;
+                        //                modelprojectlistyear[i].children[j].spread = true;
+                        //                modelprojectlistyear[i].children[j].children[k].spread = true;
 
 
-                                    }
-                                    else {
+                        //            }
+                        //            else {
 
-                                        modelprojectlistyear[i].children[j].children[k].checked = false;
+                        //                modelprojectlistyear[i].children[j].children[k].checked = false;
 
-                                    }
-                                }
-                            }
-                        }
+                        //            }
+                        //        }
+                        //    }
+                        //}
                         LoadModel(obj.data);
-                        DelEntitiesInViewer(modelprojectentities);//移除项目标注图标
+                        DelEntitiesInViewer(projectentities);//移除项目标注图标
 
                     }
                     //重载项目树：将项目列表数据ModelProjectlist给data
-                    tree.reload('yearprojectlistid', {
-                        data: modelprojectlistyear
-                    });
+                    //tree.reload('yearprojectlistid', {
+                    //    data: modelprojectlistyear
+                    //});
                 }
                 else {
                     viewer.scene.primitives.remove(curtileset);
@@ -273,8 +273,8 @@ layer.open({
 //获取用户所有项目列表
 function GetUserAllModelProjects() {
     //TODO 新增项目位置及标注
-    DelEntitiesInViewer(modelprojectentities);//移除项目标注图标
-    modelprojectentities = [];
+    DelEntitiesInViewer(projectentities);//移除项目标注图标
+    projectentities = [];
 
     modelprojectlist = [];
     modelprojectlistyear = [];
@@ -443,7 +443,7 @@ function GetUserAllModelProjects() {
                             disableDepthTestDistance: Number.POSITIVE_INFINITY, //深度检测，解决图标、标注与模型遮挡冲突
                         }
                     });
-                    modelprojectentities.push(modelprojectentity);
+                    projectentities.push(modelprojectentity);
 
                     var modelprojectentitylabel = new Cesium.Entity({
                         id: "PROJECTCENTER_" + modelprojectdata[i].ModelProjects.Id + "_LABEL",
@@ -460,7 +460,7 @@ function GetUserAllModelProjects() {
                         }
                     });
 
-                    modelprojectentities.push(modelprojectentitylabel);
+                    projectentities.push(modelprojectentitylabel);
 
                     bs.push(modelprojectdata[i].ModelProjects.ZXWD);
                     ls.push(modelprojectdata[i].ModelProjects.ZXJD);
@@ -508,7 +508,7 @@ function ModelProjectNodeClick(obj) {
                                 CloseAllLayer();                               //关闭弹出图层
                                 viewer.entities.removeAll();
                                 viewer.scene.primitives.remove(curtileset);//关闭模型
-                                AddEntitiesInViewer(modelprojectentities);
+                                AddEntitiesInViewer(projectentities);
                             }
                         });
                     });
@@ -565,7 +565,7 @@ function ModelProjectNodeClick(obj) {
                 FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
                 layer.close(index);
                 viewer.scene.primitives.remove(curtileset);//关闭模型
-                AddEntitiesInViewer(modelprojectentities);
+                AddEntitiesInViewer(projectentities);
             });
 
         }
@@ -627,9 +627,9 @@ function FlytoExtent(west, south, east, north) {
         destination: new Cesium.Rectangle.fromDegrees(west, south, east, north)
     }, { duration: 3 });
 
-    if (modelprojectentities.length > 0) {
+    if (projectentities.length > 0) {
         setTimeout(() => {
-            AddEntitiesInViewer(modelprojectentities)
+            AddEntitiesInViewer(projectentities)
         }, 100);
     }
 };

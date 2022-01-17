@@ -207,7 +207,7 @@ function ModelTaskInfo(id, style) {
                             success: function (result) {
                                 var info = JSON.parse(result);
                                 //刷新项目列表
-                                GetUserAllModelProjects();
+                                GetUserAllModelProjects(info.data);
                                 layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                                 layer.close(modeltaskinfoeditlayerindex);  //关闭模块
                                 
@@ -232,7 +232,7 @@ function ModelTaskInfo(id, style) {
         });
     }
     else if (style == "add") {
-        //新建目标----必须选择当前项目
+        //新建任务----必须选择当前项目
         //①--先选择当前项目
         if (id == null) {
             layer.msg("请先选择当前项目！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -316,7 +316,7 @@ function ModelTaskInfo(id, style) {
                                     if (info.code == 1) {
                                         layer.close(modeltaskinfoaddlayerindex);
                                         //刷新项目列表
-                                        GetUserAllModelProjects();
+                                        GetUserAllModelProjects(info.data);
                                     }
 
 
