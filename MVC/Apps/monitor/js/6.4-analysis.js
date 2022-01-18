@@ -312,7 +312,8 @@ function LoadwuRenJiXuShiLayer(projectid) {
                     //, { field: 'tynzd', title: '标志完好性', width: 120, align: "center" }
                     //, {
                     //    field: 'cgqgr', title: '传感器检查', width: 120, align: "center" }
-                    , { fixed: 'right', width: 180, align: 'center', toolbar: '#processedPatrolButon' }
+                    , { width: 180, align: 'center', toolbar: '#processedPatrolButon' }
+                    , { width: 180, align: 'center', toolbar: '#processedPatrolButon' }
                 ]]
                 , data: processedPatroltabledata
             });
@@ -592,7 +593,8 @@ function LoadwuRenJiXuShiLayer(projectid) {
                    
                     }
                    
-                    , { fixed: 'right', width: 80, align: 'center', toolbar: '#lieFengButon' }
+                    , { width: 80, align: 'center', toolbar: '#lieFengButon' },
+                    { width: 80, align: 'center', toolbar: '#lieFengButon' }
                 ]]
                 , data: []
             });
@@ -840,7 +842,8 @@ function LoadwuRenJiXuShiLayer(projectid) {
                     , { field: 'xsjg', title: '巡查结果', width: 200, align: "center" }
                     , { field: 'xssj', title: '巡查时间', width: 120, sort: true, align: "center"}
 
-                    , { fixed: 'right', width: 80, align: 'center', toolbar: '#jiZuoButon' }
+                    , { width: 80, align: 'center', toolbar: '#jiZuoButon' }
+                    , { width: 80, align: 'center', toolbar: '#jiZuoButon' }
                 ]]
                 , data: []
             });
@@ -1431,7 +1434,8 @@ function LoadwuRenJiXuShiLayer(projectid) {
                         }
 
                     }
-                    , { fixed: 'right', width: 80, align: 'center', toolbar: '#renXunButon' }
+                    , { width: 80, align: 'center', toolbar: '#renXunButon' }
+                    , { width: 80, align: 'center', toolbar: '#renXunButon' }
                 ]]
                 , data: []
             });

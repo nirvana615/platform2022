@@ -69,7 +69,8 @@ namespace SERVICE.Controllers
                 }
                 else
                 {
-                    MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse)));
+                    //
+                    MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND ztm={1} and roleid={2} ", user.Id, (int)MODEL.Enum.State.InUse,5)));
                     if (mapUserRole == null)
                     {
                         return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户角色！", string.Empty));//无角色

@@ -1,5 +1,5 @@
 ﻿
-
+var handler;
 var layers = [];//图层列表数据
 var layerlist;
 //节点点击
@@ -307,7 +307,7 @@ function AddRegion() {
     }
 
 }
-var handler;
+
 
 //边界区域范围
 function RegionlBoundary(regionid) {
