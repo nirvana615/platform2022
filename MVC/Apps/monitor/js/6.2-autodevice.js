@@ -4,12 +4,16 @@ var projectdevicecharttype = null;
 var monitordevicechart = null;
 
 var currentdevicemonitor = null;//当前设备
-
-
+var laytpl = layui.laytpl;
+var viewerPhoto = null;
 //自动化监测设备widget
 function LoadAutoDeviceLayer(projectid) {
     if (projectid == null) {
         layer.msg("请先选择当前项目！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+    }
+    if (currentprojectmonitors.length == 0) {
+        layer.msg("请稍等项目加载！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        return;
     }
     else {
         if (automonitordevicelayerindex == null) {
@@ -22,15 +26,18 @@ function LoadAutoDeviceLayer(projectid) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--设备管理--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px"><ul class="layui-tab-title"><li class="layui-this" style="width:40%;padding-top: 10px;">概况</li><li style="width:40%;padding-top: 10px;">详情</li></ul><div class="layui-tab-content"><!--概况--><div class="layui-tab-item layui-show"><form class="layui-form" lay-filter="autodevicesform" style="margin-top:5px;"><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><div class="layui-input-block" style="margin-left:10px;"><select id="autodevicespretimeid" name="autodevicespretime" lay-filter="autodevicespretimefilter" style="visibility:visible;"></select></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><div class="layui-input-block" style="margin-left:10px;margin-right:10px;"><input id="autodevicescustomtimeid" name="autodevicescustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;"></div></div></div></div></div></form><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1">1</div></div><div class="layui-col-xs6"><div class="grid-demo"><!--设备数量--><div id="autodevicechartbynum" class="layui-tab-item layui-show" style="width:350px;height:300px"></div></div></div></div><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><!--按灾害体--><div id="autodevicechartbydisaster" class="layui-tab-item layui-show" style="width:350px;height:300px"></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><!--按设备类型--><div id="autodevicechartbytype" class="layui-tab-item layui-show" style="width:350px;height:300px"></div></div></div></div></div><!--详情--><div class="layui-tab-item"><div class="layui-row"><!--左侧--><div class="layui-col-md3" style="width:20%;height:500px;overflow: auto;"><div id="device-monitor-tree" class="grid-demo"></div></div><!--右侧--><div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"><div class="grid-demo grid-demo-bg1"><!--工具栏--><form class="layui-form" lay-filter="autodeviceform" style="margin-top:5px;"><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><div class="layui-input-block" style="margin-left:10px;"><select id="autodevicepretimeid" name="autodevicepretime" lay-filter="autodevicepretimefilter" style="visibility:visible;"></select></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><div class="layui-input-block" style="margin-left:10px;margin-right:10px;"><input id="autodevicecustomtimeid" name="autodevicecustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;"></div></div></div></div></div></form><!--采集数量柱状图--><div id="autodevicechart" class="layui-tab-item layui-show" style="width:780px;height:600px"></div><!--设备采集率--><div style="padding-left:50px;padding-right:10px;padding-top:20px;"><div class="layui-progress layui-progress" lay-showpercent="true" lay-filter="devicerate"><div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div></div></div></div></div></div></div></div></div>'
+                , content: '<!--设备管理--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px">    <ul class="layui-tab-title">        <li class="layui-this" style="width:30%;padding-top: 10px;">概况</li>        <li style="width:30%;padding-top: 10px;">详情</li>        <li style="width:30%;padding-top: 10px;">设备安装进度</li>    </ul>    <div class="layui-tab-content">        <!--概况-->        <div class="layui-tab-item layui-show">            <form class="layui-form" lay-filter="autodevicesform" style="margin-top:5px;">                <div class="layui-row">                    <div class="layui-col-xs6">                        <div class="grid-demo grid-demo-bg1">                            <div class="layui-form-item">                                <div class="layui-input-block" style="margin-left:10px;">                                    <select id="autodevicespretimeid" name="autodevicespretime" lay-filter="autodevicespretimefilter" style="visibility:visible;"></select>                                </div>                            </div>                        </div>                    </div>                    <div class="layui-col-xs6">                        <div class="grid-demo">                            <div class="layui-form-item">                                <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                    <input id="autodevicescustomtimeid" name="autodevicescustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">                                </div>                            </div>                        </div>                    </div>                </div>            </form>            <div class="layui-row">                <div class="layui-col-xs6">                    <div class="grid-demo grid-demo-bg1">                        1                    </div>                </div>                <div class="layui-col-xs6">                    <div class="grid-demo">                        <!--设备数量-->                        <div id="autodevicechartbynum" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>            </div>            <div class="layui-row">                <div class="layui-col-xs6">                    <div class="grid-demo grid-demo-bg1">                        <!--按灾害体-->                        <div id="autodevicechartbydisaster" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>                <div class="layui-col-xs6">                    <div class="grid-demo">                        <!--按设备类型-->                        <div id="autodevicechartbytype" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>            </div>        </div>        <!--详情-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:500px;overflow: auto;">                    <div id="device-monitor-tree" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="autodeviceform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs6">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;">                                                <select id="autodevicepretimeid" name="autodevicepretime" lay-filter="autodevicepretimefilter" style="visibility:visible;"></select>                                            </div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs6">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="autodevicecustomtimeid" name="autodevicecustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--采集数量柱状图-->                        <div id="autodevicechart" class="layui-tab-item layui-show" style="width:780px;height:600px"></div>                        <!--设备采集率-->                        <div style="padding-left:50px;padding-right:10px;padding-top:20px;">                            <div class="layui-progress layui-progress" lay-showpercent="true" lay-filter="devicerate">                                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>                            </div>                        </div>                    </div>                </div>            </div>        </div>        <!--施工管理-->        <div class="layui-tab-item">            <!--施工设备管理-->            <div class="layui-fluid">                <div class="layui-card">                    <div class="layui-card-body">                        <table id="const-device-manage" lay-filter="const-device-manage"></table>                        <script type="text/html" id="table-toolbar-const">                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview"><i class="layui-icon layui-icon-read"></i>详情</a>                        </script>                        <!--统计表格-->                        <div id="autodatastatisticsdiv" style="margin-left:250px;margin-right:250px;margin-top: 20px;">                            <table id="constdeviceTongji" class="layui-hide"></table>                        </div>                    </div>                </div>            </div>        </div>    </div></div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
-
+                    elem.init();
+                    elem.render('progress');
                     //展示项目设备总览
                     DisplayProjectDevices();
                     //展示监测设备详情
                     DisplayMonitorDevice();
+                    //展示设备施工数据
+                    ConstPhotoData(projectid);
                 }
                 , end: function () {
                     automonitordevicelayerindex = null;
@@ -185,8 +192,7 @@ function DisplayDeviceCount(monitor, data) {
     var times = [];
     var counts = [];
 
-    elem.init();
-    elem.render('progress');
+    
     elem.progress('devicerate', toPercent(devicecount.Rate));
 
 
@@ -266,3 +272,259 @@ function toPercent(point) {
     str += "%";
     return str;
 };
+
+//监测设备
+function ConstPhotoData(projectid) {
+    var constPhotoTable = table.render({
+        elem: '#const-device-manage'
+        , id: 'constPhotoTableId'
+        , title: '自动化监测设备信息'
+        , page: true
+        , even: true
+        , limit: 10
+        , initSort: { field: 'mointorStatus', type: 'desc' }
+        , toolbar: false
+        , totalRow: false
+        , cols: [[
+            { field: 'Id', title: 'ID', width: 123, fixed: 'left', align: "center" }
+            , { field: 'JCDMC', title: '监测点名称', width: 280, align: "center" }
+            , { field: 'JCDBH', title: '监测点编号', width: 180, align: "center" }
+            , {
+                field: 'mointorStatus', title: '施工进度', width: 220, align: "center", templet: function (row) {
+                    if (row.mointorStatus == "0") {
+                        return '<span style="color: red;">未开始</span>'
+                    } else if(row.mointorStatus == "1") {
+                        return '已放样'
+                    } else if (row.mointorStatus == "2") {
+                        return '已挖坑'
+                    } else if (row.mointorStatus == "3") {
+                        return '已浇筑'
+                    } else if (row.mointorStatus == "4") {
+                        return '<span style="color: green;">已完成</span>'
+                    }
+
+                    //得到当前行数据，并拼接成自定义模板
+
+                } }
+         
+            , { width: 120, align: 'center', toolbar: '#table-toolbar-const' }
+            , { width: 120, align: 'center', toolbar: '#table-toolbar-const' }
+        ]]
+        , data: []
+    });
+    //渲染统计表格
+    var constdeviceTongjitable = table.render({
+        elem: '#constdeviceTongji'
+        , id: 'constdeviceTongjiId'
+        , title: '监测点监测数据统计信息'
+        , page: false
+        , skin: 'line'
+        , even: false
+        , size: 'sm'
+        , totalRow: false
+        , cols: [[
+            { field: 'name', width: 127,  title: '工序', align: "center" }
+            , { field: 'num', width: 150, title: '完成量', align: "center" }
+            , { field: 'bili', width: 150, title: '进度', align: "center" }
+            , { field: 'bili', width: 150, title: '进度', align: "center" }
+        ]]
+        , data: []
+    });
+
+    table.on('tool(const-device-manage)', function (obj) {
+        var layEvent = obj.event;
+        if (obj.data.photoList.length == 0) {
+            layer.msg("该监测点还未开始放样", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            return;
+        }
+        console.log(obj);
+        console.log(datasurl);
+        if (layEvent === 'photoview') {
+            adddevicelayerindex = layer.open({
+                type: 1
+                , title: ['设备详情', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['650px', '500px']
+                , shade: [0.5, '#393D49']
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: false
+                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="constPhotoform">    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">        <!--标签-->        <ul class="layui-tab-title">            <li class="layui-this" style="width:100px">已放样</li>            <li style="width:100px">已挖坑</li>            <li style="width:100px">已浇筑</li>            <li style="width:100px">已完成</li>        </ul>        <!--内容-->        <div class="layui-tab-content">            <!--设备信息-->            <div class="layui-tab-item layui-show">                <div class="layim-chat-main">                  <ul id="yiFangYang"></ul>                </div>            </div>            <!--设备厂家-->            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWaKeng"></ul>                </div>            </div>            <!--设备经销商-->            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiJiaoZhu"></ul>                </div>            </div>            <!--监测数据库-->            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWanCheng"></ul>                </div>            </div>        </div>    </div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+                 
+                    for (var i in obj.data.photoList) {
+                        if (obj.data.photoList[i].type=='1') {
+                            document.getElementById("yiFangYang").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="已放样'+(i)+'" ></img></li>';
+
+                        } else if (obj.data.photoList[i].type == '2') {
+                            document.getElementById("yiWaKeng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="已挖坑' + (i) +'"></img></li>';
+
+                        } else if (obj.data.photoList[i].type == '3') {
+                            document.getElementById("yiJiaoZhu").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="已浇筑' + (i) +'"></img></li>';
+
+                        } else if (obj.data.photoList[i].type == '4') {
+                            document.getElementById("yiWanCheng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="已完成' + (i) +'"></img></li>';
+
+                        }
+                        
+                     }
+                    if (viewerPhoto != null) {
+                        viewerPhoto.destroy();
+                    }
+                    viewerPhoto = new Viewer(document.getElementById('yiFangYang'), {
+                        toolbar: true, //显示工具条
+                        viewed() {
+                            viewerPhoto.zoomTo(0.75); // 图片显示比例 75%
+                        },
+                        zIndex: 99999999,
+                        navbar: false,
+                        show: function () {  // 动态加载图片后，更新实例
+                            viewerPhoto.update();
+                        },
+                    });
+                    viewerPhoto = new Viewer(document.getElementById('yiWaKeng'), {
+                        toolbar: true, //显示工具条
+                        viewed() {
+                            viewerPhoto.zoomTo(0.75); // 图片显示比例 75%
+                        },
+                        zIndex: 99999999,
+                        navbar: false,
+                        show: function () {  // 动态加载图片后，更新实例
+                            viewerPhoto.update();
+                        },
+                    });
+                    viewerPhoto = new Viewer(document.getElementById('yiJiaoZhu'), {
+                        toolbar: true, //显示工具条
+                        viewed() {
+                            viewerPhoto.zoomTo(0.75); // 图片显示比例 75%
+                        },
+                        zIndex: 99999999,
+                        navbar: false,
+                        show: function () {  // 动态加载图片后，更新实例
+                            viewerPhoto.update();
+                        },
+                    });
+                    viewerPhoto = new Viewer(document.getElementById('yiWanCheng'), {
+                        toolbar: true, //显示工具条
+                        viewed() {
+                            viewerPhoto.zoomTo(0.75); // 图片显示比例 75%
+                        },
+                        zIndex: 99999999,
+                        navbar: false,
+                        show: function () {  // 动态加载图片后，更新实例
+                            viewerPhoto.update();
+                        },
+                    });
+                   
+                }
+                , end: function () {
+                    viewerPhoto = null;
+                }
+            });
+
+        } 
+    });
+    var MonitorStringList = [];
+    var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    var yifangyang = 0;
+    var yiWakeng = 0;
+    var yiJiaozhu = 0;
+    var yiWancheng = 0;
+    $.ajax({
+        url: servicesurl + "/api/Monitor/GetMonitor", type: "get", data: { "id": projectid, "cookie": document.cookie },
+        success: function (data1) {
+            var monitorinfos = JSON.parse(data1);
+            console.log(monitorinfos);
+            $.ajax({
+                url: window.parent.servicesurl + "/api/PatrolEquipment/getConstPhotoInfo", type: "get", data: { 'projectId': projectid, 'monitorId': "" },
+                success: function (data) {
+                    layer.close(loadingceindex);
+                    var constPhotodata = JSON.parse(data);
+                    console.log(constPhotodata);
+                    for (var i in monitorinfos) {
+                        var MonitorString = monitorinfos[i].MonitorString;
+                        var photoList = [];
+                        var mointorStatus = 0;
+                        for (var j in constPhotodata) {
+                            if (MonitorString.Id == constPhotodata[j].monitorId) {
+
+                                photoList.push(constPhotodata[j]);
+                                if (constPhotodata[j].type == '1' && mointorStatus < 1) {
+                                    mointorStatus = 1;
+                                }
+                                if (constPhotodata[j].type == '2' && mointorStatus < 2) {
+                                    mointorStatus = 2;
+                                }
+                                if (constPhotodata[j].type == '3' && mointorStatus < 3) {
+                                    mointorStatus = 3;
+                                }
+                                if (constPhotodata[j].type == '4' && mointorStatus < 4) {
+                                    mointorStatus = 4;
+                                }
+                            }
+                        }
+                        MonitorString.photoList = photoList;
+                        MonitorString.mointorStatus = mointorStatus;
+                        if (mointorStatus == 1) {
+                            yifangyang++;
+                        } else if (mointorStatus == 2) {
+                            yiWakeng++;
+                        } else if (mointorStatus == 3) {
+                            yiJiaozhu++;
+                        } else if (mointorStatus == 4) {
+                            yiWancheng++;
+                        }
+                        MonitorStringList.push(MonitorString);
+                    }
+                    
+      
+                    constPhotoTable.reload({ id: 'constPhotoTableId', data: MonitorStringList });
+                    var tempList = [];
+                    tempList.push({ "name": '已放样', "num": yifangyang, "bili": toPercent(yifangyang / MonitorStringList.length)});
+                    tempList.push({ "name": '已挖坑', "num": yiWakeng, "bili": toPercent(yiWakeng / MonitorStringList.length)});
+                    tempList.push({ "name": '已浇筑', "num": yiJiaozhu, "bili": toPercent(yiJiaozhu / MonitorStringList.length)});
+                    tempList.push({ "name": '已完成', "num": yiWancheng, "bili": toPercent(yiWancheng / MonitorStringList.length) });
+                    console.log(tempList);
+                    constdeviceTongjitable.reload({ id: 'constdeviceTongjiId', data: tempList });
+                    //console.log(MonitorStringList);
+                }, datatype: "json"
+            });
+
+
+
+        }, datatype: "json"
+    });
+   
+    function GetDeviceInfo() {
+        $.ajax({
+            url: window.parent.servicesurl + "/api/Device/GetDeviceInfo", type: "get",
+            success: function (data) {
+                if (data == "") {
+                    layer.msg("无自动化监测设备信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    constPhotoTable.reload({ id: 'constPhotoTableId', data: [] });
+                }
+                else {
+                    var deviceinfos = JSON.parse(data);
+                    devicedatas = [];
+                    for (var i in deviceinfos) {
+                        var devicedata = new Object;
+                        devicedata.id = deviceinfos[i].Id;
+                        devicedata.code = deviceinfos[i].Code;
+                        devicedata.sbmc = deviceinfos[i].SBMC;
+                        devicedata.sbbh = deviceinfos[i].SBBH;
+                        devicedata.sbxh = deviceinfos[i].SBXH;
+                        devicedata.sblx = deviceinfos[i].SBLX;
+                        devicedata.gdfs = deviceinfos[i].GDFS;
+                        devicedata.cjsj = deviceinfos[i].CJSJ;
+                        devicedata.bsm = deviceinfos[i].BSM;
+                        devicedata.bz = deviceinfos[i].BZ;
+
+                        devicedatas.push(devicedata);
+                    }
+                   // constPhotoTable.reload({ id: 'constPhotoTableId', data: devicedatas });
+                }
+            }, datatype: "json"
+        });
+    }
+}
