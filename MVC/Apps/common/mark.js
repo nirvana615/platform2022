@@ -188,7 +188,7 @@ function pointMark() {
                     }
                 }
             }
-        }
+        
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
     //右击结束标注
