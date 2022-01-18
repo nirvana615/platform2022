@@ -338,7 +338,7 @@ function GetUserAllModelProjects() {
                                     task.icon = MODELICON;
 
                                     task.title = modelprojectdata[i].ModelTasks.TaskList[j].RWMC;
-                                    task.path = modelprojectdata[i].ModelTasks.TaskList[j].RWBM + modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
+                                    task.path =  modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
                                     task.modelView = modelprojectdata[i].ModelTasks.TaskList[j].MXSJ;
 
                                     if (modelprojectdata[i].ModelTasks.TaskList[j].MXLJ != null) {
@@ -393,7 +393,7 @@ function GetUserAllModelProjects() {
                                     task.icon = MODELICON;
 
                                     task.title = modelprojectdata[i].ModelTasks.TaskList[j].RWMC;
-                                    task.path = modelprojectdata[i].ModelTasks.TaskList[j].RWBM + modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
+                                    task.path = modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
                                     task.modelView = modelprojectdata[i].ModelTasks.TaskList[j].MXSJ;
 
                                     if (modelprojectdata[i].ModelTasks.TaskList[j].MXLJ != null) {

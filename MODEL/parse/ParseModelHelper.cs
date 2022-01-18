@@ -159,6 +159,14 @@ namespace MODEL
                 {
                     modelTask.MXSJ = row[17].ToString();
                 }
+                if (string.IsNullOrEmpty(row[19].ToString()))
+                {
+                    modelTask.MXLJ = null;
+                }
+                else
+                {
+                    modelTask.MXLJ = row[19].ToString();
+                }
                 return modelTask;
             }
             catch (Exception ex)

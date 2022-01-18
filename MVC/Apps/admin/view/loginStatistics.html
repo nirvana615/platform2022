@@ -87,7 +87,10 @@
             </div>
         </div>
         <div class="layui-card">
-            <div class="layui-card-header layui-font-24">报表统计</div>
+            <div class="layui-card-header layui-font-24">
+                <li>
+            报表统计
+            </div>
             <div class="layui-card-body">
                 <div class="layui-card">
                     <div class="layui-card-header layui-font-12" style="border-bottom:2px solid #a7a9a9;margin-top:-20px">系统报表</div>
@@ -148,16 +151,75 @@
                 <div class="layui-card">
                     <div class="layui-card-header layui-font-12" style="border-bottom:2px solid #a7a9a9">用户报表</div>
                     <div class="layui-card-body">
-                        <div class="layui-row" style="position:relative">
+                        <div class="layui-row" style="position:relative;margin-top:20px;">
                             <div class="layui-col-md6">
-                                <div id="login_allusersort" style="width: 100%;height:400px;"></div>
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs5" style="margin:10px 10px">
+                                        <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
+                                            <div class="panel-body" style="margin:5px 5px;">
+                                                <div class="panel-title">
+                                                    <span class="label layui-bg-red" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
+                                                    <h5>总登录次数</h5>
+                                                </div>
+                                                <div class="panel-content">
+                                                    <h1 id="user_all" class="no-margins" style="color:red">--</h1>
+                                                    <small>当前分类总记录数</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs5" style="margin:10px 10px">
+                                        <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
+                                            <div class="panel-body" style="margin:5px 5px;">
+                                                <div class="panel-title">
+                                                    <span class="label layui-bg-blue" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
+                                                    <h5>本年登录次数</h5>
+                                                </div>
+                                                <div class="panel-content">
+                                                    <h1 id="user_year" class="no-margins" style="color:dodgerblue">--</h1>
+                                                    <small>当前分类总记录数</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="layui-row">
+                                    <div class="layui-col-xs5" style="margin:10px 10px">
+                                        <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
+                                            <div class="panel-body" style="margin:5px 5px;">
+                                                <div class="panel-title">
+                                                    <span class="label layui-bg-orange" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
+                                                    <h5>本月登录次数</h5>
+                                                </div>
+                                                <div class="panel-content">
+                                                    <h1 id="user_month" class="no-margins" style="color:orange">--</h1>
+                                                    <small>当前分类总记录数</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs5" style="margin:10px 10px">
+                                        <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
+                                            <div class="panel-body" style="margin:5px 5px;">
+                                                <div class="panel-title">
+                                                    <span class="label layui-bg-green" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
+                                                    <h5>今日登录次数</h5>
+                                                </div>
+                                                <div class="panel-content">
+                                                    <h1 id="user_day" class="no-margins" style="color:green">--</h1>
+                                                    <small>当前分类总记录数</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
 
                             </div>
                             <div class="layui-col-md6">
                                 <div id="login_allcount" style="width: 95%;height:400px;"></div>
-                                <div style="position:absolute; top:10px;right:100px;">
-                                    <select id="login_month" name="login_month" style="border:1px solid #e6e6e6"></select>
-                                </div>
                             </div>
                         </div>
                         <div style="position:absolute; top:10px;right:100px;">
@@ -165,7 +227,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">用户名称</label>
                                     <div class="layui-input-inline">
-                                        <select name="modules" lay-verify="required" lay-search="">
+                                        <select id="usernameid" name="username"  lay-verify="test" lay-search="">
                                             <option value="">直接选择或搜索选择</option>
 
                                         </select>
@@ -206,6 +268,7 @@
         var yearcount = null;;//本年登录次数
         var monthcount = null;;//本月登录次数
         var daycount = null;;//当日登录次数
+        var usernames = [];//所用用户名称
         form.render();
         GetSystemInfo();//获取系统类型
         ///
@@ -249,17 +312,12 @@
                     var result = JSON.parse(data);
                     if (result.code == 1) {
                         var databasedatas = JSON.parse(result.data);
-                        allcount = null;//总登录次数
-                        yearcount = null;;//本年登录次数
                         monthcount = null;;//本月登录次数
                         var times = [];
                         for (var i in databasedatas) {
                             allcount += databasedatas[i].COUNT;//all
                             if (databasedatas[i].TIME.substr(0, 7) == date.substr(0, 7)) {
                                 monthcount += databasedatas[i].COUNT;//月
-                            }
-                            if (databasedatas[i].TIME.substr(0, 4) == date.substr(0, 4)) {
-                                yearcount += databasedatas[i].COUNT;//年
                             }
                             
                         }
@@ -368,13 +426,31 @@
                     var result = JSON.parse(data);
                     if (result.code == 1) {
                         var databasedatas = JSON.parse(result.data);
-                        
+                        allcount = null;//总登录次数
+                        yearcount = null;;//本年登录次数
+                        var userIds = [];
+                        var times = [];
                         for (var i in databasedatas) {
-                            if (years.indexOf(databasedatas[i].TIME) == -1) {
-                                years.push(databasedatas[i].TIME);
+                            allcount += databasedatas[i].COUNT;//all
+                            if (databasedatas[i].TIME.substr(0, 4) == date.substr(0, 4)) {
+                                yearcount += databasedatas[i].COUNT;//年
                             }
-                        }
+                            if (years.indexOf(databasedatas[i].TIME) == -1) {
+                                years.push(databasedatas[i].TIME);//获取年份
+                            }
+                            if (userIds.indexOf(databasedatas[i].UserId) == -1) {
+                                userIds.push(databasedatas[i].UserId);
+                                var user = new Object;
+                                user.userid = databasedatas[i].UserId;
+                                user.username = databasedatas[i].AliasName;
+                                usernames.push(user);//获取用户名
+                            }
 
+                        }
+                        //头部数据统计
+                        $('#count_year').text(yearcount);
+                        $('#count_all').text(allcount);
+                        
                         //
                         if (years.length > 0) {
                             for (var i in years) {
@@ -400,7 +476,20 @@
                                 }
                             }
                         };
-                       
+                        //
+                        if (usernames.length > 0) {
+                            for (var i in usernames) {
+                                if (i == 0) {
+                                    document.getElementById("usernameid").innerHTML += '<option value="' + usernames[i].userid + '" selected>' + usernames[i].username + '</option>';
+                                }
+                                else {
+                                    document.getElementById("usernameid").innerHTML += '<option value="' + usernames[i].userid + '">' + usernames[i].username + '</option>';
+                                }
+                            }
+                        };
+
+                        form.render('select');
+
                         loginBarChart(date.substr(0, 4));//系统柱状图
                         sysPieChar(date.substr(0, 4));//分系统饼状图
                         sysBarChart(date.substr(0, 4), monitor);
@@ -555,353 +644,35 @@
                                     
                                 }
                             };
-                            //前十名
-                            var title_top = systemName+'前十名';
-                            SystemUserYearTopTen(title_top, yearslabel.slice(0, 10), yearsdata.slice(0, 10));
-                            //后十名
-                            var title_last = systemName+ '后十名';
-                            SystemUserYearLastTen(title_last,yearslabel.slice(yearslabel.length - 10, yearslabel.length).reverse(), yearsdata.slice(yearsdata.length - 10, yearsdata.length).reverse());
+                            if (yearslabel.length <= 10) {
+                                //前十名
+                                var title_top = systemName + '前十名';
+                                SystemUserYearTopTen(title_top, yearslabel, yearsdata);
+                                //后十名
+                                var title_last = systemName + '后十名';
+                                SystemUserYearLastTen(title_last, yearslabel.reverse(), yearsdata.reverse());
+
+                            }
+                            else {
+                                //前十名
+                                var title_top = systemName + '前十名';
+                                SystemUserYearTopTen(title_top, yearslabel.slice(0, 10), yearsdata.slice(0, 10));
+                                //后十名
+                                var title_last = systemName + '后十名';
+                                SystemUserYearLastTen(title_last, yearslabel.slice(yearslabel.length - 10, yearslabel.length).reverse(), yearsdata.slice(yearsdata.length - 10, yearsdata.length).reverse());
+
+                            }
                             
                         }
                     }
                 }
             }, datatype: "json"
         });
+        //
+
+
         ///
-        ///
-        //报表统计
-        ///
-        //系统用户和年度分组(年前十、后十，柱状图)
-        //$.ajax({
-        //    url: window.parent.servicesurl + "/api/LoginUser/GetLoginUserYearInfo", type: "get", data: {},
-        //    success: function (data) {
-        //        if (data == "") {
-        //            layer.msg("无数据信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-        //        }
-        //        else {
-        //            var result = JSON.parse(data);
-        //            if (result.code == 1) {
-        //                var databasedatas = JSON.parse(result.data);
-        //                for (var i in databasedatas) {
-        //                    if (years.indexOf(databasedatas[i].TIMES)==-1) {
-        //                        years.push(databasedatas[i].TIMES);
-        //                    }
-        //                    if (databasedatas[i].TIMES == year) {
-        //                        yearcount += databasedatas[i].COUNT;//头部数据统计当年登录次数
-        //                    }
-        //                    allcount += databasedatas[i].COUNT;//头部数据统计总登录次数
-
-        //                }
-        //                //头部数据统计总登录次数
-        //                $('#count_all').text(allcount);
-        //                //头部数据统计当年登录次数
-        //                $('#count_year').text(yearcount);
-
-
-        //                //
-        //                if (years.length > 0) {
-        //                    for (var i in years) {
-        //                        if (years[i] == year) {
-        //                            document.getElementById("login_year").innerHTML += '<option value="' + years[i] + '" selected>' + years[i] + '</option>';
-        //                        }
-        //                        else {
-        //                            document.getElementById("login_year").innerHTML += '<option value="' + years[i] + '">' + years[i] + '</option>';
-        //                        }
-        //                    }
-        //                };
-        //                var yearsdata = [];
-        //                var yearslabel = [];
-
-
-        //                loginBarChart(year);
-        //                //监听年份
-        //                $("#login_year").bind("change", function () {
-        //                    var typeId = $(this).val();
-        //                    loginBarChart(typeId)
-        //                });
-        //                //
-        //                function loginBarChart(time) {
-        //                    yearsdata = [];
-        //                    yearslabel = [];
-        //                    for (var i in databasedatas) {
-        //                        if (databasedatas[i].TIMES == time) {
-        //                            yearsdata.push(databasedatas[i].COUNT);
-        //                            yearslabel.push(databasedatas[i].AliasName);
-        //                        }
-        //                    }
-        //                    title = '登录系统次数前十名';
-        //                    LoginAlluserYearCount(title, yearslabel.slice(0, 10), yearsdata.slice(0, 10));
-        //                    //前十名
-        //                    $("#login_topten").on("click", function () {
-        //                        title = '登录系统次数前十名';
-        //                        LoginAlluserYearCount(title, yearslabel.slice(0, 10), yearsdata.slice(0, 10));
-        //                    });
-        //                    //后十名
-        //                    $("#login_lastten").on("click", function () {
-        //                        title = '登录系统次数后十名';
-        //                        LoginAlluserYearCount(title, yearslabel.slice(yearslabel.length - 10, yearslabel.length).reverse(), yearsdata.slice(yearsdata.length - 10, yearsdata.length).reverse());
-        //                    });
-        //                }
-
-
-        //            }
-
-
-        //        }
-        //    }, datatype: "json"
-        //});
-        //// //系统月分组
-        //$.ajax({
-        //    url: window.parent.servicesurl + "/api/LoginUser/GetLoginUserMonthInfo", type: "get", data: {},
-        //    success: function (data) {
-        //        if (data == "") {
-        //            layer.msg("无数据信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-        //        }
-        //        else {
-        //            var result = JSON.parse(data);
-        //            if (result.code == 1) {
-        //                var databasedatas = JSON.parse(result.data);
-
-        //                var monthsdata = [];
-        //                var monthslabel = [];
-        //                for (var i in databasedatas) {
-        //                    if (years.indexOf(databasedatas[i].TIMES.substr(0, 4)) == -1) {
-        //                        years.push(databasedatas[i].TIMES.substr(0, 4));
-        //                    }
-        //                    //头部数据统计当月登录次数
-        //                    if (databasedatas[i].TIMES.substr(0, 4) == year && Number(databasedatas[i].TIMES.substr(5, 7)) == month) {
-        //                        monthcount += databasedatas[i].COUNT;//头部数据统计当月登录次数
-        //                    }
-        //                }
-        //                //头部数据统计当月登录次数
-        //                $('#count_month').text(monthcount);
-
-
-        //                //初始化年份SELECT
-        //                if (years.length > 0) {
-        //                    for (var i in years) {
-        //                        if (years[i] == year) {
-        //                            document.getElementById("login_month").innerHTML += '<option value="' + years[i] + '" selected>' + years[i] + '</option>';
-        //                        }
-        //                        else {
-        //                            document.getElementById("login_month").innerHTML += '<option value="' + years[i] + '">' + years[i] + '</option>';
-        //                        }
-        //                    }
-        //                };
-
-        //                for (var i in databasedatas) {
-        //                    if (databasedatas[i].TIMES.substr(0, 4) == year) {
-        //                        monthsdata.push(databasedatas[i].COUNT);
-        //                        var time = databasedatas[i].TIMES.substr(5, 7) + '月'
-        //                        monthslabel.push(time);
-        //                    }
-        //                }
-        //                LoginAllMonthCount(monthslabel, monthsdata);
-
-        //                $("#login_month").bind("change", function () {
-        //                    var typeId = $(this).val();
-        //                    monthsdata = [];
-        //                    monthslabel = [];
-        //                    for (var i in databasedatas) {
-        //                        if (databasedatas[i].TIMES.substr(0, 4) == typeId) {
-        //                            monthsdata.push(databasedatas[i].COUNT);
-        //                            var time = databasedatas[i].TIMES.substr(5, 7) + '月'
-        //                            monthslabel.push(time);
-        //                        }
-        //                    }
-
-        //                    LoginAllMonthCount(monthslabel, monthsdata);
-        //                });
-
-        //            }
-
-         
-        //        }
-        //    }, datatype: "json"
-        //});
-        ////分系统月份分组(分系统统计饼状图（年）\折线图（月）\柱状图)
-        //$.ajax({
-        //    url: window.parent.servicesurl + "/api/LoginUser/GetLoginSysMonthInfo", type: "get", data: {},
-        //    success: function (data) {
-        //        if (data == "") {
-        //            layer.msg("无数据信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-        //        }
-        //        else {
-        //            var result = JSON.parse(data);
-        //            if (result.code == 1) {
-        //                var databasedatas = JSON.parse(result.data);
-        //                var sysYearPieDatas = [];//饼状图数据
-        //                var sysMonthLineDatas = [];//折线图数据
-
-        //                for (var i in databasedatas) {
-        //                    if (years.indexOf(databasedatas[i].TIMES.substr(0, 4)) == -1) {
-        //                        years.push(databasedatas[i].TIMES.substr(0, 4));
-        //                    }
-        //                }
-        //                //初始化年份SELECT
-        //                if (years.length > 0) {
-        //                    for (var i in years) {
-        //                        if (years[i] == year) {
-        //                            document.getElementById("sys_year").innerHTML += '<option value="' + years[i] + '" selected>' + years[i] + '</option>';
-        //                        }
-        //                        else {
-        //                            document.getElementById("sys_year").innerHTML += '<option value="' + years[i] + '">' + years[i] + '</option>';
-        //                        }
-        //                    }
-        //                };
-
-        //                sysPieChar(year);
-        //                sysLineChar(year);
-        //                sysBarChar(year);
-        //                //监听年份（SELECT）
-        //                $("#sys_year").bind("change", function () {
-        //                    var time = $(this).val();
-        //                    sysPieChar(time);
-        //                    sysLineChar(time);
-        //                    sysBarChar(time)
-        //                });
-
-        //                //各系统年百分比
-        //                function sysPieChar(time) {
-        //                    sysYearPieDatas = [];
-        //                    for (var i in systemlist) {
-        //                        var piedata = new Object;
-        //                        var data = null;
-        //                        for (var j in databasedatas) {
-        //                            if (systemlist[i].syscode == databasedatas[j].SYSCODE) {
-        //                                if (databasedatas[j].TIMES.substr(0, 4) == time) {
-        //                                    data = databasedatas[j].COUNT + data;
-        //                                }
-        //                            }
-        //                        }
-        //                        piedata.value = data;
-        //                        piedata.name = systemlist[i].sysalias
-        //                        sysYearPieDatas.push(piedata);
-        //                    }
-        //                    SystemPieChart(sysYearPieDatas);
-        //                }
-
-        //                //各系统年月登录次数
-        //                function sysLineChar(time) {
-        //                    sysMonthLineDatas = [];
-        //                    var syslabel = [];
-        //                    var YMtime = "";
-        //                    for (var i in systemlist) {
-        //                        var Linedata = new Object;
-        //                        var datas = [];
-        //                        for (var k = 1; k <= 12; k++) {
-        //                            if (k < 10) {
-        //                                YMtime = String(time) + "-0" + String(k);
-        //                            }
-        //                            else {
-        //                                YMtime = String(time) + "-" + String(k);
-        //                            }
-        //                            for (var j in databasedatas) {
-        //                                if (systemlist[i].syscode == databasedatas[j].SYSCODE) {
-        //                                    if (YMtime == databasedatas[j].TIMES) {
-        //                                        datas[k-1]=databasedatas[j].COUNT
-
-        //                                    }
-
-        //                                }
-        //                            }
-
-        //                        }
-
-        //                        syslabel.push(systemlist[i].sysalias);
-        //                        Linedata.data = datas;
-        //                        Linedata.name = systemlist[i].sysalias
-        //                        sysMonthLineDatas.push(Linedata);
-
-
-        //                    }
-        //                    SystemLineChart(syslabel, sysMonthLineDatas);
-        //                }
-
-        //                //各系统年柱状图
-        //                function sysBarChar(time) {
-        //                    var labels = [];
-        //                    var datas = [];
-        //                    for (var i in systemlist) {
-        //                        var data = null;
-        //                        for (var j in databasedatas) {
-        //                            if (systemlist[i].syscode == databasedatas[j].SYSCODE) {
-        //                                if (databasedatas[j].TIMES.substr(0, 4) == time) {
-        //                                    data = databasedatas[j].COUNT + data;
-        //                                }
-        //                            }
-        //                        }
-        //                        datas.push(data);
-        //                        labels.push(systemlist[i].sysalias);
-        //                    }
-        //                    SystemYearBarChart(labels, datas);
-        //                }
-
-        //            }
-
-
-        //        }
-        //    }, datatype: "json"
-        //});
-        /////
-        ////分系统用户和年度分组(分系统年前十、后十，柱状图)
-        //$.ajax({
-        //    url: window.parent.servicesurl + "/api/LoginUser/GetLoginSysUserYearInfo", type: "get", data: {},
-        //    success: function (data) {
-        //        if (data == "") {
-        //            layer.msg("无数据信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-        //        }
-        //        else {
-        //            var result = JSON.parse(data);
-        //            if (result.code == 1) {
-        //                var databasedatas = JSON.parse(result.data);
-
-        //                var yearsdata = [];
-        //                var yearslabel = [];
-
-
-        //                SysBarChart(time, system);
-        //                //监听年份
-        //                $("#sys_year").bind("change", function () {
-        //                    var typeId = $(this).val();
-        //                    SysBarChart(time, system);
-        //                });
-        //                //
-        //                function SysBarChart(time,system) {
-        //                    yearsdata = [];
-        //                    yearslabel = [];
-        //                    for (var i in databasedatas) {
-        //                        if (databasedatas[i].TIMES == time) {
-        //                            if (databasedatas[i].SYSCODE == system) {
-        //                                yearsdata.push(databasedatas[i].COUNT);
-        //                                yearslabel.push(databasedatas[i].AliasName);
-        //                            }
-
-        //                        }
-        //                    }
-        //                    title = '登录系统次数前十名';
-        //                    LoginAlluserYearCount(title, yearslabel.slice(0, 10), yearsdata.slice(0, 10));
-        //                    //前十名
-        //                    $("#sys_topten").on("click", function () {
-        //                        title = '登录系统次数前十名';
-        //                        LoginAlluserYearCount(title, yearslabel.slice(0, 10), yearsdata.slice(0, 10));
-        //                    });
-        //                    //后十名
-        //                    $("#sys_lastten").on("click", function () {
-        //                        title = '登录系统次数后十名';
-        //                        LoginAlluserYearCount(title, yearslabel.slice(yearslabel.length - 10, yearslabel.length).reverse(), yearsdata.slice(yearsdata.length - 10, yearsdata.length).reverse());
-        //                    });
-        //                }
-
-
-        //            }
-
-
-        //        }
-        //    }, datatype: "json"
-        //});
-        ////
-        //年前十、后十，柱状图
+        //系统年前十、后十名用户，柱状图
         function LoginAlluserYearCount(title, lables, datas) {
 
             var chartDom = document.getElementById('login_allusersort');
@@ -1132,7 +903,7 @@
         }
        
         //
-        //各系统年前十、后十名用户，柱状图
+        //各系统年前十名用户，柱状图
         function SystemUserYearTopTen(title,lables,datas) {
             var chartDom = document.getElementById('login_sys_topbaryear');
             var myChart = echarts.init(chartDom);
@@ -1196,7 +967,7 @@
 
             option && myChart.setOption(option);
         }
-        //各系统年前十、后十名用户，柱状图
+        //各系统年后十名用户，柱状图
         function SystemUserYearLastTen(title,lables,datas) {
             var chartDom = document.getElementById('login_sys_lastbaryear');
             var myChart = echarts.init(chartDom);

@@ -50,7 +50,7 @@ function LoadNewModelTask() {
             , maxmin: true
             , moveOut: true
             , resize: false
-            , content: '<!--任务管理--> <div class="layui-tab layui-tab-brief" lay-filter="demo" style="margin:0px;"> <ul class="layui-tab-title"> <li class="layui-this" style="width:29%;padding-top: 0px;">待处理任务</li> <li style="width:30%;padding-top: 0px;">正在处理任务</li> <li style="width:29%;padding-top: 0px;">已完成任务</li> </ul> <div class="layui-tab-content"> <div class="layui-tab-item layui-show"> <table class="layui-hide" id="newtasktable_Pending" lay-filter="newtasktable_Pending"></table> <script type="text/html" id="barDemo_Pending"> <a class="layui-btn layui-bg-gray layui-btn-xs" title="查看" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Pending_detail"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" title="编辑" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Pending_edit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> </script> </div> <div class="layui-tab-item"> <table class="layui-hide" id="newtasktable_Processing" lay-filter="newtasktable_Processing"></table> <script type="text/html" id="barDemo_Processing"> <a class="layui-btn layui-bg-gray layui-btn-xs" title="查看" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Processing_detail"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" title="编辑" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Processing_edit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> <div class="layui-tab-item"> <table class="layui-hide" id="newtasktable_Finished" lay-filter="newtasktable_Finished"></table> <script type="text/html" id="barDemo_Finished"> <a class="layui-btn layui-bg-gray layui-btn-xs" title="查看" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Finished_detail"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> </div> </div>'
+            , content: '<!--任务管理--> <div class="layui-tab layui-tab-brief" lay-filter="demo" style="margin:0px;"> <ul class="layui-tab-title"> <li class="layui-this" style="width:29%;padding-top: 0px;">待处理任务</li> <li style="width:30%;padding-top: 0px;">正在处理任务</li> <li style="width:29%;padding-top: 0px;">已完成任务</li> </ul> <div class="layui-tab-content"> <div class="layui-tab-item layui-show"> <table class="layui-hide" id="newtasktable_Pending" lay-filter="newtasktable_Pending"></table> <script type="text/html" id="barDemo_Pending"> <a class="layui-btn layui-bg-gray layui-btn-xs" title="查看" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Pending_detail"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" title="编辑" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Pending_edit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> </script> </div> <div class="layui-tab-item"> <table class="layui-hide" id="newtasktable_Processing" lay-filter="newtasktable_Processing"></table> <script type="text/html" id="barDemo_Processing"> <a class="layui-btn layui-bg-gray layui-btn-xs" title="查看" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Processing_detail"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <!--<a class="layui-btn layui-bg-gray layui-btn-xs" title="编辑" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Processing_edit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>--></script> </div> <div class="layui-tab-item"> <table class="layui-hide" id="newtasktable_Finished" lay-filter="newtasktable_Finished"></table> <script type="text/html" id="barDemo_Finished"> <a class="layui-btn layui-bg-gray layui-btn-xs" title="查看" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Finished_detail"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> </div> </div>'
             , zIndex: layer.zIndex
             , success: function (layero) {
                 layer.setTop(layero);
@@ -138,26 +138,25 @@ function LoadNewModelTask() {
                         , layEvent = obj.event; //获得 lay-event 对应的值
                     if (layEvent === 'Processing_detail') {
                         ModelTaskInfo(obj.data.Id, "view");
-
                     }
-                    else if (layEvent === 'Processing_edit') {
-                        layer.confirm('是否确认完成?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
-                            //同步更新缓存对应的值
-                            data.RWZT = "已完成";
-                            for (var i in newmodeltasktableProcess) {
-                                if (newmodeltasktableProcess[i].Id == data.Id) {
-                                    newmodeltasktableProcess.splice(i, 1);
-                                }
-                            }
-                            newmodeltasktableFinished.unshift(data);
-                            newTaskTableProcessing.reload({ id: 'newTaskTableProcessingid', data: newmodeltasktableProcess });
-                            newTaskTableFinished.reload({ id: 'newTaskTableFinishedid', data: newmodeltasktableFinished });
-                            obj.del();
-                            //更新任务状态
-                            UpdateModelTaskStatus(data);
-                            layer.close(index);
-                        });
-                    }
+                    //else if (layEvent === 'Processing_edit') {
+                    //    layer.confirm('是否确认完成?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                    //        //同步更新缓存对应的值
+                    //        data.RWZT = "已完成";
+                    //        for (var i in newmodeltasktableProcess) {
+                    //            if (newmodeltasktableProcess[i].Id == data.Id) {
+                    //                newmodeltasktableProcess.splice(i, 1);
+                    //            }
+                    //        }
+                    //        newmodeltasktableFinished.unshift(data);
+                    //        newTaskTableProcessing.reload({ id: 'newTaskTableProcessingid', data: newmodeltasktableProcess });
+                    //        newTaskTableFinished.reload({ id: 'newTaskTableFinishedid', data: newmodeltasktableFinished });
+                    //        obj.del();
+                    //        //更新任务状态
+                    //        UpdateModelTaskStatus(data);
+                    //        layer.close(index);
+                    //    });
+                    //}
                 });
 
 

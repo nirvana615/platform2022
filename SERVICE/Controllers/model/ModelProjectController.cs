@@ -21,9 +21,7 @@ namespace SERVICE.Controllers
     {
         private static Logger logger = Logger.CreateLogger(typeof(ModelProjectController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
-        //service 的Web.config中定义modeldir,绝对路径
-        private static string modeldir = ConfigurationManager.AppSettings["modeldir"] != null ? ConfigurationManager.AppSettings["modeldir"].ToString() : string.Empty;
-
+       
         /// <summary>
         /// 新建项目
         /// </summary>
@@ -160,66 +158,7 @@ namespace SERVICE.Controllers
                                         ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
                                         if (modelTask != null)
                                         {
-                                            try
-                                            {
-                                                string taskdirname = modeldir + modelTask.RWBM;
-
-                                                if (Directory.Exists(taskdirname))
-                                                {
-                                                    #region 任务已建模
-                                                    DirectoryInfo taskdir = new DirectoryInfo(taskdirname);
-                                                    FileInfo[] fileInfos = taskdir.GetFiles("*.json", SearchOption.AllDirectories);
-                                                    if (fileInfos.Length > 0)
-                                                    {
-                                                        //modelTask.MXLJ = fileInfos[0].ToString();
-                                                        string jsonName = fileInfos[0].FullName;
-                                                        string[] path = jsonName.Split(new string[] { modelTask.RWBM.ToString() }, StringSplitOptions.RemoveEmptyEntries);
-                                                        
-                                                        modelTask.MXLJ = path.Last().Replace("\\", "/");
-                                                    }
-                                                    else
-                                                    {
-                                                        modelTask.MXLJ = null;
-                                                    }
-
-                                                    #endregion
-                                                }
-                                                else
-                                                {
-                                                    #region 任务未建模
-                                                    modelTask.MXLJ = null;
-                                                    #endregion
-                                                }
-
-                                                //// 使用 System.IO.Directory.GetFiles() 函数获取所有文件
-                                                //string modelFilePath = modeldir + @"\AllModel" + @"\" + modelTask.RWBM.ToString();
-                                                //string jsonname = string.Empty; ;
-                                                //DirectoryInfo dir = new DirectoryInfo(modelFilePath);
-                                                //foreach (FileInfo file in dir.GetFiles("*.json", SearchOption.AllDirectories))
-                                                //{
-                                                //    jsonname = file.FullName;
-                                                //    if (jsonname.Contains(".json"))
-                                                //    {
-                                                //        break;
-                                                //    }
-                                                //}
-                                                //string[] path = jsonname.Split(new string[] { "data" }, StringSplitOptions.RemoveEmptyEntries);
-                                                //if (path.Last() == null)
-                                                //{
-                                                //    modelTask.MXLJ = null;
-                                                //}
-                                                //else
-                                                //{
-                                                //    modelTask.MXLJ = path.Last().Replace("\\", "/");
-                                                //}
-
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                logger.Error("读取JSON文件错误原因:" + ex.ToString());
-                                                modelTask.MXLJ = null;
-                                            }
-
+                                           
                                             Tasks.Add(modelTask);
 
                                         }
@@ -309,43 +248,6 @@ namespace SERVICE.Controllers
                                         ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
                                         if (modelTask != null)
                                         {
-                                            try
-                                            {
-                                                string taskdirname = modeldir + modelTask.RWBM;
-
-                                                if (Directory.Exists(taskdirname))
-                                                {
-                                                    #region 任务已建模
-                                                    DirectoryInfo taskdir = new DirectoryInfo(taskdirname);
-                                                    FileInfo[] fileInfos = taskdir.GetFiles("*.json", SearchOption.AllDirectories);
-                                                    if (fileInfos.Length > 0)
-                                                    {
-                                                        //modelTask.MXLJ = fileInfos[0].ToString();
-                                                        string jsonName = fileInfos[0].FullName;
-                                                        string[] path = jsonName.Split(new string[] { modelTask.RWBM.ToString() }, StringSplitOptions.RemoveEmptyEntries);
-
-                                                        modelTask.MXLJ = path.Last().Replace("\\", "/");
-                                                    }
-                                                    else
-                                                    {
-                                                        modelTask.MXLJ = null;
-                                                    }
-
-                                                    #endregion
-                                                }
-                                                else
-                                                {
-                                                    #region 任务未建模
-                                                    modelTask.MXLJ = null;
-                                                    #endregion
-                                                }
-
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                logger.Error("读取JSON文件错误原因:" + ex.ToString());
-                                                modelTask.MXLJ = null;
-                                            }
                                             Tasks.Add(modelTask);
                                         }
 
