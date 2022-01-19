@@ -13,7 +13,7 @@ util.fixbar({
         }
         else if (type === 'bar6') {
 
-            biaozhuMangan();//标注
+            mark();//标注
         }
 
         else if (type === 'bar7') {

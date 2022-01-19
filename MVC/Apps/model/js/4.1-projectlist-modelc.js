@@ -4,7 +4,7 @@ var modelprojectlistyear = [];//按时间组织
 var newprojecttype = false;
 
 
-layer.open({
+var toIndex =layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
     , area: ['340px', '90%']
@@ -488,7 +488,7 @@ function GetUserAllModelProjects(newprojectcode) {
                     AddEntitiesInViewer(projectentities);
                     FlytoCurrentProjectExtent(newprojectzxjd, newprojectzxwd, 8000.0);
                 }
-                
+                viewer.scene.primitives.remove(curtileset);
 
             }
             else {
@@ -588,7 +588,7 @@ function ModelProjectNodeClick(obj) {
             FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
         }
     }
-   
+    
 };
 
 //项目树（项目列表+目标）节点操作：add\update\del

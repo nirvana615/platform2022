@@ -185,7 +185,10 @@ function ModelTaskInfo(id, style) {
                                 
                                 form.render();
                                 form.render('select');
-                                
+                                //调整视角
+                                $("#modelview").on("click", function () {
+                                    modelview(id, taskinfo.RWBM);
+                                });
                             }
                             
                         }, datatype: "json"
@@ -226,10 +229,7 @@ function ModelTaskInfo(id, style) {
             });
         }
 
-        //调整视角
-        $("#modelview").on("click", function () {
-            modelview(id);
-        });
+        
     }
     else if (style == "add") {
         //新建任务----必须选择当前项目

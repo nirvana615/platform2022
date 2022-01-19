@@ -278,8 +278,10 @@ layer.min(toIndex);
 ////
 
 //获取用户所有项目列表
-function GetUserAllModelProjects() {
+function GetUserAllModelProjects(newprojectcode) {
     //TODO 新增项目位置及标注
+    var newprojectzxjd = null;
+    var newprojectzxwd = null;
     DelEntitiesInViewer(projectentities);//移除项目标注图标
     projectentities = [];
 
@@ -332,6 +334,15 @@ function GetUserAllModelProjects() {
                             prj.b = modelprojectdata[i].ModelProjects.ZXWD;
                             prj.l = modelprojectdata[i].ModelProjects.ZXJD;
                             prj.type = "project";
+                            if (newprojectcode != null) {
+                                if (modelprojectdata[i].ModelProjects.XMBM == newprojectcode.substr(0, 10)) {
+                                    prj.spread = true;
+                                    newprojectzxjd = prj.l;
+                                    newprojectzxwd = prj.b;
+                                    xzq.spread = true;
+                                }
+                            }
+
                             //prj.icon = PROJECTICON;
                             var tasks = [];
 
@@ -345,7 +356,7 @@ function GetUserAllModelProjects() {
                                     task.icon = MODELICON;
 
                                     task.title = modelprojectdata[i].ModelTasks.TaskList[j].RWMC;
-                                    task.path =  modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
+                                    task.path = modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
                                     task.modelView = modelprojectdata[i].ModelTasks.TaskList[j].MXSJ;
 
                                     if (modelprojectdata[i].ModelTasks.TaskList[j].MXLJ != null) {
@@ -400,7 +411,7 @@ function GetUserAllModelProjects() {
                                     task.icon = MODELICON;
 
                                     task.title = modelprojectdata[i].ModelTasks.TaskList[j].RWMC;
-                                    task.path =  modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
+                                    task.path = modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
                                     task.modelView = modelprojectdata[i].ModelTasks.TaskList[j].MXSJ;
 
                                     if (modelprojectdata[i].ModelTasks.TaskList[j].MXLJ != null) {
@@ -423,8 +434,6 @@ function GetUserAllModelProjects() {
                     year.children = projects;
                     modelprojectlistyear.push(year);
                 }
-
-
 
                 //重载项目树：将项目列表数据ModelProjectlist给data
                 tree.reload('areaprojectlistid', {
@@ -472,17 +481,19 @@ function GetUserAllModelProjects() {
                     bs.push(modelprojectdata[i].ModelProjects.ZXWD);
                     ls.push(modelprojectdata[i].ModelProjects.ZXJD);
                 };
-
-
-
-
-
-                if ((bs.length > 0) && (ls.length > 0)) {
-                    //缩放至项目范围
-                    setTimeout(() => {
-                        FlytoExtent(Math.min.apply(null, ls) - 0.5, Math.min.apply(null, bs) - 0.5, Math.max.apply(null, ls) + 0.5, Math.max.apply(null, bs) + 0.5)
-                    }, 1000);
-                };
+                if (newprojectcode == null) {
+                    if ((bs.length > 0) && (ls.length > 0)) {
+                        //缩放至项目范围
+                        setTimeout(() => {
+                            FlytoExtent(Math.min.apply(null, ls) - 0.5, Math.min.apply(null, bs) - 0.5, Math.max.apply(null, ls) + 0.5, Math.max.apply(null, bs) + 0.5)
+                        }, 1000);
+                    };
+                }
+                else {
+                    AddEntitiesInViewer(projectentities);
+                    FlytoCurrentProjectExtent(newprojectzxjd, newprojectzxwd, 8000.0);
+                }
+                viewer.scene.primitives.remove(curtileset);
 
             }
             else {
@@ -496,6 +507,7 @@ function GetUserAllModelProjects() {
 function ModelProjectNodeClick(obj) {
     if (obj.data.type == "project") {
         if (currentprojectid == null || obj.data.id != currentprojectid) {
+
             layer.confirm('<p style="font-size:16px">是否确定将以下项目作为系统当前项目？</p><br/><p style="font-size:24px;font-weight:bold;text-align:center;">' + JSON.stringify(obj.data.title).replace(/\"/g, "") + '</p>', { title: ['消息提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei;background-color:#68bc80'], area: ['400px', '250px'], shade: 0.5, shadeClose: true, closeBtn: 0, resize: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } }, function (index) {
 
                 if (JSON.stringify(obj.data.id) != currentprojectid) {
@@ -576,12 +588,12 @@ function ModelProjectNodeClick(obj) {
             });
 
         }
-
+        else {
+            //
+            FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
+        }
     }
-    else {
-        //TODO
 
-    }
 };
 
 //项目树（项目列表+目标）节点操作：add\update\del
