@@ -25,11 +25,7 @@ namespace SERVICE.Controllers
     {
         private static Logger logger = Logger.CreateLogger(typeof(ModelTaskController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
-        //service 的Web.config中定义modeldir,绝对路径
-        private static string modeldir = ConfigurationManager.AppSettings["modeldir"] != null ? ConfigurationManager.AppSettings["modeldir"].ToString() : string.Empty;
         
-
-
         /// <summary>
         /// 新建任务
         /// </summary>
@@ -391,7 +387,7 @@ namespace SERVICE.Controllers
                 List<ModelTask> newModelTaskPending = new List<ModelTask>();//存储待处理任务
                 List<ModelTask> newModelTaskFinished = new List<ModelTask>();//存储已完成任务
                 List<ModelTask> newModelTaskProcess = new List<ModelTask>();//存储已完成任务
-                string modelTasks = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE ztm={0} ORDER BY RWCJSJ DESC", (int)MODEL.Enum.State.InUse));
+                string modelTasks = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
                 if (!string.IsNullOrEmpty(modelTasks))
                 {
                     string[] maprows = modelTasks.Split(new char[] { COM.ConstHelper.rowSplit });

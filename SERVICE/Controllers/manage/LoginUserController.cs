@@ -131,100 +131,43 @@ namespace SERVICE.Controllers
 
             return string.Empty;
         }
-        ///// <summary>
-        ///// 获取用户登录信息(月分组)
-        ///// </summary>
-        ///// <returns>用户登录记录列表</returns>
-        //[HttpGet]
-        //public string GetLoginUserMonthInfo()
-        //{
-        //    string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT LEFT(time,7) times,COUNT(LEFT(time,7)) usercount FROM manage_user_login GROUP BY LEFT(time,7) ORDER BY times ASC"));
-        //    if (!string.IsNullOrEmpty(datas))
-        //    {
-        //        List<LoginUser> logiusers = new List<LoginUser>();
+        /// <summary>
+        /// 获取单一用户登录信息
+        /// </summary>
+        /// <returns>用户登录记录列表</returns>
+        [HttpGet]
+        public string GetUserLoginInfo(int id)
+        {
+           
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT userid, LEFT(time,10) times,syscode,COUNT(LEFT(time,10)) counts FROM manage_user_login WHERE userid={0} GROUP BY userid,syscode,LEFT(time,10) ORDER BY times ASC",id));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<LoginUser> logiusers = new List<LoginUser>();
 
-        //        string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
-        //        for (int i = 0; i < rows.Length; i++)
-        //        {
-        //            LoginUser loginUser = ParseManageHelper.ParseLoginMonthUser(rows[i]);
-        //            if (loginUser != null)
-        //            {
-        //                logiusers.Add(loginUser);
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    LoginUser loginUser = ParseManageHelper.ParseLoginUser(rows[i]);
+                    if (loginUser != null)
+                    {
+                        User users = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE id={0} AND ztm={1}", loginUser.UserId, (int)MODEL.Enum.State.InUse)));
+                        if (users != null)
+                        {
+                            loginUser.UserName = users.UserName;
+                            loginUser.AliasName = users.AliasName;
+                            logiusers.Add(loginUser);
+                        }
+                    }
+                }
 
-        //            }
-        //        }
+                if (logiusers.Count > 0)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(logiusers)));
+                }
+            }
 
-        //        if (logiusers.Count > 0)
-        //        {
-        //            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(logiusers)));
-        //        }
-        //    }
+            return string.Empty;
+        }
 
-        //    return string.Empty;
-        //}
-        ///// <summary>
-        ///// 获取用户登录信息(日分组)
-        ///// </summary>
-        ///// <returns>用户登录记录列表</returns>
-        //[HttpGet]
-        //public string GetLoginUserDayInfo()
-        //{
-        //    string nowtime = SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd"));
-
-        //    string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT LEFT(time,10) times, COUNT(LEFT(time,10)) usercount FROM manage_user_login where LEFT(time,10)={0} GROUP BY LEFT(time,10)", nowtime));
-        //    if (!string.IsNullOrEmpty(datas))
-        //    {
-        //        List<LoginUser> logiusers = new List<LoginUser>();
-
-        //        string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
-        //        for (int i = 0; i < rows.Length; i++)
-        //        {
-        //            LoginUser loginUser = ParseManageHelper.ParseLoginMonthUser(rows[i]);
-        //            if (loginUser != null)
-        //            {
-        //                logiusers.Add(loginUser);
-
-        //            }
-        //        }
-
-        //        if (logiusers.Count > 0)
-        //        {
-        //            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(logiusers)));
-        //        }
-        //    }
-
-        //    return string.Empty;
-        //}
-        ///// <summary>
-        ///// 获取用户登录信息(分系统和年月分组)
-        ///// </summary>
-        ///// <returns>用户登录记录列表</returns>
-        //[HttpGet]
-        //public string GetLoginSysMonthInfo()
-        //{
-        //    string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT LEFT(time,7) times,COUNT(LEFT(time,7)) usercount,syscode FROM manage_user_login GROUP BY syscode,LEFT(time,7) ORDER BY times ASC"));
-        //    if (!string.IsNullOrEmpty(datas))
-        //    {
-        //        List<LoginUser> logiusers = new List<LoginUser>();
-
-        //        string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
-        //        for (int i = 0; i < rows.Length; i++)
-        //        {
-        //            LoginUser loginUser = ParseManageHelper.ParseLoginSysMonthUser(rows[i]);
-        //            if (loginUser != null)
-        //            {
-        //                logiusers.Add(loginUser);
-
-        //            }
-        //        }
-
-        //        if (logiusers.Count > 0)
-        //        {
-        //            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(logiusers)));
-        //        }
-        //    }
-
-        //    return string.Empty;
-        //}
     }
 }
