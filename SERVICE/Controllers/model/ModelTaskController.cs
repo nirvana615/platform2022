@@ -107,7 +107,7 @@ namespace SERVICE.Controllers
                             //企业微信推送消息
                             string message= "任务提醒：\n" + user.AliasName +":创建'"+ rwmc + "'新的模型任务，请及时处理!";
                             //企业微信推送地址
-                            string webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=3d834562-2dd6-47dd-ab58-c6ae8f0a2fc4";
+                            string webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=130fddf5-d47c-413a-836e-f095571998c9";
 
                             if (!string.IsNullOrEmpty(message))
                             {

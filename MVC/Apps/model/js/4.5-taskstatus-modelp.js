@@ -69,7 +69,7 @@ function LoadNewModelTask() {
                     , totalRow: false
                     , initSort: { field: 'RWCJSJ', type: 'desc' }
                     , cols: [[
-                        { field: 'Id', title: 'ID', width: 53, sort: true, align: "center" }
+                        { field: 'Id', title: 'ID', width: 50, sort: true, align: "center" }
                         , { field: 'RWMC', title: '任务名称', sort: true, width: 250, align: "center" }
                         , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 200, align: "center" }
                         , { field: 'RWZT', title: '任务状态', width: 150, align: "center" }
@@ -123,7 +123,7 @@ function LoadNewModelTask() {
                     , totalRow: false
                     , initSort: { field: 'RWCJSJ', type: 'desc' }
                     , cols: [[
-                        { field: 'Id', title: 'ID', width: 53, sort: true, align: "center" }
+                        { field: 'Id', title: 'ID', width: 50, sort: true, align: "center" }
                         , { field: 'RWMC', title: '任务名称', sort: true, width: 250, align: "center" }
                         , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 200, align: "center" }
                         , { field: 'RWZT', title: '任务状态', width: 150, align: "center" }
@@ -177,7 +177,7 @@ function LoadNewModelTask() {
                     , totalRow: false
                     , initSort: { field: 'RWCJSJ', type: 'desc' }
                     , cols: [[
-                        { field: 'Id', title: 'ID', width: 53, sort: true, align: "center" }
+                        { field: 'Id', title: 'ID', width: 50, sort: true, align: "center" }
                         , { field: 'RWMC', title: '任务名称', sort: true, width: 250, align: "center" }
                         , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 200, align: "center" }
                         , { field: 'RWZT', title: '任务状态', width: 150, align: "center" }

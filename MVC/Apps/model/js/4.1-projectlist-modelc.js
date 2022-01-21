@@ -40,7 +40,6 @@ var toIndex =layer.open({
             }
             , oncheck: function (obj) {
                 if (obj.checked) {
-                    modleInfo = obj.data;//标注获取模型数据标签
                     if (obj.data.type == "task") {
 
                         //for (var i in modelprojectlist) {
@@ -74,7 +73,6 @@ var toIndex =layer.open({
                 else {
                     viewer.scene.primitives.remove(curtileset);
                     AddEntitiesInViewer(projectentities);
-                    modleInfo = null;//标签
                     curtileset = null;
                 }
                 
@@ -100,7 +98,6 @@ var toIndex =layer.open({
             }
             , oncheck: function (obj) {
                 if (obj.checked) {
-                    modleInfo = obj.data;//标签
                     if (obj.data.type == "task") {
                         //for (var i in modelprojectlistyear) {
                         //    for (var j in modelprojectlistyear[i].children) {
@@ -132,7 +129,6 @@ var toIndex =layer.open({
                 }
                 else {
                     viewer.scene.primitives.remove(curtileset);
-                    modleInfo = null;//标签
                     curtileset = null;
                 }
             }
