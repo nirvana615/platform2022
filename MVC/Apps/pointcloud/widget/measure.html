@@ -1,31 +1,44 @@
 ﻿
-<div class="layui-tab layui-tab-brief" lay-filter="measurelayer" style="margin:0px;">
+<div class="layui-tab layui-tab-brief" lay-filter="measureway" style="margin:0px;">
     <ul class="layui-tab-title">
-        <li lay-id="111" class="layui-this" style="width:40%;padding-top: 10px;line-height: normal;">地形测量</li>
-        <li lay-id="222" style="width:40%;padding-top:10px;line-height:20px">模型测量</li>
+        <li lay-id="terrainMeasure" class="layui-this" style="width:40%;padding-top: 10px;line-height: normal;">地形测量</li>
+        <li lay-id="modelMeasure" style="width:40%;padding-top:10px;line-height:20px">模型测量</li>
     </ul>
 
     <div class="layui-tab-content" style="padding:0px;">
         <form class="layui-form" style="margin-top:0px;margin-left:0px;" lay-filter="measureinfoform">
+
             <div class="layui-row">
-                <div class="layui-col-md3">
-                    <label class="layui-form-label" style="width:60px;">连续测量</label>
-                </div>
-                <div class="layui-col-md9">
-                    <div class="layui-input-block" style="margin-left:0px">
-                        <input type="checkbox" style="padding-left:0px;width:80%" name="close" lay-filter="multiMeasureswitch-type" lay-skin="switch" lay-text="是|否">
-                    </div>
+                <div class="layui-input-block" style="margin:5px 5px 0px 5px;">
+                    <textarea name="measureresults" placeholder="请先选择测量方式后开始测量。" class="layui-textarea" style="height:200px;width: 100%;font-size: 15px;line-height:25px;"></textarea>
                 </div>
             </div>
 
             <div class="layui-row">
-                <div class="layui-input-block" style="margin:5px;">
-                    <textarea name="desc" placeholder="请先选择测量方式后开始测量。" class="layui-textarea" style="height:200px;width: 100%;font-size: 15px;line-height:25px;"></textarea>
+                <div class="layui-col-xs6">
+                    <div class="grid-demo grid-demo-bg1">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">连续测量</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="multiMeasure" lay-filter="multiMeasureswitch" lay-skin="switch" lay-text="是|否">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="grid-demo">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">操作提示</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="tipsMeasure" lay-filter="tipsMeasureswitch" lay-skin="switch" lay-text="是|否">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
 
-        <div class="layui-btn-container" style="margin-top:10px;text-align:center ">
+        <div class="layui-btn-container" style="margin-left:8px;margin-top:10px;text-align:center ">
             <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_point_id" onclick="pointMeasure()">坐标</button>
             <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_height_id" onclick="heightMeasure()">高差</button>
             <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_distance_id" onclick="distanceMeasure()">距离</button>
@@ -33,7 +46,7 @@
             <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_azimuth_id" onclick="azimuthMeasure()">方位角</button>
         </div>
 
-        <div style="text-align:center;margin-top:5px;">
+        <div style="text-align:center;margin-top:2px;">
             <button type="button" style="width:90%" class="layui-btn layui-btn-radius layui-btn-fluid layui-btn-danger" onclick="ClearCeliangTemp()">清除</button>
         </div>
     </div>
