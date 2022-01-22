@@ -46,8 +46,12 @@ function GetUserProjects() {
     console.log(layer);
     
     console.log(document);
+    var user = ViewBag.User;
+    if (user == 'wuxiamodel') {
+        user = 'wuxia';
+    }
     $.ajax({
-        url: servicesurl + "/api/Flz/GetUserFlzProjectList", type: "get", data: { "cookie": document.cookie, user:ViewBag.User },
+        url: servicesurl + "/api/Flz/GetUserFlzProjectList", type: "get", data: { "cookie": document.cookie, user: user },
         success: function (data) {
             if (data == "") {
                 layer.msg("无项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
