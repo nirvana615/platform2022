@@ -21,7 +21,6 @@
 <body>
     <div class="layui-fluid">
         <div class="layui-card">
-            <div class="layui-card-header"><i class="fa fa-warning icon"></i>数据统计</div>
             <div class="layui-card-body">
                 <div class="welcome-module">
                     <div class="layui-row layui-col-space15">
@@ -87,60 +86,49 @@
             </div>
         </div>
         <div class="layui-card">
-            <div class="layui-card-header layui-font-24">
-                <li>
-            报表统计
-            </div>
             <div class="layui-card-body">
                 <div class="layui-card">
-                    <div class="layui-card-header layui-font-12" style="border-bottom:2px solid #a7a9a9;margin-top:-20px">系统报表</div>
+                    <div class="layui-card-header layui-font-12" style="border-bottom:2px solid #a7a9a9;">系统报表</div>
                     <div class="layui-card-body">
                         <div class="layui-row">
                             <div class="layui-col-md6" style="position:relative">
-                                <div id="login_allusersort" style="width: 100%;height:400px;"></div>
-                                <div style="position:absolute; top:10px;right:100px;">
-                                    <button id="login_topten" type="button" class="layui-btn layui-btn-xs layui-bg-gray " style="width:100px;height:20px; ">前十名</button>
-                                    <button id="login_lastten" type="button" class="layui-btn layui-btn-xs layui-bg-gray" style="width:100px;height:20px;">后十名</button>
-                                    <select id="login_year" name="login_year" style="border:1px solid #e6e6e6"></select>
+                                <div id="login_allusersort" style="width: 100%;height:350px;"></div>
+                                <div style="position:absolute; top:5px;right:300px;">
+                                    <button id="login_topten" type="button" class="layui-btn layui-btn-xs layui-bg-gray " style="width:100px;height:20px; ">前15名</button>
+                                    <button id="login_lastten" type="button" class="layui-btn layui-btn-xs layui-bg-gray" style="width:100px;height:20px;">后15名</button>
                                 </div>
+                                <div style="position:absolute; top:5px;right:70px;">
+                                    <select id="sys_name" name="sys_name" style="border:1px solid #e6e6e6">
+                                        <option value="100" selected>AllSystem</option>
+                                    </select>
+                                    <select id="login_year" name="login_year" style="border:1px solid #e6e6e6; margin-left:10px;"></select>
+                                </div>
+
+
 
                             </div>
                             <div class="layui-col-md6">
-                                <div id="login_allcount" style="width: 95%;height:400px;"></div>
-                                <div style="position:absolute; top:10px;right:100px;">
+                                <div id="login_allcount" style="width: 95%;height:350px;"></div>
+                                <div style="position:absolute; top:5px;right:70px;">
                                     <select id="login_month" name="login_month" style="border:1px solid #e6e6e6"></select>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
                 <div class="layui-card">
-                    <div class="layui-card-header layui-font-12" style="border-bottom:2px solid #a7a9a9">分系统报表</div>
-                    <div class="layui-card-body">
+                    <div class="layui-card-body" style="border-bottom:2px solid #a7a9a9">
                         <div class="layui-row">
                             <div class="layui-col-md6">
-                                <div class="layui-row">
-                                    <div id="login_sys_pieyear" style="width: 95%;height:300px;"></div>
-                                    <div style="position:absolute; top:10px;right:100px;">
-                                        <select id="sys_year" name="sys_year" style="border:1px solid #e6e6e6"></select>
-                                    </div>
-                                </div>
-                                <div class="layui-row">
-                                    <div id="login_sys_linemonth" style="width: 95%;height:400px;"></div>
+                                <div id="login_sys_pieyear" style="width: 95%;height:350px;"></div>
+                                <div style="position:absolute; top:5px;right:70px;">
+                                    <select id="sys_pieyear" name="sys_year" style="border:1px solid #e6e6e6"></select>
                                 </div>
                             </div>
                             <div class="layui-col-md6">
-                                <div class="layui-row">
-                                    <div id="login_sys_topbaryear" style="width: 95%;height:300px;"></div>
-                                    <div style="position:absolute; top:10px;right:100px;">
-                                        <select id="sys_name" name="sys_name" style="border:1px solid #e6e6e6"></select>
-                                    </div>
-                                </div>
-                                <div class="layui-row" style="position:relative">
-                                    <div id="login_sys_lastbaryear" style="width: 95%;height:400px;"></div>
-                                    
+                                <div id="login_sys_linemonth" style="width: 95%;height:350px;"></div>
+                                <div style="position:absolute; top:5px;right:70px;">
+                                    <select id="sys_lineyear" name="sys_year" style="border:1px solid #e6e6e6"></select>
                                 </div>
                             </div>
 
@@ -149,12 +137,11 @@
                 </div>
 
                 <div class="layui-card">
-                    <div class="layui-card-header layui-font-12" style="border-bottom:2px solid #a7a9a9">用户报表</div>
                     <div class="layui-card-body">
-                        <div class="layui-row" style="position:relative;margin-top:20px;">
+                        <div class="layui-row" style="position:relative;">
                             <div class="layui-col-md6">
                                 <div class="layui-row layui-col-space15">
-                                    <div class="layui-col-xs5" style="margin:10px 10px">
+                                    <div class="layui-col-xs3">
                                         <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
                                             <div class="panel-body" style="margin:5px 5px;">
                                                 <div class="panel-title">
@@ -168,7 +155,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="layui-col-xs5" style="margin:10px 10px">
+                                    <div class="layui-col-xs3" >
                                         <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
                                             <div class="panel-body" style="margin:5px 5px;">
                                                 <div class="panel-title">
@@ -182,11 +169,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-
-                                </div>
-                                <div class="layui-row">
-                                    <div class="layui-col-xs5" style="margin:10px 10px">
+                                    <div class="layui-col-xs3" >
                                         <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
                                             <div class="panel-body" style="margin:5px 5px;">
                                                 <div class="panel-title">
@@ -200,7 +183,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="layui-col-xs5" style="margin:10px 10px">
+                                    <div class="layui-col-xs3">
                                         <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
                                             <div class="panel-body" style="margin:5px 5px;">
                                                 <div class="panel-title">
@@ -214,22 +197,26 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                
 
+                                </div>
+                                <div class="layui-row">
+                                    <div id="user_days" style="width: 95%;height:300px;"></div>
+                                </div>
                             </div>
-                            <div class="layui-col-md6">
-                                <div id="login_allcount" style="width: 95%;height:400px;"></div>
+                            <div class="layui-col-md6" style="margin-top:40px;">
+                                <div id="user_system" style="width: 95%;height:350px;"></div>
+                                <div style="position:absolute; top:5px;right:70px;">
+                                    <select id="user_select" style="border:1px solid #e6e6e6"></select>
+                                </div>
                             </div>
                         </div>
-                        <div style="position:absolute; top:10px;right:100px;">
+                        <div style="position:absolute; top:5px;right:50px;">
                             <form class="layui-form" action="">
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">用户名称</label>
-                                    <div class="layui-input-inline">
-                                        <select id="usernameid" name="username"  lay-verify="test" lay-search="">
+                                    <div class="layui-input-block">
+                                        <select id="usernameid" name="username" lay-filter="test" lay-verify="required"  lay-search="">
                                             <option value="">直接选择或搜索选择</option>
-
                                         </select>
                                     </div>
                                 </div>
@@ -315,7 +302,6 @@
                         monthcount = null;;//本月登录次数
                         var times = [];
                         for (var i in databasedatas) {
-                            allcount += databasedatas[i].COUNT;//all
                             if (databasedatas[i].TIME.substr(0, 7) == date.substr(0, 7)) {
                                 monthcount += databasedatas[i].COUNT;//月
                             }
@@ -323,10 +309,7 @@
                         }
                         //头部数据统计
                         $('#count_month').text(monthcount);
-                        $('#count_year').text(yearcount);
-                        $('#count_all').text(allcount);
-
-
+                        
                         //初始化年份SELECT
                         if (years.length > 0) {
                             for (var i in years) {
@@ -344,7 +327,7 @@
                             var typeId = $(this).val();
                             loginLineChart(typeId);
                         });
-                        $("#sys_year").bind("change", function () {
+                        $("#sys_lineyear").bind("change", function () {
                             var typeId = $(this).val();
                             sysLineChar(typeId);
                         });
@@ -456,63 +439,68 @@
                             for (var i in years) {
                                 if (years[i] == date.substr(0, 4)) {
                                     document.getElementById("login_year").innerHTML += '<option value="' + years[i] + '" selected>' + years[i] + '</option>';
-                                    document.getElementById("sys_year").innerHTML += '<option value="' + years[i] + '" selected>' + years[i] + '</option>';
+                                    document.getElementById("sys_pieyear").innerHTML += '<option value="' + years[i] + '" selected>' + years[i] + '</option>';
+                                    document.getElementById("sys_lineyear").innerHTML += '<option value="' + years[i] + '" selected>' + years[i] + '</option>';
+                                    document.getElementById("user_select").innerHTML += '<option value="' + years[i] + '" selected>' + years[i] + '</option>';
                                 }
                                 else {
                                     document.getElementById("login_year").innerHTML += '<option value="' + years[i] + '">' + years[i] + '</option>';
-                                    document.getElementById("sys_year").innerHTML += '<option value="' + years[i] + '">' + years[i] + '</option>';
+                                    document.getElementById("sys_pieyear").innerHTML += '<option value="' + years[i] + '">' + years[i] + '</option>';
+                                    document.getElementById("sys_lineyear").innerHTML += '<option value="' + years[i] + '">' + years[i] + '</option>';
+                                    document.getElementById("user_select").innerHTML += '<option value="' + years[i] + '">' + years[i] + '</option>';
                                 }
                             }
                         };
                         //
                         if (systemlist.length > 0) {
                             for (var i in systemlist) {
-                                if (systemlist[i].sysalias == "Monitor") {
-                                    var monitor = systemlist[i].syscode;
-                                    document.getElementById("sys_name").innerHTML += '<option value="' + systemlist[i].syscode + '" selected>' + systemlist[i].sysalias + '</option>';
-                                }
-                                else {
-                                    document.getElementById("sys_name").innerHTML += '<option value="' + systemlist[i].syscode + '">' + systemlist[i].sysalias + '</option>';
-                                }
+                                document.getElementById("sys_name").innerHTML += '<option value="' + systemlist[i].syscode + '">' + systemlist[i].sysalias + '</option>';
                             }
                         };
                         //
                         if (usernames.length > 0) {
                             for (var i in usernames) {
-                                if (i == 0) {
-                                    document.getElementById("usernameid").innerHTML += '<option value="' + usernames[i].userid + '" selected>' + usernames[i].username + '</option>';
-                                }
-                                else {
-                                    document.getElementById("usernameid").innerHTML += '<option value="' + usernames[i].userid + '">' + usernames[i].username + '</option>';
-                                }
+                                document.getElementById("usernameid").innerHTML += '<option value="' + usernames[i].userid + '">' + usernames[i].username + '</option>';
+                                
                             }
                         };
-
+                       
                         form.render('select');
 
                         loginBarChart(date.substr(0, 4));//系统柱状图
                         sysPieChar(date.substr(0, 4));//分系统饼状图
-                        sysBarChart(date.substr(0, 4), monitor);
+                        
                         //监听系统年份
                         $("#login_year").bind("change", function () {
                             var typeId = $(this).val();
-                            loginBarChart(typeId);
+                            var sys_code = $("#sys_name").val();
+                            if (sys_code == 100) {
+                                loginBarChart(typeId);//系统前15名
+                            }
+                            else {
+                                sysBarChart(typeId, sys_code);//分系统前15名
+                            }
+                            
                         });
                         //监听分系统年份
-                        $("#sys_year").bind("change", function () {
+                        $("#sys_pieyear").bind("change", function () {
                             var typeId = $(this).val();
-                            sysPieChar(typeId);
-                            var sys_code=$("#sys_name").val();
-                            sysBarChart(typeId, sys_code);
+                            sysPieChar(typeId);//分系统饼状图
+                            
                         });
                         //监听分系统名称
                         $("#sys_name").bind("change", function () {
                             var sys_code = $(this).val();
-                            var time = $("#sys_year").val();
-                            sysBarChart(time, sys_code);
+                            var time = $("#login_year").val();
+                            if (sys_code == 100) {
+                                loginBarChart(time);//系统前15名
+                            }
+                            else {
+                                sysBarChart(time, sys_code);//分系统前15名
+                            }
                         });
                         //
-                        //系统前十名、后十名柱状图
+                        //系统前15名、后15名柱状图
                         function loginBarChart(time) {
                             var yearsdata = [];
                             var yearslabel = [];
@@ -552,46 +540,39 @@
                                     }
                                 }
                             }
-                            for (var i in datas) {
-                                yearsdata.push(datas[i].COUNT);
-                                yearslabel.push(datas[i].AliasName);
-                            };
-                            var title = '登录系统次数前十名';
-                            LoginAlluserYearCount(title, yearslabel.slice(0, 10), yearsdata.slice(0, 10));
+                            if (datas.length < 15) {
+                                for (i = 0; i < 15; i++) {
+                                    if (i < datas.length) {
+                                        yearsdata.push(datas[i].COUNT);
+                                        yearslabel.push(datas[i].AliasName);
+                                    }
+                                    else {
+                                        yearsdata.push(0);
+                                        yearslabel.push("*");
+                                    }
+                                }
+                            }
+                            else {
+                                for (var i in datas) {
+                                    yearsdata.push(datas[i].COUNT);
+                                    yearslabel.push(datas[i].AliasName);
+                                };
+                            }
+                            var title = '系统年浏览次数前15名';
+                            LoginAlluserYearCount(title, yearslabel.slice(0, 15), yearsdata.slice(0, 15));
                             //前十名
                             $("#login_topten").on("click", function () {
-                                title = '登录系统次数前十名';
-                                LoginAlluserYearCount(title, yearslabel.slice(0, 10), yearsdata.slice(0, 10));
+                                title = '系统年浏览次数前15名';
+                                LoginAlluserYearCount(title, yearslabel.slice(0, 15), yearsdata.slice(0, 15));
                             });
                             //后十名
                             $("#login_lastten").on("click", function () {
-                                title = '登录系统次数后十名';
-                                LoginAlluserYearCount(title, yearslabel.slice(yearslabel.length - 10, yearslabel.length).reverse(), yearsdata.slice(yearsdata.length - 10, yearsdata.length).reverse());
+                                title = '系统年浏览次数后15名';
+                                LoginAlluserYearCount(title, yearslabel.slice(yearslabel.length - 15, yearslabel.length), yearsdata.slice(yearsdata.length - 15, yearsdata.length));
                             });
                         }
-                        //
-                        //分系统占比饼状图
-                        function sysPieChar(time) {
-                            var sysYearPieDatas = [];
-                            for (var i in systemlist) {
-                                var piedata = new Object;
-                                var data = null;
-                                for (var j in databasedatas) {
-                                    if (systemlist[i].syscode == databasedatas[j].SYSCODE) {
-                                        if (databasedatas[j].TIME.substr(0, 4) == time) {
-                                            data = databasedatas[j].COUNT + data;
-                                        }
-                                    }
-                                }
-                                piedata.value = data;
-                                piedata.name = systemlist[i].sysalias
-                                sysYearPieDatas.push(piedata);
-                            }
-                            SystemPieChart(sysYearPieDatas);
-                        }
-                        //
-                        //分系统前十名、后十名柱状图
-                        function sysBarChart(time,sys_code) {
+                        //分系统前15名、后15名柱状图
+                        function sysBarChart(time, sys_code) {
                             var yearsdata = [];
                             var yearslabel = [];
                             var userids = [];
@@ -602,7 +583,7 @@
                                     if (userids.indexOf(databasedatas[i].AliasName) == -1) {
                                         userids.push(databasedatas[i].AliasName);
                                     }
-                                    
+
                                 }
                             }
                             for (var i in userids) {
@@ -632,45 +613,208 @@
                                     }
                                 }
                             }
-                            for (var i in datas) {
-                                yearsdata.push(datas[i].COUNT);
-                                yearslabel.push(datas[i].AliasName);
-                            };
+                            if (datas.length < 15) {
+                                for (i = 0; i < 15; i++) {
+                                    if (i < datas.length) {
+                                        yearsdata.push(datas[i].COUNT);
+                                        yearslabel.push(datas[i].AliasName);
+                                    }
+                                    else {
+                                        yearsdata.push();
+                                        yearslabel.push("--");
+                                    }
+                                }
+                            }
+                            else {
+                                for (var i in datas) {
+                                    yearsdata.push(datas[i].COUNT);
+                                    yearslabel.push(datas[i].AliasName);
+                                };
+                            }
+
                             if (systemlist.length > 0) {
                                 for (var i in systemlist) {
                                     if (systemlist[i].syscode == sys_code) {
                                         systemName = systemlist[i].sysalias;
                                     }
-                                    
+
                                 }
                             };
-                            if (yearslabel.length <= 10) {
-                                //前十名
-                                var title_top = systemName + '前十名';
-                                SystemUserYearTopTen(title_top, yearslabel, yearsdata);
-                                //后十名
-                                var title_last = systemName + '后十名';
-                                SystemUserYearLastTen(title_last, yearslabel.reverse(), yearsdata.reverse());
+                            //前15名
+                            var title_top = systemName + '系统前15名';
+                            SystemUserYearTen(title_top, yearslabel.slice(0, 15), yearsdata.slice(0, 15));
 
-                            }
-                            else {
-                                //前十名
-                                var title_top = systemName + '前十名';
-                                SystemUserYearTopTen(title_top, yearslabel.slice(0, 10), yearsdata.slice(0, 10));
-                                //后十名
-                                var title_last = systemName + '后十名';
-                                SystemUserYearLastTen(title_last, yearslabel.slice(yearslabel.length - 10, yearslabel.length).reverse(), yearsdata.slice(yearsdata.length - 10, yearsdata.length).reverse());
+                            $("#login_topten").on("click", function () {
+                                //前15名
+                                var title_top = systemName + '系统前15名';
+                                SystemUserYearTen(title_top, yearslabel.slice(0, 15), yearsdata.slice(0, 15));
+                            });
+                            //后15名
+                            $("#login_lastten").on("click", function () {
+                                //后15名
+                                var title_last = systemName + '系统后15名';
+                                SystemUserYearTen(title_last, yearslabel.slice(yearslabel.length - 15, yearslabel.length), yearsdata.slice(yearsdata.length - 15, yearsdata.length));
 
-                            }
-                            
+                            });
+
+
                         }
+                        //
+                        //分系统占比饼状图
+                        function sysPieChar(time) {
+                            var sysYearPieDatas = [];
+                            for (var i in systemlist) {
+                                var piedata = new Object;
+                                var data = null;
+                                for (var j in databasedatas) {
+                                    if (systemlist[i].syscode == databasedatas[j].SYSCODE) {
+                                        if (databasedatas[j].TIME.substr(0, 4) == time) {
+                                            data = databasedatas[j].COUNT + data;
+                                        }
+                                    }
+                                }
+                                if (data!=null) {
+                                    piedata.value = data;
+                                    piedata.name = systemlist[i].sysalias
+                                    sysYearPieDatas.push(piedata);
+                                }
+                                
+                            }
+                            SystemPieChart(sysYearPieDatas);
+                        }
+                        //
+                        
                     }
                 }
             }, datatype: "json"
         });
         //
+        //用户查询
+        //监听用户
+        form.on('select(test)', function (info) {
+            UserInfo(info.value);
+        });
+        form.render('select');
+        UserSysPieChart();
+        UserLineChart();
+        
+        function UserInfo(Id) {
+            var user_years = [];
+            $.ajax({
+                url: window.parent.servicesurl + "/api/LoginUser/GetUserLoginInfo", type: "get", data: { "id": Id },
+                success: function (data) {
+                    if (data == "") {
+                        layer.msg("无数据信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
 
+                    }
+                    else {
+                        var result = JSON.parse(data);
+                        if (result.code == 1) {
+                            var databasedatas = JSON.parse(result.data);
+                            var user_allcount = null;//总登录次数
+                            var user_yearcount = null;//本年登录次数
+                            var user_monthcount = null;//本月登录次数
+                            var user_daycount = null;//本日登录次数
+                            user_years.length=0;
+                            for (var i in databasedatas) {
+                                user_allcount += databasedatas[i].COUNT;//all
+                                if (databasedatas[i].TIME.substr(0, 4) == date.substr(0, 4)) {
+                                    user_yearcount += databasedatas[i].COUNT;//年
+                                }
+                                if (databasedatas[i].TIME.substr(0, 7) == date.substr(0, 7)) {
+                                    user_monthcount += databasedatas[i].COUNT;//月
+                                }
+                                if (databasedatas[i].TIME == date) {
+                                    user_daycount += databasedatas[i].COUNT;//日
+                                }
+                                if (user_years.indexOf(databasedatas[i].TIME.substr(0, 4)) == -1) {
+                                    user_years.push(databasedatas[i].TIME.substr(0, 4));//获取年份
+                                }
+                                
+                            }
+                            //用户统计头部数据统计
+                            if (user_yearcount == null) {
+                                $('#user_year').text(0);
+                            }
+                            else {
+                                $('#user_year').text(user_yearcount);
+                            }
+                            if (user_allcount == null) {
+                                $('#user_all').text(0);
+                            }
+                            else {
+                                $('#user_all').text(user_allcount);
+                            }
+                            
+                            if (user_monthcount == null) {
+                                $('#user_month').text(0);
+                            }
+                            else {
+                                $('#user_month').text(user_monthcount);
+                            }
+                            
+                            if (user_daycount==null) {
+                                $('#user_day').text(0);
+                            }
+                            else {
+                                $('#user_day').text(user_daycount);
+                            }
+                            
+                            PieChar(date.substr(0, 4));
+                            LineChar();
+                            //监听分系统年份
+                            $("#user_select").bind("change", function () {
+                                var typeId = $(this).val();
+                                PieChar(typeId);//分系统饼状图
 
+                            });
+                            
+                            //
+                            //用户时间轴
+                            function LineChar() {
+                                var data = [];
+                                var datas = [];
+                                for (var i in databasedatas) {
+                                    data = [];
+                                    data.push(databasedatas[i].TIME);
+                                    data.push(databasedatas[i].COUNT)
+                                    datas.push(data);
+                                }
+                                
+                                UserLineChart(datas);
+                            }
+                            //
+                            //用户分系统占比饼状图
+                            function PieChar(time) {
+                                var userSysPieDatas = [];
+                                for (var i in systemlist) {
+                                    var piedata = new Object;
+                                    var data = null;
+                                    for (var j in databasedatas) {
+                                        if (systemlist[i].syscode == databasedatas[j].SYSCODE) {
+                                            if (databasedatas[j].TIME.substr(0, 4) == time) {
+                                                data = databasedatas[j].COUNT + data;
+                                            }
+                                        }
+                                    }
+                                    if (data!=null) {
+                                        piedata.value = data;
+                                        piedata.name = systemlist[i].sysalias
+                                        userSysPieDatas.push(piedata);
+                                    }
+                                    
+                                }
+                                title = time+"年度子系统百分比"
+                                UserSysPieChart(title,userSysPieDatas);
+                            }
+                            //
+
+                        }
+                    }
+                }, datatype: "json"
+            });
+        }
+        
         ///
         //系统年前十、后十名用户，柱状图
         function LoginAlluserYearCount(title, lables, datas) {
@@ -747,43 +891,72 @@
             var option;
 
             option = {
-                color: ['#1E90FF'],
                 title: {
-                    text: '各月份登录系统次数'
+                    text: '系统各月份浏览次数'
                 },
                 tooltip: {
-                    trigger: 'axis'
-                },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                toolbox: {
-                    feature: {
-                        saveAsImage: {}
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        crossStyle: {
+                            color: '#999'
+                        }
                     }
                 },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: ['01月', '02月', '03月', '04月', '05月', '06月', '07月', '08月', '09月', '10月', '11月', '12月']
+                toolbox: {
+                    right: "100",
+                    feature: {
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
                 },
-                yAxis: {
-                    type: 'value'
+                legend: {
+                    data: ['Precipitation', 'Temperature']
                 },
-                series: [
+                xAxis: [
                     {
-                        name: '次数',
+                        type: 'category',
+                        data: ['01月', '02月', '03月', '04月', '05月', '06月', '07月', '08月', '09月', '10月', '11月', '12月'],
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        min: 0,
+                        axisLabel: {
+                            formatter: '{value}'
+                        }
+                    },
+                    {
+                        type: 'value',
+                        min: 0,
+                        axisLabel: {
+                            formatter: '{value}'
+                        }
+                    }
+                ],
+                series: [
+                    
+                    {
+                        type: 'bar',
+                        data: datas
+                    },
+                    {
                         type: 'line',
-                        smooth: true,
+                        yAxisIndex: 1,
                         data: datas
                     }
                 ]
             };
 
             option && myChart.setOption(option);
+
+            
         }
         //
         //各系统统计饼状图（年）
@@ -794,9 +967,16 @@
 
             option = {
                 title: {
-                    text: '分系统年登录次数比例',
-                    subtext: 'Proportion of Each System',
-                    left: 'center'
+                    text: '子系统年浏览次数比例',
+                    left: 'left'
+                },
+                toolbox: {
+                    right: "100",
+                    feature: {
+                        dataView: { show: true, readOnly: false },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
                 },
                 tooltip: {
                     trigger: 'item',
@@ -804,7 +984,8 @@
                 },
                 legend: {
                     orient: 'vertical',
-                    left: 'left'
+                    left: 'left',
+                    top:'center'
                 },
                 series: [
                     {
@@ -839,11 +1020,23 @@
             var option;
 
             option = {
-
+                title: {
+                    text: '子系统各月份浏览次数',
+                    left: 'left'
+                },
+                toolbox: {
+                    right: "100",
+                    feature: {
+                        dataView: { show: true, readOnly: false },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
                 tooltip: {
                     trigger: 'axis'
                 },
                 legend: {
+                    top: 30,
                     data: labels
                 },
                 grid: {
@@ -864,36 +1057,43 @@
                     {
                         name: datas[0].name,
                         type: 'line',
+                        smooth: true,
                         data: datas[0].data
                     },
                     {
                         name: datas[1].name,
                         type: 'line',
+                        smooth: true,
                         data: datas[1].data
                     },
                     {
                         name: datas[2].name,
                         type: 'line',
+                        smooth: true,
                         data: datas[2].data
                     },
                     {
                         name: datas[3].name,
                         type: 'line',
+                        smooth: true,
                         data: datas[3].data
                     },
                     {
                         name: datas[4].name,
                         type: 'line',
+                        smooth: true,
                         data: datas[4].data
                     },
                     {
                         name: datas[5].name,
                         type: 'line',
+                        smooth: true,
                         data: datas[5].data
                     },
                     {
                         name: datas[6].name,
                         type: 'line',
+                        smooth: true,
                         data: datas[6].data
                     }
                 ]
@@ -903,9 +1103,9 @@
         }
        
         //
-        //各系统年前十名用户，柱状图
-        function SystemUserYearTopTen(title,lables,datas) {
-            var chartDom = document.getElementById('login_sys_topbaryear');
+        //各系统年前后十名用户，柱状图
+        function SystemUserYearTen(title,lables,datas) {
+            var chartDom = document.getElementById('login_allusersort');
             var myChart = echarts.init(chartDom);
 
             var option;
@@ -967,71 +1167,121 @@
 
             option && myChart.setOption(option);
         }
-        //各系统年后十名用户，柱状图
-        function SystemUserYearLastTen(title,lables,datas) {
-            var chartDom = document.getElementById('login_sys_lastbaryear');
+        //单一用户信息分系统饼状图
+        function UserSysPieChart(title,datas) {
+            var chartDom = document.getElementById('user_system');
             var myChart = echarts.init(chartDom);
-
             var option;
 
             option = {
                 title: {
-                    text: title
-                },
-                tooltip: {
-                    trigger: 'axis'
-                },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
+                    text: title,
+                    left: 'left'
+                    
                 },
                 toolbox: {
+                    right: "100",
                     feature: {
+                        dataView: { show: true, readOnly: false },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b} :{c} ({d}%)"/*鼠标经过显示*/
+                },
+                legend: {
+                    bottom: 0
+                },
+                series: [
+                    {
+                        name: '无信息',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            show: false,
+                            position: 'center',
+                            normal: {
+                                formatter: '{b}({d} %)'
+                            }
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '15',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        data: datas
+                    }
+                ]
+            };
+
+            option && myChart.setOption(option);
+
+        }
+        //单一用户信息时间轴
+        function UserLineChart(datas) {
+            var chartDom = document.getElementById('user_days');
+            var myChart = echarts.init(chartDom);
+            var option;
+            
+            option = {
+                tooltip: {
+                    trigger: 'axis',
+                    position: function (pt) {
+                        return [pt[0], '10%'];
+                    }
+                },
+                
+                toolbox: {
+                    right: "100",
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
                         saveAsImage: {}
                     }
                 },
                 xAxis: {
-                    type: 'category',
-                    data: lables,
-                    axisLabel: {
-                        interval: 0,
-                        rotate: 45,//倾斜度 -90 至 90 默认为0
-                        margin: 10
-
-                    }
+                    type: 'time',
+                    boundaryGap: true
                 },
                 yAxis: {
                     type: 'value',
-                    //axisLabel: {
-                    //    formatter: '{value} 次' //单位
-                    //}
+                    boundaryGap: [0, '100%']
                 },
+                dataZoom: [
+                    {
+                        type: 'inside',
+                        start: 50,
+                        end: 100
+                    },
+                    {
+                        start: 50,
+                        end: 100
+                    }
+                ],
                 series: [
                     {
                         name: '次数',
-                        data: datas,
-                        type: 'bar',
-                        itemStyle: {
-                            normal: {
-                                label: {
-                                    show: true,  //开启显示
-                                    position: 'top',  //在上方显示
-                                    textStyle: {  //数值样式
-                                        //color: 'black',
-                                        fontSize: 16
-                                    }
-                                }
-                            }
-                        }
+                        type: 'line',
+                        smooth: false,
+                        symbol: 'none',
+                        areaStyle: {},
+                        data: datas
                     }
                 ]
             };
 
             option && myChart.setOption(option);
         }
-        //
         //获取系统列表
         function GetSystemInfo() {
             systemlist = [];

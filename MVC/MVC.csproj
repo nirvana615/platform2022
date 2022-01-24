@@ -466,7 +466,7 @@
     <Content Include="Apps\admin\widget\user-role-edit.html" />
     <Content Include="Apps\admin\widget\user-add.html" />
     <Content Include="Apps\common\common.js" />
-	<Content Include="Apps\common\mark.js" />
+    <Content Include="Apps\common\mark.js" />
     <Content Include="Apps\common\measure.js" />
     <Content Include="Apps\flz\css\main.css" />
     <Content Include="Apps\flz\js\1.1-all.js" />
@@ -546,6 +546,7 @@
     <Content Include="Apps\model\widget\1.2 projectview.html" />
     <Content Include="Apps\model\widget\1.3 projecteditview.html" />
     <Content Include="Apps\model\widget\2.1 taskaddview.html" />
+    <Content Include="Apps\model\widget\2.5 taskview-modelp.html" />
     <Content Include="Apps\model\widget\2.2 taskview.html" />
     <Content Include="Apps\model\widget\2.4 taskstatus.html" />
     <Content Include="Apps\model\widget\2.3 taskeditview.html" />
@@ -613,7 +614,7 @@
     <Content Include="Apps\pointcloud\widget\2.5 pointcloud_util_changelayer.html" />
     <Content Include="Apps\pointcloud\widget\6.51 pointcloud_pointdisplystyle.html" />
     <Content Include="Apps\pointcloud\widget\measure.html" />
-	<Content Include="Apps\pointcloud\widget\mark.html" />
+    <Content Include="Apps\pointcloud\widget\mark.html" />
     <Content Include="Apps\pointcloud\widget\markPoint.html" />
     <Content Include="Apps\rock\css\main.css" />
     <Content Include="Apps\rock\js\1.1-all.js" />
@@ -671,7 +672,7 @@
     <Content Include="Resources\img\mark\mark_P6.png" />
     <Content Include="Resources\img\mark\mark_P7.png" />
     <Content Include="Resources\img\mark\mark_P8.png" />
-    <Content Include="Resources\img\mark\mark_P9.png" />	
+    <Content Include="Resources\img\mark\mark_P9.png" />
     <Content Include="Resources\img\survey\area.png" />
     <Content Include="Resources\img\survey\areabiaozhu.png" />
     <Content Include="Resources\img\survey\azimuth.png" />

@@ -4,7 +4,7 @@ var modelprojectlistyear = [];//按时间组织
 var newprojecttype = false;
 
 
-layer.open({
+var toIndex =layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
     , area: ['340px', '90%']
@@ -40,7 +40,6 @@ layer.open({
             }
             , oncheck: function (obj) {
                 if (obj.checked) {
-                    modleInfo = obj.data;//标注获取模型数据标签
                     if (obj.data.type == "task") {
 
                         //for (var i in modelprojectlist) {
@@ -74,7 +73,6 @@ layer.open({
                 else {
                     viewer.scene.primitives.remove(curtileset);
                     AddEntitiesInViewer(projectentities);
-                    modleInfo = null;//标签
                     curtileset = null;
                 }
                 
@@ -100,7 +98,6 @@ layer.open({
             }
             , oncheck: function (obj) {
                 if (obj.checked) {
-                    modleInfo = obj.data;//标签
                     if (obj.data.type == "task") {
                         //for (var i in modelprojectlistyear) {
                         //    for (var j in modelprojectlistyear[i].children) {
@@ -132,7 +129,6 @@ layer.open({
                 }
                 else {
                     viewer.scene.primitives.remove(curtileset);
-                    modleInfo = null;//标签
                     curtileset = null;
                 }
             }
@@ -488,7 +484,7 @@ function GetUserAllModelProjects(newprojectcode) {
                     AddEntitiesInViewer(projectentities);
                     FlytoCurrentProjectExtent(newprojectzxjd, newprojectzxwd, 8000.0);
                 }
-                
+                viewer.scene.primitives.remove(curtileset);
 
             }
             else {
@@ -588,7 +584,7 @@ function ModelProjectNodeClick(obj) {
             FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
         }
     }
-   
+    
 };
 
 //项目树（项目列表+目标）节点操作：add\update\del

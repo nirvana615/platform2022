@@ -67,7 +67,20 @@ namespace MODEL
 
 
         }
+        /// <summary>
+        /// 模型系统角色
+        /// </summary>
+        public enum ModelRole
+        {
+            [RemarkAttribute("模型采集员")]
+            Modelc = 1,
 
+            [RemarkAttribute("模型处理员")]
+            Modelp = 2,
+
+            [RemarkAttribute("模型用户")]
+            Modelv = 3
+        }
 
     }
 }

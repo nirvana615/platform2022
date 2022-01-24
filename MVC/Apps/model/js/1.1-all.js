@@ -48,7 +48,6 @@ var currentprojectid = null;//当前项目id
 
 
 var curtileset = null;//当前模型
-var modleInfo = null;//当前模型数据
 
 var projectlayerlistlayerindex =null  //标注窗口
 

@@ -51,7 +51,7 @@ util.fixbar({
         }
         else if (type === 'bar8') {
             //测量
-            LoadMeasureLayer();
+            Measurewidget();
         }
         else if (type === 'bar9') {
             //标注

@@ -25,11 +25,7 @@ namespace SERVICE.Controllers
     {
         private static Logger logger = Logger.CreateLogger(typeof(ModelTaskController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
-        //service 的Web.config中定义modeldir,绝对路径
-        private static string modeldir = ConfigurationManager.AppSettings["modeldir"] != null ? ConfigurationManager.AppSettings["modeldir"].ToString() : string.Empty;
         
-
-
         /// <summary>
         /// 新建任务
         /// </summary>
@@ -111,7 +107,7 @@ namespace SERVICE.Controllers
                             //企业微信推送消息
                             string message= "任务提醒：\n" + user.AliasName +":创建'"+ rwmc + "'新的模型任务，请及时处理!";
                             //企业微信推送地址
-                            string webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=3d834562-2dd6-47dd-ab58-c6ae8f0a2fc4";
+                            string webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=130fddf5-d47c-413a-836e-f095571998c9";
 
                             if (!string.IsNullOrEmpty(message))
                             {
@@ -391,7 +387,7 @@ namespace SERVICE.Controllers
                 List<ModelTask> newModelTaskPending = new List<ModelTask>();//存储待处理任务
                 List<ModelTask> newModelTaskFinished = new List<ModelTask>();//存储已完成任务
                 List<ModelTask> newModelTaskProcess = new List<ModelTask>();//存储已完成任务
-                string modelTasks = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE ztm={0} ORDER BY RWCJSJ DESC", (int)MODEL.Enum.State.InUse));
+                string modelTasks = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
                 if (!string.IsNullOrEmpty(modelTasks))
                 {
                     string[] maprows = modelTasks.Split(new char[] { COM.ConstHelper.rowSplit });

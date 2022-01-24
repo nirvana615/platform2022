@@ -87,7 +87,7 @@ namespace SERVICE.Controllers
                     for (int i = 0; i < rows.Length; i++)
                     {
                         Role roleinfo = ParseManageHelper.ParseRole(rows[i]);
-                        if (roleinfo != null)
+                        if (roleinfo != null && roleinfo.RoleCode!= (int)MODEL.EnumModel.ModelRole.Modelp)
                         {
                             string mapUserRole= PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE roleid={0}", roleinfo.Id));
                             

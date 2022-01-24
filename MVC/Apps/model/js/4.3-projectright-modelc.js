@@ -5,7 +5,7 @@ var dataprojects = [];//数据授权树data
 var modeluserid = null;
 var datauserid = null;
 function LoadProjectRight() {
-    //编辑目标
+    //
     if (modelprojectrightuserlayerindex == null) {
         modelprojectrightuserlayerindex = layer.open({
             type: 1
@@ -250,7 +250,7 @@ function GetAllUserInfo() {
         url: servicesurl + "/api/ModelProjectRight/GetAllUserInfo", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             if (data == "") {
-                layer.msg("无实景模型用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 datauserid = null;
             }
             else {

@@ -1109,10 +1109,14 @@ function LoadBiaozhunListLayer() {
         // if (projectbiaoZhuListlayerindex == null) {
         var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
         var data = {};
+        var user = ViewBag.User;
+        if (user == 'wuxiamodel') {
+            user = 'wuxia';
+        }
         data.cookie = document.cookie;
         data.projectId = currentprojectid;
         data.modleId = modleInfo.id.split('_')[1];
-        data.user = ViewBag.User;
+        data.user = user;
         console.log(ViewBag);
         data.type = null;
         moidsendhist = data.modleId;//把历史记录存起来

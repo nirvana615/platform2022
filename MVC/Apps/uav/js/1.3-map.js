@@ -276,7 +276,7 @@ viewer = new Cesium.Viewer("map", {
  */
 viewer._cesiumWidget._creditContainer.style.display = "none";           //隐藏版权信息
 viewer.scene.globe.enableLighting = false;                              //日夜区分
-viewer.scene.globe.depthTestAgainstTerrain = false;                     //影响无模型pickPosition(默认false，当需要从地形pickPosition获取位置时设置true)
+viewer.scene.globe.depthTestAgainstTerrain = true;                     //影响无模型pickPosition(默认false，当需要从地形pickPosition获取位置时设置true)
 viewer.homeButton.viewModel.tooltip = "初始视图";
 viewer.baseLayerPicker.viewModel.buttonTooltip = "地图及地形";
 viewer.baseLayerPicker.viewModel.toggleDropDown.afterExecute.addEventListener(function () {
@@ -362,6 +362,8 @@ var isMobile = {
 
 //加载3d tiles模型
 function LoadModel(obj) {
+    viewer.scene.globe.depthTestAgainstTerrain = false;
+
     //var modelurl = "../Data/SurModel" + obj.mxlj;//本地加载
     var modelurl = datasurl + "/SurModel" + obj.mxlj;//远程加载
 
