@@ -32,11 +32,11 @@ util.fixbar({
         }
         else if (type === 'bar6') {
             //测量工具
-            measure();
+            Measurewidget();
         }
         else if (type === 'bar7') {
             //标绘工具
-            mark();
+            Markwidget(currentprojectid);
         }
     }
 });

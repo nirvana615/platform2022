@@ -163,6 +163,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\common\MarkController.cs" />
     <Compile Include="Controllers\flz\FlzController.cs" />
     <Compile Include="Controllers\flz\FlzDataController.cs" />
     <Compile Include="Controllers\flz\FlzLayerController.cs" />
