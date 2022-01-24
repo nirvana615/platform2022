@@ -294,24 +294,87 @@ namespace SERVICE
             }
         }
 
+        /// <summary>
+        /// 验证cookie并返回用户及系统编码
+        /// </summary>
+        /// <param name="connect"></param>
+        /// <param name="cookie"></param>
+        /// <param name="user"></param>
+        /// <param name="syscode"></param>
+        /// <returns></returns>
+        public static COM.CookieHelper.CookieResult ValidateCookie(string connect, string cookie, ref User user, ref int syscode)
+        {
+            #region 参数检查
+            if (string.IsNullOrEmpty(connect))
+            {
+                return CookieHelper.CookieResult.FailureCookkie;//无连接信息
+            }
 
+            if (string.IsNullOrEmpty(cookie))
+            {
+                return CookieHelper.CookieResult.NoCookie;//无cookie信息
+            }
+            #endregion
 
+            try
+            {
+                string encryptUser = string.Empty;//加密用户信息
+                string encryptRole = string.Empty;//加密角色信息
 
+                string[] items = cookie.Split(new char[] { ';' });
+                if (items.Length != 2)
+                {
+                    return CookieHelper.CookieResult.ErrorCookie;//cookie错误
+                }
 
+                for (int i = 0; i < items.Length; i++)
+                {
+                    if (items[i].Contains("User"))
+                    {
+                        encryptUser = items[i].Replace("User=\"", "").Replace("\"", "").Trim(' ');
+                    }
+                    if (items[i].Contains("Role"))
+                    {
+                        encryptRole = items[i].Replace("Role=\"", "").Replace("\"", "").Trim(' ');
+                    }
+                }
 
+                if (string.IsNullOrEmpty(encryptUser) || string.IsNullOrEmpty(encryptRole))
+                {
+                    return CookieHelper.CookieResult.ErrorCookie;//cookie错误
+                }
 
+                List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(encryptUser);//解密用户信息
+                string roleinfo = COM.CookieHelper.GetRoleInfoFromCookie(encryptRole);//解密角色信息
+                #region 验证时效性
+                if (DateTime.Now.CompareTo(Convert.ToDateTime(userinfo[3])) > 0)
+                {
+                    return CookieHelper.CookieResult.ExpireCookie;//时效过期
+                }
+                #endregion
 
+                user = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM manage_user WHERE username={0} AND password={1} AND ztm={2}", SQLHelper.UpdateString(userinfo[0]), SQLHelper.UpdateString(userinfo[2]), (int)MODEL.Enum.State.InUse)));
+                if (user == null)
+                {
+                    return CookieHelper.CookieResult.FailureCookkie;//验证用户失败
+                }
+                else
+                {
+                    Systems sys = ParseManageHelper.ParseSystems(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM manage_systems WHERE sysalias={0}", SQLHelper.UpdateString(roleinfo))));
+                    if (sys == null)
+                    {
+                        return CookieHelper.CookieResult.FailureCookkie;
+                    }
 
+                    syscode = sys.SysCode;
 
-
-
-
-
-
-
-
-
-
-
+                    return CookieHelper.CookieResult.SuccessCookkie;
+                }
+            }
+            catch
+            {
+                return CookieHelper.CookieResult.FailureCookkie;//验证cookie出错
+            }
+        }
     }
 }

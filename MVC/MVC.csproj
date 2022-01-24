@@ -564,7 +564,6 @@
     <Content Include="Apps\monitor\js\6.3-autodata.js" />
     <Content Include="Apps\monitor\js\6.4-analysis.js" />
     <Content Include="Apps\monitor\js\6.5-warning.js" />
-    <Content Include="Apps\monitor\js\6.6-measure.js" />
     <Content Include="Apps\monitor\js\6.7-etl.js" />
     <Content Include="Apps\monitor\widget\5.0 headeruser.html" />
     <Content Include="Apps\monitor\widget\1.5 disasterpropertyedit.html" />
@@ -655,7 +654,7 @@
     <Content Include="Resources\img\map\map.png" />
     <Content Include="Resources\img\map\model.png" />
     <Content Include="Resources\img\map\project.png" />
-    <Content Include="Resources\img\mark\markpointselected_style.png" />	
+    <Content Include="Resources\img\mark\markpointselected_style.png" />
     <Content Include="Resources\img\mark\p19.png" />
     <Content Include="Resources\img\mark\img_mark_P1.png" />
     <Content Include="Resources\img\mark\img_mark_P10.png" />

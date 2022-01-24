@@ -123,7 +123,6 @@ namespace MVC
                     //用户写入cookie
                     COM.CookieHelper.WriteCookie(context, user.UserName, COM.CookieHelper.CreateCookie(user.UserName, user.AliasName, user.PassWord, hour), "User", hour);
                     PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET dlsj={0} WHERE id={1}", SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), user.Id));//更新用户登录时间
-                    //PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO manage_user_login (userid,type,time) VALUES({0},{1},{2})", user.Id, (int)MODEL.Enum.LoginWay.Web, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))));//记录用户登录时间
 
                     return LoginResult.Success;
                 }
