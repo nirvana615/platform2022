@@ -1719,7 +1719,7 @@ namespace SERVICE.Controllers
             //  return HttpContext.Current.Request.MapPath(outputPath).Replace("\\api\\FlzWordWxpert", string.Empty).ToString();
 
         }
-        //
+        //折线图
         public string DrawLineChart(List<List<GNSSZheXian>> data,List<string> zheLianName)
         {
             // 预置颜色
@@ -2002,6 +2002,7 @@ namespace SERVICE.Controllers
             return relativePath;
            // return Json(relativePath);
         }
+        //柱状图
         public string DrawBarChart(List<RAINDelta> xywww)
         {
             #region 允许配置项
@@ -2163,270 +2164,139 @@ namespace SERVICE.Controllers
             return "lingShi.jpg";
         }
 
-      
+        /// <summary>
+        ///施工记录表
+        /// </summary>
+        /// <param name="id">监测点id</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [System.Web.Http.HttpGet]
+        public string GetShiGongJiLuBiao(string id, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+            logger.Info("【" + pgsqlConnection + "】pgsqlConnection");
+
+            int year = Convert.ToInt32(DateTime.Now.ToString("yyyy"));
+            int month = Convert.ToInt32(DateTime.Now.ToString("MM"));
+            int day = Convert.ToInt32(DateTime.Now.ToString("dd"));
+            //获取当前项目信息   
+            //
+            
+            string templatePath = imgdir + "/SurImage/baoGao/anzhuang.docx";
+            string sql = "SELECT * FROM const_photo_info WHERE monitor_id ={0} ORDER BY type ";
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(id)));
+            List<ConstPhotoInfo> constPhotoInfoList = new List<ConstPhotoInfo>();//相片集合
+            if (!string.IsNullOrEmpty(datas))
+            {
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    ConstPhotoInfo constPhotoInfo = ParseMonitorHelper.ParseConstPhotoInfo(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+                    if (constPhotoInfo != null)
+                    {
+                        constPhotoInfoList.Add(constPhotoInfo);
+
+                    }
+                }
+            }; 
+            WordMLHelper wordMLHelper = new WordMLHelper();
+            List<TagInfo> tagInfos = wordMLHelper.GetAllTagInfo(File.OpenRead(templatePath));//打开模板文件,获取所有填充域
+
+            for (int i = 0; i < tagInfos.Count; i++)
+            {
+                //填充域有两种类型,1:段落或图片,2:表格
+                //对填充域填充时需先判断填充域类型
+                if (tagInfos[i].Tbl == null)
+                {
+
+                }
+                else
+                {
+
+                    logger.Info("【" + tagInfos[i].Tbl.TblType + "】pgsqlConnection");
+                    // HORIZONTAL_HEADER
+                    //HORIZONTAL_VERTICAL_HEADER
+                    if (tagInfos[i].Seq == 1)
+                    {
+                        tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
+                        TableStructureInfo tblInfo = tagInfos[i].Tbl;
+                        List<RowStructureInfo>  xyz=tblInfo.Rows;
+                        logger.Info("【" + xyz.Count + "】xyz.Count");
+                        int xy = 0;
+                        for (int m=0;m< xyz.Count;m++)
+                        {
+                            RowStructureInfo row = xyz[m];
+                            List<CellStructureInfo> mhn = row.Cells;
+                            for (int n=0;n< mhn.Count;n++)
+                            {
+                                if (m==0&&n==0) {
+                                    continue;
+                                }
+                                
+                                if (xy< constPhotoInfoList.Count)
+                                {
+                                    ImgInfo imgInfo = new ImgInfo();
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[xy].photoUrl;
+                                    imgInfo.Width = 200;
+                                    imgInfo.Height = 200;
+                                    mhn[n].AddContent(imgInfo);
+                                    xy++;
+                                }
+                                
+                                
+                                
+                                
+                            }
+
+                        }
+                        //TableStructureInfo tblInfo = tagInfos[i].Tbl;
+                        //for (int m = 0; m < 4; m++)
+                        //{
+
+                        //     RowStructureInfo row = new RowStructureInfo();
+                        //    for (int k = 1; k < 3; k++)
+                        //    {
+
+                        //        CellStructureInfo cell = new CellStructureInfo();
+                        //        TxtInfo txtInfo = new TxtInfo();
+                        //        txtInfo.Content = "1111111111";
+                        //        txtInfo.Size = 20;
+                        //        cell.AddContent(txtInfo);
+                        //        row.AddCell(cell);
+                        //    }
+                        //    tblInfo.AddRow(row);
+                        //}
 
 
+                    }
+                    if (tagInfos[i].Seq == 3)
+                    {
+                        tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
 
 
+                    }
+                }
+            }
+            //2021年11月下旬旬报
+            
+            string outputPath = "111111111111.docx";
+            if (!string.IsNullOrEmpty(outputPath))
+            {
 
+                string templateOutPath = imgdir + "/SurImage/Download/" + outputPath;
 
+                wordMLHelper.GenerateWordDocument(File.OpenRead(templatePath)
+                    , templateOutPath
+                    , tagInfos);
 
+                Assistance.RemoveAllTmpFile();// 删除所有临时文件
+            }
 
+            return outputPath;
+            //无效cookie
+            //  return HttpContext.Current.Request.MapPath(outputPath).Replace("\\api\\FlzWordWxpert", string.Empty).ToString();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //public string DrawLineChart(List<GNSSDelta> data)
-        //{
-        //    // 预置颜色
-        //    List<Color> colors = new List<Color>()
-        //    {
-        //        Color.FromArgb(255,182,193),
-        //        Color.FromArgb(238,130,238),
-        //        Color.FromArgb(220,20,60),
-        //        Color.FromArgb(153,50,204),
-        //        Color.FromArgb(30,144,255),
-        //        Color.FromArgb(60,179,113),
-        //        Color.FromArgb(255,215,0),
-        //        Color.FromArgb(255,140,0),
-        //        Color.FromArgb(105,105,105)
-        //    };
-
-        //    #region 允许配置项
-
-        //    //定义宽高
-        //    int height = 400, width = 730;
-
-        //    //边缘位置留白
-        //    int margin_top = 20;
-        //    int margin_right = 40;
-        //    int margin_bottom = 60;
-        //    int margin_left = 80;
-
-        //    //辅助线距离顶部的距离
-        //    int xsubline = 20;
-
-        //    //文字大小，单位：px
-        //    int fontsize = 12;
-
-        //    // 折线名称预留的位置  颜色框20，与文字间隙5，文字80，距离折线图10，需要包含边缘留白
-        //    int lineNameWidth = 120 - margin_right;
-
-        //    #endregion
-
-        //    #region 数据
-
-        //    //最大数量/总数量--生成y轴时，显示数字需要
-        //    double maxCount = 0;
-        //    double minCount = 0;
-
-        //    //x轴底部显示的名称
-        //    // string[] bottomData = new string[] { "第一个", "第二个", "第三个", "第四个", "第五个" };
-
-        //    string[] bottomData = new string[data.Count];
-        //    //折线数据
-        //    List<List<double>> lineData = new List<List<double>>
-        //    {
-
-        //    };
-
-
-        //    List<double> xyList = new List<double>();
-        //    List<double> dhList = new List<double>();
-        //    //bottomData[0] = "1";
-        //    for (int i = 0; i < data.Count; i++)
-        //    {
-        //        bottomData[i] = data[i].Time.Substring(0, 10);
-        //        xyList.Add(data[i].Dxy);
-        //        dhList.Add(data[i].Dh);
-        //    }
-
-        //    //折线名称
-        //    string[] lineName = new string[] { "水平位移", "垂直位移" };
-        //    lineData.Add(xyList);
-        //    lineData.Add(dhList);
-
-
-        //    //maxCount = xCount.Max();
-        //    for (int i = 0; i < lineData.Count; i++)
-        //    {
-        //        double tempMaxCount = lineData[i].Max();
-        //        double tempMinCount = lineData[i].Min();
-        //        if (i == 0)
-        //        {
-        //            minCount = tempMinCount;
-        //        }
-        //        if (tempMaxCount > maxCount)
-        //        {
-        //            maxCount = tempMaxCount;
-        //        }
-        //        if (tempMinCount < minCount)
-        //        {
-        //            minCount = tempMinCount;
-        //        }
-        //    }
-
-        //    maxCount = maxCount == 0 ? 5 : maxCount;
-
-        //    #endregion
-
-        //    //单位转换对象
-        //    // Spire.Pdf.Graphics.PdfUnitConvertor unitCvtr = new Spire.Pdf.Graphics.PdfUnitConvertor();
-
-        //    //生成图像对象
-        //    Bitmap image = new Bitmap(width + margin_left + margin_right + lineNameWidth, height + margin_top + margin_bottom);
-
-        //    //创建画布
-        //    Graphics g = Graphics.FromImage(image);
-        //    //消除锯齿
-        //    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-        //    //质量
-        //    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-        //    g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-
-        //    //黑色画笔--主轴颜色
-        //    Brush blackBrush = new SolidBrush(Color.FromArgb(255, 102, 102, 102));
-        //    Pen blackPen = new Pen(blackBrush, 1);
-
-        //    //灰色画笔--辅助线条颜色
-        //    Brush grayBrush = new SolidBrush(Color.FromArgb(255, 224, 224, 224));
-        //    Pen grayPen = new Pen(grayBrush, 1);
-
-        //    //填充区域内容
-        //    g.FillRectangle(Brushes.WhiteSmoke, 0, 0, width + margin_left + margin_right + lineNameWidth, height + margin_top + margin_bottom);
-
-        //    //y轴
-        //    g.DrawLine(blackPen, margin_left, margin_top, margin_left, (height + margin_top));
-
-        //    //x轴
-        //    g.DrawLine(blackPen, margin_left, (height + margin_top), (width + margin_left), (height + margin_top));
-
-        //    // Font font = new Font(宋体, unitCvtr.ConvertUnits(fontsize, Spire.Pdf.Graphics.PdfGraphicsUnit.Pixel, Spire.Pdf.Graphics.PdfGraphicsUnit.Point));
-
-        //    Font font = new Font("宋体", 12, FontStyle.Bold);
-        //    //x轴--辅助线
-
-        //    //画5条辅助线，不管数字大小
-        //    int avgCount = Convert.ToInt32(Math.Ceiling((maxCount - minCount) / 5.0));
-
-        //    // 为了适应后面的计算
-        //    maxCount = avgCount * 5;
-
-        //    int lineHeight = (height - xsubline) / 5;
-
-        //    //画辅助线与文字
-        //    for (int i = 0; i <= 5; i++)
-        //    {
-        //        //辅助线
-        //        if (i > 0)
-        //        {
-        //            g.DrawLine(grayPen, margin_left, (height + margin_top - lineHeight * i), (width + margin_left), (height + margin_top - lineHeight * i));
-        //        }
-
-        //        //指向文字的线
-        //        g.DrawLine(blackPen, (margin_left - 5), (height + margin_top - lineHeight * i), margin_left, (height + margin_top - lineHeight * i));
-        //        //文字
-        //        string text = Convert.ToInt32((Math.Ceiling(minCount) + avgCount * i) * 1.5) + "mm";
-
-        //        RectangleF rec = new RectangleF(10, (height + margin_top - lineHeight * i - fontsize / 2), margin_left - 20, 20);
-        //        StringFormat format = new StringFormat(StringFormatFlags.DisplayFormatControl);
-        //        g.DrawString(text, font, blackBrush, rec, format);
-        //    }
-
-        //    //底部文字
-        //    int singleWidth = width / 5;
-        //    int pingJun = Convert.ToInt32(Math.Ceiling(data.Count / 5.0));
-
-        //    for (int i = 0; i < bottomData.Length; i++)
-        //    {
-        //        if (i % pingJun == 0)
-        //        {
-        //            StringFormat format = new StringFormat();
-        //            format.Alignment = StringAlignment.Center; //居中
-
-        //            //x轴下的文字
-        //            //指向线
-        //            g.DrawLine(blackPen, margin_left + Convert.ToInt32(Math.Ceiling(i / pingJun * 1.0)) * singleWidth, (height + margin_top), margin_left + Convert.ToInt32(Math.Ceiling(i / pingJun * 1.0)) * singleWidth, (height + margin_top + 5));
-        //            //文字
-        //            RectangleF rec = new RectangleF(margin_left + (Convert.ToInt32(Math.Ceiling(i / pingJun * 1.0)) * singleWidth) - singleWidth / 2, (height + margin_top + 15), singleWidth, (margin_bottom - 20));
-        //            g.DrawString(bottomData[i].ToString(), font, blackBrush, rec, format);
-        //        }
-        //        if (i == bottomData.Length - 1)
-        //        {
-        //            StringFormat format = new StringFormat();
-        //            format.Alignment = StringAlignment.Center; //居中
-
-        //            //x轴下的文字
-        //            //指向线
-        //            g.DrawLine(blackPen, margin_left + width, (height + margin_top), margin_left + width, (height + margin_top + 5));
-        //            //文字
-        //            RectangleF rec = new RectangleF(margin_left + width - singleWidth / 2, (height + margin_top + 15), singleWidth, (margin_bottom - 20));
-        //            g.DrawString(bottomData[i].ToString(), font, blackBrush, rec, format);
-        //        }
-
-        //    }
-
-        //    //预定颜色
-
-        //    for (int i = 0; i < lineName.Length; i++)
-        //    {
-        //        //随机颜色
-        //        Color tempColor = colors[i];//GetRandomColor();
-
-        //        //文字内容
-        //        StringFormat format = new StringFormat(StringFormatFlags.DirectionVertical);
-        //        //format.Alignment = StringAlignment.Center; //居中
-
-        //        //画笔
-        //        SolidBrush brush = new SolidBrush(tempColor);
-        //        Pen pen = new Pen(brush, 1);
-
-        //        // 折线名称处理
-        //        // 颜色块
-        //        Rectangle rectangle = new Rectangle(margin_left + width + 10, margin_top + i * 25, 20, 20);
-        //        g.FillRectangle(brush, rectangle);
-
-        //        // 文字
-        //        RectangleF rec = new RectangleF(margin_left + width + 10 + 25, margin_top + i * 25, 80, 20);
-        //        g.DrawString(lineName[i].ToString(), font, blackBrush, rec, format);
-
-        //        //这里要开始画折线了
-        //        Point[] points = new Point[lineData[i].Count];
-        //        for (int j = 0; j < lineData[i].Count; j++)
-        //        {
-        //            singleWidth = width / lineData[i].Count; ;
-        //            int x = j * singleWidth + margin_left;
-        //            int y = height + margin_top - Convert.ToInt32((lineData[i][j] - minCount * 1.5) / Convert.ToDouble(maxCount * 1.5) * (height - xsubline));
-
-        //            Point point = new Point(x, y);
-
-        //            points[j] = point;
-        //        }
-
-        //        g.DrawLines(pen, points);
-        //    }
-
-        //    // string relativePath = @DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
-        //    string relativePath = "zheXianTu" + ".jpg";
-
-        //    string path = imgdir + "/SurImage/Download/zheXianTu.jpg";
-        //    // Server.MapPath(relativePath);
-        //    image.Save(path, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-        //    return relativePath;
-        //    // return Json(relativePath);
-        //}
-
+        }
     }
 }

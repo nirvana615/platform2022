@@ -733,6 +733,8 @@ namespace SERVICE.Controllers
                 string constTime = HttpContext.Current.Request.Form["constTime"];
                 string patrolTtypeime = HttpContext.Current.Request.Form["type"];
                 string monitorId = HttpContext.Current.Request.Form["monitorId"];
+                string insetNo = HttpContext.Current.Request.Form["insetNo"];
+                string cardNo = HttpContext.Current.Request.Form["cardNo"];
 
 
                 if (file != null)
@@ -753,8 +755,24 @@ namespace SERVICE.Controllers
                         + SQLHelper.UpdateString(projectId) + ","
                         + SQLHelper.UpdateString(monitorId) + ","
                         + SQLHelper.UpdateString(type) + ","
-                        + SQLHelper.UpdateString(constTime) + ")";
-                    int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, "INSERT INTO const_photo_info (photo_url,project_id,monitor_id,type,const_time) VALUES" + value);
+                        + SQLHelper.UpdateString(constTime) ;
+
+                    string sql = "INSERT INTO const_photo_info(photo_url, project_id, monitor_id, type, const_time";
+                    if (!string.IsNullOrEmpty(insetNo))
+                    {
+                        sql = sql + ",inset_no ";
+                        value = value + "," + SQLHelper.UpdateString(insetNo);
+                    }
+                    if (!string.IsNullOrEmpty(cardNo))
+                    {
+                        sql = sql + ",card_no ";
+                        value = value + "," + SQLHelper.UpdateString(cardNo);
+                    }
+                    value = value + ")";
+                    sql = sql + ") VALUES ";
+
+
+                    int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, sql + value);
                     if (id != -1)
                     {
                         return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "上传成功！", id + ""));

@@ -36,5 +36,15 @@ namespace MODEL
         /// </summary>
         public string constTime { get; set; }
 
+        /// <summary>
+        /// 仪器编号
+        /// </summary>
+        public string insetNo { get; set; }
+
+        /// <summary>
+        /// 卡号
+        /// </summary>
+        public string cardNo { get; set; }
+
     }
 }

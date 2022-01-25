@@ -164,22 +164,22 @@ namespace MODEL
                         for (int j = rows.Count - 1; j >= 0 ; j--)
                         {
                             List<CellStructureInfo> cells = rows[j].Cells;
-                            bool isDelete = true;
-                            foreach (CellStructureInfo cell in cells)
-                            {
-                                if (!string.IsNullOrEmpty(cell.Tips)
-                                    && !cell.Tips.TrimAllSpace().IsNumeric())
-                                {
-                                    isDelete = false;
-                                    break;
-                                }
-                            }
+                            //bool isDelete = true;
+                            //foreach (CellStructureInfo cell in cells)
+                            //{
+                            //    if (!string.IsNullOrEmpty(cell.Tips)
+                            //        && !cell.Tips.TrimAllSpace().IsNumeric())
+                            //    {
+                            //        isDelete = false;
+                            //        break;
+                            //    }
+                            //}
 
-                            if (isDelete)
-                            {
-                                deleteRowIndex.Add(rows[j].Index);
-                                rows.Remove(rows[j]);
-                            }
+                            //if (isDelete)
+                            //{
+                            //    deleteRowIndex.Add(rows[j].Index);
+                            //    rows.Remove(rows[j]);
+                            //}
                         }
 
                         // 设置表格类型

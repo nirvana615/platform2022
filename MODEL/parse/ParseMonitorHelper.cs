@@ -4662,7 +4662,9 @@ namespace MODEL
                     projectId = row[2].ToString(),
                     monitorId = row[3].ToString(),
                     type = row[4].ToString(),
-                    constTime = row[4].ToString(),
+                    constTime = row[5].ToString(),
+                    insetNo = row[6].ToString(),
+                    cardNo = row[7].ToString(),
                 };
                 return constPhotoInfo;
             }
