@@ -34,19 +34,28 @@
 <body>
     <!--顶栏-->
     <div id="header">
-        <!--系统logo-->
-        <img id="syslogo" src="~/Resources/img/head/monitorlogo.png" />
+        <div style="position:absolute;height:100%;width:300px;">
+            <div style="position:absolute;width:50px;height:50px;">
+                <!--系统图标-->
+                <svg t="1643122590509" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1116" width="50" height="50"><path d="M511.53651428 206.48566437L794.72628784 293.23474121v263.33713532c-3.08990479 5.33008576-14.1363144 21.2430954-50.98342896 56.85424804-26.88217163 25.87795258-62.5705719 57.70397187-106.21547699 94.39659118C588.47514343 749.15019226 540.34987641 787.54225922 512.7724762 809.24884033c-27.57740021-21.70658112-75.70266724-60.09864807-124.75490571-101.34887695C344.37266541 671.13009643 308.68426513 639.30407715 281.80209351 613.34887695c-36.84711457-35.61115266-47.89352417-51.52416229-50.98342896-56.85424804v-263.41438294l280.71784973-86.5945816m-0.07724762-40.40050507L192.19485474 264.65312195v296.86260224c0 49.36122894 320.57762146 296.78535461 320.57762146 296.7853546S833.35009765 610.87695313 833.35009765 561.43847655V264.57587433L511.45926666 166.0851593z" fill="#ffffff" p-id="1117"></path><path d="M606.70558167 686.42512511L508.91009521 369.47814178 419.30285644 573.95259094l-113.24501037-117.41638183H215.36914062v-38.62380982h107.14244844l84.58614349 87.7532959 108.14666748-246.72889709L615.28006745 583.06781006l82.65495299-165.15541077h110.85033417v38.62380982H721.80453492z" fill="#ffffff" p-id="1118"></path></svg>
+            </div>
+
+            <div style="position:absolute;margin:2px 2px 2px 52px;">
+                <p class="syschinaTitle">地质灾害监测系统</p>
+                <p class="sysenglishTitle">Geological Disaster Monitoring System</p>
+            </div>
+        </div>
 
         <!--当前项目-->
-        <div class="layui-inline" style="position:absolute;left:420px;top:5px;bottom:5px">
+        <div style="position:absolute;left:45%;margin-left:-250px;text-align:center;width:200px;">
             <div class="layui-input-inline" id="currentprojectoperate">
-                <select id="currentproject"></select>
+                <select id="currentproject" style="margin-top:5px;"></select>
             </div>
         </div>
 
         <!--工具栏-->
         <div style="position:absolute;top:7px;right:5px">
-            <butto id="userbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-user"><span style="margin-left:5px">@ViewBag.User</span></i></butto>
+            <button id="userbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-user"><span style="margin-left:5px;font-size:18px;">@ViewBag.User</span></i></button>
             <button id="noticebtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-notice"></i></button>
             <button id="setbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-set-fill"></i></button>
             <a href="~/Platform/Logout">

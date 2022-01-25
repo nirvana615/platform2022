@@ -642,6 +642,7 @@
     <Content Include="Apps\uav\js\2.0-projectlist.js" />
     <Content Include="Apps\uav\js\4.0-route.js" />
     <Content Include="Apps\uav\js\3.0-project.js" />
+    <Content Include="Apps\uav\js\6.0-header.js" />
     <Content Include="Apps\uav\js\5.0-util.js" />
     <Content Include="Apps\uav\widget\1.2-uavproject-view.html" />
     <Content Include="Apps\uav\widget\1.1-uavproject-edit.html" />
@@ -712,17 +713,8 @@
     <Content Include="Resources\img\cesium\google_earth_pro.ico" />
     <Content Include="Resources\img\head\flzlogo.png" />
     <Content Include="Resources\img\head\imagelogo.png" />
-    <Content Include="Resources\img\head\img1.png" />
-    <Content Include="Resources\img\head\img2.png" />
     <Content Include="Resources\img\head\modellogo.png" />
-    <Content Include="Resources\img\head\pc1.png" />
-    <Content Include="Resources\img\head\pc2.png" />
     <Content Include="Resources\img\head\pointcloudlogo.png" />
-    <Content Include="Resources\img\head\uav1.png" />
-    <Content Include="Resources\img\head\uav2.png" />
-    <Content Include="Resources\img\head\uavlogo.png" />
-    <Content Include="Resources\img\head\xc1.png" />
-    <Content Include="Resources\img\head\xc2.png" />
     <Content Include="Resources\img\icon\add.png" />
     <Content Include="Resources\img\icon\left.png" />
     <Content Include="Resources\img\icon\right.png" />
@@ -745,7 +737,6 @@
     <Content Include="Resources\img\cesium\STK.png" />
     <Content Include="Resources\img\cesium\chinaImage.png" />
     <Content Include="Resources\img\cesium\chinaVector.png" />
-    <Content Include="Resources\img\head\monitorlogo.png" />
     <Content Include="Resources\img\map\project_type_landslide.png" />
     <Content Include="Resources\img\map\project_type_rockfall.png" />
     <Content Include="Resources\img\map\target.png" />
