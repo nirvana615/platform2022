@@ -87,41 +87,41 @@ namespace SERVICE.Controllers
         [HttpGet]
         public string GetMonitorUserInfo()
         {
-            //string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
-            //if (!string.IsNullOrEmpty(datas))
-            //{
-            //    List<User> monitorusers = new List<User>();
-            //    string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
-            //    for (int i = 0; i < rows.Length; i++)
-            //    {
-            //        User user = ParseManageHelper.ParseUser(rows[i]);
-            //        if (user != null)
-            //        {
-            //            string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_role WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
-            //            if (!string.IsNullOrEmpty(maps))
-            //            {
-            //                string[] maprows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
-            //                if (maprows.Length == 1)
-            //                {
-            //                    MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(maprows[0]);
-            //                    if (mapUserRole != null)
-            //                    {
-            //                        Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE id={0} AND ztm={1}", mapUserRole.RoleId, (int)MODEL.Enum.State.InUse)));
-            //                        if ((role != null) && (role.RoleName.ToUpper() == "MONITOR"))
-            //                        {
-            //                            monitorusers.Add(user);
-            //                        }
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<User> monitorusers = new List<User>();
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    User user = ParseManageHelper.ParseUser(rows[i]);
+                    if (user != null)
+                    {
+                        string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                        if (!string.IsNullOrEmpty(maps))
+                        {
+                            string[] maprows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                            for (int j = 0; j < maprows.Length; j++)
+                            {
+                                MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(maprows[j]);
+                                if (mapUserRole != null)
+                                {
+                                    Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_roles WHERE id={0}", mapUserRole.RoleId)));
+                                    if (role.SysCode == (int)MODEL.Enum.System.Monitor)
+                                    {
+                                        monitorusers.Add(user);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
-            //    if (monitorusers.Count > 0)
-            //    {
-            //        return JsonHelper.ToJson(monitorusers);
-            //    }
-            //}
+                if (monitorusers.Count > 0)
+                {
+                    return JsonHelper.ToJson(monitorusers);
+                }
+            }
 
             return string.Empty;
         }
@@ -302,7 +302,7 @@ namespace SERVICE.Controllers
                 return "无此用户！";
             }
         }
-        
+
         /// <summary>
         /// 获取全部陡崖用户信息
         /// </summary>

@@ -453,7 +453,7 @@
     <Content Include="Apps\admin\view\srid.html" />
     <Content Include="Apps\admin\view\database.html" />
     <Content Include="Apps\admin\view\sql.html" />
-    <Content Include="Apps\admin\view\auth.html" />
+    <Content Include="Apps\admin\view\auth_monitor.html" />
     <Content Include="Apps\admin\view\user.html" />
     <Content Include="Apps\admin\widget\database-add.html" />
     <Content Include="Apps\admin\widget\device-view.html" />
