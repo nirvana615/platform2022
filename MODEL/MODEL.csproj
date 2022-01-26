@@ -49,6 +49,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="data\common\mark\MapMarkProject.cs" />
+    <Compile Include="data\common\mark\Mark.cs" />
+    <Compile Include="data\common\mark\MarkData.cs" />
     <Compile Include="data\common\survey\BlockExtent.cs" />
     <Compile Include="data\flzone\flzproject\FlzData.cs" />
     <Compile Include="data\flzone\flzproject\FlzDataLayer.cs" />

@@ -20,6 +20,7 @@ var markType = "";//新增标注类型 1:点 2：线 3：多边形
 var markClickType = "";//
 var currentmarkpointstyle = '../Resources/img/mark/img_mark_P1.png';//默认点标注样式
 var currentmarkcolor = '#cc0000';//默认点标注颜色
+var markprojectid;//标注项目id
 
 var markAddLayer = [];//新增点标注列表
 var markProjectPointLayerList = [];//项目点标注列表
@@ -29,6 +30,7 @@ var markAddPolygonLayerList = [];//新增面标注列表
 
 var selectMarkPointStyleid; //点标注选取样式id
 var selectMarkPointColor; //点颜色
+
 
 var depthTestAgainstTerrain = null;//深度监测初始值
 var modelpolt = null;//模型标绘
@@ -58,6 +60,7 @@ function Markwidget(id) {
             depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
             //默认地形测量
             viewer.scene.globe.depthTestAgainstTerrain = true;
+            markprojectid = id;
             //选择颜色
             layui.colorpicker.render({
                 elem: '#mark-point-color'
@@ -79,7 +82,7 @@ function Markwidget(id) {
                 elem: '#addmarklayerlist'
                 , id: 'addmarklayerTree'
                 , showCheckbox: true
-                , customCheckbox: true
+                //, customCheckbox: true
                 , customOperate: false
                 , showLine: true
                 , data: markAddLayer
@@ -87,6 +90,9 @@ function Markwidget(id) {
                 , accordion: true
                 , click: function (obj) {
                     addMarkLayerClick(obj);
+                }
+                , oncheck: function (obj) {
+                    addMarkLayerCheck(obj);
                 }
             });
         }
@@ -208,16 +214,18 @@ function pointMark() {
                                 scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
                             }
                         });
-
+                        pointmarktemp.showCheckbox = true;//显示复选框
+                        pointmarktemp.checked = true;
                         pointmarktemp.id = id_temp;
                         pointmarktemp.title = "标注点";
-                        pointmarktemp.position = JSON.stringify(position);
+                        pointmarktemp.projetid = markprojectid;//
+                        pointmarktemp.position = JSON.stringify(position);//
                         pointmarktemp.longitude = longitude;
                         pointmarktemp.latitude = latitude;
                         pointmarktemp.height = height;
-                        pointmarktemp.marktype = "point";
-                        pointmarktemp.style = currentmarkpointstyle;
-                        pointmarktemp.color = currentmarkcolor;
+                        pointmarktemp.marktype = "point";//
+                        pointmarktemp.style = currentmarkpointstyle;//
+                        pointmarktemp.color = currentmarkcolor;//
                         markAddPointLayerList.push(pointmarktemp);
                         updateMarkInfoPanel(pointmarktemp);
                         tree.reload('addmarklayerTree', {
@@ -226,8 +234,8 @@ function pointMark() {
                     }
                 }
             }
-        }
-    
+        }    
+
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
         //右击结束标注
@@ -256,17 +264,48 @@ function polygonMark() {
 
 //保存标注
 function saveMark() {
-    var data = {};
-    data.cookie = document.cookie;
-    data.markinfo = JSON.stringify(markAddLayer);
+    var saveMarkAdd = markAddLayer;
+    var markdata = {};
+    var postmarks = [];
+    //获取选中状态标注
+    var splice = [];
+    for (var i in saveMarkAdd) {
+        for (var j in saveMarkAdd[i].children) {
+            if (saveMarkAdd[i].children[j].checked == true) {
+                var data = new Object;
+                data.title = saveMarkAdd[i].children[j].title;
+                data.position = saveMarkAdd[i].children[j].position;
+                data.style = saveMarkAdd[i].children[j].style;
+                data.color = saveMarkAdd[i].children[j].color;
+                data.projetid = saveMarkAdd[i].children[j].projetid;
+                data.marktype = saveMarkAdd[i].children[j].marktype;
+                postmarks.push(data);
+                splice.push(j);
+            }
+        }
+        for (var n in splice) {
+            saveMarkAdd[i].children.splice(parseInt(splice[n]), 1);
+        }
+        splice = [];
+    }
+
+
+    markdata.cookie = document.cookie;
+    markdata.postmarks = JSON.stringify(postmarks);
+
     $.ajax({
-        url: servicesurl + "/api/Mark/AddMark", type: "post", data: data,
+        url: servicesurl + "/api/Mark/AddMark", type: "post", data: markdata,
         success: function (result) {
-            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            var data = JSON.parse(result);
+            layer.msg(data.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            if (data.code == "1") {
+                markAddLayer = saveMarkAdd;
+                tree.reload('addmarklayerTree', {
+                    data: markAddLayer
+                });
+            }
         }, datatype: "json"
     });
-
-
 
 };
 
@@ -298,7 +337,7 @@ function updateMarkInfoPanel(markobject) {
     }
 };
 
-//选中新增标注节点操作
+//点击新增标注节点操作
 function addMarkLayerClick(obj) {
 
     if (JSON.stringify(obj.data.id) == undefined) {
@@ -316,6 +355,21 @@ function addMarkLayerClick(obj) {
         }
     }
 };
+//选中新增标注节点操作
+function addMarkLayerCheck(obj) {
+    //更新选中状态
+    for (var i in markAddLayer) {
+        if (markAddLayer[i].type == obj.data.marktype) {
+            for (var j in markAddLayer[i].children) {
+                if (markAddLayer[i].children[j].id == obj.data.id) {
+                    markAddLayer[i].children[j].checked = obj.checked
+                }
+            }
+        }
+    }
+};
+
+
 
 //选中标注方式操作
 function selectAddMarkTypeOperate(id) {
