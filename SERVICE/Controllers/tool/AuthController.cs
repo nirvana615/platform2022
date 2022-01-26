@@ -69,8 +69,7 @@ namespace SERVICE.Controllers
                 }
                 else
                 {
-                    //
-                    MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND ztm={1} and roleid={2} ", user.Id, (int)MODEL.Enum.State.InUse,5)));
+                    MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND ztm={1} and roleid={2} ", user.Id, (int)MODEL.Enum.State.InUse, 5)));
                     if (mapUserRole == null)
                     {
                         return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无用户角色！", string.Empty));//无角色
@@ -85,7 +84,7 @@ namespace SERVICE.Controllers
                         else
                         {
                             PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET dlsj={0} WHERE id={1}", SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), user.Id));//更新用户登录时间
-                            PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO manage_user_login (userid,type,time) VALUES({0},{1},{2})", user.Id, (int)MODEL.Enum.LoginWay.WeChat, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))));//记录用户登录时间
+                            PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO manage_user_login (userid,type,time,syscode) VALUES({0},{1},{2},{3})", user.Id, (int)MODEL.Enum.LoginWay.WeChat, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.System.Monitor));//记录用户登录时间
 
                             #region usercookie
                             FormsAuthenticationTicket userticket = new FormsAuthenticationTicket(
@@ -116,7 +115,6 @@ namespace SERVICE.Controllers
                             #endregion
 
                             return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", "User=" + usercookie.Value + ";Role=" + rolecookie.Value));
-
                         }
                     }
                 }
