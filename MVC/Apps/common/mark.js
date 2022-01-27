@@ -28,12 +28,13 @@ var markAddPointLayerList = [];//新增点标注列表
 var markAddLineLayerList = [];//新增线标注列表
 var markAddPolygonLayerList = [];//新增面标注列表
 
-var selectMarkPointStyleid; //点标注选取样式id
-var selectMarkPointColor; //点颜色
-
+var markwidget_temppoints = [];
+var markwidget_tempentities = [];
 
 var depthTestAgainstTerrain = null;//深度监测初始值
 var modelpolt = null;//模型标绘
+var markwidget_tipsentity = null;            //操作提示
+
 
 //标绘widget
 function Markwidget(id) {
@@ -94,6 +95,21 @@ function Markwidget(id) {
                 , oncheck: function (obj) {
                     addMarkLayerCheck(obj);
                 }
+            });
+
+
+            //操作提示
+            markwidget_tipsentity = viewer.entities.add({
+                label: {
+                    show: false,
+                    showBackground: true,
+                    font: "14px monospace",
+                    horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                    pixelOffset: new Cesium.Cartesian2(20, 20),
+                    scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+                },
             });
         }
         , end: function () {
@@ -254,12 +270,396 @@ function lineMark() {
     selectAddMarkTypeOperate("mark_line_id");
     viewer._container.style.cursor = "crosshair";//修改鼠标样式
 
+    markwidget_temppoints = [];//清除临时点
+    markwidget_tempentities = [];//清除临时图形
+
+    if (handler != undefined) {
+        handler.destroy();
+    }
+    handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+    //左键（开始测量）
+    handler.setInputAction(function (leftclick) {
+
+        var pickedOject;
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            pickedOject = viewer.scene.pickPosition(leftclick.position);//地形测量
+        }
+        else {
+            pickedOject = viewer.scene.pick(leftclick.position);//模型测量
+        }
+
+        if (pickedOject != undefined) {
+            var xyz = viewer.scene.pickPosition(leftclick.position);
+            if (xyz != undefined) {
+                var tempentity = viewer.entities.add({
+                    name: "add_mark_line" + NewGuid(),
+                    position: xyz,
+                    point: {
+                        pixelSize: 8,
+                        color: Cesium.Color.YELLOW,
+                        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                    }
+                });
+                markwidget_temppoints.push(xyz);
+                markwidget_tempentities.push(tempentity);
+
+                if (markwidget_temppoints.length > 1) {
+                    var tempentity_line = viewer.entities.add({
+                        name: "add_mark_line" + NewGuid(),
+                        polyline: {
+                            positions: [markwidget_temppoints[markwidget_temppoints.length - 2], xyz],
+                            width: 2,
+                            material: Cesium.Color.DARKORANGE,
+                            depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                color: Cesium.Color.DARKORANGE
+                            }),
+                        }
+                    });
+                    markwidget_tempentities.push(tempentity_line);
+                }
+            }
+        }
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+    //右键（结束测量）
+    handler.setInputAction(function (rightclik) {
+        if (viewer.entities.getById("line_temp9999") != null) {
+            viewer.entities.removeById("line_temp9999");//删除临时边线
+        }
+
+        if (markwidget_temppoints.length == 1 && markwidget_tempentities.length == 1) {
+            if (viewer.entities.contains(markwidget_tempentities[0])) {
+                viewer.entities.remove(markwidget_tempentities[0]);
+
+                markwidget_temppoints = [];
+                markwidget_tempentities = [];
+
+                layer.msg('请至少绘制两个点！');
+            }
+        }
+        else if (markwidget_temppoints.length > 1) {
+            var lens = 0;
+            var diss = 0;
+
+            for (var i = 1; i < markwidget_temppoints.length; i++) {
+                var len = Cesium.Cartesian3.distance(markwidget_temppoints[i - 1], markwidget_temppoints[i]);
+                var blh1 = Cesium.Cartographic.fromCartesian(markwidget_temppoints[i - 1]);
+                var blh2 = Cesium.Cartographic.fromCartesian(markwidget_temppoints[i]);
+                var dis = Math.sqrt(Math.pow(len, 2) - Math.pow(Math.abs(blh1.height - blh2.height), 2));
+                lens += len;
+                diss += dis;
+            }
+
+            viewer.entities.add({
+                name: "add_mark_line_label_" + NewGuid(),
+                position: markwidget_temppoints[markwidget_temppoints.length - 1],
+                label: {
+                    text: '空间距离：' + lens.toFixed(3) + 'm',
+                    showBackground: true,
+                    backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                    font: '18px Times New Roman',
+                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                    pixelOffset: new Cesium.Cartesian2(0.0, -30),
+                    scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+                }
+            });
+            markwidget_temppoints = [];
+            markwidget_tempentities = [];
+
+            if (handler != undefined) {
+                handler.destroy();
+                layer.msg("结束线标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                unselectAddMarkTypeOperate();
+                markType = "";
+                markwidget_tipsentity.label.show = false;
+                markwidget_tipsentity.label.text = "";
+            }
+        }
+    }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+
+    //移动（操作提示）
+    handler.setInputAction(function (move) {
+        var pickedOject;
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            pickedOject = viewer.scene.pickPosition(move.endPosition);//地形测量
+        } else {
+            pickedOject = viewer.scene.pick(move.endPosition);//模型测量
+        }
+
+        if (pickedOject != undefined) {
+            var position = viewer.scene.pickPosition(move.endPosition);
+            if (position != undefined) {
+                markwidget_tipsentity.position = position;
+                markwidget_tipsentity.label.show = true;
+                markwidget_tipsentity.label.text = "左键点击开始测量，右键点击结束测量";
+
+                if (markwidget_temppoints.length > 0) {
+                    if (viewer.entities.getById("line_temp9999") != null) {
+                        viewer.entities.removeById("line_temp9999");//删除临时边线
+                    }
+                    //绘制多边形临时边线
+                    viewer.entities.add({
+                        id: "line_temp9999",
+                        polyline: {
+                            positions: [markwidget_temppoints[markwidget_temppoints.length - 1], position],
+                            width: 2,
+                            arcType: Cesium.ArcType.RHUMB,
+                            material: new Cesium.PolylineDashMaterialProperty({
+                                color: Cesium.Color.DARKORANGE,
+                            }),
+                            depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                color: Cesium.Color.DARKORANGE,
+                            }),
+                        }
+                    });
+                }
+            }
+            else {
+                markwidget_tipsentity.label.show = false;
+                markwidget_tipsentity.label.text = "";
+            }
+        }
+        else {
+            markwidget_tipsentity.label.show = false;
+            markwidget_tipsentity.label.text = "";
+        }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
 };
 //面标注
 function polygonMark() {
     markType = "2";
     selectAddMarkTypeOperate("mark_polygon_id");
     viewer._container.style.cursor = "crosshair";//修改鼠标样式
+
+    markwidget_temppoints = [];//清除临时点
+    markwidget_tempentities = [];//清除临时图形
+
+    if (handler != undefined) {
+        handler.destroy();
+    }
+    handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+    //左键（开始测量）
+    handler.setInputAction(function (leftclik) {
+
+        var pickedOject;
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            pickedOject = viewer.scene.pickPosition(leftclik.position);//地形测量
+        } else {
+            pickedOject = viewer.scene.pick(leftclik.position);//模型测量
+        }
+
+        if (pickedOject != undefined) {
+            var position = viewer.scene.pickPosition(leftclik.position);
+            if (position != undefined) {
+                if (Cesium.defined(position)) {
+                    var tempentity = viewer.entities.add({
+                        name: "add_mark_polygon" + MeasureGuid(),
+                        position: position,
+                        point: {
+                            pixelSize: 8,
+                            color: Cesium.Color.YELLOW,
+                            disableDepthTestDistance: Number.POSITIVE_INFINITY
+                        },
+                    });
+                    markwidget_temppoints.push(position);
+                    markwidget_tempentities.push(tempentity);
+                }
+                if (markwidget_temppoints.length > 1) {
+                    var tempentity_line = viewer.entities.add({
+                        name: "add_mark_polygon" + MeasureGuid(),
+                        polyline: {
+                            positions: [markwidget_temppoints[markwidget_temppoints.length - 2], position],
+                            width: 2,
+                            arcType: Cesium.ArcType.RHUMB,
+                            material: Cesium.Color.DARKORANGE,
+                            depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                color: Cesium.Color.DARKORANGE,
+                            }),
+                        }
+                    });
+                    markwidget_tempentities.push(tempentity_line);
+                }
+            }
+        }
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+    //右键（结束测量）
+    handler.setInputAction(function () {
+        if (viewer.entities.getById("line_temp9999") != null) {
+            viewer.entities.removeById("line_temp9999");
+        }
+        if (viewer.entities.getById("line_temp9998") != null) {
+            viewer.entities.removeById("line_temp9998");
+        }
+
+        if (markwidget_temppoints.length > 2) {
+            //绘制多边形闭合线
+            viewer.entities.add({
+                name: "add_mark_polygon" + MeasureGuid(),
+                polyline: {
+                    positions: [markwidget_temppoints[0], markwidget_temppoints[markwidget_temppoints.length - 1]],
+                    width: 2,
+                    arcType: Cesium.ArcType.RHUMB,
+                    material: Cesium.Color.DARKORANGE,
+                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                        color: Cesium.Color.DARKORANGE,
+                    }),
+                }
+            });
+
+            var xsum = 0;
+            var ysum = 0;
+            var zsum = 0;
+            var lens = 0;
+            var diss = 0;
+            var area = 0;
+            var xys = [];
+            for (var i = 0; i < markwidget_temppoints.length; i++) {
+                if (i == 0) {
+                    lens += Cesium.Cartesian3.distance(markwidget_temppoints[markwidget_temppoints.length - 1], markwidget_temppoints[0]);
+                }
+                else {
+                    lens += Cesium.Cartesian3.distance(markwidget_temppoints[i - 1], markwidget_temppoints[i]);
+                }
+
+                xsum += markwidget_temppoints[i].x;
+                ysum += markwidget_temppoints[i].y;
+                zsum += markwidget_temppoints[i].z;
+
+                var blh = CGCS2000XYZ2BLH(markwidget_temppoints[i].x, markwidget_temppoints[i].y, markwidget_temppoints[i].z);
+                var xy = bl2xy(blh.x, blh.y, 3, 108, false);
+                xys.push(new Cesium.Cartesian2(xy.x, xy.y));
+            }
+
+            for (var i = 0; i < xys.length; i++) {
+                if (i == 0) {
+                    diss += Cesium.Cartesian2.distance(xys[0], xys[xys.length - 1]);
+                }
+                else {
+                    diss += Cesium.Cartesian2.distance(xys[i], xys[i - 1]);
+                }
+            }
+
+            for (var i = 1; i < xys.length - 1; i++) {
+                area += (xys[i].x - xys[0].x) * (xys[i + 1].y - xys[0].y) - (xys[i].y - xys[0].y) * (xys[i + 1].x - xys[0].x);
+            }
+            area = Math.abs(area) * 0.5;
+
+            viewer.entities.add({
+                name: "add_mark_polygon_label_" + MeasureGuid(),
+                position: new Cesium.Cartesian3(xsum / markwidget_temppoints.length, ysum / markwidget_temppoints.length, zsum / markwidget_temppoints.length),
+                label: {
+                    text: '平面面积：' + area.toFixed(3) + 'm²',
+                    showBackground: true,
+                    backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                    font: '18px Times New Roman',
+                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                    pixelOffset: new Cesium.Cartesian2(0.0, -50),
+                    scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+                }
+            });
+
+            if (handler != undefined) {
+                handler.destroy();
+                layer.msg("结束线标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                unselectAddMarkTypeOperate();
+                markType = "";
+                markwidget_tipsentity.label.show = false;
+                markwidget_tipsentity.label.text = "";
+            }
+            markwidget_temppoints = [];
+            markwidget_tempentities = [];
+        }
+        else if (markwidget_temppoints.length > 0) {
+            for (var i in markwidget_tempentities) {
+                if (viewer.entities.contains(markwidget_tempentities[i])) {
+                    viewer.entities.remove(markwidget_tempentities[i]);
+                }
+            }
+
+            markwidget_temppoints = [];
+            markwidget_tempentities = [];
+
+            layer.msg('请至少绘制三个点！');
+        }
+    }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+
+    //移动（操作提示）
+    handler.setInputAction(function (move) {
+        var pickedOject;
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            pickedOject = viewer.scene.pickPosition(move.endPosition);//地形测量
+        } else {
+            pickedOject = viewer.scene.pick(move.endPosition);//模型测量
+        }
+
+        if (pickedOject != undefined) {
+            var position = viewer.scene.pickPosition(move.endPosition);
+            if (position != undefined) {
+                markwidget_tipsentity.position = position;
+                markwidget_tipsentity.label.show = istips;
+                markwidget_tipsentity.label.text = "左键点击开始测量，右键点击结束测量";
+
+                if (markwidget_temppoints.length > 0) {
+                    if (viewer.entities.getById("line_temp9999") != null) {
+                        viewer.entities.removeById("line_temp9999");//删除临时边线
+                    }
+                    //绘制多边形临时边线
+                    viewer.entities.add({
+                        id: "line_temp9999",
+                        polyline: {
+                            positions: [markwidget_temppoints[markwidget_temppoints.length - 1], position],
+                            width: 2,
+                            arcType: Cesium.ArcType.RHUMB,
+                            material: new Cesium.PolylineDashMaterialProperty({
+                                color: Cesium.Color.DARKORANGE,
+                            }),
+                            depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                color: Cesium.Color.DARKORANGE,
+                            }),
+                        }
+                    });
+
+                    if (markwidget_temppoints.length > 1) {
+                        if (viewer.entities.getById("line_temp9998") != null) {
+                            viewer.entities.removeById("line_temp9998");//删除临时闭合线
+                        }
+                        //绘制多边形临时闭合线
+                        viewer.entities.add({
+                            id: "line_temp9998",
+                            polyline: {
+                                positions: [markwidget_temppoints[0], position],
+                                width: 2,
+                                arcType: Cesium.ArcType.RHUMB,
+                                material: new Cesium.PolylineDashMaterialProperty({
+                                    color: Cesium.Color.DARKORANGE,
+                                }),
+                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                    color: Cesium.Color.DARKORANGE,
+                                }),
+                            }
+                        });
+                    }
+                }
+            }
+            else {
+                markwidget_tipsentity.label.show = false;
+                markwidget_tipsentity.label.text = "";
+            }
+        }
+        else {
+            markwidget_tipsentity.label.show = false;
+            markwidget_tipsentity.label.text = "";
+        }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
 };
 
 //保存标注
@@ -399,6 +799,8 @@ function ClearMarkTemp() {
                 || (viewer.entities._entities._array[i]._name.indexOf("temppolygon") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("add_mark_point") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("add_mark_line") > -1)
+                || (viewer.entities._entities._array[i]._name.indexOf("add_mark_line_label_") > -1)
+                || (viewer.entities._entities._array[i]._name.indexOf("add_mark_polygon_label_") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("add_mark_polygon") > -1))
             ) {
                 viewer.entities.remove(viewer.entities._entities._array[i]);
