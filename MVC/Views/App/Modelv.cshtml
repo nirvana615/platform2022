@@ -7,7 +7,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>实景模型管理系统（用户）</title>
+    <title>实景模型管理系统</title>
     <!--jquery-->
     <script src="~/Scripts/jquery-3.3.1.js"></script>
     <link rel="stylesheet" href="~/Scripts/viewer.min.css">
@@ -31,17 +31,28 @@
 <body>
     <!--顶栏-->
     <div id="header">
-        <!--系统logo-->
-        <img id="syslogo" src="~/Resources/img/head/modellogo.png" />
-        <!--当前项目-->
-        <div class="layui-inline" style="position:absolute;left:420px;top:5px;bottom:5px">
-            <div class="layui-input-inline" id="currentprojectoperate">
-                <select id="currentproject"></select>
+        <div style="position:absolute;height:100%;width:300px;">
+            <div style="position:absolute;width:50px;height:50px;">
+                <!--系统图标-->
+                <svg t="1643166207048" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1447" width="50" height="50"><path d="M512 164.38571167l-336.0283041 150.63169956v390.09970664L512 859.61428833l336.0283041-150.63169956V315.01741123L512 164.38571167z m158.35916519 540.73488235l-61.79886817 27.03396321v-224.01655197l57.93687344-27.0339632c65.66086292-27.03743935 108.14628125-11.58598423 108.14628122 65.66086292 0 73.38137627-42.48889447 131.31477356-104.28428649 158.35568904z m92.69830227-370.78973293L512 446.33913708l-251.05399132-112.01175213L512 218.46059036l251.05746746 115.87027073z m-536.87288761 34.76142883L512 496.55202103v305.12539386l-285.81542015-127.45625496v-305.12887001z" fill="#ffffff" p-id="1448"></path><path d="M666.49369431 515.86199474l-11.58598423 3.86199475v154.4936943l11.58598423-3.86199475c38.62342357-15.44797897 65.66086292-50.20940781 65.66086292-104.28428649-3.85851861-57.93339729-27.03396321-65.65738678-65.66086292-50.20940781z m-266.50197029 81.1088419c23.1754446 0 38.62342357-15.44797897 38.62342356-38.62342358 0-38.61994744-27.03396321-69.52285766-73.38485239-84.97083663-27.03743935-11.58598423-46.34741306-7.72398949-65.66086293-1e-8L322.74487686 512c11.58598423-7.72398949 27.03743935-7.72398949 42.48541833-3.86199474 19.31344986 7.72746562 30.89943409 23.1754446 30.89943409 38.62342357 0 19.31344986-11.58598423 27.03396321-54.07140255 11.58598423v30.90291024c46.34741306 19.30997371 61.79539204 38.61994744 61.79539202 57.93339729s-15.44797897 23.1754446-38.62342356 15.44797898c-19.31344986-7.72398949-34.76142883-23.17196846-50.20940782-42.48541832l-19.31344985 19.31344985c15.44797897 23.17196846 38.62342357 46.34741306 73.3848524 57.9333973 42.48889447 15.44797897 77.2503233 7.72746562 77.25032331-34.76142883-3.86547089-23.17196846-23.17892075-50.20940781-46.35088921-65.66086293z" fill="#ffffff" p-id="1449"></path></svg>
+            </div>
+
+            <div style="position:absolute;margin:2px 2px 2px 52px;">
+                <p class="syschinaTitle">实景模型管理系统</p>
+                <p class="sysenglishTitle">3D Reality Model Management System</p>
             </div>
         </div>
+
+        <!--当前项目-->
+        <div style="position:absolute;left:45%;margin-left:-250px;text-align:center;width:200px;">
+            <div class="layui-input-inline" id="currentprojectoperate">
+                <select id="currentproject" style="margin-top:5px;"></select>
+            </div>
+        </div>
+
         <!--工具栏-->
         <div style="position:absolute;top:7px;right:5px">
-            <butto id="userbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-user"><span style="margin-left:5px">@ViewBag.User</span></i></butto>
+            <button id="userbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-user"><span style="margin-left:5px;font-size:18px;">@ViewBag.User</span></i></button>
             <button id="noticebtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-notice"></i></button>
             <button id="setbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-set-fill"></i></button>
             <a href="~/Platform/Logout">
@@ -51,6 +62,7 @@
     </div>
     <!--地图-->
     <div id="map"></div>
+
     <!--javascript-->
     <script>
         var servicesurl = @Html.Raw(Json.Encode(ViewBag.ServicesURL));
@@ -58,7 +70,7 @@
         var ViewBag = @Html.Raw(Json.Encode(ViewBag));
     </script>
 
-    <!--开发-->
+    <script src="~/Apps/common/common.js"></script>
     <script src="~/Apps/model/js/1.1-all.js"></script>
     <script src="~/Apps/model/js/1.2-para.js"></script>
     <script src="~/Apps/model/js/3.0-map.js"></script>
@@ -70,7 +82,6 @@
     <script src="~/Apps/model/js/5.1-message.js"></script>
     <script src="~/Apps/model/js/5.2-setting.js"></script>
     <script src="~/Apps/model/js/6.0-util-modelv.js"></script>
-    <!--实景模型系统，导入测量工具-->
     <script src="~/Apps/common/measure.js"></script>
     <script src="~/Apps/common/mark.js"></script>
     <script src="~/Apps/model/js/6.3-localtool.js"></script>

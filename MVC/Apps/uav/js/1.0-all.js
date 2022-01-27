@@ -24,6 +24,9 @@ var uavrouteaddlayerindex = null;       //航线（新建）模块
 var uavrouteviewlayerindex = null;      //航线（查看）模块
 var uavrouteeditlayerindex = null;      //航线（编辑）模块
 
+var headeruserlayerindex = null;                                //用户信息
+var headerselayerindex = null;                                  //设置
+
 
 
 var uav_project_list_all = [];//用户全部项目列表

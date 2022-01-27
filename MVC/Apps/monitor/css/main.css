@@ -27,12 +27,18 @@
     bottom: 0px;
 }
 
-#syslogo {
-    position: absolute;
-    width: 389px;
-    height: 50px;
-    top: 0px;
-    left: 5px;
+.syschinaTitle {
+    color: Lavender;
+    font-family: sans-serif;
+    font-size: 22px;
+    letter-spacing: 5px;
+}
+
+.sysenglishTitle {
+    color: Lavender;
+    font-family: Georgia;
+    font-size: 12px;
+    letter-spacing: 0px;
 }
 
 #currentproject {

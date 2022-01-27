@@ -26,7 +26,7 @@ function LoadAutoDeviceLayer(projectid) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--设备管理--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px">    <ul class="layui-tab-title">        <li class="layui-this" style="width:30%;padding-top: 10px;">概况</li>        <li style="width:30%;padding-top: 10px;">详情</li>        <li style="width:30%;padding-top: 10px;">设备安装进度</li>    </ul>    <div class="layui-tab-content">        <!--概况-->        <div class="layui-tab-item layui-show">            <form class="layui-form" lay-filter="autodevicesform" style="margin-top:5px;">                <div class="layui-row">                    <div class="layui-col-xs6">                        <div class="grid-demo grid-demo-bg1">                            <div class="layui-form-item">                                <div class="layui-input-block" style="margin-left:10px;">                                    <select id="autodevicespretimeid" name="autodevicespretime" lay-filter="autodevicespretimefilter" style="visibility:visible;"></select>                                </div>                            </div>                        </div>                    </div>                    <div class="layui-col-xs6">                        <div class="grid-demo">                            <div class="layui-form-item">                                <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                    <input id="autodevicescustomtimeid" name="autodevicescustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">                                </div>                            </div>                        </div>                    </div>                </div>            </form>            <div class="layui-row">                <div class="layui-col-xs6">                    <div class="grid-demo grid-demo-bg1">                        1                    </div>                </div>                <div class="layui-col-xs6">                    <div class="grid-demo">                        <!--设备数量-->                        <div id="autodevicechartbynum" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>            </div>            <div class="layui-row">                <div class="layui-col-xs6">                    <div class="grid-demo grid-demo-bg1">                        <!--按灾害体-->                        <div id="autodevicechartbydisaster" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>                <div class="layui-col-xs6">                    <div class="grid-demo">                        <!--按设备类型-->                        <div id="autodevicechartbytype" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>            </div>        </div>        <!--详情-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:500px;overflow: auto;">                    <div id="device-monitor-tree" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="autodeviceform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs6">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;">                                                <select id="autodevicepretimeid" name="autodevicepretime" lay-filter="autodevicepretimefilter" style="visibility:visible;"></select>                                            </div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs6">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="autodevicecustomtimeid" name="autodevicecustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--采集数量柱状图-->                        <div id="autodevicechart" class="layui-tab-item layui-show" style="width:780px;height:600px"></div>                        <!--设备采集率-->                        <div style="padding-left:50px;padding-right:10px;padding-top:20px;">                            <div class="layui-progress layui-progress" lay-showpercent="true" lay-filter="devicerate">                                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>                            </div>                        </div>                    </div>                </div>            </div>        </div>        <!--施工管理-->        <div class="layui-tab-item">            <!--施工设备管理-->            <div class="layui-fluid">                <div class="layui-card">                    <div class="layui-card-body">                        <table id="const-device-manage" lay-filter="const-device-manage"></table>                        <script type="text/html" id="table-toolbar-const">                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview"><i class="layui-icon layui-icon-read"></i>详情</a>                        </script>                        <!--统计表格-->                        <div id="autodatastatisticsdiv" style="margin-left:250px;margin-right:250px;margin-top: 20px;">                            <table id="constdeviceTongji" class="layui-hide"></table>                        </div>                    </div>                </div>            </div>        </div>    </div></div>'
+                , content: '<!--设备管理--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px">    <ul class="layui-tab-title">        <li class="layui-this" style="width:30%;padding-top: 10px;">概况</li>        <li style="width:30%;padding-top: 10px;">详情</li>        <li style="width:30%;padding-top: 10px;">设备安装进度</li>    </ul>    <div class="layui-tab-content">        <!--概况-->        <div class="layui-tab-item layui-show">            <form class="layui-form" lay-filter="autodevicesform" style="margin-top:5px;">                <div class="layui-row">                    <div class="layui-col-xs6">                        <div class="grid-demo grid-demo-bg1">                            <div class="layui-form-item">                                <div class="layui-input-block" style="margin-left:10px;">                                    <select id="autodevicespretimeid" name="autodevicespretime" lay-filter="autodevicespretimefilter" style="visibility:visible;"></select>                                </div>                            </div>                        </div>                    </div>                    <div class="layui-col-xs6">                        <div class="grid-demo">                            <div class="layui-form-item">                                <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                    <input id="autodevicescustomtimeid" name="autodevicescustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">                                </div>                            </div>                        </div>                    </div>                </div>            </form>            <div class="layui-row">                <div class="layui-col-xs6">                    <div class="grid-demo grid-demo-bg1">                        1                    </div>                </div>                <div class="layui-col-xs6">                    <div class="grid-demo">                        <!--设备数量-->                        <div id="autodevicechartbynum" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>            </div>            <div class="layui-row">                <div class="layui-col-xs6">                    <div class="grid-demo grid-demo-bg1">                        <!--按灾害体-->                        <div id="autodevicechartbydisaster" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>                <div class="layui-col-xs6">                    <div class="grid-demo">                        <!--按设备类型-->                        <div id="autodevicechartbytype" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>            </div>        </div>        <!--详情-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:500px;overflow: auto;">                    <div id="device-monitor-tree" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="autodeviceform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs6">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;">                                                <select id="autodevicepretimeid" name="autodevicepretime" lay-filter="autodevicepretimefilter" style="visibility:visible;"></select>                                            </div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs6">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="autodevicecustomtimeid" name="autodevicecustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--采集数量柱状图-->                        <div id="autodevicechart" class="layui-tab-item layui-show" style="width:760px;height:600px"></div>                        <!--设备采集率-->                        <div style="padding-left:50px;padding-right:10px;padding-top:20px;">                            <div class="layui-progress layui-progress" lay-showpercent="true" lay-filter="devicerate">                                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>                            </div>                        </div>                    </div>                </div>            </div>        </div>        <!--施工管理-->        <div class="layui-tab-item">            <!--施工设备管理-->            <div class="layui-fluid">                <div class="layui-card">                    <div class="layui-card-body">                        <table id="const-device-manage" lay-filter="const-device-manage"></table>                        <script type="text/html" id="table-toolbar-const">                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a>                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="photoDown">下载</a>                        </script>                        <!--统计表格-->                        <div id="autodatastatisticsdiv" style="margin-left:250px;margin-right:250px;margin-top:20px">                            <table id="constdeviceTongji" class="layui-hide"></table>                        </div>                    </div>                </div>            </div>        </div>    </div></div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -37,7 +37,7 @@ function LoadAutoDeviceLayer(projectid) {
                     //展示监测设备详情
                     DisplayMonitorDevice();
                     //展示设备施工数据
-                    ConstPhotoData(projectid);
+                    FuConstPhotoData(projectid);
                 }
                 , end: function () {
                     automonitordevicelayerindex = null;
@@ -45,6 +45,7 @@ function LoadAutoDeviceLayer(projectid) {
                     projectdevicechartdisaster = null;
                     projectdevicecharttype = null;
                     monitordevicechart = null;
+
                 }
             });
         }
@@ -274,7 +275,7 @@ function toPercent(point) {
 };
 
 //监测设备
-function ConstPhotoData(projectid) {
+function FuConstPhotoData(projectid) {
     var constPhotoTable = table.render({
         elem: '#const-device-manage'
         , id: 'constPhotoTableId'
@@ -294,12 +295,16 @@ function ConstPhotoData(projectid) {
                     if (row.mointorStatus == "0") {
                         return '<span style="color: red;">未开始</span>'
                     } else if(row.mointorStatus == "1") {
-                        return '已放样'
+                        return '放样'
                     } else if (row.mointorStatus == "2") {
-                        return '已挖坑'
+                        return '挖坑'
                     } else if (row.mointorStatus == "3") {
-                        return '已浇筑'
+                        return '浇筑'
                     } else if (row.mointorStatus == "4") {
+                        return '立杆'
+                    } else if (row.mointorStatus == "5") {
+                        return '调试'
+                    } else if (row.mointorStatus == "6") {
                         return '<span style="color: green;">已完成</span>'
                     }
 
@@ -323,7 +328,7 @@ function ConstPhotoData(projectid) {
         , size: 'sm'
         , totalRow: false
         , cols: [[
-            { field: 'name', width: 127,  title: '工序', align: "center" }
+            { field: 'name', width: 120,  title: '工序', align: "center" }
             , { field: 'num', width: 150, title: '完成量', align: "center" }
             , { field: 'bili', width: 150, title: '进度', align: "center" }
             , { field: 'bili', width: 150, title: '进度', align: "center" }
@@ -333,42 +338,52 @@ function ConstPhotoData(projectid) {
 
     table.on('tool(const-device-manage)', function (obj) {
         var layEvent = obj.event;
-        if (obj.data.photoList.length == 0) {
-            layer.msg("该监测点还未开始放样", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-            return;
-        }
+        
         console.log(obj);
         console.log(datasurl);
         if (layEvent === 'photoview') {
+            if (obj.data.photoList.length == 0) {
+                layer.msg("该监测点还未开始放样", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return;
+            }
             adddevicelayerindex = layer.open({
                 type: 1
-                , title: ['设备详情', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['650px', '500px']
+                , title: [obj.data.JCDMC + '施工照片', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['700px', '500px']
                 , shade: [0.5, '#393D49']
                 , offset: 'auto'
                 , closeBtn: 1
                 , maxmin: false
-                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="constPhotoform">    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">        <!--标签-->        <ul class="layui-tab-title">            <li class="layui-this" style="width:100px">已放样</li>            <li style="width:100px">已挖坑</li>            <li style="width:100px">已浇筑</li>            <li style="width:100px">已完成</li>        </ul>        <!--内容-->        <div class="layui-tab-content">            <!--设备信息-->            <div class="layui-tab-item layui-show">                <div class="layim-chat-main">                  <ul id="yiFangYang"></ul>                </div>            </div>            <!--设备厂家-->            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWaKeng"></ul>                </div>            </div>            <!--设备经销商-->            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiJiaoZhu"></ul>                </div>            </div>            <!--监测数据库-->            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWanCheng"></ul>                </div>            </div>        </div>    </div></form>'
+                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="constPhotoform">    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">        <!--标签-->        <ul class="layui-tab-title">            <li class="layui-this" style="width:50px">放样</li>            <li style="width:50px">挖坑</li>            <li style="width:50px">浇筑</li>            <li style="width:50px">立杆</li>            <li style="width:50px">调试</li>            <li style="width:50px">完成</li>            <li style="width:50px">其他</li>        </ul>        <!--内容-->        <div class="layui-tab-content">            <div class="layui-tab-item layui-show">                <div class="layim-chat-main">                    <ul id="yiFangYang"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWaKeng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiJiaoZhu"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiligan"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yitiaoshi"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWanCheng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="qita"></ul>                </div>            </div>        </div>    </div></form>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
-                 
+
                     for (var i in obj.data.photoList) {
-                        if (obj.data.photoList[i].type=='1') {
-                            document.getElementById("yiFangYang").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="已放样'+(i)+'" ></img></li>';
+                        if (obj.data.photoList[i].type == '1') {
+                            document.getElementById("yiFangYang").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="放样' + (i) + '" ></img></li>';
 
                         } else if (obj.data.photoList[i].type == '2') {
-                            document.getElementById("yiWaKeng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="已挖坑' + (i) +'"></img></li>';
+                            document.getElementById("yiWaKeng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="挖坑' + (i) + '"></img></li>';
 
                         } else if (obj.data.photoList[i].type == '3') {
-                            document.getElementById("yiJiaoZhu").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="已浇筑' + (i) +'"></img></li>';
+                            document.getElementById("yiJiaoZhu").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="浇筑' + (i) + '"></img></li>';
 
                         } else if (obj.data.photoList[i].type == '4') {
-                            document.getElementById("yiWanCheng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="已完成' + (i) +'"></img></li>';
+                            document.getElementById("yiligan").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="立杆' + (i) + '"></img></li>';
+
+                        } else if (obj.data.photoList[i].type == '5') {
+                            document.getElementById("yitiaoshi").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="调试' + (i) + '"></img></li>';
+
+                        }  else if (obj.data.photoList[i].type == '6') {
+                            document.getElementById("yiWanCheng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="完成' + (i) + '"></img></li>';
+
+                        } else if (obj.data.photoList[i].type == '7') {
+                            document.getElementById("qita").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="其他' + (i) + '"></img></li>';
 
                         }
-                        
-                     }
+
+                    }
                     if (viewerPhoto != null) {
                         viewerPhoto.destroy();
                     }
@@ -416,13 +431,68 @@ function ConstPhotoData(projectid) {
                             viewerPhoto.update();
                         },
                     });
-                   
+                    viewerPhoto = new Viewer(document.getElementById('yiligan'), {
+                        toolbar: true, //显示工具条
+                        viewed() {
+                            viewerPhoto.zoomTo(0.75); // 图片显示比例 75%
+                        },
+                        zIndex: 99999999,
+                        navbar: false,
+                        show: function () {  // 动态加载图片后，更新实例
+                            viewerPhoto.update();
+                        },
+                    });
+                    viewerPhoto = new Viewer(document.getElementById('yitiaoshi'), {
+                        toolbar: true, //显示工具条
+                        viewed() {
+                            viewerPhoto.zoomTo(0.75); // 图片显示比例 75%
+                        },
+                        zIndex: 99999999,
+                        navbar: false,
+                        show: function () {  // 动态加载图片后，更新实例
+                            viewerPhoto.update();
+                        },
+                    });
+                    viewerPhoto = new Viewer(document.getElementById('qita'), {
+                        toolbar: true, //显示工具条
+                        viewed() {
+                            viewerPhoto.zoomTo(0.75); // 图片显示比例 75%
+                        },
+                        zIndex: 99999999,
+                        navbar: false,
+                        show: function () {  // 动态加载图片后，更新实例
+                            viewerPhoto.update();
+                        },
+                    });
+
                 }
                 , end: function () {
                     viewerPhoto = null;
                 }
             });
 
+        } else if (layEvent === 'photoDown') {
+            if (obj.data.mointorStatus != 6) {
+                layer.msg("该监测点未安装完成", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return;
+            }
+           
+            // data.field.patrolStatus = "1";//这里已处理的
+            var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+            $.ajax({
+                url: servicesurl + "/api/FlzWordWxpert/GetShiGongJiLuBiao", type: "get", data: { "id": obj.data.Id, "cookie": document.cookie },
+                success: function (result) {
+                    layer.close(loadingminindex);
+                    console.log(result);
+                    //window.location.href = 'http://www.cq107chy.com:4022/SurImage/Download/' + result;
+                },
+                error: function (res) {
+                    layer.close(loadingminindex);
+                    console.log(res);
+                    layer.msg(res.responseJSON.ExceptionMessage, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                }, datatype: "json"
+            });
         } 
     });
     var MonitorStringList = [];
@@ -430,6 +500,8 @@ function ConstPhotoData(projectid) {
     var yifangyang = 0;
     var yiWakeng = 0;
     var yiJiaozhu = 0;
+    var yiligan = 0;
+    var yitiaoshi = 0;
     var yiWancheng = 0;
     $.ajax({
         url: servicesurl + "/api/Monitor/GetMonitor", type: "get", data: { "id": projectid, "cookie": document.cookie },
@@ -462,6 +534,12 @@ function ConstPhotoData(projectid) {
                                 if (constPhotodata[j].type == '4' && mointorStatus < 4) {
                                     mointorStatus = 4;
                                 }
+                                if (constPhotodata[j].type == '5' && mointorStatus < 5) {
+                                    mointorStatus = 5;
+                                }
+                                if (constPhotodata[j].type == '6' && mointorStatus < 6) {
+                                    mointorStatus = 6;
+                                }
                             }
                         }
                         MonitorString.photoList = photoList;
@@ -473,6 +551,10 @@ function ConstPhotoData(projectid) {
                         } else if (mointorStatus == 3) {
                             yiJiaozhu++;
                         } else if (mointorStatus == 4) {
+                            yiligan++;
+                        } else if (mointorStatus == 5) {
+                            yitiaoshi++;
+                        } else if (mointorStatus == 6) {
                             yiWancheng++;
                         }
                         MonitorStringList.push(MonitorString);
@@ -481,10 +563,12 @@ function ConstPhotoData(projectid) {
       
                     constPhotoTable.reload({ id: 'constPhotoTableId', data: MonitorStringList });
                     var tempList = [];
-                    tempList.push({ "name": '已放样', "num": yifangyang, "bili": toPercent(yifangyang / MonitorStringList.length)});
-                    tempList.push({ "name": '已挖坑', "num": yiWakeng, "bili": toPercent(yiWakeng / MonitorStringList.length)});
-                    tempList.push({ "name": '已浇筑', "num": yiJiaozhu, "bili": toPercent(yiJiaozhu / MonitorStringList.length)});
-                    tempList.push({ "name": '已完成', "num": yiWancheng, "bili": toPercent(yiWancheng / MonitorStringList.length) });
+                    tempList.push({ "name": '放样', "num": yifangyang, "bili": toPercent(yifangyang / MonitorStringList.length)});
+                    tempList.push({ "name": '挖坑', "num": yiWakeng, "bili": toPercent(yiWakeng / MonitorStringList.length)});
+                    tempList.push({ "name": '浇筑', "num": yiJiaozhu, "bili": toPercent(yiJiaozhu / MonitorStringList.length)});
+                    tempList.push({ "name": '立杆', "num": yiligan, "bili": toPercent(yiligan / MonitorStringList.length)});
+                    tempList.push({ "name": '调试', "num": yitiaoshi, "bili": toPercent(yitiaoshi / MonitorStringList.length) });
+                    tempList.push({ "name": '完成', "num": yiWancheng, "bili": toPercent(yiWancheng / MonitorStringList.length) });
                     console.log(tempList);
                     constdeviceTongjitable.reload({ id: 'constdeviceTongjiId', data: tempList });
                     //console.log(MonitorStringList);

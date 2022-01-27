@@ -453,7 +453,7 @@
     <Content Include="Apps\admin\view\srid.html" />
     <Content Include="Apps\admin\view\database.html" />
     <Content Include="Apps\admin\view\sql.html" />
-    <Content Include="Apps\admin\view\auth.html" />
+    <Content Include="Apps\admin\view\auth_monitor.html" />
     <Content Include="Apps\admin\view\user.html" />
     <Content Include="Apps\admin\widget\database-add.html" />
     <Content Include="Apps\admin\widget\device-view.html" />
@@ -538,7 +538,6 @@
     <Content Include="Apps\model\js\6.0-util-modelp.js" />
     <Content Include="Apps\model\js\6.0-util-modelv.js" />
     <Content Include="Apps\model\js\6.0-util-modelc.js" />
-    <Content Include="Apps\model\js\6.1-measure.js" />
     <Content Include="Apps\model\js\6.2-draw.js" />
     <Content Include="Apps\model\js\6.3-localtool.js" />
     <Content Include="Apps\model\widget\0-projectlist.html" />
@@ -642,6 +641,7 @@
     <Content Include="Apps\uav\js\2.0-projectlist.js" />
     <Content Include="Apps\uav\js\4.0-route.js" />
     <Content Include="Apps\uav\js\3.0-project.js" />
+    <Content Include="Apps\uav\js\6.0-header.js" />
     <Content Include="Apps\uav\js\5.0-util.js" />
     <Content Include="Apps\uav\widget\1.2-uavproject-view.html" />
     <Content Include="Apps\uav\widget\1.1-uavproject-edit.html" />
@@ -712,17 +712,7 @@
     <Content Include="Resources\img\cesium\google_earth_pro.ico" />
     <Content Include="Resources\img\head\flzlogo.png" />
     <Content Include="Resources\img\head\imagelogo.png" />
-    <Content Include="Resources\img\head\img1.png" />
-    <Content Include="Resources\img\head\img2.png" />
-    <Content Include="Resources\img\head\modellogo.png" />
-    <Content Include="Resources\img\head\pc1.png" />
-    <Content Include="Resources\img\head\pc2.png" />
     <Content Include="Resources\img\head\pointcloudlogo.png" />
-    <Content Include="Resources\img\head\uav1.png" />
-    <Content Include="Resources\img\head\uav2.png" />
-    <Content Include="Resources\img\head\uavlogo.png" />
-    <Content Include="Resources\img\head\xc1.png" />
-    <Content Include="Resources\img\head\xc2.png" />
     <Content Include="Resources\img\icon\add.png" />
     <Content Include="Resources\img\icon\left.png" />
     <Content Include="Resources\img\icon\right.png" />
@@ -745,7 +735,6 @@
     <Content Include="Resources\img\cesium\STK.png" />
     <Content Include="Resources\img\cesium\chinaImage.png" />
     <Content Include="Resources\img\cesium\chinaVector.png" />
-    <Content Include="Resources\img\head\monitorlogo.png" />
     <Content Include="Resources\img\map\project_type_landslide.png" />
     <Content Include="Resources\img\map\project_type_rockfall.png" />
     <Content Include="Resources\img\map\target.png" />

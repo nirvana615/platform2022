@@ -8,7 +8,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>无人机影像分析系统</title>
+    <title>影像对比分析系统</title>
     <!--jquery-->
     <script src="~/Scripts/jquery-3.3.1.js"></script>
     <!--CesiumJS-->
@@ -48,14 +48,13 @@
 
         <!--工具栏-->
         <div style="position:absolute;top:7px;right:5px">
-            <button id="userbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-user"><span style="margin-left:5px">@ViewBag.User</span></i></button>
+            <button id="userbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-user"><span style="margin-left:5px;font-size:18px;">@ViewBag.User</span></i></button>
             <button id="noticebtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-notice"></i></button>
             <button id="setbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-set-fill"></i></button>
             <a href="~/Platform/Logout">
                 <button id="exitbtn" type="button" class="layui-btn1 layui-btn-primary1 layui-btn-sm1" style="height:35px;color:Lavender"><i class="layui-icon layui-icon-logout"></i></button>
             </a>
         </div>
-
     </div>
 
     <!--地图-->
@@ -67,6 +66,7 @@
         var datasurl = @Html.Raw(Json.Encode(ViewBag.DatasURL));
     </script>
 
+    <script src="~/Apps/common/common.js"></script>
     <script src="~/Apps/image/js/1.1-all.js"></script>
     <script src="~/Apps/image/js/1.2-para.js"></script>
     <script src="~/Apps/image/js/3.0-map.js"></script>
@@ -77,6 +77,7 @@
     <script src="~/Apps/image/js/6.0-util.js"></script>
     <script src="~/Apps/image/js/6.1-imageresult.js"></script>
     <script src="~/Apps/image/js/5.0-header.js"></script>
-
+    <script src="~/Apps/common/measure.js"></script>
+    <script src="~/Apps/common/mark.js"></script>
 </body>
 </html>

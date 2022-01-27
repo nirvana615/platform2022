@@ -4,36 +4,24 @@
  * 必须先创建handler变量
  * 必须先引入common.js
  */
-var measurewidgetlayerindex = null;
-var depthTestAgainstTerrain = null;             //深度检测初始值
+var measurewidget_layerindex = null;
+var measurewidget_depthTestAgainstTerrain = null;             //深度检测初始值
 var measurewidget_result = "";                  //测量结果
 var measurewidget_tipsentity = null;            //操作提示
-var ismulti = false;                             //是否连续测量
-var istips = true;                              //是否操作提示
-var isredo = false;
+var measurewidget_ismulti = false;                             //是否连续测量
+var measurewidget_istips = true;                              //是否操作提示
+var measurewidget_isredo = false;
 var measurewidget_temppoints = [];
 var measurewidget_tempentities = [];
 
-function MeasureGuid() {
-    return ((((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + "-" + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-        + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1));
-};
-
-
 //测量widget
 function Measurewidget() {
-    if (measurewidgetlayerindex != null) {
-        layer.setTop(measurewidgetlayerindex);
+    if (measurewidget_layerindex != null) {
+        layer.setTop(measurewidget_layerindex);
         return;
     }
 
-    measurewidgetlayerindex = layer.open({
+    measurewidget_layerindex = layer.open({
         type: 1
         , title: ['测量工具', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
         , area: ['400px', '430px']
@@ -48,8 +36,8 @@ function Measurewidget() {
             layer.setTop(layero);
 
             layui.form.val("measureinfoform", {
-                "multiMeasure": ismulti
-                , "tipsMeasure": istips
+                "multiMeasure": measurewidget_ismulti
+                , "tipsMeasure": measurewidget_istips
             });
 
             //操作提示
@@ -67,7 +55,7 @@ function Measurewidget() {
             });
 
             //记录当前深度检测值
-            depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
+            measurewidget_depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
             if (viewer.scene.globe.depthTestAgainstTerrain) {
                 layui.element.tabChange('measureway', 'terrainMeasure');//地形
             }
@@ -78,19 +66,19 @@ function Measurewidget() {
             layui.form.render();
         }
         , end: function () {
-            viewer.scene.globe.depthTestAgainstTerrain = depthTestAgainstTerrain;//还原当前深度检测值
+            viewer.scene.globe.depthTestAgainstTerrain = measurewidget_depthTestAgainstTerrain;//还原当前深度检测值
             viewer._container.style.cursor = "default";//还原鼠标样式
             ClearCeliangTemp();
-            viewer.entities.remove(measurewidget_tipsentity);
+            viewer.entities.remove(measurewidget_tipsentity);//删除操作提示
 
             //还原参数
-            measurewidgetlayerindex = null;
-            depthTestAgainstTerrain = null;
+            measurewidget_layerindex = null;
+            measurewidget_depthTestAgainstTerrain = null;
             measurewidget_result = "";
             measurewidget_tipsentity = null;
-            ismulti = true;
-            istips = true;
-            isredo = false;
+            measurewidget_ismulti = true;
+            measurewidget_istips = true;
+            measurewidget_isredo = false;
             measurewidget_temppoints = [];
             measurewidget_tempentities = [];
 
@@ -104,12 +92,12 @@ function Measurewidget() {
 
 //是否连续测量
 layui.form.on('switch(multiMeasureswitch)', function (data) {
-    ismulti = data.elem.checked;
+    measurewidget_ismulti = data.elem.checked;
     return false;
 });
 //是否操作提示
 layui.form.on('switch(tipsMeasureswitch)', function (data) {
-    istips = data.elem.checked;
+    measurewidget_istips = data.elem.checked;
     return false;
 });
 
@@ -128,7 +116,7 @@ layui.element.on('tab(measureway)', function (data) {
         }
     }
 
-    isredo = false;
+    measurewidget_isredo = false;
     measurewidget_temppoints = [];
     measurewidget_tempentities = [];
 
@@ -180,7 +168,7 @@ function pointMeasure() {
 
     //左键（开始测量）
     handler.setInputAction(function (leftclick) {
-        if (!ismulti) {
+        if (!measurewidget_ismulti) {
             measurewidget_result = "";//清空测量结果
             ClearCeliangTemp();//清除测量图形
         }
@@ -217,7 +205,7 @@ function pointMeasure() {
 
                     if (Cesium.defined(position)) {
                         viewer.entities.add({
-                            name: "ptMeasure_" + MeasureGuid(),
+                            name: "ptMeasure_" + NewGuid(),
                             position: position,
                             billboard: {
                                 image: "../Resources/img/mark/p19.png",
@@ -228,7 +216,7 @@ function pointMeasure() {
                             }
                         });
                         viewer.entities.add({
-                            name: "ptMeasure_label_" + MeasureGuid(),
+                            name: "ptMeasure_label_" + NewGuid(),
                             position: position,
                             label: {
                                 text: lon.toFixed(6) + ', ' + lat.toFixed(6) + ', ' + (height).toFixed(3),
@@ -276,7 +264,7 @@ function pointMeasure() {
             var position = viewer.scene.pickPosition(move.endPosition);
             if (position != undefined) {
                 measurewidget_tipsentity.position = position;
-                measurewidget_tipsentity.label.show = istips;
+                measurewidget_tipsentity.label.show = measurewidget_istips;
                 measurewidget_tipsentity.label.text = "左键点击开始测量";
             }
             else {
@@ -307,13 +295,13 @@ function heightMeasure() {
 
     //左键（开始测量）
     handler.setInputAction(function (leftclick) {
-        if (!ismulti) {
+        if (!measurewidget_ismulti) {
             measurewidget_result = "";
         }
 
-        if (!ismulti && isredo) {
+        if (!measurewidget_ismulti && measurewidget_isredo) {
             ClearCeliangSingle();
-            isredo = false;
+            measurewidget_isredo = false;
         }
 
         var pickedOject;
@@ -329,7 +317,7 @@ function heightMeasure() {
             if (xyz != undefined) {
                 var rblh = Cesium.Cartographic.fromCartesian(xyz);
                 var tempentity = viewer.entities.add({
-                    name: "pt_Measure_single_" + MeasureGuid(),
+                    name: "pt_Measure_single_" + NewGuid(),
                     position: xyz,
                     point: {
                         pixelSize: 8,
@@ -343,7 +331,7 @@ function heightMeasure() {
                 if (measurewidget_temppoints.length == 2) {
                     var point = measurewidget_temppoints[0];
                     viewer.entities.add({
-                        name: "pl_Measure_single_" + MeasureGuid(),
+                        name: "pl_Measure_single_" + NewGuid(),
                         polyline: {
                             positions: [point, xyz],
                             width: 1,
@@ -362,7 +350,7 @@ function heightMeasure() {
                         var h = rblh.height;
 
                         viewer.entities.add({
-                            name: "pl_Measure_single_" + MeasureGuid(),
+                            name: "pl_Measure_single_" + NewGuid(),
                             polyline: {
                                 positions: [point, Cesium.Cartesian3.fromDegrees(l, b, rblh1.height)],
                                 width: 1,
@@ -375,7 +363,7 @@ function heightMeasure() {
                             }
                         });
                         viewer.entities.add({
-                            name: "pl_Measure_single_" + MeasureGuid(),
+                            name: "pl_Measure_single_" + NewGuid(),
                             polyline: {
                                 positions: [xyz, Cesium.Cartesian3.fromDegrees(l, b, rblh1.height)],
                                 width: 2,
@@ -386,7 +374,7 @@ function heightMeasure() {
                             }
                         });
                         viewer.entities.add({
-                            name: "pl_Measure_single_label_" + MeasureGuid(),
+                            name: "pl_Measure_single_label_" + NewGuid(),
                             position: Cesium.Cartesian3.fromDegrees(l, b, rblh1.height),
                             label: {
                                 text: '高差：' + (rblh1.height - h).toFixed(3) + 'm',
@@ -404,7 +392,7 @@ function heightMeasure() {
                         var dis = Math.sqrt(Math.pow(len, 2) - Math.pow(rblh1.height - h, 2));
 
                         //viewer.entities.add({
-                        //    name: "pl_Measure_single_label_" + MeasureGuid(),
+                        //    name: "pl_Measure_single_label_" + NewGuid(),
                         //    position: Cesium.Cartesian3.fromDegrees((l + rblh1.longitude * 180 / Math.PI) / 2, (b + rblh1.latitude * 180 / Math.PI) / 2, (rblh1.height + h) / 2),
 
                         //    label: {
@@ -418,7 +406,7 @@ function heightMeasure() {
                         //    }
                         //});
                         //viewer.entities.add({
-                        //    name: "pl_Measure_single_label_" + MeasureGuid(),
+                        //    name: "pl_Measure_single_label_" + NewGuid(),
                         //    position: measurewidget_temppoints[0],
                         //    label: {
                         //        text: '倾角：' + (Math.acos(pingju / sum) * 180 / Math.PI).toFixed(2) + '°',
@@ -440,7 +428,7 @@ function heightMeasure() {
                             });
                         }
 
-                        isredo = true;
+                        measurewidget_isredo = true;
                         measurewidget_temppoints = [];
                         measurewidget_tempentities = [];
                     }
@@ -450,7 +438,7 @@ function heightMeasure() {
                         var h = rblh1.height;
 
                         viewer.entities.add({
-                            name: "pl_Measure_single_" + MeasureGuid(),
+                            name: "pl_Measure_single_" + NewGuid(),
                             polyline: {
                                 positions: [point, Cesium.Cartesian3.fromDegrees(l, b, rblh.height)],
                                 width: 2,
@@ -461,7 +449,7 @@ function heightMeasure() {
                             }
                         });
                         viewer.entities.add({
-                            name: "pl_Measure_single_" + MeasureGuid(),
+                            name: "pl_Measure_single_" + NewGuid(),
                             polyline: {
                                 positions: [xyz, Cesium.Cartesian3.fromDegrees(l, b, rblh.height)],
                                 width: 1,
@@ -474,7 +462,7 @@ function heightMeasure() {
                             }
                         });
                         viewer.entities.add({
-                            name: "pl_Measure_single_label_" + MeasureGuid(),
+                            name: "pl_Measure_single_label_" + NewGuid(),
                             position: Cesium.Cartesian3.fromDegrees(l, b, rblh.height),
                             label: {
                                 text: '高差：' + (rblh.height - h).toFixed(3) + 'm',
@@ -493,7 +481,7 @@ function heightMeasure() {
                         var dis = Math.sqrt(Math.pow(len, 2) - Math.pow(rblh.height - h, 2));
 
                         //viewer.entities.add({
-                        //    name: "pl_Measure_single_label_" + MeasureGuid(),
+                        //    name: "pl_Measure_single_label_" + NewGuid(),
                         //    position: Cesium.Cartesian3.fromDegrees((l + rblh.longitude * 180 / Math.PI) / 2, (b + rblh.latitude * 180 / Math.PI) / 2, (rblh.height + h) / 2),
 
                         //    label: {
@@ -507,7 +495,7 @@ function heightMeasure() {
                         //    }
                         //});
                         //viewer.entities.add({
-                        //    name: "pl_Measure_single_label_" + MeasureGuid(),
+                        //    name: "pl_Measure_single_label_" + NewGuid(),
                         //    position: measurewidget_temppoints[1],
 
                         //    label: {
@@ -530,7 +518,7 @@ function heightMeasure() {
                             });
                         }
 
-                        isredo = true;
+                        measurewidget_isredo = true;
                         measurewidget_temppoints = [];
                         measurewidget_tempentities = [];
                     }
@@ -557,7 +545,6 @@ function heightMeasure() {
                 measurewidget_tempentities = [];
             }
         }
-
     }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 
     //移动（操作提示）
@@ -574,7 +561,7 @@ function heightMeasure() {
             var position = viewer.scene.pickPosition(move.endPosition);
             if (position != undefined) {
                 measurewidget_tipsentity.position = position;
-                measurewidget_tipsentity.label.show = istips;
+                measurewidget_tipsentity.label.show = measurewidget_istips;
                 measurewidget_tipsentity.label.text = "左键点击开始测量，右键点击重新开始测量";
             }
             else {
@@ -605,13 +592,13 @@ function distanceMeasure() {
 
     //左键（开始测量）
     handler.setInputAction(function (leftclick) {
-        if (!ismulti) {
+        if (!measurewidget_ismulti) {
             measurewidget_result = "";
         }
 
-        if (!ismulti && isredo) {
+        if (!measurewidget_ismulti && measurewidget_isredo) {
             ClearCeliangSingle();
-            isredo = false;
+            measurewidget_isredo = false;
         }
 
         var pickedOject;
@@ -626,7 +613,7 @@ function distanceMeasure() {
             var xyz = viewer.scene.pickPosition(leftclick.position);
             if (xyz != undefined) {
                 var tempentity = viewer.entities.add({
-                    name: "pt_Measure_single_" + MeasureGuid(),
+                    name: "pt_Measure_single_" + NewGuid(),
                     position: xyz,
                     point: {
                         pixelSize: 8,
@@ -639,7 +626,7 @@ function distanceMeasure() {
 
                 if (measurewidget_temppoints.length > 1) {
                     var tempentity_line = viewer.entities.add({
-                        name: "pl_Measure_single_" + MeasureGuid(),
+                        name: "pl_Measure_single_" + NewGuid(),
                         polyline: {
                             positions: [measurewidget_temppoints[measurewidget_temppoints.length - 2], xyz],
                             width: 2,
@@ -685,7 +672,7 @@ function distanceMeasure() {
             }
 
             viewer.entities.add({
-                name: "pl_Measure_single_label_" + MeasureGuid(),
+                name: "pl_Measure_single_label_" + NewGuid(),
                 position: measurewidget_temppoints[measurewidget_temppoints.length - 1],
                 label: {
                     text: '空间距离：' + lens.toFixed(3) + 'm',
@@ -708,7 +695,7 @@ function distanceMeasure() {
                 });
             }
 
-            isredo = true;
+            measurewidget_isredo = true;
             measurewidget_temppoints = [];
             measurewidget_tempentities = [];
         }
@@ -727,7 +714,7 @@ function distanceMeasure() {
             var position = viewer.scene.pickPosition(move.endPosition);
             if (position != undefined) {
                 measurewidget_tipsentity.position = position;
-                measurewidget_tipsentity.label.show = istips;
+                measurewidget_tipsentity.label.show = measurewidget_istips;
                 measurewidget_tipsentity.label.text = "左键点击开始测量，右键点击结束测量";
 
                 if (measurewidget_temppoints.length > 0) {
@@ -779,13 +766,13 @@ function areaMeasure() {
 
     //左键（开始测量）
     handler.setInputAction(function (leftclik) {
-        if (!ismulti) {
+        if (!measurewidget_ismulti) {
             measurewidget_result = "";
         }
 
-        if (!ismulti && isredo) {
+        if (!measurewidget_ismulti && measurewidget_isredo) {
             ClearCeliangSingle();
-            isredo = false;
+            measurewidget_isredo = false;
         }
 
         var pickedOject;
@@ -800,7 +787,7 @@ function areaMeasure() {
             if (position != undefined) {
                 if (Cesium.defined(position)) {
                     var tempentity = viewer.entities.add({
-                        name: "pt_Measure_single_" + MeasureGuid(),
+                        name: "pt_Measure_single_" + NewGuid(),
                         position: position,
                         point: {
                             pixelSize: 8,
@@ -813,7 +800,7 @@ function areaMeasure() {
                 }
                 if (measurewidget_temppoints.length > 1) {
                     var tempentity_line = viewer.entities.add({
-                        name: "pl_Measure_single_" + MeasureGuid(),
+                        name: "pl_Measure_single_" + NewGuid(),
                         polyline: {
                             positions: [measurewidget_temppoints[measurewidget_temppoints.length - 2], position],
                             width: 2,
@@ -842,7 +829,7 @@ function areaMeasure() {
         if (measurewidget_temppoints.length > 2) {
             //绘制多边形闭合线
             viewer.entities.add({
-                name: "pl_Measure_single_" + MeasureGuid(),
+                name: "pl_Measure_single_" + NewGuid(),
                 polyline: {
                     positions: [measurewidget_temppoints[0], measurewidget_temppoints[measurewidget_temppoints.length - 1]],
                     width: 2,
@@ -940,7 +927,7 @@ function areaMeasure() {
             //}
 
             viewer.entities.add({
-                name: "py_Measure_single_label_" + MeasureGuid(),
+                name: "py_Measure_single_label_" + NewGuid(),
                 position: new Cesium.Cartesian3(xsum / measurewidget_temppoints.length, ysum / measurewidget_temppoints.length, zsum / measurewidget_temppoints.length),
                 label: {
                     text: '平面面积：' + area.toFixed(3) + 'm²',
@@ -963,7 +950,7 @@ function areaMeasure() {
                 });
             }
 
-            isredo = true;
+            measurewidget_isredo = true;
             measurewidget_temppoints = [];
             measurewidget_tempentities = [];
         }
@@ -994,7 +981,7 @@ function areaMeasure() {
             var position = viewer.scene.pickPosition(move.endPosition);
             if (position != undefined) {
                 measurewidget_tipsentity.position = position;
-                measurewidget_tipsentity.label.show = istips;
+                measurewidget_tipsentity.label.show = measurewidget_istips;
                 measurewidget_tipsentity.label.text = "左键点击开始测量，右键点击结束测量";
 
                 if (measurewidget_temppoints.length > 0) {
@@ -1067,13 +1054,13 @@ function azimuthMeasure() {
 
     //左键（开始测量）
     handler.setInputAction(function (leftclik) {
-        if (!ismulti) {
+        if (!measurewidget_ismulti) {
             measurewidget_result = "";
         }
 
-        if (!ismulti && isredo) {
+        if (!measurewidget_ismulti && measurewidget_isredo) {
             ClearCeliangSingle();
-            isredo = false;
+            measurewidget_isredo = false;
         }
 
         var pickedOject;
@@ -1088,7 +1075,7 @@ function azimuthMeasure() {
             var xyz = viewer.scene.pickPosition(leftclik.position);
             if (xyz != undefined) {
                 var tempentity = viewer.entities.add({
-                    name: "pt_Measure_single_" + MeasureGuid(),
+                    name: "pt_Measure_single_" + NewGuid(),
                     position: xyz,
                     point: {
                         pixelSize: 8,
@@ -1102,7 +1089,7 @@ function azimuthMeasure() {
                 if (measurewidget_temppoints.length == 2) {
                     var point = measurewidget_temppoints[0];
                     viewer.entities.add({
-                        name: "pl_Measure_single_" + MeasureGuid(),
+                        name: "pl_Measure_single_" + NewGuid(),
                         polyline: {
                             positions: measurewidget_temppoints,
                             width: 2,
@@ -1144,7 +1131,7 @@ function azimuthMeasure() {
                     }
 
                     viewer.entities.add({
-                        name: "al_Measure_single" + MeasureGuid(),
+                        name: "al_Measure_single" + NewGuid(),
                         position: Cesium.Cartesian3.fromElements((point.x + xyz.x) / 2, (point.y + xyz.y) / 2, (point.z + xyz.z) / 2),
                         label: {
                             text: '方位角：' + r.toFixed(2) + '°',
@@ -1167,7 +1154,7 @@ function azimuthMeasure() {
                         });
                     }
 
-                    isredo = true;
+                    measurewidget_isredo = true;
                     measurewidget_temppoints = [];
                     measurewidget_tempentities = [];
                 }
@@ -1185,7 +1172,6 @@ function azimuthMeasure() {
                 measurewidget_tempentities = [];
             }
         }
-
     }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 
     //移动（操作提示）
@@ -1202,7 +1188,7 @@ function azimuthMeasure() {
             var position = viewer.scene.pickPosition(move.endPosition);
             if (position != undefined) {
                 measurewidget_tipsentity.position = position;
-                measurewidget_tipsentity.label.show = istips;
+                measurewidget_tipsentity.label.show = measurewidget_istips;
                 measurewidget_tipsentity.label.text = "左键点击开始测量，右键点击重新开始测量";
             }
             else {
