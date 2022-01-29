@@ -1,5 +1,5 @@
 ﻿/*
- * 地图
+ * 地图底图
  */
 var baseMaps = new Array(
     new Cesium.ProviderViewModel({

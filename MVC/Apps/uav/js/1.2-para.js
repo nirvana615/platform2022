@@ -7,9 +7,6 @@ var gzlxs = [];            //挂载类型
 var drones = null;         //无人机
 
 
-
-
-
 $.ajax({
     url: servicesurl + "/api/Parameter/GetLJLX", type: "get",
     success: function (data) {
@@ -70,8 +67,6 @@ $.ajax({
         }
     }, datatype: "json"
 });
-
-
 
 
 $.ajax({

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>用户授权</title>
+    <title>用户统计</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -19,9 +19,9 @@
     <link href="../layuiadmin/style/loginStatistics.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="layui-fluid">
-        <div class="layui-card">
-            <div class="layui-card-body">
+    <div class="layui-fluid" style="padding:5px;">
+        <div class="layui-card" style="margin-bottom:5px;">
+            <div class="layui-card-body" style="padding: 5px 10px 5px 10px;">
                 <div class="welcome-module">
                     <div class="layui-row layui-col-space15">
                         <div class="layui-col-xs3">
@@ -31,9 +31,8 @@
                                         <span class="label layui-bg-red" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                         <h5>总登录次数</h5>
                                     </div>
-                                    <div class="panel-content">
+                                    <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                         <h1 id="count_all" class="no-margins" style="color:red">--</h1>
-                                        <small>当前分类总记录数</small>
                                     </div>
                                 </div>
                             </div>
@@ -45,9 +44,8 @@
                                         <span class="label layui-bg-blue" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                         <h5>本年登录次数</h5>
                                     </div>
-                                    <div class="panel-content">
+                                    <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                         <h1 id="count_year" class="no-margins" style="color:dodgerblue">--</h1>
-                                        <small>当前分类总记录数</small>
                                     </div>
                                 </div>
                             </div>
@@ -59,9 +57,8 @@
                                         <span class="label layui-bg-orange" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                         <h5>本月登录次数</h5>
                                     </div>
-                                    <div class="panel-content">
+                                    <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                         <h1 id="count_month" class="no-margins" style="color:orange">--</h1>
-                                        <small>当前分类总记录数</small>
                                     </div>
                                 </div>
                             </div>
@@ -73,23 +70,21 @@
                                         <span class="label layui-bg-green" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                         <h5>今日登录次数</h5>
                                     </div>
-                                    <div class="panel-content">
+                                    <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                         <h1 id="count_day" class="no-margins" style="color:green">--</h1>
-                                        <small>当前分类总记录数</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
         <div class="layui-card">
-            <div class="layui-card-body">
-                <div class="layui-card">
-                    <div class="layui-card-header layui-font-12" style="border-bottom:2px solid #a7a9a9;">系统报表</div>
-                    <div class="layui-card-body">
+            <div class="layui-card-body" style="padding: 5px;">
+                <div class="layui-card" style="margin-bottom:2px;">
+                    <!--<div class="layui-card-header layui-font-12" style="border-bottom:2px solid #a7a9a9;"></div>-->
+                    <div class="layui-card-body" style="padding: 5px;">
                         <div class="layui-row">
                             <div class="layui-col-md6" style="position:relative">
                                 <div id="login_allusersort" style="width: 100%;height:350px;"></div>
@@ -103,9 +98,6 @@
                                     </select>
                                     <select id="login_year" name="login_year" style="border:1px solid #e6e6e6; margin-left:10px;"></select>
                                 </div>
-
-
-
                             </div>
                             <div class="layui-col-md6">
                                 <div id="login_allcount" style="width: 95%;height:350px;"></div>
@@ -116,8 +108,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-card">
-                    <div class="layui-card-body" style="border-bottom:2px solid #a7a9a9">
+                <div class="layui-card" style="margin-bottom:2px;">
+                    <div class="layui-card-body" style="padding:5px;">
                         <div class="layui-row">
                             <div class="layui-col-md6">
                                 <div id="login_sys_pieyear" style="width: 95%;height:350px;"></div>
@@ -137,7 +129,7 @@
                 </div>
 
                 <div class="layui-card">
-                    <div class="layui-card-body">
+                    <div class="layui-card-body" style="padding:5px;">
                         <div class="layui-row" style="position:relative;">
                             <div class="layui-col-md6">
                                 <div class="layui-row layui-col-space15">
@@ -148,37 +140,34 @@
                                                     <span class="label layui-bg-red" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                                     <h5>总登录次数</h5>
                                                 </div>
-                                                <div class="panel-content">
+                                                <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                                     <h1 id="user_all" class="no-margins" style="color:red">--</h1>
-                                                    <small>当前分类总记录数</small>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="layui-col-xs3" >
+                                    <div class="layui-col-xs3">
                                         <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
                                             <div class="panel-body" style="margin:5px 5px;">
                                                 <div class="panel-title">
                                                     <span class="label layui-bg-blue" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                                     <h5>本年登录次数</h5>
                                                 </div>
-                                                <div class="panel-content">
+                                                <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                                     <h1 id="user_year" class="no-margins" style="color:dodgerblue">--</h1>
-                                                    <small>当前分类总记录数</small>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="layui-col-xs3" >
+                                    <div class="layui-col-xs3">
                                         <div class="panel layui-bg-number" style="background-color:#F8F8FF;margin-right:10px;">
                                             <div class="panel-body" style="margin:5px 5px;">
                                                 <div class="panel-title">
                                                     <span class="label layui-bg-orange" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                                     <h5>本月登录次数</h5>
                                                 </div>
-                                                <div class="panel-content">
+                                                <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                                     <h1 id="user_month" class="no-margins" style="color:orange">--</h1>
-                                                    <small>当前分类总记录数</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -190,9 +179,8 @@
                                                     <span class="label layui-bg-green" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                                     <h5>今日登录次数</h5>
                                                 </div>
-                                                <div class="panel-content">
+                                                <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                                     <h1 id="user_day" class="no-margins" style="color:green">--</h1>
-                                                    <small>当前分类总记录数</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -215,7 +203,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">用户名称</label>
                                     <div class="layui-input-block">
-                                        <select id="usernameid" name="username" lay-filter="test" lay-verify="required"  lay-search="">
+                                        <select id="usernameid" name="username" lay-filter="test" lay-verify="required" lay-search="">
                                             <option value="">直接选择或搜索选择</option>
                                         </select>
                                     </div>
@@ -305,11 +293,11 @@
                             if (databasedatas[i].TIME.substr(0, 7) == date.substr(0, 7)) {
                                 monthcount += databasedatas[i].COUNT;//月
                             }
-                            
+
                         }
                         //头部数据统计
                         $('#count_month').text(monthcount);
-                        
+
                         //初始化年份SELECT
                         if (years.length > 0) {
                             for (var i in years) {
@@ -335,7 +323,7 @@
                         function loginLineChart(time) {
                             var monthsdata = [];
                             var YMtime = "";
-                           
+
                             for (var k = 1; k <= 12; k++) {
                                 if (k < 10) {
                                     YMtime = String(time) + "-0" + String(k);
@@ -350,9 +338,9 @@
                                     }
                                 }
                                 monthsdata[k - 1] = data;
-                                
+
                             }
-                            
+
                             LoginAllMonthCount(monthsdata);
                         }
                         //各系统年际变化折线图
@@ -392,7 +380,7 @@
                             }
                             SystemLineChart(sysMonthLineLabel, sysMonthLineDatas);
                         }
-                        
+
                     }
                 }
             }, datatype: "json"
@@ -433,7 +421,7 @@
                         //头部数据统计
                         $('#count_year').text(yearcount);
                         $('#count_all').text(allcount);
-                        
+
                         //
                         if (years.length > 0) {
                             for (var i in years) {
@@ -461,15 +449,15 @@
                         if (usernames.length > 0) {
                             for (var i in usernames) {
                                 document.getElementById("usernameid").innerHTML += '<option value="' + usernames[i].userid + '">' + usernames[i].username + '</option>';
-                                
+
                             }
                         };
-                       
+
                         form.render('select');
 
                         loginBarChart(date.substr(0, 4));//系统柱状图
                         sysPieChar(date.substr(0, 4));//分系统饼状图
-                        
+
                         //监听系统年份
                         $("#login_year").bind("change", function () {
                             var typeId = $(this).val();
@@ -480,13 +468,13 @@
                             else {
                                 sysBarChart(typeId, sys_code);//分系统前15名
                             }
-                            
+
                         });
                         //监听分系统年份
                         $("#sys_pieyear").bind("change", function () {
                             var typeId = $(this).val();
                             sysPieChar(typeId);//分系统饼状图
-                            
+
                         });
                         //监听分系统名称
                         $("#sys_name").bind("change", function () {
@@ -522,7 +510,7 @@
                                             data += databasedatas[j].COUNT;
                                         }
                                     }
-                                    
+
                                 }
                                 obj.AliasName = userids[i];
                                 obj.COUNT = data;
@@ -673,17 +661,17 @@
                                         }
                                     }
                                 }
-                                if (data!=null) {
+                                if (data != null) {
                                     piedata.value = data;
                                     piedata.name = systemlist[i].sysalias
                                     sysYearPieDatas.push(piedata);
                                 }
-                                
+
                             }
                             SystemPieChart(sysYearPieDatas);
                         }
                         //
-                        
+
                     }
                 }
             }, datatype: "json"
@@ -697,7 +685,7 @@
         form.render('select');
         UserSysPieChart();
         UserLineChart();
-        
+
         function UserInfo(Id) {
             var user_years = [];
             $.ajax({
@@ -715,7 +703,7 @@
                             var user_yearcount = null;//本年登录次数
                             var user_monthcount = null;//本月登录次数
                             var user_daycount = null;//本日登录次数
-                            user_years.length=0;
+                            user_years.length = 0;
                             for (var i in databasedatas) {
                                 user_allcount += databasedatas[i].COUNT;//all
                                 if (databasedatas[i].TIME.substr(0, 4) == date.substr(0, 4)) {
@@ -730,7 +718,7 @@
                                 if (user_years.indexOf(databasedatas[i].TIME.substr(0, 4)) == -1) {
                                     user_years.push(databasedatas[i].TIME.substr(0, 4));//获取年份
                                 }
-                                
+
                             }
                             //用户统计头部数据统计
                             if (user_yearcount == null) {
@@ -745,21 +733,21 @@
                             else {
                                 $('#user_all').text(user_allcount);
                             }
-                            
+
                             if (user_monthcount == null) {
                                 $('#user_month').text(0);
                             }
                             else {
                                 $('#user_month').text(user_monthcount);
                             }
-                            
-                            if (user_daycount==null) {
+
+                            if (user_daycount == null) {
                                 $('#user_day').text(0);
                             }
                             else {
                                 $('#user_day').text(user_daycount);
                             }
-                            
+
                             PieChar(date.substr(0, 4));
                             LineChar();
                             //监听分系统年份
@@ -768,7 +756,7 @@
                                 PieChar(typeId);//分系统饼状图
 
                             });
-                            
+
                             //
                             //用户时间轴
                             function LineChar() {
@@ -780,7 +768,7 @@
                                     data.push(databasedatas[i].COUNT)
                                     datas.push(data);
                                 }
-                                
+
                                 UserLineChart(datas);
                             }
                             //
@@ -797,15 +785,15 @@
                                             }
                                         }
                                     }
-                                    if (data!=null) {
+                                    if (data != null) {
                                         piedata.value = data;
                                         piedata.name = systemlist[i].sysalias
                                         userSysPieDatas.push(piedata);
                                     }
-                                    
+
                                 }
-                                title = time+"年度子系统百分比"
-                                UserSysPieChart(title,userSysPieDatas);
+                                title = time + "年度子系统百分比"
+                                UserSysPieChart(title, userSysPieDatas);
                             }
                             //
 
@@ -814,7 +802,7 @@
                 }, datatype: "json"
             });
         }
-        
+
         ///
         //系统年前十、后十名用户，柱状图
         function LoginAlluserYearCount(title, lables, datas) {
@@ -941,7 +929,7 @@
                     }
                 ],
                 series: [
-                    
+
                     {
                         type: 'bar',
                         data: datas
@@ -956,7 +944,7 @@
 
             option && myChart.setOption(option);
 
-            
+
         }
         //
         //各系统统计饼状图（年）
@@ -985,7 +973,7 @@
                 legend: {
                     orient: 'vertical',
                     left: 'left',
-                    top:'center'
+                    top: 'center'
                 },
                 series: [
                     {
@@ -1101,10 +1089,10 @@
 
             option && myChart.setOption(option);
         }
-       
+
         //
         //各系统年前后十名用户，柱状图
-        function SystemUserYearTen(title,lables,datas) {
+        function SystemUserYearTen(title, lables, datas) {
             var chartDom = document.getElementById('login_allusersort');
             var myChart = echarts.init(chartDom);
 
@@ -1168,7 +1156,7 @@
             option && myChart.setOption(option);
         }
         //单一用户信息分系统饼状图
-        function UserSysPieChart(title,datas) {
+        function UserSysPieChart(title, datas) {
             var chartDom = document.getElementById('user_system');
             var myChart = echarts.init(chartDom);
             var option;
@@ -1177,7 +1165,7 @@
                 title: {
                     text: title,
                     left: 'left'
-                    
+
                 },
                 toolbox: {
                     right: "100",
@@ -1230,7 +1218,7 @@
             var chartDom = document.getElementById('user_days');
             var myChart = echarts.init(chartDom);
             var option;
-            
+
             option = {
                 tooltip: {
                     trigger: 'axis',
@@ -1238,7 +1226,7 @@
                         return [pt[0], '10%'];
                     }
                 },
-                
+
                 toolbox: {
                     right: "100",
                     feature: {

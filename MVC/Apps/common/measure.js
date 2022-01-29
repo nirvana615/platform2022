@@ -5,11 +5,11 @@
  * 必须先引入common.js
  */
 var measurewidget_layerindex = null;
-var measurewidget_depthTestAgainstTerrain = null;             //深度检测初始值
-var measurewidget_result = "";                  //测量结果
-var measurewidget_tipsentity = null;            //操作提示
-var measurewidget_ismulti = false;                             //是否连续测量
-var measurewidget_istips = true;                              //是否操作提示
+var measurewidget_depthTestAgainstTerrain = null;               //深度检测初始值
+var measurewidget_result = "";                                  //测量结果
+var measurewidget_tipsentity = null;                            //操作提示
+var measurewidget_ismulti = false;                              //是否连续测量
+var measurewidget_istips = true;                                //是否操作提示
 var measurewidget_isredo = false;
 var measurewidget_temppoints = [];
 var measurewidget_tempentities = [];
@@ -88,7 +88,6 @@ function Measurewidget() {
         }
     });
 };
-
 
 //是否连续测量
 layui.form.on('switch(multiMeasureswitch)', function (data) {

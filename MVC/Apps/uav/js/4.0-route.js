@@ -2913,18 +2913,35 @@ function AddTargetAreaModel() {
 
                             //绘制多边形边线
                             if (targetarea_points.length > 1) {
+                                //var entity_targetarea_line = new Cesium.Entity({
+                                //    id: "TARGETAREA_LINE_" + targetarea_points[targetarea_points.length - 2].id + "_" + targetarea_points[targetarea_points.length - 1].id,
+                                //    polyline: {
+                                //        positions: [targetarea_points[targetarea_points.length - 2].xyz, targetarea_points[targetarea_points.length - 1].xyz],
+                                //        width: 2,
+                                //        arcType: Cesium.ArcType.RHUMB,
+                                //        material: Cesium.Color.AQUA,
+                                //        show: true,
+                                //        clampToGround: true,
+                                //        classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                                //    },
+                                //});
+
                                 var entity_targetarea_line = new Cesium.Entity({
                                     id: "TARGETAREA_LINE_" + targetarea_points[targetarea_points.length - 2].id + "_" + targetarea_points[targetarea_points.length - 1].id,
                                     polyline: {
                                         positions: [targetarea_points[targetarea_points.length - 2].xyz, targetarea_points[targetarea_points.length - 1].xyz],
                                         width: 2,
-                                        arcType: Cesium.ArcType.RHUMB,
-                                        material: Cesium.Color.AQUA,
                                         show: true,
-                                        clampToGround: true,
-                                        classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                                        arcType: Cesium.ArcType.RHUMB,
+                                        material: new Cesium.PolylineDashMaterialProperty({
+                                            color: Cesium.Color.AQUA
+                                        }),
+                                        depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                            color: Cesium.Color.AQUA
+                                        }),
                                     },
                                 });
+
                                 entities_targetarea_line.push(entity_targetarea_line);
                                 AddEntityInViewer(entity_targetarea_line);
                             }
@@ -2946,15 +2963,29 @@ function AddTargetAreaModel() {
                         var XYZ = viewer.scene.pickPosition(move.endPosition);
                         if (XYZ != undefined) {
                             //绘制多边形临时边线
+                            //var entity_targetarea_line_temp = new Cesium.Entity({
+                            //    polyline: {
+                            //        positions: [targetarea_points[targetarea_points.length - 1].xyz, XYZ],
+                            //        width: 2,
+                            //        arcType: Cesium.ArcType.RHUMB,
+                            //        material: Cesium.Color.AQUA,
+                            //        show: true,
+                            //        clampToGround: true,
+                            //        classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                            //    },
+                            //});
                             var entity_targetarea_line_temp = new Cesium.Entity({
                                 polyline: {
                                     positions: [targetarea_points[targetarea_points.length - 1].xyz, XYZ],
                                     width: 2,
-                                    arcType: Cesium.ArcType.RHUMB,
-                                    material: Cesium.Color.AQUA,
                                     show: true,
-                                    clampToGround: true,
-                                    classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                                    arcType: Cesium.ArcType.RHUMB,
+                                    material: new Cesium.PolylineDashMaterialProperty({
+                                        color: Cesium.Color.AQUA,
+                                    }),
+                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                        color: Cesium.Color.AQUA,
+                                    }),
                                 },
                             });
                             entities_targetarea_line_temp.push(entity_targetarea_line_temp);
@@ -2966,11 +2997,14 @@ function AddTargetAreaModel() {
                                     polyline: {
                                         positions: [targetarea_points[0].xyz, XYZ],
                                         width: 2,
-                                        arcType: Cesium.ArcType.RHUMB,
-                                        material: Cesium.Color.AQUA,
                                         show: true,
-                                        clampToGround: true,
-                                        classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                                        arcType: Cesium.ArcType.RHUMB,
+                                        material: new Cesium.PolylineDashMaterialProperty({
+                                            color: Cesium.Color.AQUA,
+                                        }),
+                                        depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                            color: Cesium.Color.AQUA,
+                                        }),
                                     },
                                 });
                                 entities_targetarea_line_temp.push(entity_targetarea_line_temp_closure);
@@ -3038,11 +3072,14 @@ function AddTargetAreaModel() {
                         polyline: {
                             positions: line,
                             width: 2,
-                            arcType: Cesium.ArcType.RHUMB,
-                            material: Cesium.Color.AQUA,
                             show: true,
-                            clampToGround: true,
-                            classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                            arcType: Cesium.ArcType.RHUMB,
+                            material: new Cesium.PolylineDashMaterialProperty({
+                                color: Cesium.Color.AQUA
+                            }),
+                            depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                color: Cesium.Color.AQUA
+                            }),
                         },
                     });
                     entities_targetarea.push(entity_targetarea);
@@ -3395,16 +3432,31 @@ function AddTargetAreaTerrain() {
 
                         //绘制多边形边线
                         if (targetarea_points.length > 1) {
+                            //var entity_targetarea_line = new Cesium.Entity({
+                            //    id: "TARGETAREA_LINE_" + targetarea_points[targetarea_points.length - 2].id + "_" + targetarea_points[targetarea_points.length - 1].id,
+                            //    polyline: {
+                            //        positions: [targetarea_points[targetarea_points.length - 2].xyz, targetarea_points[targetarea_points.length - 1].xyz],
+                            //        width: 2,
+                            //        arcType: Cesium.ArcType.RHUMB,
+                            //        material: Cesium.Color.AQUA,
+                            //        show: true,
+                            //        clampToGround: true,
+                            //        classificationType: Cesium.ClassificationType.TERRAIN,
+                            //    },
+                            //});
                             var entity_targetarea_line = new Cesium.Entity({
                                 id: "TARGETAREA_LINE_" + targetarea_points[targetarea_points.length - 2].id + "_" + targetarea_points[targetarea_points.length - 1].id,
                                 polyline: {
                                     positions: [targetarea_points[targetarea_points.length - 2].xyz, targetarea_points[targetarea_points.length - 1].xyz],
                                     width: 2,
-                                    arcType: Cesium.ArcType.RHUMB,
-                                    material: Cesium.Color.AQUA,
                                     show: true,
-                                    clampToGround: true,
-                                    classificationType: Cesium.ClassificationType.TERRAIN,
+                                    arcType: Cesium.ArcType.RHUMB,
+                                    material: new Cesium.PolylineDashMaterialProperty({
+                                        color: Cesium.Color.AQUA
+                                    }),
+                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                        color: Cesium.Color.AQUA
+                                    }),
                                 },
                             });
                             entities_targetarea_line.push(entity_targetarea_line);
@@ -3428,15 +3480,29 @@ function AddTargetAreaTerrain() {
                     var XYZ = viewer.scene.pickPosition(move.endPosition);
                     if (XYZ != undefined) {
                         //绘制多边形临时边线
+                        //var entity_targetarea_line_temp = new Cesium.Entity({
+                        //    polyline: {
+                        //        positions: [targetarea_points[targetarea_points.length - 1].xyz, XYZ],
+                        //        width: 2,
+                        //        arcType: Cesium.ArcType.RHUMB,
+                        //        material: Cesium.Color.AQUA,
+                        //        show: true,
+                        //        clampToGround: true,
+                        //        classificationType: Cesium.ClassificationType.TERRAIN,
+                        //    },
+                        //});
                         var entity_targetarea_line_temp = new Cesium.Entity({
                             polyline: {
                                 positions: [targetarea_points[targetarea_points.length - 1].xyz, XYZ],
                                 width: 2,
-                                arcType: Cesium.ArcType.RHUMB,
-                                material: Cesium.Color.AQUA,
                                 show: true,
-                                clampToGround: true,
-                                classificationType: Cesium.ClassificationType.TERRAIN,
+                                arcType: Cesium.ArcType.RHUMB,
+                                material: new Cesium.PolylineDashMaterialProperty({
+                                    color: Cesium.Color.AQUA
+                                }),
+                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                    color: Cesium.Color.AQUA
+                                }),
                             },
                         });
                         entities_targetarea_line_temp.push(entity_targetarea_line_temp);
@@ -3444,15 +3510,29 @@ function AddTargetAreaTerrain() {
 
                         if (targetarea_points.length > 1) {
                             //绘制多边形临时闭合线
+                            //var entity_targetarea_line_temp_closure = new Cesium.Entity({
+                            //    polyline: {
+                            //        positions: [targetarea_points[0].xyz, XYZ],
+                            //        width: 2,
+                            //        arcType: Cesium.ArcType.RHUMB,
+                            //        material: Cesium.Color.AQUA,
+                            //        show: true,
+                            //        clampToGround: true,
+                            //        classificationType: Cesium.ClassificationType.TERRAIN,
+                            //    },
+                            //});
                             var entity_targetarea_line_temp_closure = new Cesium.Entity({
                                 polyline: {
                                     positions: [targetarea_points[0].xyz, XYZ],
                                     width: 2,
-                                    arcType: Cesium.ArcType.RHUMB,
-                                    material: Cesium.Color.AQUA,
                                     show: true,
-                                    clampToGround: true,
-                                    classificationType: Cesium.ClassificationType.TERRAIN,
+                                    arcType: Cesium.ArcType.RHUMB,
+                                    material: new Cesium.PolylineDashMaterialProperty({
+                                        color: Cesium.Color.AQUA
+                                    }),
+                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                        color: Cesium.Color.AQUA
+                                    }),
                                 },
                             });
                             entities_targetarea_line_temp.push(entity_targetarea_line_temp_closure);
@@ -3515,16 +3595,31 @@ function AddTargetAreaTerrain() {
                 updateroutetree();//刷新航线树
 
                 //绘制闭合线（至少3个点）
+                //var entity_targetarea = new Cesium.Entity({
+                //    id: "TARGETAREA_" + uav_route_add_targetarea.id,
+                //    polyline: {
+                //        positions: line,
+                //        width: 2,
+                //        arcType: Cesium.ArcType.RHUMB,
+                //        material: Cesium.Color.AQUA,
+                //        show: true,
+                //        clampToGround: true,
+                //        classificationType: Cesium.ClassificationType.TERRAIN,
+                //    },
+                //});
                 var entity_targetarea = new Cesium.Entity({
                     id: "TARGETAREA_" + uav_route_add_targetarea.id,
                     polyline: {
                         positions: line,
                         width: 2,
-                        arcType: Cesium.ArcType.RHUMB,
-                        material: Cesium.Color.AQUA,
                         show: true,
-                        clampToGround: true,
-                        classificationType: Cesium.ClassificationType.TERRAIN,
+                        arcType: Cesium.ArcType.RHUMB,
+                        material: new Cesium.PolylineDashMaterialProperty({
+                            color: Cesium.Color.AQUA
+                        }),
+                        depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                            color: Cesium.Color.AQUA
+                        }),
                     },
                 });
                 entities_targetarea.push(entity_targetarea);
