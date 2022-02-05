@@ -23,17 +23,24 @@ var currentmarkcolor = '#cc0000';//默认点标注颜色
 var markprojectid;//标注项目id
 
 var markAddLayer = [];//新增点标注列表
-var markProjectPointLayerList = [];//项目点标注列表
 var markAddPointLayerList = [];//新增点标注列表
 var markAddLineLayerList = [];//新增线标注列表
 var markAddPolygonLayerList = [];//新增面标注列表
+
+
+var markProjectLayer = [];//项目点标注列表
+
+
+
+
+
 
 var markwidget_temppoints = [];
 var markwidget_tempentities = [];
 
 var depthTestAgainstTerrain = null;//深度监测初始值
 var modelpolt = null;//模型标绘
-var markwidget_tipsentity = null;            //操作提示
+var markwidget_tipsentity = null;//操作提示
 
 
 //标绘widget
@@ -56,10 +63,9 @@ function Markwidget(id) {
         , success: function (layero) {
 
             layer.setTop(layero);
-            loadProjectMarkLayersTree();
             //记录当前深度检测值
             depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
-            //默认地形测量
+            //默认地形标注
             viewer.scene.globe.depthTestAgainstTerrain = true;
             markprojectid = id;
             //选择颜色
@@ -78,7 +84,8 @@ function Markwidget(id) {
                 }
             });
             layui.form.render();
-            loadAddMarkLayersTree();
+            loadMarkProjectLayersTree();
+            loadMarkAddLayersTree();
             layui.tree.render({
                 elem: '#addmarklayerlist'
                 , id: 'addmarklayerTree'
@@ -119,6 +126,7 @@ function Markwidget(id) {
             markwidgetlayerindex = null;
             markstylelayerindex = null;
             markAddLayer = [];
+            markProjectLayer = [];
             ClearMarkTemp();
         }
     });
@@ -126,11 +134,211 @@ function Markwidget(id) {
 
 
 //加载项目标注层级树
-function loadProjectMarkLayersTree() {
+function loadMarkProjectLayersTree() {
+    var data = {};
+    data.cookie = document.cookie;
+    data.markprojectid = markprojectid;
+    //请求图层列表
+    $.ajax({
+        url: servicesurl + "/api/Mark/GetMarkProjectList", type: "get", data: data,
+        success: function (result) {
+            var data = JSON.parse(result);
+            var projecttext = $("#currentproject").find("option:selected").text();
+            if (data.code == "1") {
+                var markProject_temp = JSON.parse(data.data);
 
+                if (projecttext != "") {
+                    var markproject = [];
+
+                    var markProjectPointLayerList = [];//项目点标注列表
+                    var markProjectLineLayerList = [];//项目线标注列表
+                    var markProjectPolygonLayerList = [];//项目面标注列表
+
+
+                    for (var i in markProject_temp) {
+                        if (markProject_temp[i].projetid != "null") {
+                            if (markProject_temp[i].marktype == "point") {
+                                var pointobj = new Object;
+                                pointobj.showCheckbox = true;//显示复选框
+                                pointobj.checked = true;
+                                pointobj.id = markProject_temp[i].id;
+                                pointobj.title = markProject_temp[i].title;
+                                pointobj.projetid = markProject_temp[i].projetid;//
+                                pointobj.position = markProject_temp[i].position;//
+                                pointobj.style = markProject_temp[i].style;//
+                                pointobj.color = markProject_temp[i].color;//
+                                pointobj.info = markProject_temp[i].info;//
+                                markProjectPointLayerList.push(pointobj);
+                            }
+                            else if (markProject_temp[i].marktype == "line") {
+                                var lineobj = new Object;
+                                lineobj.showCheckbox = true;//显示复选框
+                                lineobj.checked = true;
+                                lineobj.id = markProject_temp[i].id;
+                                lineobj.title = markProject_temp[i].title;
+                                lineobj.projetid = markProject_temp[i].projetid;//
+                                lineobj.position = markProject_temp[i].position;//
+                                lineobj.style = markProject_temp[i].style;//
+                                lineobj.color = markProject_temp[i].color;//
+                                lineobj.info = markProject_temp[i].info;//
+                                markProjectLineLayerList.push(lineobj);
+                            }
+                            else if (markProject_temp[i].marktype == "polygon") {
+                                var polygonobj = new Object;
+                                polygonobj.showCheckbox = true;//显示复选框
+                                polygonobj.checked = true;
+                                polygonobj.id = markProject_temp[i].id;
+                                polygonobj.title = markProject_temp[i].title;
+                                polygonobj.projetid = markProject_temp[i].projetid;//
+                                polygonobj.position = markProject_temp[i].position;//
+                                polygonobj.style = markProject_temp[i].style;//
+                                polygonobj.color = markProject_temp[i].color;//
+                                polygonobj.info = markProject_temp[i].info;//
+                                markProjectPolygonLayerList.push(polygonobj);
+                            }
+                        }
+
+                    }
+
+                    //项目标注一级菜单
+                    var markprojectobj = new Object;
+                    markprojectobj.title = projecttext;
+                    markprojectobj.type = "markproject";
+                    markprojectobj.children = markproject;
+                    markprojectobj.spread = true;
+                    markProjectLayer.push(markprojectobj);
+                    //项目标注二级菜单
+                    var markprojectpointobj = new Object;
+                    markprojectpointobj.title = "点标注";
+                    markprojectpointobj.type = "point";
+                    markprojectpointobj.children = markProjectPointLayerList;
+                    markprojectpointobj.spread = true;
+                    markproject.push(markprojectpointobj);
+
+                    var markprojectlineobj = new Object;
+                    markprojectlineobj.title = "线标注";
+                    markprojectlineobj.type = "line";
+                    markprojectlineobj.children = markProjectLineLayerList;
+                    markprojectlineobj.spread = true;
+                    markproject.push(markprojectlineobj);
+
+                    var markprojectpolygonobj = new Object;
+                    markprojectpolygonobj.title = "面标注";
+                    markprojectpolygonobj.type = "line";
+                    markprojectpolygonobj.children = markProjectPolygonLayerList;
+                    markprojectpolygonobj.spread = true;
+                    markproject.push(markprojectlineobj);
+                }
+            
+                var markProjectPointTempLayerList = [];//临时点标注列表
+                var markProjectLineTempLayerList = [];//临时线标注列表
+                var markProjectPolygonTempLayerList = [];//临时面标注列表
+
+                for (var i in markProject_temp) {
+                    if (markProject_temp[i].projetid == "null") {
+                        if (markProject_temp[i].marktype == "point") {
+                            var pointobj = new Object;
+                            pointobj.showCheckbox = true;//显示复选框
+                            pointobj.checked = true;
+                            pointobj.id = markProject_temp[i].id;
+                            pointobj.title = markProject_temp[i].title;
+                            pointobj.projetid = markProject_temp[i].projetid;//
+                            pointobj.position = markProject_temp[i].position;//
+                            pointobj.style = markProject_temp[i].style;//
+                            pointobj.color = markProject_temp[i].color;//
+                            pointobj.info = markProject_temp[i].info;//
+                            markProjectPointTempLayerList.push(pointobj);
+                        }
+                        else if (markProject_temp[i].marktype == "line") {
+                            var lineobj = new Object;
+                            lineobj.showCheckbox = true;//显示复选框
+                            lineobj.checked = true;
+                            lineobj.id = markProject_temp[i].id;
+                            lineobj.title = markProject_temp[i].title;
+                            lineobj.projetid = markProject_temp[i].projetid;//
+                            lineobj.position = markProject_temp[i].position;//
+                            lineobj.style = markProject_temp[i].style;//
+                            lineobj.color = markProject_temp[i].color;//
+                            lineobj.info = markProject_temp[i].info;//
+                            markProjectLineTempLayerList.push(lineobj);
+                        }
+                        else if (markProject_temp[i].marktype == "polygon") {
+                            var polygonobj = new Object;
+                            polygonobj.showCheckbox = true;//显示复选框
+                            polygonobj.checked = true;
+                            polygonobj.title = markProject_temp[i].title;
+                            polygonobj.id = markProject_temp[i].id;
+                            polygonobj.projetid = markProject_temp[i].projetid;//
+                            polygonobj.position = markProject_temp[i].position;//
+                            polygonobj.style = markProject_temp[i].style;//
+                            polygonobj.color = markProject_temp[i].color;//
+                            polygonobj.info = markProject_temp[i].info;//
+                            markProjectPolygonTempLayerList.push(polygonobj);
+                        }
+                    }
+                }
+
+                var marktemp = [];
+
+
+                //临时标注一级菜单
+                var marktempobj = new Object;
+                marktempobj.title = "临时标注";
+                marktempobj.type = "markproject";
+                marktempobj.children = marktemp;
+                marktempobj.spread = true;
+                markProjectLayer.push(marktempobj);
+
+                //临时标注二级菜单
+                var markprojectpointtmpobj = new Object;
+                markprojectpointtmpobj.title = "点标注";
+                markprojectpointtmpobj.type = "point";
+                markprojectpointtmpobj.children = markProjectPointTempLayerList;
+                markprojectpointtmpobj.spread = true;
+                marktemp.push(markprojectpointtmpobj);
+
+                var markprojectlinetempobj = new Object;
+                markprojectlinetempobj.title = "线标注";
+                markprojectlinetempobj.type = "line";
+                markprojectlinetempobj.children = markProjectLineTempLayerList;
+                markprojectlinetempobj.spread = true;
+                marktemp.push(markprojectlinetempobj);
+
+                var markprojectpolygontemobj = new Object;
+                markprojectpolygontemobj.title = "面标注";
+                markprojectpolygontemobj.type = "line";
+                markprojectpolygontemobj.children = markProjectPolygonTempLayerList;
+                markprojectpolygontemobj.spread = true;
+                marktemp.push(markprojectpolygontemobj);
+
+                //加载项目标注树
+                layui.tree.render({
+                    elem: '#marklayerlist'
+                    , id: 'markProjectlayerTree'
+                    , showCheckbox: true
+                    //, customCheckbox: true
+                    , customOperate: false
+                    , showLine: true
+                    , data: markProjectLayer
+                    , edit: ['add', 'update', 'del']
+                    , accordion: true
+                    , click: function (obj) {
+                    }
+                    , oncheck: function (obj) {
+                    }
+                    , operate: function (obj) {
+                        projectMarkNodeOperate(obj);
+                    }
+                });
+
+
+            }
+
+        }, datatype: "json"
+    });
 };
 //加载新增标注层级树
-function loadAddMarkLayersTree() {
+function loadMarkAddLayersTree() {
     var addpointmarkobj = new Object;
     addpointmarkobj.title = "点标注";
     addpointmarkobj.type = "point";
@@ -152,6 +360,8 @@ function loadAddMarkLayersTree() {
     addpolygonmarkobj.children = markAddPolygonLayerList;
     addpolygonmarkobj.spread = true;
     markAddLayer.push(addpolygonmarkobj);
+
+
 };
 
 //点标注
@@ -169,10 +379,10 @@ function pointMark() {
         var pickedOject;
 
         if (viewer.scene.globe.depthTestAgainstTerrain) {
-            //地形测量
+            //地形标注
             pickedOject = viewer.scene.pickPosition(leftclick.position);
         } else {
-            //模型测量
+            //模型标注
             pickedOject = viewer.scene.pick(leftclick.position);
         }
 
@@ -233,7 +443,7 @@ function pointMark() {
                         pointmarktemp.showCheckbox = true;//显示复选框
                         pointmarktemp.checked = true;
                         pointmarktemp.id = id_temp;
-                        pointmarktemp.title = "标注点";
+                        pointmarktemp.title = "点标注";
                         pointmarktemp.projetid = markprojectid;//
                         pointmarktemp.position = JSON.stringify(position);//
                         pointmarktemp.longitude = longitude;
@@ -242,6 +452,7 @@ function pointMark() {
                         pointmarktemp.marktype = "point";//
                         pointmarktemp.style = currentmarkpointstyle;//
                         pointmarktemp.color = currentmarkcolor;//
+                        pointmarktemp.info = "null";//
                         markAddPointLayerList.push(pointmarktemp);
                         updateMarkInfoPanel(pointmarktemp);
                         tree.reload('addmarklayerTree', {
@@ -255,7 +466,7 @@ function pointMark() {
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
         //右击结束标注
-        handler.setInputAction(function () {
+     handler.setInputAction(function () {
             if (handler != undefined) {
                 handler.destroy();
                 layer.msg("结束点标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -278,15 +489,15 @@ function lineMark() {
     }
     handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
-    //左键（开始测量）
+    //左键
     handler.setInputAction(function (leftclick) {
 
         var pickedOject;
         if (viewer.scene.globe.depthTestAgainstTerrain) {
-            pickedOject = viewer.scene.pickPosition(leftclick.position);//地形测量
+            pickedOject = viewer.scene.pickPosition(leftclick.position);//地形标注
         }
         else {
-            pickedOject = viewer.scene.pick(leftclick.position);//模型测量
+            pickedOject = viewer.scene.pick(leftclick.position);//模型标注
         }
 
         if (pickedOject != undefined) {
@@ -310,9 +521,9 @@ function lineMark() {
                         polyline: {
                             positions: [markwidget_temppoints[markwidget_temppoints.length - 2], xyz],
                             width: 2,
-                            material: Cesium.Color.DARKORANGE,
+                            material: Cesium.Color.fromCssColorString(currentmarkcolor),
                             depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                color: Cesium.Color.DARKORANGE
+                                color: Cesium.Color.fromCssColorString(currentmarkcolor)
                             }),
                         }
                     });
@@ -322,8 +533,10 @@ function lineMark() {
         }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-    //右键（结束测量）
+    //右键（结束）
     handler.setInputAction(function (rightclik) {
+        var linemarktemp = new Object;
+
         if (viewer.entities.getById("line_temp9999") != null) {
             viewer.entities.removeById("line_temp9999");//删除临时边线
         }
@@ -366,8 +579,25 @@ function lineMark() {
                     scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
                 }
             });
+
+            linemarktemp.showCheckbox = true;//显示复选框
+            linemarktemp.checked = true;
+            linemarktemp.id = "add_mark_line_" + NewGuid();
+            linemarktemp.title = "线标注";
+            linemarktemp.projetid = markprojectid;//
+            linemarktemp.position = JSON.stringify(markwidget_temppoints);//
+            linemarktemp.marktype = "line";//
+            linemarktemp.style = "null";//
+            linemarktemp.color = currentmarkcolor;//
+            linemarktemp.info = "null";//
+            markAddLineLayerList.push(linemarktemp);
+            updateMarkInfoPanel(linemarktemp);
+            tree.reload('addmarklayerTree', {
+                data: markAddLayer
+            });
+   
             markwidget_temppoints = [];
-            markwidget_tempentities = [];
+            markwidget_tempentities = [];        
 
             if (handler != undefined) {
                 handler.destroy();
@@ -384,9 +614,9 @@ function lineMark() {
     handler.setInputAction(function (move) {
         var pickedOject;
         if (viewer.scene.globe.depthTestAgainstTerrain) {
-            pickedOject = viewer.scene.pickPosition(move.endPosition);//地形测量
+            pickedOject = viewer.scene.pickPosition(move.endPosition);//地形标注
         } else {
-            pickedOject = viewer.scene.pick(move.endPosition);//模型测量
+            pickedOject = viewer.scene.pick(move.endPosition);//模型标注
         }
 
         if (pickedOject != undefined) {
@@ -394,7 +624,7 @@ function lineMark() {
             if (position != undefined) {
                 markwidget_tipsentity.position = position;
                 markwidget_tipsentity.label.show = true;
-                markwidget_tipsentity.label.text = "左键点击开始测量，右键点击结束测量";
+                markwidget_tipsentity.label.text = "左键点击开始标注，右键点击结束标注";
 
                 if (markwidget_temppoints.length > 0) {
                     if (viewer.entities.getById("line_temp9999") != null) {
@@ -408,10 +638,10 @@ function lineMark() {
                             width: 2,
                             arcType: Cesium.ArcType.RHUMB,
                             material: new Cesium.PolylineDashMaterialProperty({
-                                color: Cesium.Color.DARKORANGE,
+                                color: Cesium.Color.fromCssColorString(currentmarkcolor),
                             }),
                             depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                color: Cesium.Color.DARKORANGE,
+                                color: Cesium.Color.fromCssColorString(currentmarkcolor),
                             }),
                         }
                     });
@@ -443,14 +673,14 @@ function polygonMark() {
     }
     handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
-    //左键（开始测量）
+    //左键（开始标注）
     handler.setInputAction(function (leftclik) {
 
         var pickedOject;
         if (viewer.scene.globe.depthTestAgainstTerrain) {
-            pickedOject = viewer.scene.pickPosition(leftclik.position);//地形测量
+            pickedOject = viewer.scene.pickPosition(leftclik.position);//地形标注
         } else {
-            pickedOject = viewer.scene.pick(leftclik.position);//模型测量
+            pickedOject = viewer.scene.pick(leftclik.position);//模型标注
         }
 
         if (pickedOject != undefined) {
@@ -458,7 +688,7 @@ function polygonMark() {
             if (position != undefined) {
                 if (Cesium.defined(position)) {
                     var tempentity = viewer.entities.add({
-                        name: "add_mark_polygon" + MeasureGuid(),
+                        name: "add_mark_polygon" + NewGuid(),
                         position: position,
                         point: {
                             pixelSize: 8,
@@ -471,14 +701,14 @@ function polygonMark() {
                 }
                 if (markwidget_temppoints.length > 1) {
                     var tempentity_line = viewer.entities.add({
-                        name: "add_mark_polygon" + MeasureGuid(),
+                        name: "add_mark_polygon" + NewGuid(),
                         polyline: {
                             positions: [markwidget_temppoints[markwidget_temppoints.length - 2], position],
                             width: 2,
                             arcType: Cesium.ArcType.RHUMB,
-                            material: Cesium.Color.DARKORANGE,
+                            material: Cesium.Color.fromCssColorString(currentmarkcolor),
                             depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                color: Cesium.Color.DARKORANGE,
+                                color: Cesium.Color.fromCssColorString(currentmarkcolor),
                             }),
                         }
                     });
@@ -488,7 +718,7 @@ function polygonMark() {
         }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-    //右键（结束测量）
+    //右键（结束）
     handler.setInputAction(function () {
         if (viewer.entities.getById("line_temp9999") != null) {
             viewer.entities.removeById("line_temp9999");
@@ -498,16 +728,19 @@ function polygonMark() {
         }
 
         if (markwidget_temppoints.length > 2) {
+            var polygonmarktemp = new Object;
+
+
             //绘制多边形闭合线
             viewer.entities.add({
-                name: "add_mark_polygon" + MeasureGuid(),
+                name: "add_mark_polygon" + NewGuid(),
                 polyline: {
                     positions: [markwidget_temppoints[0], markwidget_temppoints[markwidget_temppoints.length - 1]],
                     width: 2,
                     arcType: Cesium.ArcType.RHUMB,
-                    material: Cesium.Color.DARKORANGE,
+                    material: Cesium.Color.fromCssColorString(currentmarkcolor),
                     depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                        color: Cesium.Color.DARKORANGE,
+                        color: Cesium.Color.fromCssColorString(currentmarkcolor),
                     }),
                 }
             });
@@ -551,7 +784,7 @@ function polygonMark() {
             area = Math.abs(area) * 0.5;
 
             viewer.entities.add({
-                name: "add_mark_polygon_label_" + MeasureGuid(),
+                name: "add_mark_polygon_label_" + NewGuid(),
                 position: new Cesium.Cartesian3(xsum / markwidget_temppoints.length, ysum / markwidget_temppoints.length, zsum / markwidget_temppoints.length),
                 label: {
                     text: '平面面积：' + area.toFixed(3) + 'm²',
@@ -574,6 +807,22 @@ function polygonMark() {
                 markwidget_tipsentity.label.show = false;
                 markwidget_tipsentity.label.text = "";
             }
+            polygonmarktemp.showCheckbox = true;//显示复选框
+            polygonmarktemp.checked = true;
+            polygonmarktemp.id = "add_mark_polygon_" + NewGuid();
+            polygonmarktemp.title = "面标注";
+            polygonmarktemp.projetid = markprojectid;//
+            polygonmarktemp.position = JSON.stringify(markwidget_temppoints);//
+            polygonmarktemp.marktype = "polygon";//
+            polygonmarktemp.style = "null";//
+            polygonmarktemp.color = currentmarkcolor;//
+            polygonmarktemp.info = "null";//
+            markAddPolygonLayerList.push(polygonmarktemp);
+            updateMarkInfoPanel(polygonmarktemp);
+            tree.reload('addmarklayerTree', {
+                data: markAddLayer
+            });
+
             markwidget_temppoints = [];
             markwidget_tempentities = [];
         }
@@ -583,10 +832,8 @@ function polygonMark() {
                     viewer.entities.remove(markwidget_tempentities[i]);
                 }
             }
-
             markwidget_temppoints = [];
             markwidget_tempentities = [];
-
             layer.msg('请至少绘制三个点！');
         }
     }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
@@ -595,17 +842,17 @@ function polygonMark() {
     handler.setInputAction(function (move) {
         var pickedOject;
         if (viewer.scene.globe.depthTestAgainstTerrain) {
-            pickedOject = viewer.scene.pickPosition(move.endPosition);//地形测量
+            pickedOject = viewer.scene.pickPosition(move.endPosition);//地形标注
         } else {
-            pickedOject = viewer.scene.pick(move.endPosition);//模型测量
+            pickedOject = viewer.scene.pick(move.endPosition);//模型标注
         }
 
         if (pickedOject != undefined) {
             var position = viewer.scene.pickPosition(move.endPosition);
             if (position != undefined) {
                 markwidget_tipsentity.position = position;
-                markwidget_tipsentity.label.show = istips;
-                markwidget_tipsentity.label.text = "左键点击开始测量，右键点击结束测量";
+                markwidget_tipsentity.label.show = true;
+                markwidget_tipsentity.label.text = "左键点击开始标注，右键点击结束标注";
 
                 if (markwidget_temppoints.length > 0) {
                     if (viewer.entities.getById("line_temp9999") != null) {
@@ -619,10 +866,10 @@ function polygonMark() {
                             width: 2,
                             arcType: Cesium.ArcType.RHUMB,
                             material: new Cesium.PolylineDashMaterialProperty({
-                                color: Cesium.Color.DARKORANGE,
+                                color: Cesium.Color.fromCssColorString(currentmarkcolor),
                             }),
                             depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                color: Cesium.Color.DARKORANGE,
+                                color: Cesium.Color.fromCssColorString(currentmarkcolor),
                             }),
                         }
                     });
@@ -639,10 +886,10 @@ function polygonMark() {
                                 width: 2,
                                 arcType: Cesium.ArcType.RHUMB,
                                 material: new Cesium.PolylineDashMaterialProperty({
-                                    color: Cesium.Color.DARKORANGE,
+                                    color: Cesium.Color.fromCssColorString(currentmarkcolor),
                                 }),
                                 depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                    color: Cesium.Color.DARKORANGE,
+                                    color: Cesium.Color.fromCssColorString(currentmarkcolor),
                                 }),
                             }
                         });
@@ -664,31 +911,25 @@ function polygonMark() {
 
 //保存标注
 function saveMark() {
-    var saveMarkAdd = markAddLayer;
-    var markdata = {};
     var postmarks = [];
-    //获取选中状态标注
-    var splice = [];
-    for (var i in saveMarkAdd) {
-        for (var j in saveMarkAdd[i].children) {
-            if (saveMarkAdd[i].children[j].checked == true) {
+    var markdata = {};
+
+    for (var i in markAddLayer) {
+        for (var j in markAddLayer[i].children) {
+            if (markAddLayer[i].children[j].checked == true) {
                 var data = new Object;
-                data.title = saveMarkAdd[i].children[j].title;
-                data.position = saveMarkAdd[i].children[j].position;
-                data.style = saveMarkAdd[i].children[j].style;
-                data.color = saveMarkAdd[i].children[j].color;
-                data.projetid = saveMarkAdd[i].children[j].projetid;
-                data.marktype = saveMarkAdd[i].children[j].marktype;
+                data.id="null"
+                data.title = markAddLayer[i].children[j].title;
+                data.position = markAddLayer[i].children[j].position;
+                data.style = markAddLayer[i].children[j].style;
+                data.color = markAddLayer[i].children[j].color;
+                data.projetid = markAddLayer[i].children[j].projetid;
+                data.marktype = markAddLayer[i].children[j].marktype;
+                data.info = markAddLayer[i].children[j].info;
                 postmarks.push(data);
-                splice.push(j);
             }
         }
-        for (var n in splice) {
-            saveMarkAdd[i].children.splice(parseInt(splice[n]), 1);
-        }
-        splice = [];
     }
-
 
     markdata.cookie = document.cookie;
     markdata.postmarks = JSON.stringify(postmarks);
@@ -699,7 +940,19 @@ function saveMark() {
             var data = JSON.parse(result);
             layer.msg(data.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
             if (data.code == "1") {
-                markAddLayer = saveMarkAdd;
+                //更新已保存的标注树
+                for (var i in markAddLayer) {
+                    var re_num = [];
+                    for (var j = markAddLayer[i].children.length - 1; j >= 0; j--) {
+                        if (markAddLayer[i].children[j].checked == true) {
+                            re_num.push(j);
+                        }
+                    }
+                    for (var n in re_num) {
+                        markAddLayer[i].children.splice(parseInt(re_num[n]), 1);
+                    }
+
+                }
                 tree.reload('addmarklayerTree', {
                     data: markAddLayer
                 });
@@ -736,6 +989,28 @@ function updateMarkInfoPanel(markobject) {
 
     }
 };
+
+
+//节点操作(查看、编辑、删除)
+function projectMarkNodeOperate(obj) {
+    if (obj.type === 'add') {
+
+    }
+    else if (obj.type === 'edit') {
+
+    }
+    else if (obj.type === 'del') {
+        //删除项目
+        $.ajax({
+            url: servicesurl + "/api/Mark/DeleteMark", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
+            success: function (data) {
+                layer.msg(data.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                markProjectLayer = [];
+                loadMarkProjectLayersTree();
+            }, datatype: "json"
+        });
+    }
+}
 
 //点击新增标注节点操作
 function addMarkLayerClick(obj) {
@@ -776,6 +1051,8 @@ function selectAddMarkTypeOperate(id) {
     unselectAddMarkTypeOperate();
     document.getElementById(id).style = "color:#FFFFFF;background-color:#33ABA0;width:65px;border-radius: 20px";
     document.getElementById('svg_' + id).setAttribute("style", "fill:#FFFFFF");
+    var divtemp = document.getElementById("addmarkinfo");
+    divtemp.innerHTML = '';
 };
 //结束标注方式操作
 function unselectAddMarkTypeOperate() {
@@ -815,7 +1092,7 @@ function ClearMarkTemp() {
         viewer.entities.removeById("line_temp9998");
     }
 };
-//清除单次测量图形
+//清除单次标注图形
 function ClearMarkSingle() {
     var count = 0;
     while (count < 40) {

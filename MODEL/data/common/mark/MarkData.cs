@@ -8,6 +8,9 @@ namespace MODEL
 {
     public class MarkData
     {
+        public string id { get; set; }
+
+
         public string title { get; set; }
 
         public string position { get; set; }
@@ -20,5 +23,6 @@ namespace MODEL
 
         public string marktype { get; set; }
 
+        public string info { get; set; }
     }
 }

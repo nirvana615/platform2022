@@ -258,6 +258,7 @@
     <Compile Include="parse\ParseFlzoneHelper.cs" />
     <Compile Include="parse\ParseImageHelper.cs" />
     <Compile Include="parse\ParseManageHelper.cs" />
+    <Compile Include="parse\ParseMarkHelper.cs" />
     <Compile Include="parse\ParseModelHelper.cs" />
     <Compile Include="parse\ParseMonitorHelper.cs" />
     <Compile Include="parse\ParsePointCloudHelper.cs" />

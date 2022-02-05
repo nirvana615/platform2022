@@ -18,7 +18,10 @@ namespace SERVICE.Controllers
         private static Logger logger = Logger.CreateLogger(typeof(DisasterController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
-
+        /// <summary>
+        /// 新增标注
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public string AddMark()
         {
@@ -48,6 +51,7 @@ namespace SERVICE.Controllers
                            && !string.IsNullOrEmpty(marks[i].style)
                            && !string.IsNullOrEmpty(marks[i].color)
                            && !string.IsNullOrEmpty(marks[i].style)
+                           && !string.IsNullOrEmpty(marks[i].info)
                            && !string.IsNullOrEmpty(marks[i].marktype))
                         {
                             string value = "("
@@ -56,13 +60,16 @@ namespace SERVICE.Controllers
                             + SQLHelper.UpdateString(marks[i].style) + ","
                             + SQLHelper.UpdateString(marks[i].color) + ","
                             + SQLHelper.UpdateString(marks[i].position) + ","
+                            + SQLHelper.UpdateString(marks[i].info) + ","
+
                             + SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + ","
                             + (int)MODEL.Enum.State.InUse;
-                            string sql = " INSERT INTO common_mark(text, type, style, color, pos, cjsj, ztm";
+                            string sql = " INSERT INTO common_mark(text, type, style, color, pos,info, cjsj, ztm";
                             int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, sql + ") VALUES" + value + ")");
 
                             if (id != -1)
                             {
+
                                 if (marks[i].projetid==null)
                                 {
                                     marks[i].projetid = "null";
@@ -104,10 +111,96 @@ namespace SERVICE.Controllers
             }
         }
 
+        /// <summary>
+  /// 获取所有项目标注
+  /// </summary>
+  /// <param name="markprojectid"></param>
+  /// <param name="cookie"></param>
+  /// <returns></returns>
+        [HttpGet]
+        public string GetMarkProjectList(string markprojectid, string cookie)
+        {
+            User user = null;
+            string userbsms = string.Empty;
+            int syscode = 0;
+
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user, ref syscode);
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                string sql = "select b.id,b.text,a.projectid,b.type,b.style, b.color,b.pos,b.info from common_map_project_mark a,common_mark b where a.markid=b.id AND ";
+                if (markprojectid!=null)
+                {
+                    sql = sql + " a.syscode = '"+ syscode + "' AND ( a.projectid='"+ markprojectid + "'OR a.projectid='null') ";
+                }
+                else
+                {
+                    sql = sql + " a.syscode = '" + syscode + "' AND a.projectid= 'null'";
+
+                }
+
+                string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql));
+                if (!string.IsNullOrEmpty(data))
+                {
+                    List<MarkData> MarkProjectDataList = new List<MarkData>();
+                    string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        MarkData markData = ParseMarkHelper.ParseMark(rows[i]);
+                        MarkProjectDataList.Add(markData);
+
+                    }
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "获取项目标注成功", JsonHelper.ToJson(MarkProjectDataList)));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "获取项目标注列表失败，请重试！", string.Empty));
+
+                }
 
 
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无权限！", string.Empty));
+            }
+        }
+        /// <summary>
+        /// 删除标注
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        public string DeleteMark()
+        {
+            string id = HttpContext.Current.Request.Form["id"];
 
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  common_mark  WHERE id={0}AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
+                if (updatecount == 1)
+                {
+                    int updatemarkcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  common_map_project_mark  WHERE markid={0}AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
+                    if (updatemarkcount == 1)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除标注成功", string.Empty));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除标注-项目映射出错！！", string.Empty));
+                    }
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除标注失败！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "验证失败，请重试！", string.Empty));
+            }
+        }
 
     }
 }
