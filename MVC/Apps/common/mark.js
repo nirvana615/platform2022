@@ -146,14 +146,19 @@ function loadMarkProjectLayersTree() {
             var projecttext = $("#currentproject").find("option:selected").text();
             if (data.code == "1") {
                 var markProject_temp = JSON.parse(data.data);
+                var marktemp = [];
 
                 if (projecttext != "") {
+
                     var markproject = [];
 
                     var markProjectPointLayerList = [];//项目点标注列表
                     var markProjectLineLayerList = [];//项目线标注列表
                     var markProjectPolygonLayerList = [];//项目面标注列表
 
+                    var markProjectPointTempLayerList = [];//临时点标注列表
+                    var markProjectLineTempLayerList = [];//临时线标注列表
+                    var markProjectPolygonTempLayerList = [];//临时面标注列表
 
                     for (var i in markProject_temp) {
                         if (markProject_temp[i].projetid != "null") {
@@ -168,6 +173,7 @@ function loadMarkProjectLayersTree() {
                                 pointobj.style = markProject_temp[i].style;//
                                 pointobj.color = markProject_temp[i].color;//
                                 pointobj.info = markProject_temp[i].info;//
+                                pointobj.type = "PROJECTMARKPOINT";//
                                 markProjectPointLayerList.push(pointobj);
                             }
                             else if (markProject_temp[i].marktype == "line") {
@@ -181,6 +187,7 @@ function loadMarkProjectLayersTree() {
                                 lineobj.style = markProject_temp[i].style;//
                                 lineobj.color = markProject_temp[i].color;//
                                 lineobj.info = markProject_temp[i].info;//
+                                lineobj.type = "PROJECTMARKLINE";//
                                 markProjectLineLayerList.push(lineobj);
                             }
                             else if (markProject_temp[i].marktype == "polygon") {
@@ -194,10 +201,89 @@ function loadMarkProjectLayersTree() {
                                 polygonobj.style = markProject_temp[i].style;//
                                 polygonobj.color = markProject_temp[i].color;//
                                 polygonobj.info = markProject_temp[i].info;//
+                                polygonobj.type = "PROJECTMARKPOLYGON";//
                                 markProjectPolygonLayerList.push(polygonobj);
                             }
                         }
 
+                        else {
+                            if (markProject_temp[i].marktype == "point") {
+                                var pointobj = new Object;
+                                pointobj.showCheckbox = true;//显示复选框
+                                pointobj.checked = true;
+                                pointobj.id = markProject_temp[i].id;
+                                pointobj.title = markProject_temp[i].title;
+                                pointobj.projetid = markProject_temp[i].projetid;//
+                                pointobj.position = markProject_temp[i].position;//
+                                pointobj.style = markProject_temp[i].style;//
+                                pointobj.color = markProject_temp[i].color;//
+                                pointobj.info = markProject_temp[i].info;//
+                                pointobj.type = "PROJECTMARKPOINT";//
+
+                                markProjectPointTempLayerList.push(pointobj);
+
+                                //添加项目点标注
+                                viewer.entities.add({
+                                    id: "project_mark_point_" + markProject_temp[i].id,
+                                    name: "project_mark_point_" + markProject_temp[i].id,
+                                    position: JSON.parse(markProject_temp[i].position),
+                                    billboard: {
+                                        image: markProject_temp[i].style,
+                                        color: Cesium.Color.fromCssColorString(markProject_temp[i].color),
+                                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                                        width: 24,
+                                        height: 24,
+                                        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                    }
+                                });
+
+                                viewer.entities.add({
+                                    id: "project_mark_point_label_" + markProject_temp[i].id,
+                                    name: "project_mark_point_label_" + markProject_temp[i].id,
+                                    position: JSON.parse(markProject_temp[i].position),
+                                    label: {
+                                        text: markProject_temp[i].title,
+                                        font: '18px Times New Roman',
+                                        showBackground: true,
+                                        backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                        fillColor: Cesium.Color.AQUA,
+                                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                        verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                        pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                                        eyeOffset: new Cesium.Cartesian3(0, 0, -10),
+                                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                        scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+                                    }
+                                });
+
+                            }
+                            else if (markProject_temp[i].marktype == "line") {
+                                var lineobj = new Object;
+                                lineobj.showCheckbox = true;//显示复选框
+                                lineobj.checked = true;
+                                lineobj.id = markProject_temp[i].id;
+                                lineobj.title = markProject_temp[i].title;
+                                lineobj.projetid = markProject_temp[i].projetid;//
+                                lineobj.position = markProject_temp[i].position;//
+                                lineobj.style = markProject_temp[i].style;//
+                                lineobj.color = markProject_temp[i].color;//
+                                lineobj.info = markProject_temp[i].info;//
+                                markProjectLineTempLayerList.push(lineobj);
+                            }
+                            else if (markProject_temp[i].marktype == "polygon") {
+                                var polygonobj = new Object;
+                                polygonobj.showCheckbox = true;//显示复选框
+                                polygonobj.checked = true;
+                                polygonobj.title = markProject_temp[i].title;
+                                polygonobj.id = markProject_temp[i].id;
+                                polygonobj.projetid = markProject_temp[i].projetid;//
+                                polygonobj.position = markProject_temp[i].position;//
+                                polygonobj.style = markProject_temp[i].style;//
+                                polygonobj.color = markProject_temp[i].color;//
+                                polygonobj.info = markProject_temp[i].info;//
+                                markProjectPolygonTempLayerList.push(polygonobj);
+                            }
+                        }
                     }
 
                     //项目标注一级菜单
@@ -224,63 +310,12 @@ function loadMarkProjectLayersTree() {
 
                     var markprojectpolygonobj = new Object;
                     markprojectpolygonobj.title = "面标注";
-                    markprojectpolygonobj.type = "line";
+                    markprojectpolygonobj.type = "polygon";
                     markprojectpolygonobj.children = markProjectPolygonLayerList;
                     markprojectpolygonobj.spread = true;
-                    markproject.push(markprojectlineobj);
+                    markproject.push(markprojectpolygonobj);
                 }
             
-                var markProjectPointTempLayerList = [];//临时点标注列表
-                var markProjectLineTempLayerList = [];//临时线标注列表
-                var markProjectPolygonTempLayerList = [];//临时面标注列表
-
-                for (var i in markProject_temp) {
-                    if (markProject_temp[i].projetid == "null") {
-                        if (markProject_temp[i].marktype == "point") {
-                            var pointobj = new Object;
-                            pointobj.showCheckbox = true;//显示复选框
-                            pointobj.checked = true;
-                            pointobj.id = markProject_temp[i].id;
-                            pointobj.title = markProject_temp[i].title;
-                            pointobj.projetid = markProject_temp[i].projetid;//
-                            pointobj.position = markProject_temp[i].position;//
-                            pointobj.style = markProject_temp[i].style;//
-                            pointobj.color = markProject_temp[i].color;//
-                            pointobj.info = markProject_temp[i].info;//
-                            markProjectPointTempLayerList.push(pointobj);
-                        }
-                        else if (markProject_temp[i].marktype == "line") {
-                            var lineobj = new Object;
-                            lineobj.showCheckbox = true;//显示复选框
-                            lineobj.checked = true;
-                            lineobj.id = markProject_temp[i].id;
-                            lineobj.title = markProject_temp[i].title;
-                            lineobj.projetid = markProject_temp[i].projetid;//
-                            lineobj.position = markProject_temp[i].position;//
-                            lineobj.style = markProject_temp[i].style;//
-                            lineobj.color = markProject_temp[i].color;//
-                            lineobj.info = markProject_temp[i].info;//
-                            markProjectLineTempLayerList.push(lineobj);
-                        }
-                        else if (markProject_temp[i].marktype == "polygon") {
-                            var polygonobj = new Object;
-                            polygonobj.showCheckbox = true;//显示复选框
-                            polygonobj.checked = true;
-                            polygonobj.title = markProject_temp[i].title;
-                            polygonobj.id = markProject_temp[i].id;
-                            polygonobj.projetid = markProject_temp[i].projetid;//
-                            polygonobj.position = markProject_temp[i].position;//
-                            polygonobj.style = markProject_temp[i].style;//
-                            polygonobj.color = markProject_temp[i].color;//
-                            polygonobj.info = markProject_temp[i].info;//
-                            markProjectPolygonTempLayerList.push(polygonobj);
-                        }
-                    }
-                }
-
-                var marktemp = [];
-
-
                 //临时标注一级菜单
                 var marktempobj = new Object;
                 marktempobj.title = "临时标注";
@@ -306,7 +341,7 @@ function loadMarkProjectLayersTree() {
 
                 var markprojectpolygontemobj = new Object;
                 markprojectpolygontemobj.title = "面标注";
-                markprojectpolygontemobj.type = "line";
+                markprojectpolygontemobj.type = "polygon";
                 markprojectpolygontemobj.children = markProjectPolygonTempLayerList;
                 markprojectpolygontemobj.spread = true;
                 marktemp.push(markprojectpolygontemobj);
@@ -325,13 +360,13 @@ function loadMarkProjectLayersTree() {
                     , click: function (obj) {
                     }
                     , oncheck: function (obj) {
+                        projectMarkNodeChecked(obj);
+
                     }
                     , operate: function (obj) {
                         projectMarkNodeOperate(obj);
                     }
                 });
-
-
             }
 
         }, datatype: "json"
@@ -408,11 +443,10 @@ function pointMark() {
                 }
 
                 if (height > 0) {
-                    var id_temp = "add_mark_point" + NewGuid();
-                    var time_temp= new Date().getTime();//时间戳
+                    var id_temp = "add_mark_point_" + NewGuid();
                     if (Cesium.defined(position)) {
                         viewer.entities.add({
-                            name: "add_mark_point_" + time_temp,
+                            name: "add_mark_point_" + NewGuid(),
                             id: id_temp,
                             position: position,
                             billboard: {
@@ -425,7 +459,7 @@ function pointMark() {
                             }
                         });
                         viewer.entities.add({
-                            name: "add_mark_point_label" + NewGuid(),
+                            name: "add_mark_point_label_" + NewGuid(),
                             position: position,
                             label: {
                                 text: longitude.toFixed(6) + '，' + latitude.toFixed(6) + '，' + (height).toFixed(3),
@@ -1012,6 +1046,122 @@ function projectMarkNodeOperate(obj) {
     }
 }
 
+//项目标注树节点选中
+function projectMarkNodeChecked(obj) {
+    //选中
+    if (obj.checked) {
+        //多选
+        if (obj.data.children != undefined) {
+            if (obj.data.type == "markproject") {
+                for (var i in obj.data.children) {
+                    if (obj.data.children[i].type == "point") {
+                        for (var j in obj.data.children[i].children) {
+                            uploadProjectPointMarkEntity(obj.data.children[i].children[j].id, obj.data.children[i].children[j].title, obj.data.children[i].children[j].position, obj.data.children[i].children[j].style, obj.data.children[i].children[j].color);
+                        }
+                    }
+                    else if (obj.data.children[i].type == "line") {
+                        for (var j in obj.data.children[i].children) {
+                            uploadProjectLineMarkEntity(obj.data.children[i].children[j].id, obj.data.children[i].children[j].title, obj.data.children[i].children[j].position, obj.data.children[i].children[j].color);                                          
+                        }
+                    }
+                    else if (obj.data.children[i].type == "polygon") {
+                        for (var j in obj.data.children[i].children) {
+                            uploadProjectPolygonMarkEntity(obj.data.children[i].children[j].id, obj.data.children[i].children[j].title, obj.data.children[i].children[j].position, obj.data.children[i].children[j].color);                           
+                        }
+                    }
+                }
+            }
+            else {
+                for (var i in obj.data.children) {
+                    if (obj.data.children[i].type == "PROJECTMARKPOINT") {
+                        uploadProjectPointMarkEntity(obj.data.children[i].id, obj.data.children[i].title, obj.data.children[i].position, obj.data.children[i].style, obj.data.children[i].color);                        
+                    }
+                    else if (obj.data.children[i].type == "PROJECTMARKLINE") {
+                        uploadProjectLineMarkEntity(obj.data.children[i].id, obj.data.children[i].title, obj.data.children[i].position, obj.data.children[i].color);                                                             
+                    }
+                    else if (obj.data.children[i].type == "PROJECTMARKPOLYGON") {
+                        uploadProjectPolygonMarkEntity(obj.data.children[i].id, obj.data.children[i].title, obj.data.children[i].position, obj.data.children[i].color);                                                   
+                    }
+                }
+            }
+        }
+        //单选
+        else {
+            if (obj.data.type == "PROJECTMARKPOINT") {
+                uploadProjectPointMarkEntity(obj.data.id, obj.data.title, obj.data.position, obj.data.style, obj.data.color);
+            }
+            else if ((obj.data.type == "PROJECTMARKLINE")) {
+                uploadProjectLineMarkEntity(obj.data.id, obj.data.title, obj.data.position, obj.data.color);               
+            }
+            else if ((obj.data.type == "PROJECTMARKPOLYGON")) {
+                uploadProjectPolygonMarkEntity(obj.data.id, obj.data.title, obj.data.position, obj.data.color);
+            }
+        }
+    }
+    //不选中
+    else {
+        //多选
+        if (obj.data.children != undefined) {
+            if (obj.data.type == "markproject") {
+                for (var i in obj.data.children) {
+                    if (obj.data.children[i].type == "point") {
+                        for (var j in obj.data.children[i].children) {
+                            viewer.entities.removeById("project_mark_point_" + obj.data.children[i].children[j].id);
+                            viewer.entities.removeById("project_mark_point_label_" + obj.data.children[i].children[j].id);
+                        }
+                    }
+                    else if (obj.data.children[i].type == "line") {
+                        for (var j in obj.data.children[i].children) {
+                            viewer.entities.removeById("project_mark_line_" + obj.data.children[i].children[j].id);
+                            viewer.entities.removeById("project_mark_line_label_" + obj.data.children[i].children[j].id);
+                        }
+                    }
+                    else if (obj.data.children[i].type == "polygon") {
+                        for (var j in obj.data.children[i].children) {
+                            viewer.entities.removeById("project_mark_polygon_" + obj.data.children[i].children[j].id);
+                            viewer.entities.removeById("project_mark_polygon_label_" + obj.data.children[i].children[j].id);
+                        }
+                    }
+                }
+            }
+            else {
+                for (var i in obj.data.children) {
+                    if (obj.data.children[i].type == "PROJECTMARKPOINT") {
+                        viewer.entities.removeById("project_mark_point_" + obj.data.children[i].id);
+                        viewer.entities.removeById("project_mark_point_label_" + obj.data.children[i].id);
+                    }
+                    else if (obj.data.children[i].type == "PROJECTMARKLINE") {
+                        viewer.entities.removeById("project_mark_line_" + obj.data.children[i].id);
+                        viewer.entities.removeById("project_mark_line_label_" + obj.data.children[i].id);
+                    }
+                    else if (obj.data.children[i].type == "PROJECTMARKPOLYGON") {
+                        viewer.entities.removeById("project_mark_polygon_" + obj.data.children[i].id);
+                        viewer.entities.removeById("project_mark_polygon_label_" + obj.data.children[i].id);
+                    }
+
+                }
+            }
+  
+        }
+        else {
+            if (obj.data.type == "PROJECTMARKPOINT") {
+                viewer.entities.removeById("project_mark_point_" + obj.data.id);
+                viewer.entities.removeById("project_mark_point_label_" + obj.data.id);
+            }
+            else if (obj.data.type == "PROJECTMARKLINE") {
+                viewer.entities.removeById("project_mark_line_" + obj.data.id);
+                viewer.entities.removeById("project_mark_line_label_" + obj.data.id);
+            }
+            else if (obj.data.type == "PROJECTMARKPOLYGON") {
+                viewer.entities.removeById("project_mark_polygon_" + obj.data.id);
+                viewer.entities.removeById("project_mark_polygon_label_" + obj.data.id);
+            }
+
+        }
+
+    }
+}
+
 //点击新增标注节点操作
 function addMarkLayerClick(obj) {
 
@@ -1078,7 +1228,13 @@ function ClearMarkTemp() {
                 || (viewer.entities._entities._array[i]._name.indexOf("add_mark_line") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("add_mark_line_label_") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("add_mark_polygon_label_") > -1)
-                || (viewer.entities._entities._array[i]._name.indexOf("add_mark_polygon") > -1))
+                || (viewer.entities._entities._array[i]._name.indexOf("add_mark_polygon") > -1)
+                || (viewer.entities._entities._array[i]._name.indexOf("project_mark_point_") > -1)
+                || (viewer.entities._entities._array[i]._name.indexOf("project_mark_line_") > -1)
+                || (viewer.entities._entities._array[i]._name.indexOf("project_mark_polygon_") > -1)
+                || (viewer.entities._entities._array[i]._name.indexOf("project_mark_point_label_") > -1)
+                || (viewer.entities._entities._array[i]._name.indexOf("project_mark_line_label_") > -1)
+                || (viewer.entities._entities._array[i]._name.indexOf("project_mark_polygon_label_") > -1))
             ) {
                 viewer.entities.remove(viewer.entities._entities._array[i]);
             }
@@ -1179,6 +1335,128 @@ function getMarkStyle() {
     layer.close(markstylelayerindex);
 }
 
+//地图加载项目点标注
+function uploadProjectPointMarkEntity(id, title, position,style,color) {
+    var entity = viewer.entities.getById("project_mark_point_" + id);
+    if (entity == undefined) {
+        //添加项目点标注
+        viewer.entities.add({
+            id: "project_mark_point_" + id,
+            name: "project_mark_point_" + id,
+            position: JSON.parse(position),
+            billboard: {
+                image: style,
+                color: Cesium.Color.fromCssColorString(color),
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                width: 24,
+                height: 24,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY
+            }
+        });
+    }
+    var entitylabel = viewer.entities.getById("project_mark_point_label_" + id);
+    if (entitylabel == undefined) {
+        viewer.entities.add({
+            id: "project_mark_point_label_" + id,
+            name: "project_mark_point_label_" + id,
+            position: JSON.parse(position),
+            label: {
+                text: title,
+                font: '18px Times New Roman',
+                showBackground: true,
+                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                fillColor: Cesium.Color.AQUA,
+                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                eyeOffset: new Cesium.Cartesian3(0, 0, -10),
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+            }
+        });
+    }
+}
+//地图加载项目线标注
+function uploadProjectLineMarkEntity(id, title,position, color) {
+    var entity = viewer.entities.getById("project_mark_line_" + id);
+    if (entity == undefined) {
+        var lineposition = JSON.parse(position);
+        viewer.entities.add({
+            id: "project_mark_line_" +id,
+            name: "project_mark_line_" + id,
+            polyline: {
+                positions: lineposition,
+                width: 2,
+                material: Cesium.Color.fromCssColorString(color),
+                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                    color: Cesium.Color.fromCssColorString(color),
+                }),
+            }
+        });
+    }
+    var entitylabel = viewer.entities.getById("project_mark_line_label_" +id);
+    if (entitylabel == undefined) {
+        viewer.entities.add({
+            id: "project_mark_line_label_" + id,
+            name: "project_mark_line_label_" + id,
+            position: JSON.parse(position)[0],
+            label: {
+                text: title,
+                font: '18px Times New Roman',
+                showBackground: true,
+                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                fillColor: Cesium.Color.AQUA,
+                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                eyeOffset: new Cesium.Cartesian3(0, 0, -10),
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+            }
+        });
+    }
+}
+//地图加载项目面标注
+function uploadProjectPolygonMarkEntity(id, title, position, color) {
+    var entity = viewer.entities.getById("project_mark_polygon_" + id);
+    if (entity == undefined) {
+        var polygonposition = JSON.parse(position);
+        polygonposition.push(polygonposition[0]);
+        viewer.entities.add({
+            id: "project_mark_polygon_" + id,
+            name: "project_mark_polygon_" + id,
+            polyline: {
+                positions: polygonposition,
+                width: 2,
+                material: Cesium.Color.fromCssColorString(color),
+                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                    color: Cesium.Color.fromCssColorString(color),
+                }),
+            }
+        });
+    }
+    var entitylabel = viewer.entities.getById("project_mark_polygon_label_" +id);
+    if (entitylabel == undefined) {
+        viewer.entities.add({
+            id: "project_mark_polygon_label_" + id,
+            name: "project_mark_polygon_label_" + id,
+            position: JSON.parse(position)[0],
+            label: {
+                text: title,
+                font: '18px Times New Roman',
+                showBackground: true,
+                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                fillColor: Cesium.Color.AQUA,
+                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                eyeOffset: new Cesium.Cartesian3(0, 0, -10),
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+            }
+        });
+    }
+}
 
 //样式按钮动态获取位置
 function CPos(x, y) {
