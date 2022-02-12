@@ -80,7 +80,7 @@ namespace SERVICE.Controllers
             {
                 List<User> users = new List<User>();
 
-                string roles = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_roles WHERE  syscode={0}", (int)MODEL.Enum.System.Model));
+                string roles = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE  syscode={0}", (int)MODEL.Enum.System.Model));
                 if (!string.IsNullOrEmpty(roles))
                 {
                     string[] rows = roles.Split(new char[] { COM.ConstHelper.rowSplit });

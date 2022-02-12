@@ -868,7 +868,7 @@ namespace SERVICE.Controllers
             {
                 List<WarningModelInfo> warningModelInfos = new List<WarningModelInfo>();
 
-                string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_project_model WHERE projectid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
+                string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_project_warningmodel WHERE projectid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
                 if (!string.IsNullOrEmpty(datas))
                 {
                     string[] rows = datas.Split(new char[] {COM.ConstHelper.rowSplit});
@@ -950,7 +950,7 @@ namespace SERVICE.Controllers
                         int modelid = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO monitor_warningmodel (mxmc,zht,yjtj,cjsj,bsm,ztm,bz) VALUES({0},{1},{2},{3},{4},{5},{6})", SQLHelper.UpdateString(mxmc), zht, yjtj, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), SQLHelper.UpdateString(project.BSM), (int)MODEL.Enum.State.InUse, SQLHelper.UpdateString(bz)));
                         if (modelid != -1)
                         {
-                            int mapid = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO monitor_map_project_model (projectid,warningmodelid,cjsj,ztm) VALUES({0},{1},{2},{3})", id, modelid, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
+                            int mapid = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO monitor_map_project_warningmodel (projectid,warningmodelid,cjsj,ztm) VALUES({0},{1},{2},{3})", id, modelid, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
                             if (mapid != -1)
                             {
                                 bool isSuccess = true;

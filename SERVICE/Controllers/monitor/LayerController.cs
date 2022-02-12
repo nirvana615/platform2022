@@ -50,7 +50,7 @@ namespace SERVICE.Controllers
                         {
                             Title = "位置",
                             BL = bl,
-                            Label = project.XMMC
+                            Label = project.ZHDMC//Label = project.XMMC
                         };
                     }
 
@@ -71,7 +71,8 @@ namespace SERVICE.Controllers
                             MapProjectSurvey mapProjectSurvey = ParseMonitorHelper.ParseMapProjectSurvey(rows[i]);
                             if (mapProjectSurvey != null)
                             {
-                                SurModel surModel = ParseMonitorHelper.ParseSurModel(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM survey_model WHERE id={0} AND bsm{1} AND ztm={2} AND mxjb={3}", mapProjectSurvey.SurveyId, userbsms, (int)MODEL.Enum.State.InUse, (int)MODEL.EnumMonitor.ModelLevel.Whole)));
+                                //SurModel surModel = ParseMonitorHelper.ParseSurModel(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM survey_model WHERE id={0} AND bsm{1} AND ztm={2} AND mxjb={3}", mapProjectSurvey.SurveyId, userbsms, (int)MODEL.Enum.State.InUse, (int)MODEL.EnumMonitor.ModelLevel.Whole)));
+                                SurModel surModel = ParseMonitorHelper.ParseSurModel(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM survey_model WHERE id={0} AND ztm={1}", mapProjectSurvey.SurveyId, (int)MODEL.Enum.State.InUse)));
                                 if (surModel != null)
                                 {
                                     surModelList.Add(surModel);

@@ -168,7 +168,7 @@ namespace MVC
 
             for (int i = 0; i < mapUserRoles.Count; i++)
             {
-                Role systemRole = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_roles WHERE id={0}", mapUserRoles[i].RoleId)));
+                Role systemRole = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE id={0}", mapUserRoles[i].RoleId)));
                 if (systemRole != null)
                 {
                     if (systemRole.SysCode == syscode)

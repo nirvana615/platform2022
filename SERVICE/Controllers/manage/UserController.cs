@@ -106,7 +106,7 @@ namespace SERVICE.Controllers
                                 MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(maprows[j]);
                                 if (mapUserRole != null)
                                 {
-                                    Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_roles WHERE id={0}", mapUserRole.RoleId)));
+                                    Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE id={0}", mapUserRole.RoleId)));
                                     if (role.SysCode == (int)MODEL.Enum.System.Monitor)
                                     {
                                         monitorusers.Add(user);
@@ -271,10 +271,11 @@ namespace SERVICE.Controllers
             if (count > 0)
             {
                 count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET ztm={0} WHERE id={1}", (int)MODEL.Enum.State.NoUse, id));
-                int mapcount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_role WHERE userid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
+
+                int mapcount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
                 if (mapcount > 0)
                 {
-                    mapcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_map_user_role SET ztm={0} WHERE userid={1}", (int)MODEL.Enum.State.NoUse, id));
+                    mapcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_map_user_sysrole SET ztm={0} WHERE userid={1}", (int)MODEL.Enum.State.NoUse, id));
 
                     if (count > 0 && mapcount > 0)
                     {

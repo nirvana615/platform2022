@@ -26,7 +26,7 @@ namespace SERVICE.Controllers
         [HttpGet]
         public string GetSystems()
         {
-            string data = PostgresqlHelper.QueryData(pgsqlConnection, "SELECT *FROM manage_systems ORDER BY id ASC");
+            string data = PostgresqlHelper.QueryData(pgsqlConnection, "SELECT *FROM manage_system ORDER BY id ASC");
 
             if (!string.IsNullOrEmpty(data))
             {
@@ -57,7 +57,7 @@ namespace SERVICE.Controllers
         [HttpGet]
         public string GetRoles()
         {
-            string data = PostgresqlHelper.QueryData(pgsqlConnection, "SELECT *FROM manage_roles ORDER BY id ASC");
+            string data = PostgresqlHelper.QueryData(pgsqlConnection, "SELECT *FROM manage_role ORDER BY id ASC");
 
             if (!string.IsNullOrEmpty(data))
             {
@@ -138,13 +138,13 @@ namespace SERVICE.Controllers
             #endregion
 
             #region 系统-角色一致性检验
-            Systems system = ParseManageHelper.ParseSystems(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_systems WHERE id={0}", sysid)));
+            Systems system = ParseManageHelper.ParseSystems(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_system WHERE id={0}", sysid)));
             if (system == null)
             {
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "未能找到此系统，无法创建！", string.Empty));
             }
 
-            Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_roles WHERE id={0}", roleid)));
+            Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE id={0}", roleid)));
             if (role == null)
             {
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "未能找到此角色，无法创建！", string.Empty));
@@ -157,7 +157,7 @@ namespace SERVICE.Controllers
             #endregion
 
             #region 系统唯一性检验
-            int syscount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND roleid IN (SELECT id FROM manage_roles WHERE syscode = (SELECT syscode FROM manage_systems WHERE id={1})) AND ztm={2}", userid, sysid, (int)MODEL.Enum.State.InUse));
+            int syscount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND roleid IN (SELECT id FROM manage_role WHERE syscode = (SELECT syscode FROM manage_system WHERE id={1})) AND ztm={2}", userid, sysid, (int)MODEL.Enum.State.InUse));
             if (syscount > 0)
             {
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, string.Format("规定用户在一个系统中只能有一种角色，该用户已在{0}中存在一种角色，无法在{0}中创建另一种角色", system.SysName), string.Empty));

@@ -76,7 +76,7 @@ namespace SERVICE.Controllers
                     }
                     else
                     {
-                        Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_roles WHERE id={0}", mapUserRole.RoleId)));
+                        Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE id={0}", mapUserRole.RoleId)));
                         if (role == null)
                         {
                             return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无此角色！", string.Empty));//无角色
