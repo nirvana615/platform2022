@@ -6,7 +6,13 @@
     </ul>
     <div class="layui-tab-content" style="padding:0px;">
         <div class="layui-tab-item layui-show" id="marklayerlist_tab">
-            <div id="marklayerlist"></div>
+            <div id="marklayerlist" style="width: 100%; height: 500px; overflow: scroll;"></div>
+            <fieldset class="layui-elem-field" style="margin-left: 5px;margin-right: 10px;">
+                <legend>标注信息</legend>
+                <div class="layui-field-box" style="margin-top:-10px;margin-left:-15px;">
+                    <form class="layui-form" id="projectmarkinfo" style="height:170px;width: 100%;line-height:25px;margin-top: 5px;margin-left: 20px;" lay-filter="projectmarkinfoform"></form>
+                </div>
+            </fieldset>
         </div>
         <div class="layui-tab-item" id="addmark_tab">
             <fieldset class="layui-elem-field" style="margin-top:5px;margin-left: 10px;margin-right: 10px;">

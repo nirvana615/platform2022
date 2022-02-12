@@ -202,5 +202,36 @@ namespace SERVICE.Controllers
             }
         }
 
+        [HttpPost]
+        public string UpdateMark()
+        {
+            string title = HttpContext.Current.Request.Form["title"];
+            string color = HttpContext.Current.Request.Form["color"];
+            string id = HttpContext.Current.Request.Form["id"];
+            string style = HttpContext.Current.Request.Form["style"];
+
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(" UPDATE common_mark set text={0} ,color={1},style={2} where id={3}", SQLHelper.UpdateString(title),SQLHelper.UpdateString(color), SQLHelper.UpdateString(style),id));
+                if (updatecount == 1)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "更新成功！", string.Empty));
+
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "更新失败，请重试！", string.Empty));
+                }
+
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "验证用户失败，请重试！", string.Empty));
+            }
+
+        }
     }
 }
