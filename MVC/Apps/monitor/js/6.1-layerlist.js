@@ -1,5 +1,6 @@
 ﻿var layers = [];//图层列表数据
 
+
 //图层列表widget
 function LoadLayerListLayer(id) {
     if (id == null) {
@@ -12,7 +13,7 @@ function LoadLayerListLayer(id) {
                 , title: ['图层列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
                 , area: ['350px', '500px']
                 , shade: 0
-                , offset: ['520px', '10px']
+                , offset: ['670px', '10px']
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
@@ -221,7 +222,7 @@ function LoadLayerListLayer(id) {
                                     }
                                 });
                             }
-                            
+
 
                             //for (var i in jianceList) {
                             //    var entity = viewer.entities.getById(id+"ranqiLingshi_"+i);
@@ -256,7 +257,7 @@ function LoadLayerListLayer(id) {
                             //        });
                             //    }
                             //}
-                       
+
 
                         }
 
@@ -292,7 +293,7 @@ function LoadLayerListLayer(id) {
                                         }
                                         else {
                                             if (data.type == "PROJECTSUMODEL") {// || data.type == "YOUSHIMIAN"
-                                                
+
                                                 if (curtileset != null) {
                                                     if (data.modelView != null && data.modelView.length > 0) {
                                                         var home = JSON.parse(data.modelView);
@@ -331,7 +332,7 @@ function LoadLayerListLayer(id) {
                                                             billboard: {
                                                                 image: '../../Resources/img/map/marker.png',
                                                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                                                                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                                                heightReference: Cesium.HeightReference.NONE,
                                                                 width: 24,
                                                                 height: 24,
 
@@ -350,7 +351,7 @@ function LoadLayerListLayer(id) {
                                                                 text: data.children[i].title,
                                                                 font: '16px Times New Roman',
                                                                 horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                                                                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                                                heightReference: Cesium.HeightReference.NONE,
                                                                 verticalOrigin: Cesium.VerticalOrigin.CENTER,
                                                                 pixelOffset: new Cesium.Cartesian2(0.0, -36),
                                                             }
@@ -413,7 +414,7 @@ function LoadLayerListLayer(id) {
                                             //单选
                                             if (data.type == "PROJECTCENTER") {
                                                 //项目位置
-                                                
+
                                                 var entity = viewer.entities.getById(data.id);
                                                 if (entity == undefined) {
                                                     if (curtileset != null) {
@@ -484,7 +485,7 @@ function LoadLayerListLayer(id) {
                                                     console.log(111);
                                                     console.log(id);
                                                     //setTimeout(
-                                                        for (var i in jianceList) {
+                                                    for (var i in jianceList) {
                                                         var entity = viewer.entities.getById(id + "ranqiLingshi_" + i);
                                                         if (entity == undefined) {
                                                             //当无此元素添加  viewer.scene.clampToHeight  模型
@@ -520,8 +521,8 @@ function LoadLayerListLayer(id) {
                                                         }
                                                     }
 
-//, 1000);
-                                                    
+                                                    //, 1000);
+
                                                 }
 
                                             }
@@ -702,7 +703,7 @@ function LoadLayerListLayer(id) {
     }
 
 }
-var features = 
+var features =
     [
         [
             106.52582339999998,
@@ -1173,11 +1174,11 @@ var features =
             29.773401770000139
         ]
     ]
-;
+    ;
 
 var pointList = [];
 for (var i in features) {
-      pointList.push(new Cesium.Cartesian3.fromDegrees(features[i][0], features[i][1],150));
+    pointList.push(new Cesium.Cartesian3.fromDegrees(features[i][0], features[i][1], 150));
 
 }
 console.log(pointList);
@@ -1190,7 +1191,7 @@ var gxjcdList = [
             "L": 106.4937500,
             "B": 29.7715583,
             "H": 251.02
-			}
+        }
     },
     {
         "attributes": {
@@ -1199,7 +1200,7 @@ var gxjcdList = [
             "L": 106.4933361,
             "B": 29.7719944,
             "H": 237.97
-			}
+        }
     },
     {
         "attributes": {
@@ -1208,7 +1209,7 @@ var gxjcdList = [
             "L": 106.4928944,
             "B": 29.7724583,
             "H": 210.43
-			}
+        }
     },
     {
         "attributes": {
@@ -1217,7 +1218,7 @@ var gxjcdList = [
             "L": 106.4941806,
             "B": 29.7714306,
             "H": 249.81
-			}
+        }
     },
     {
         "attributes": {
@@ -1226,7 +1227,7 @@ var gxjcdList = [
             "L": 106.4942694,
             "B": 29.7718056,
             "H": 241.01
-			}
+        }
     },
     {
         "attributes": {
@@ -1235,7 +1236,7 @@ var gxjcdList = [
             "L": 106.4943861,
             "B": 29.7722583,
             "H": 217.61
-			}
+        }
     },
     {
         "attributes": {
@@ -1244,7 +1245,7 @@ var gxjcdList = [
             "L": 106.4926278,
             "B": 29.7726389,
             "H": 201.56
-			}
+        }
     },
     {
         "attributes": {
@@ -1253,7 +1254,7 @@ var gxjcdList = [
             "L": 106.4944833,
             "B": 29.7727194,
             "H": 206.54
-			}
+        }
     },
     {
         "attributes": {
@@ -1262,7 +1263,7 @@ var gxjcdList = [
             "L": 106.4935000,
             "B": 29.7727917,
             "H": 233.42
-			}
+        }
     },
     {
         "attributes": {
