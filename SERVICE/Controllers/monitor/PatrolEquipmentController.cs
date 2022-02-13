@@ -450,6 +450,127 @@ namespace SERVICE.Controllers
                 return string.Empty;
             }
         }
-        
+        /// <summary>
+        /// 1---临时道路插入
+        /// </summary>
+        [HttpPost]
+        public string InsertRoadImageInfo()
+        {
+            //string step = null;
+            try
+            {
+               
+                string projectId = HttpContext.Current.Request.Form["projectId"];
+                string type = HttpContext.Current.Request.Form["type"];
+                string projectName = HttpContext.Current.Request.Form["projectName"];
+                string photoUrl = HttpContext.Current.Request.Form["photoUrl"];
+                string monitorId = HttpContext.Current.Request.Form["monitorId"];
+                string name = HttpContext.Current.Request.Form["name"];
+                string roadLength = HttpContext.Current.Request.Form["roadLength"];
+                string roadRec = HttpContext.Current.Request.Form["roadRec"];
+                string value = "("
+                    + SQLHelper.UpdateString(photoUrl) + ","
+                    + SQLHelper.UpdateString(projectId) + ","
+                    + SQLHelper.UpdateString(type);
+
+                string sql = "INSERT INTO road_photo_info(photo_url, project_id, type";
+                if (!string.IsNullOrEmpty(projectName))
+                {
+                    sql = sql + ",project_name ";
+                    value = value + "," + SQLHelper.UpdateString(projectName);
+                }
+                if (!string.IsNullOrEmpty(monitorId))
+                {
+                    sql = sql + ",monitor_id ";
+                    value = value + "," + SQLHelper.UpdateString(monitorId);
+                }
+                if (!string.IsNullOrEmpty(name))
+                {
+                    sql = sql + ",name ";
+                    value = value + "," + SQLHelper.UpdateString(name);
+                }
+                if (!string.IsNullOrEmpty(roadLength))
+                {
+                    sql = sql + ",road_length ";
+                    value = value + "," + SQLHelper.UpdateString(roadLength);
+                }
+                if (!string.IsNullOrEmpty(roadRec))
+                {
+                    sql = sql + ",road_rec ";
+                    value = value + "," + SQLHelper.UpdateString(roadRec);
+                }
+                value = value + ")";
+                sql = sql + ") VALUES ";
+                int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, sql + value);
+                if (id != -1)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "新增成功！", id + ""));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "数据库插入失败", ""));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+
+        }
+
+        /// <summary>
+        /// 获取临时道路照片信息
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="type">验证信息</param>
+        /// <returns></returns>
+        [HttpGet]
+        public string getRoadPhotoInfo(string projectId, string type)
+        {
+
+
+            string sql = "SELECT * FROM const_photo_info WHERE 1 =1 ";
+            if (!string.IsNullOrEmpty(projectId))
+            {
+                sql = sql + " and project_id = " + SQLHelper.UpdateString(projectId);
+            }
+            if (!string.IsNullOrEmpty(type))
+            {
+                sql = sql + " and type = " + SQLHelper.UpdateString(type);
+            }
+            sql = sql + "ORDER BY id ";
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(projectId)));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<RoadPhotoInfo> roadPhotoInfoList = new List<RoadPhotoInfo>();
+
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    RoadPhotoInfo roadPhotoInfo = ParseMonitorHelper.ParseRoadPhotoInfo(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+                    if (roadPhotoInfo != null)
+                    {
+                        roadPhotoInfoList.Add(roadPhotoInfo);
+
+                    }
+                }
+
+                if (roadPhotoInfoList.Count > 0)
+                {
+                    return JsonHelper.ToJson(roadPhotoInfoList);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
     }
 }

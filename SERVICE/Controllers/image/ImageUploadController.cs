@@ -798,6 +798,48 @@ namespace SERVICE.Controllers
 
 
         }
+        /// <summary>
+        /// 1---临时道路图片上传（表单提交、图片上传至服务器）  陈小飞
+        /// </summary>
+        [HttpPost]
+        public string UploadDaoLuImage()
+        {
+            //string step = null;
+            try
+            {
+                string ImageFilePath = imgdir + "/SurImage/road/";        //   ".../SurImage"
+                HttpPostedFile file = HttpContext.Current.Request.Files["upload"];
 
+
+                if (file != null)
+                {
+                    Stream sr = file.InputStream;
+                    Bitmap bitmap = (Bitmap)Bitmap.FromStream(sr);
+
+                    if (!Directory.Exists(ImageFilePath))//判断文件夹是否存在
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "影像存储路径不存在！", string.Empty));
+                    }
+
+
+                    file.SaveAs(ImageFilePath + file.FileName);// +".txt");//DateTime.Now.ToString("yyyyMMddHHmm")
+                    string lujin = "/SurImage/road/" + file.FileName;
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "上传成功！", lujin));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "影像存储失败！", string.Empty));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+
+        }
     }
 }

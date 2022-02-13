@@ -4676,6 +4676,52 @@ namespace MODEL
         }
         #endregion
 
+        /// 临时道路表
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static RoadPhotoInfo ParseRoadPhotoInfo(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析临时道路照片数据为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("Project不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                RoadPhotoInfo constPhotoInfo = new RoadPhotoInfo()
+                {
+                    id = Convert.ToInt32(row[0].ToString()),
+                    photoUrl = row[1].ToString(),
+                    projectId = row[2].ToString(),
+                    monitorId = row[3].ToString(),
+                    type = row[4].ToString(),
+                    name = row[5].ToString(),
+                    roadLength = row[6].ToString(),
+                    projectName = row[7].ToString(),
+                    roadRec = row[8].ToString(),
+                };
+                return constPhotoInfo;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("为临时道路照片信息表解析失败：" + data, ex);
+                return null;
+            }
+        }
+           
+
+
+
         /// <summary>
         /// 三维实景模型
         /// </summary>
