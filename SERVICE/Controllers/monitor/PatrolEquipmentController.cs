@@ -532,7 +532,7 @@ namespace SERVICE.Controllers
         {
 
 
-            string sql = "SELECT * FROM const_photo_info WHERE 1 =1 ";
+            string sql = "SELECT * FROM road_photo_info WHERE 1 =1 ";
             if (!string.IsNullOrEmpty(projectId))
             {
                 sql = sql + " and project_id = " + SQLHelper.UpdateString(projectId);

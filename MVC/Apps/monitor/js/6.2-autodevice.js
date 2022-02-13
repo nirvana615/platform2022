@@ -26,7 +26,7 @@ function LoadAutoDeviceLayer(projectid) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--设备管理--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px">    <ul class="layui-tab-title">        <li class="layui-this" style="width:30%;padding-top: 10px;">概况</li>        <li style="width:30%;padding-top: 10px;">详情</li>        <li style="width:30%;padding-top: 10px;">设备安装进度</li>    </ul>    <div class="layui-tab-content">        <!--概况-->        <div class="layui-tab-item layui-show">            <form class="layui-form" lay-filter="autodevicesform" style="margin-top:5px;">                <div class="layui-row">                    <div class="layui-col-xs6">                        <div class="grid-demo grid-demo-bg1">                            <div class="layui-form-item">                                <div class="layui-input-block" style="margin-left:10px;">                                    <select id="autodevicespretimeid" name="autodevicespretime" lay-filter="autodevicespretimefilter" style="visibility:visible;"></select>                                </div>                            </div>                        </div>                    </div>                    <div class="layui-col-xs6">                        <div class="grid-demo">                            <div class="layui-form-item">                                <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                    <input id="autodevicescustomtimeid" name="autodevicescustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">                                </div>                            </div>                        </div>                    </div>                </div>            </form>            <div class="layui-row">                <div class="layui-col-xs6">                    <div class="grid-demo grid-demo-bg1">                        1                    </div>                </div>                <div class="layui-col-xs6">                    <div class="grid-demo">                        <!--设备数量-->                        <div id="autodevicechartbynum" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>            </div>            <div class="layui-row">                <div class="layui-col-xs6">                    <div class="grid-demo grid-demo-bg1">                        <!--按灾害体-->                        <div id="autodevicechartbydisaster" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>                <div class="layui-col-xs6">                    <div class="grid-demo">                        <!--按设备类型-->                        <div id="autodevicechartbytype" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>            </div>        </div>        <!--详情-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:500px;overflow: auto;">                    <div id="device-monitor-tree" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="autodeviceform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs6">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;">                                                <select id="autodevicepretimeid" name="autodevicepretime" lay-filter="autodevicepretimefilter" style="visibility:visible;"></select>                                            </div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs6">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="autodevicecustomtimeid" name="autodevicecustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--采集数量柱状图-->                        <div id="autodevicechart" class="layui-tab-item layui-show" style="width:760px;height:600px"></div>                        <!--设备采集率-->                        <div style="padding-left:50px;padding-right:10px;padding-top:20px;">                            <div class="layui-progress layui-progress" lay-showpercent="true" lay-filter="devicerate">                                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>                            </div>                        </div>                    </div>                </div>            </div>        </div>        <!--施工管理-->        <div class="layui-tab-item">            <!--施工设备管理-->            <div class="layui-fluid">                <div class="layui-card">                    <div class="layui-card-body">                        <table id="const-device-manage" lay-filter="const-device-manage"></table>                        <script type="text/html" id="table-toolbar-const">                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a>                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="photoDown">下载</a>                        </script>                        <!--统计表格-->                        <div id="autodatastatisticsdiv" style="margin-left:250px;margin-right:250px;margin-top:20px">                            <table id="constdeviceTongji" class="layui-hide"></table>                        </div>                    </div>                </div>            </div>        </div>    </div></div>'
+                , content: '<!--设备管理--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px">    <ul class="layui-tab-title">        <li class="layui-this" style="width:10%;padding-top: 10px;">概况</li>        <li style="width:10%;padding-top: 10px;">详情</li>        <li style="width:10%;padding-top: 10px;">设备安装进度</li>        <li style="width:10%;padding-top: 10px;">临时道路</li>    </ul>    <div class="layui-tab-content">        <!--概况-->        <div class="layui-tab-item layui-show">            <form class="layui-form" lay-filter="autodevicesform" style="margin-top:5px;">                <div class="layui-row">                    <div class="layui-col-xs6">                        <div class="grid-demo grid-demo-bg1">                            <div class="layui-form-item">                                <div class="layui-input-block" style="margin-left:10px;">                                    <select id="autodevicespretimeid" name="autodevicespretime" lay-filter="autodevicespretimefilter" style="visibility:visible;"></select>                                </div>                            </div>                        </div>                    </div>                    <div class="layui-col-xs6">                        <div class="grid-demo">                            <div class="layui-form-item">                                <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                    <input id="autodevicescustomtimeid" name="autodevicescustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">                                </div>                            </div>                        </div>                    </div>                </div>            </form>            <div class="layui-row">                <div class="layui-col-xs6">                    <div class="grid-demo grid-demo-bg1">                        1                    </div>                </div>                <div class="layui-col-xs6">                    <div class="grid-demo">                        <!--设备数量-->                        <div id="autodevicechartbynum" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>            </div>            <div class="layui-row">                <div class="layui-col-xs6">                    <div class="grid-demo grid-demo-bg1">                        <!--按灾害体-->                        <div id="autodevicechartbydisaster" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>                <div class="layui-col-xs6">                    <div class="grid-demo">                        <!--按设备类型-->                        <div id="autodevicechartbytype" class="layui-tab-item layui-show" style="width:350px;height:300px"></div>                    </div>                </div>            </div>        </div>        <!--详情-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:500px;overflow: auto;">                    <div id="device-monitor-tree" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="autodeviceform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs6">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;">                                                <select id="autodevicepretimeid" name="autodevicepretime" lay-filter="autodevicepretimefilter" style="visibility:visible;"></select>                                            </div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs6">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="autodevicecustomtimeid" name="autodevicecustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;">                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--采集数量柱状图-->                        <div id="autodevicechart" class="layui-tab-item layui-show" style="width:780px;height:600px"></div>                        <!--设备采集率-->                        <div style="padding-left:50px;padding-right:10px;padding-top:20px;">                            <div class="layui-progress layui-progress" lay-showpercent="true" lay-filter="devicerate">                                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>                            </div>                        </div>                    </div>                </div>            </div>        </div>        <!--施工管理-->        <div class="layui-tab-item">            <!--施工设备管理-->            <div class="layui-fluid">                <div class="layui-card">                    <div class="layui-card-body">                        <table id="const-device-manage" lay-filter="const-device-manage"></table>                        <script type="text/html" id="table-toolbar-const">                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a>                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="photoDown">下载</a>                        </script>                        <!--统计表格-->                        <div id="autodatastatisticsdiv" style="margin-left:250px;margin-right:250px;margin-top:20px">                            <table id="constdeviceTongji" class="layui-hide"></table>                        </div>                    </div>                </div>            </div>        </div>        <div class="layui-tab-item">            <!--施工设备管理-->            <div class="layui-fluid">                <div class="layui-card">                    <div class="layui-card-body">                        <table id="road-device-manage" lay-filter="road-device-manage"></table>                        <script type="text/html" id="table-toolbar-road">                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a>                        </script>                    </div>                </div>            </div>        </div>    </div></div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -38,6 +38,8 @@ function LoadAutoDeviceLayer(projectid) {
                     DisplayMonitorDevice();
                     //展示设备施工数据
                     FuConstPhotoData(projectid);
+                    //展示临时道路
+                    FuRoadPhotoData(projectid);
                 }
                 , end: function () {
                     automonitordevicelayerindex = null;
@@ -611,4 +613,117 @@ function FuConstPhotoData(projectid) {
             }, datatype: "json"
         });
     }
+}
+//临时道路
+function FuRoadPhotoData(projectid) {
+    var roadPhotoTable = table.render({
+        elem: '#road-device-manage'
+        , id: 'roadPhotoTableId'
+        , title: '临时道路信息'
+        , page: true
+        , even: true
+        , limit: 10
+        , initSort: { field: 'mointorStatus', type: 'desc' }
+        , toolbar: false
+        , totalRow: false
+        , cols: [[
+            { field: 'id', title: 'ID', width: 123, fixed: 'left', align: "center" }
+            , { field: 'name', title: '道路名称', width: 200, align: "center" }
+            , { field: 'roadLength', title: '道路长度', width: 180, align: "center" }
+            , { field: 'roadRec', title: '道路备注', width: 300, align: "center", }
+            , { width: 120, align: 'center', toolbar: '#table-toolbar-road' }
+            , { width: 120, align: 'center', toolbar: '#table-toolbar-road' }
+        ]]
+        , data: []
+    });
+
+
+    table.on('tool(road-device-manage)', function (obj) {
+        var layEvent = obj.event;
+
+        console.log(obj);
+        console.log(datasurl);
+        if (layEvent === 'photoview') {
+            
+            adddevicelayerindex = layer.open({
+                type: 1
+                , title: [obj.data.name + '照片', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['700px', '500px']
+                , shade: [0.5, '#393D49']
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: false
+                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="roadPhotoform">    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">  <ul id="yiFangYang"></ul>       </div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+                    var urlList = obj.data.photoUrl.split(",");
+                    for (var i in urlList) {
+                        document.getElementById("yiFangYang").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + urlList[i] + '" alt="临时道路' + (i) + '" ></img></li>';
+                    }
+                    if (viewerPhoto != null) {
+                        viewerPhoto.destroy();
+                    }
+                    viewerPhoto = new Viewer(document.getElementById('yiFangYang'), {
+                        toolbar: true, //显示工具条
+                        viewed() {
+                            viewerPhoto.zoomTo(0.75); // 图片显示比例 75%
+                        },
+                        zIndex: 99999999,
+                        navbar: false,
+                        show: function () {  // 动态加载图片后，更新实例
+                            viewerPhoto.update();
+                        },
+                    });
+
+                }
+                , end: function () {
+                    viewerPhoto = null;
+                }
+            });
+
+        } else if (layEvent === 'photoDown') {
+            if (obj.data.mointorStatus != 6) {
+                layer.msg("该监测点未安装完成", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return;
+            }
+
+            // data.field.patrolStatus = "1";//这里已处理的
+            var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+            $.ajax({
+                url: servicesurl + "/api/FlzWordWxpert/GetShiGongJiLuBiao", type: "get", data: { "id": obj.data.Id, "cookie": document.cookie },
+                success: function (result) {
+                    layer.close(loadingminindex);
+                    console.log(result);
+                    //window.location.href = 'http://www.cq107chy.com:4022/SurImage/Download/' + result;
+                },
+                error: function (res) {
+                    layer.close(loadingminindex);
+                    console.log(res);
+                    layer.msg(res.responseJSON.ExceptionMessage, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                }, datatype: "json"
+            });
+        }
+    });
+    
+    var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+ 
+    $.ajax({
+        url: servicesurl + "/api/PatrolEquipment/getRoadPhotoInfo", type: "get", data: { "projectId": projectid, "type": 1 },
+        success: function (data1) {
+            layer.close(loadingceindex);
+            if (data1 != "") {
+                var monitorinfos = JSON.parse(data1);
+                console.log(monitorinfos);
+                roadPhotoTable.reload({ id: 'roadPhotoTableId', data: monitorinfos });
+            } else {
+                roadPhotoTable.reload({ id: 'roadPhotoTableId', data: [] });
+            }
+            
+
+        }, datatype: "json"
+    });
+
+    
 }

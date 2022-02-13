@@ -1,9 +1,10 @@
 ﻿<!--设备管理-->
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px">
     <ul class="layui-tab-title">
-        <li class="layui-this" style="width:30%;padding-top: 10px;">概况</li>
-        <li style="width:30%;padding-top: 10px;">详情</li>
-        <li style="width:30%;padding-top: 10px;">设备安装进度</li>
+        <li class="layui-this" style="width:10%;padding-top: 10px;">概况</li>
+        <li style="width:10%;padding-top: 10px;">详情</li>
+        <li style="width:10%;padding-top: 10px;">设备安装进度</li>
+        <li style="width:10%;padding-top: 10px;">临时道路</li>
     </ul>
 
     <div class="layui-tab-content">
@@ -123,12 +124,26 @@
                     <div class="layui-card-body">
                         <table id="const-device-manage" lay-filter="const-device-manage"></table>
                         <script type="text/html" id="table-toolbar-const">
-                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview"><i class="layui-icon layui-icon-read"></i>详情</a>
+                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a>
+                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="photoDown">下载</a>
                         </script>
                         <!--统计表格-->
                         <div id="autodatastatisticsdiv" style="margin-left:250px;margin-right:250px;margin-top:20px">
                             <table id="constdeviceTongji" class="layui-hide"></table>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+            <!--施工设备管理-->
+            <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <table id="road-device-manage" lay-filter="road-device-manage"></table>
+                        <script type="text/html" id="table-toolbar-road">
+                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a>
+                        </script>
                     </div>
                 </div>
             </div>
