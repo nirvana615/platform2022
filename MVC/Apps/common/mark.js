@@ -20,6 +20,8 @@ var markupdatelayerinex = null;//标注信息修改弹出层
 var markType = "";//新增标注类型 1:点 2：线 3：多边形
 var markClickType = "";//
 var currentmarkpointstyle = '../Resources/img/mark/img_mark_P1.png';//默认点标注样式
+var currentmarklinestyle = '../Resources/img/mark/img_mark_l1.png';//默认点标注样式
+
 var currentmarkcolor = '#cc0000';//默认点标注颜色
 var markprojectid;//标注项目id
 
@@ -619,7 +621,7 @@ function lineMark() {
             linemarktemp.projetid = markprojectid;//
             linemarktemp.position = JSON.stringify(markwidget_temppoints);//
             linemarktemp.marktype = "line";//
-            linemarktemp.style = "null";//
+            linemarktemp.style = currentmarklinestyle;//
             linemarktemp.color = currentmarkcolor;//
             linemarktemp.info = "null";//
             markAddLineLayerList.push(linemarktemp);
@@ -985,9 +987,18 @@ function updateAddMarkInfoPanel(markobject) {
         });
         changeMarkImageColor("addmarkpointinfo_style", markobject.style, markobject.color);
         $('#mark-point-color-select').val(markobject.color);
-        document.getElementsByClassName("layui-colorpicker-trigger-span")[0].style.cssText = "background: #90ee90;"
     }
     if (markType == "1" || markClickType == "line") {
+        var divtemp = document.getElementById("addmarkinfo");
+        divtemp.innerHTML = '<!--新增线标注信息面板--><form class="layui-form" style="margin-top:10px;margin-left:0px;" lay-filter="marklineinfoform">    <div class="layui-row" >        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称：</label>                <div class="layui-input-block">                    <input type="text" name="addmarklineinfo_name" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">距离：</label>                <div class="layui-input-block">                    <input type="text" name="addmarklineinfo_distance" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">线宽：</label>                <div class="layui-input-block">                    <input type="text" name="addmarklineinfo_width" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;width: 45px;">样式：</label>                <img id="addmarklineinfo_style" src="/Resources/img/mark/img_mark_l1.png" style=" width: 25px; height: 25px;margin: 5px;" class="markPointStyle">            </div>        </div>    </div></form>';
+        changeMarkImageColor("addmarklineinfo_style", markobject.style, markobject.color);
+
+        layui.form.val("markpointinfoform", {
+            "addmarklineinfo_name": markobject.title
+            , "addmarklineinfo_distance": "11"
+            , "addmarklineinfo_width": "11"
+        });
+        $('#mark-point-color-select').val(markobject.color);
 
     }
     if (markType == "2" || markClickType == "polygon") {
@@ -1433,7 +1444,7 @@ function ClearMarkSingle() {
 };
 
 
-//监听选中样式
+//监听点标注选中样式
 $(document).on("click", "img[class='markPointStyle']", function (event) {
     //点样式设置
     if (markType == "0" || markClickType == "PROJECTMARKPOINT") {
@@ -1443,6 +1454,17 @@ $(document).on("click", "img[class='markPointStyle']", function (event) {
         changeMarkImageColor("projectmarkpointinfo_style", currentmarkpointstyle, currentmarkcolor);
     }
 });
+//监听线标注选中样式
+$(document).on("click", "img[class='markLineStyle']", function (event) {
+    //点样式设置
+    if (markType == "1" || markClickType == "PROJECTMARKLINE") {
+        var styleid = event.target.id;
+        currentmarklinestyle = '../Resources/img/mark/' + styleid + '.png';
+        changeMarkImageColor("marklineselected_style", currentmarklinestyle, '#cc0000');
+        changeMarkImageColor("projectmarklineinfo_style", currentmarklinestyle, currentmarkcolor);
+    }
+});
+
 //选择标注样式
 function selectMarkStyle(obj) {
     var stylebtnpos = getStyleBtnPos(obj);
@@ -1479,7 +1501,32 @@ function selectMarkStyle(obj) {
         });
     }
     //线样式设置
-    if (markType == "1" || markClickType == "line") {
+    if (markType == "1" || markClickType == "line" || markClickType == "PROJECTMARKLINE") {
+        markstylelayerindex = layer.open({
+            type: 1
+            , title: false
+            , area: ['320px', '280px']
+            , shade: 0
+            , offset: [stylebtnpos.y + 40, stylebtnpos.x - 120]
+            , closeBtn: 0
+            , moveOut: true
+            , resize: false
+            , content:'<!--选择线样式面板--><form class="layui-form" style="margin-top:10px;margin-left:0px;" lay-filter="marklineinfoform">    <fieldset class="layui-elem-field" style="margin-left: 10px;margin-right: 10px;">        <div class="layui-field-box">            <img id="img_mark_l1" src="/Resources/img/mark/img_mark_l1.png" style=" width: 30px; height: 30px;margin: 5px;" class="markLineStyle">            <img id="img_mark_l2" src="/Resources/img/mark/img_mark_l2.png" style=" width: 30px; height: 30px;margin: 5px;" class="markLineStyle">            <img id="img_mark_l3" src="/Resources/img/mark/img_mark_l3.png" style=" width: 30px; height: 30px;margin: 5px;" class="markLineStyle">            <img id="img_mark_l4" src="/Resources/img/mark/img_mark_l4.png" style=" width: 30px; height: 30px;margin: 5px;" class="markLineStyle">        </div>    </fieldset>    <!--点标注-标注列表更新-->    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md12" style="margin-top: 20px;">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 15px;text-align: left;width: 80px;">选中样式：</label>                <img id="marklineselected_style" src="/Resources/img/mark/img_mark_l1.png" style=" width: 25px; height: 25px;margin: 5px;" class="markLineStyle">                <button type="button" class="layui-btn  layui-btn-sm" style="margin-left: 60px;" id="select_mark_style_id" onclick="getMarkStyle()">确定</button>            </div>        </div>    </div></form>'
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                layer.setTop(layero);
+                var stylelist = document.getElementsByClassName("markLineStyle");
+                for (var i in stylelist) {
+                    var imgid = stylelist[i].id;
+                    var src = stylelist[i].src;
+                    changeMarkImageColor(imgid, src, '#cc0000');
+                }
+            }
+            , end: function () {
+                layer.close(markstylelayerindex);
+                markstylelayerindex = null;
+            }
+        });
     }
     //多边形设置
     if (markType == "2" || markClickType == "polygon") {

@@ -37,6 +37,31 @@
 </form>
 
 
+<!--选择线样式面板-->
+<form class="layui-form" style="margin-top:10px;margin-left:0px;" lay-filter="marklineinfoform">
+
+    <fieldset class="layui-elem-field" style="margin-left: 10px;margin-right: 10px;">
+        <div class="layui-field-box">
+            <img id="img_mark_l1" src="/Resources/img/mark/img_mark_l1.png" style=" width: 30px; height: 30px;margin: 5px;" class="markLineStyle">
+            <img id="img_mark_l2" src="/Resources/img/mark/img_mark_l2.png" style=" width: 30px; height: 30px;margin: 5px;" class="markLineStyle">
+            <img id="img_mark_l3" src="/Resources/img/mark/img_mark_l3.png" style=" width: 30px; height: 30px;margin: 5px;" class="markLineStyle">
+            <img id="img_mark_l4" src="/Resources/img/mark/img_mark_l4.png" style=" width: 30px; height: 30px;margin: 5px;" class="markLineStyle">
+        </div>
+    </fieldset>
+
+    <!--点标注-标注列表更新-->
+    <div class="layui-row" style="margin-top: 10px;">
+        <div class="layui-col-md12" style="margin-top: 20px;">
+            <div class="grid-demo grid-demo-bg1">
+                <label class="layui-form-label" style="padding-left: 15px;text-align: left;width: 80px;">选中样式：</label>
+                <img id="marklineselected_style" src="/Resources/img/mark/img_mark_l1.png" style=" width: 25px; height: 25px;margin: 5px;" class="markLineStyle">
+                <button type="button" class="layui-btn  layui-btn-sm" style="margin-left: 60px;" id="select_mark_style_id" onclick="getMarkStyle()">确定</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
 <!--新增点标注信息面板-->
 <form class="layui-form" style="margin-top:10px;margin-left:0px;" lay-filter="markpointinfoform">
     <div class="layui-row">
@@ -86,6 +111,49 @@
             </div>
         </div>
     </div>
+</form>
+
+<!--新增线标注信息面板-->
+<form class="layui-form" style="margin-top:10px;margin-left:0px;" lay-filter="marklineinfoform">
+    <div class="layui-row" >
+        <div class="layui-col-md6">
+            <div class="grid-demo grid-demo-bg1">
+                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="addmarklineinfo_name" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" style="margin-top: 10px;">
+        <div class="layui-col-md6">
+            <div class="grid-demo grid-demo-bg1">
+                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">距离：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="addmarklineinfo_distance" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" style="margin-top: 10px;">
+        <div class="layui-col-md6">
+            <div class="grid-demo grid-demo-bg1">
+                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">线宽：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="addmarklineinfo_width" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" style="margin-top: 10px;">
+        <div class="layui-col-md6">
+            <div class="grid-demo grid-demo-bg1">
+                <label class="layui-form-label" style="padding-left: 0px;text-align: left;width: 45px;">样式：</label>
+                <img id="addmarklineinfo_style" src="/Resources/img/mark/img_mark_l1.png" style=" width: 25px; height: 25px;margin: 5px;" class="markPointStyle">
+            </div>
+        </div>
+    </div>
+
 </form>
 
 

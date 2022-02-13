@@ -654,6 +654,8 @@
     <Content Include="Resources\img\map\map.png" />
     <Content Include="Resources\img\map\model.png" />
     <Content Include="Resources\img\map\project.png" />
+    <Content Include="Resources\img\mark\img_mark_l4.png" />
+    <Content Include="Resources\img\mark\img_mark_l3.png" />
     <Content Include="Resources\img\mark\markpointselected_style.png" />
     <Content Include="Resources\img\mark\p19.png" />
     <Content Include="Resources\img\mark\img_mark_P1.png" />
@@ -738,10 +740,8 @@
     <Content Include="Resources\img\map\project_type_landslide.png" />
     <Content Include="Resources\img\map\project_type_rockfall.png" />
     <Content Include="Resources\img\map\target.png" />
-    <Content Include="Resources\img\mark\l1.png" />
-    <Content Include="Resources\img\mark\l2.png" />
-    <Content Include="Resources\img\mark\l3.png" />
-    <Content Include="Resources\img\mark\l4.png" />
+    <Content Include="Resources\img\mark\img_mark_l1.png" />
+    <Content Include="Resources\img\mark\img_mark_l2.png" />
     <Content Include="Resources\img\mark\p1.png" />
     <Content Include="Resources\img\mark\p10.png" />
     <Content Include="Resources\img\mark\p11.png" />
