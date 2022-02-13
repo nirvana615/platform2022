@@ -1,8 +1,8 @@
 ﻿/*
  * 全局对象
  */
-var viewer = null;
-
+var viewer;
+var handler;
 
 
 var tree = layui.tree;              //layui初始化
@@ -12,12 +12,6 @@ var util = layui.util;              //layui初始化
 var date = layui.laydate;           //layui初始化
 var elem = layui.element;           //layui初始化
 var colorpicker = layui.colorpicker;//
-layui.use(['element'], function () {
-    layui.element.init();//手动调用初始化方法
-})
-
-
-
 
 
 var modelprojectinfoviewlayerindex = null;                           //项目信息模块（查看）
@@ -49,7 +43,7 @@ var currentprojectid = null;//当前项目id
 
 var curtileset = null;//当前模型
 
-var projectlayerlistlayerindex =null  //标注窗口
+var projectlayerlistlayerindex = null  //标注窗口
 
 /*
  * 图标常量

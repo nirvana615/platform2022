@@ -25,7 +25,7 @@ namespace SERVICE.Controllers
     {
         private static Logger logger = Logger.CreateLogger(typeof(ModelTaskController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
-        
+
         /// <summary>
         /// 新建任务
         /// </summary>
@@ -49,21 +49,21 @@ namespace SERVICE.Controllers
             string yxfw = HttpContext.Current.Request.Form["model_yxfw_add"];
             string yxcflj = HttpContext.Current.Request.Form["model_yxcflj_add"];
             string rwms = HttpContext.Current.Request.Form["model_rwms_add"];
-            
+
 
             string projectid = HttpContext.Current.Request.Form["projectid"];
             #endregion
 
-            
+
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
             {
-                ModelProject modelProject = ParseModelHelper.ParseModelProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE id={0} AND ztm={1}", projectid,(int)MODEL.Enum.State.InUse)));
+                ModelProject modelProject = ParseModelHelper.ParseModelProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE id={0} AND ztm={1}", projectid, (int)MODEL.Enum.State.InUse)));
                 if (modelProject == null)
                 {
                     return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无此项目！", string.Empty));
                 }
-                string rwbm = CreateTaskCode(modelProject.XMBM, modelProject.BSM);//项目编码
+                string rwbm = CreateTaskCode(modelProject.XMBM, modelProject.BSM);//
                 int rwzt = (int)MODEL.EnumModel.TaskStatus.Pending;
                 if (
                     (!string.IsNullOrEmpty(rwmc))
@@ -73,7 +73,7 @@ namespace SERVICE.Controllers
                     && (!string.IsNullOrEmpty(yxcjsb))
                     && (!string.IsNullOrEmpty(yxcflj))
                     && (!string.IsNullOrEmpty(srid))
-                    )     //1---必填选项，填入则可创建项目id
+                    )
                 {
                     string value = "("
                     + SQLHelper.UpdateString(rwmc) + ","
@@ -91,7 +91,7 @@ namespace SERVICE.Controllers
                     + SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + ","
                     + rwzt + ","
                     + SQLHelper.UpdateString(modelProject.BSM) + ","
-                    + (int)MODEL.Enum.State.InUse 
+                    + (int)MODEL.Enum.State.InUse
                     + ")";
 
                     int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, "INSERT INTO model_task (rwmc,rwbm,yxcjry,yxcjsj,yxsl,yxcjsb,kjck,sxcg,yxkzd,yxfw,yxcflj,rwms,rwcjsj,rwzt,bsm,ztm) VALUES" + value);
@@ -105,7 +105,7 @@ namespace SERVICE.Controllers
                         else
                         {
                             //企业微信推送消息
-                            string message= "任务提醒：\n" + user.AliasName +":创建'"+ rwmc + "'新的模型任务，请及时处理!";
+                            string message = "任务提醒：\n" + user.AliasName + ":创建'" + rwmc + "'新的模型任务，请及时处理!";
                             //企业微信推送地址
                             string webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=130fddf5-d47c-413a-836e-f095571998c9";
 
@@ -128,7 +128,7 @@ namespace SERVICE.Controllers
                             return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", rwbm));
 
                         }
-                    } 
+                    }
                     else
                     {
                         return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "创建任务失败！", string.Empty));
@@ -145,7 +145,7 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
             }
         }
-        
+
         /// <summary>
         /// 获取任务基本信息(查看-编辑任务基本信息)
         /// </summary>
@@ -188,7 +188,7 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
             }
         }
-        
+
         /// <summary>
         /// 更新任务基本信息(编辑后保存)
         /// </summary>
@@ -396,7 +396,7 @@ namespace SERVICE.Controllers
                         ModelTask modelTask = ParseModelHelper.ParseModelTask(maprows[j]);
                         if (modelTask != null)
                         {
-                            if(modelTask.RWZT== (int)MODEL.EnumModel.TaskStatus.Pending)
+                            if (modelTask.RWZT == (int)MODEL.EnumModel.TaskStatus.Pending)
                             {
                                 newModelTaskPending.Add(modelTask);
                             }
@@ -408,7 +408,7 @@ namespace SERVICE.Controllers
                             {
                                 newModelTaskFinished.Add(modelTask);
                             }
-                           
+
                         }
                     }
                 }
@@ -434,7 +434,7 @@ namespace SERVICE.Controllers
         [HttpPut]
         public string UpdateModelTaskStatus()
         {
-            
+
             string id = HttpContext.Current.Request.Form["Id"];
             string Status = HttpContext.Current.Request.Form["RWZT"];
 

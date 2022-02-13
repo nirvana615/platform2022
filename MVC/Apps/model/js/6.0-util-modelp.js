@@ -15,7 +15,8 @@ util.fixbar({
             Measurewidget();
         }
         else if (type === 'bar6') {
-            mark();//标注
+            //标注
+            Markwidget(currentprojectid);;
         }
         else if (type === 'bar7') {
             //本地工具
