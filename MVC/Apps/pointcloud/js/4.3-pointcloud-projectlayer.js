@@ -128,24 +128,9 @@ function PointCloudProjectNodeCheck(obj) {
 
         else {
             if (data.type == "project_surModel") {
-                //for (var i in layers) {
-                //    for (var j in layers[i].children) {
-                //        if (layers[i].children[j].title == "三维实景模型") {
-                //                for (var s in layers[i].children.children.children) {
-                //                    if (layers[i].children[j].children[s].id != data.id) {
-                //                        layers[i].children[j].children[s].checked = false;
-                //                    } else {
-                //                        layers[i].children[j].children[s].checked = true;
-                //                        layers[i].children[j].children[s].spread = true;
-                //                        layers[i].children[j].spread = true;
-                //                    }
-                //                }                      
-                //        }
-                //    }
 
-                //}
+                viewer.scene.globe.depthTestAgainstTerrain = false;
 
-                //tree.reload('prjlayerlistid', { data: layers });
                 //加载模型
                 LoadModel(data);
             }

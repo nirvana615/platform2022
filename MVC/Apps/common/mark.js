@@ -2,8 +2,8 @@
  * 必须先引用layui
  * 必须先创建viewer变量
  * 必须先创建handler变量
- * 必须先创建currentprojectid变量
- */
+
+[- */
 
 /*
  * 必须先引用layui
@@ -19,27 +19,26 @@ var markupdatelayerinex = null;//标注信息修改弹出层
 
 var markType = "";//新增标注类型 1:点 2：线 3：多边形
 var markClickType = "";//
+
 var currentmarkpointstyle = '../Resources/img/mark/img_mark_P1.png';//默认点标注样式
 var currentmarklinestylesrc = '../Resources/img/mark/img_mark_l1.png';//默认线标注样式
 var currentmarklinewidth = 2;//默认线标注线宽
+var currentmarkpolygonstylesrc = '../Resources/img/mark/img_mark_A1.png';//默认面标注样式
+var currentmarkpolygonwidth = 2;//默认面标注线宽
 
 var currentmarkcolor = '#cc0000';//默认点标注颜色
 var markprojectid;//标注项目id
 
 var markAddLayer = [];//新增点标注列表
+var markProjectLayer = [];//项目点标注列表
+
 var markAddPointLayerList = [];//新增点标注列表
 var markAddLineLayerList = [];//新增线标注列表
 var markAddPolygonLayerList = [];//新增面标注列表
 
-
-var markProjectLayer = [];//项目点标注列表
-
-
 var markwidget_temppoints = [];
 var markwidget_tempentities = [];
 
-var depthTestAgainstTerrain = null;//深度监测初始值
-var modelpolt = null;//模型标绘
 var markwidget_tipsentity = null;//操作提示
 
 
@@ -63,10 +62,22 @@ function Markwidget(id) {
         , success: function (layero) {
 
             layer.setTop(layero);
-            //记录当前深度检测值
-            depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
-            //默认地形标注
-            viewer.scene.globe.depthTestAgainstTerrain = false;
+
+            var iscontain = false;
+            for (var i = 0; i < viewer.scene.primitives.length; i++) {
+                var obj = viewer.scene.primitives.get(i);
+                if (obj != undefined && obj._url != undefined && obj._url != "") {
+                    viewer.scene.globe.depthTestAgainstTerrain = false;
+                    iscontain = true;
+                }
+            }
+            if (!iscontain) {
+                viewer.scene.globe.depthTestAgainstTerrain = true;
+            }
+
+
+
+
             markprojectid = id;
             //选择颜色
             layui.colorpicker.render({
@@ -86,23 +97,7 @@ function Markwidget(id) {
             layui.form.render();
             loadMarkProjectLayersTree();
             loadMarkAddLayersTree();
-            layui.tree.render({
-                elem: '#addmarklayerlist'
-                , id: 'addmarklayerTree'
-                , showCheckbox: true
-                //, customCheckbox: true
-                , customOperate: false
-                , showLine: true
-                , data: markAddLayer
-                , edit: ['update', 'del']
-                , accordion: true
-                , click: function (obj) {
-                    addMarkLayerClick(obj);
-                }
-                , oncheck: function (obj) {
-                    addMarkLayerCheck(obj);
-                }
-            });
+
 
 
             //操作提示
@@ -120,13 +115,14 @@ function Markwidget(id) {
             });
         }
         , end: function () {
-            //还原当前深度检测值
-            viewer.scene.globe.depthTestAgainstTerrain = depthTestAgainstTerrain;
             viewer._container.style.cursor = "default";//还原鼠标样式
             markwidgetlayerindex = null;
             markstylelayerindex = null;
             markAddLayer = [];
             markProjectLayer = [];
+            markAddPointLayerList = [];
+            markAddLineLayerList = [];
+            markAddPolygonLayerList = [];
             ClearMarkTemp();
         }
     });
@@ -145,9 +141,11 @@ function loadMarkProjectLayersTree() {
             var data = JSON.parse(result);
             var projecttext = $("#currentproject").find("option:selected").text();
             if (data.code == "1") {
+                //清空数组
+                markProjectLayer = [];
                 var markProject_temp = JSON.parse(data.data);
                 var marktemp = [];
-
+                //项目标注数据
                 if (projecttext != "") {
 
                     var markproject = [];
@@ -156,9 +154,7 @@ function loadMarkProjectLayersTree() {
                     var markProjectLineLayerList = [];//项目线标注列表
                     var markProjectPolygonLayerList = [];//项目面标注列表
 
-                    var markProjectPointTempLayerList = [];//临时点标注列表
-                    var markProjectLineTempLayerList = [];//临时线标注列表
-                    var markProjectPolygonTempLayerList = [];//临时面标注列表
+
 
                     for (var i in markProject_temp) {
                         if (markProject_temp[i].projetid != "null") {
@@ -204,86 +200,7 @@ function loadMarkProjectLayersTree() {
                                 polygonobj.type = "PROJECTMARKPOLYGON";//
                                 markProjectPolygonLayerList.push(polygonobj);
                             }
-                        }
-
-                        else {
-                            if (markProject_temp[i].marktype == "point") {
-                                var pointobj = new Object;
-                                pointobj.showCheckbox = true;//显示复选框
-                                pointobj.checked = true;
-                                pointobj.id = markProject_temp[i].id;
-                                pointobj.title = markProject_temp[i].title;
-                                pointobj.projetid = markProject_temp[i].projetid;//
-                                pointobj.position = markProject_temp[i].position;//
-                                pointobj.style = markProject_temp[i].style;//
-                                pointobj.color = markProject_temp[i].color;//
-                                pointobj.info = markProject_temp[i].info;//
-                                pointobj.type = "PROJECTMARKPOINT";//
-
-                                markProjectPointTempLayerList.push(pointobj);
-
-                                //添加项目点标注
-                                viewer.entities.add({
-                                    id: "project_mark_point_" + markProject_temp[i].id,
-                                    name: "project_mark_point_" + markProject_temp[i].id,
-                                    position: JSON.parse(markProject_temp[i].position),
-                                    billboard: {
-                                        image: markProject_temp[i].style,
-                                        color: Cesium.Color.fromCssColorString(markProject_temp[i].color),
-                                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                                        width: 24,
-                                        height: 24,
-                                        disableDepthTestDistance: Number.POSITIVE_INFINITY
-                                    }
-                                });
-
-                                viewer.entities.add({
-                                    id: "project_mark_point_label_" + markProject_temp[i].id,
-                                    name: "project_mark_point_label_" + markProject_temp[i].id,
-                                    position: JSON.parse(markProject_temp[i].position),
-                                    label: {
-                                        text: markProject_temp[i].title,
-                                        font: '18px Times New Roman',
-                                        showBackground: true,
-                                        backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                                        fillColor: Cesium.Color.AQUA,
-                                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                                        verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                                        pixelOffset: new Cesium.Cartesian2(0.0, -36),
-                                        eyeOffset: new Cesium.Cartesian3(0, 0, -10),
-                                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                                        scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
-                                    }
-                                });
-
-                            }
-                            else if (markProject_temp[i].marktype == "line") {
-                                var lineobj = new Object;
-                                lineobj.showCheckbox = true;//显示复选框
-                                lineobj.checked = true;
-                                lineobj.id = markProject_temp[i].id;
-                                lineobj.title = markProject_temp[i].title;
-                                lineobj.projetid = markProject_temp[i].projetid;//
-                                lineobj.position = markProject_temp[i].position;//
-                                lineobj.style = markProject_temp[i].style;//
-                                lineobj.color = markProject_temp[i].color;//
-                                lineobj.info = markProject_temp[i].info;//
-                                markProjectLineTempLayerList.push(lineobj);
-                            }
-                            else if (markProject_temp[i].marktype == "polygon") {
-                                var polygonobj = new Object;
-                                polygonobj.showCheckbox = true;//显示复选框
-                                polygonobj.checked = true;
-                                polygonobj.title = markProject_temp[i].title;
-                                polygonobj.id = markProject_temp[i].id;
-                                polygonobj.projetid = markProject_temp[i].projetid;//
-                                polygonobj.position = markProject_temp[i].position;//
-                                polygonobj.style = markProject_temp[i].style;//
-                                polygonobj.color = markProject_temp[i].color;//
-                                polygonobj.info = markProject_temp[i].info;//
-                                markProjectPolygonTempLayerList.push(polygonobj);
-                            }
-                        }
+                        }                        
                     }
 
                     //项目标注一级菜单
@@ -315,7 +232,57 @@ function loadMarkProjectLayersTree() {
                     markprojectpolygonobj.spread = true;
                     markproject.push(markprojectpolygonobj);
                 }
-            
+
+                var markProjectPointTempLayerList = [];//临时点标注列表
+                var markProjectLineTempLayerList = [];//临时线标注列表
+                var markProjectPolygonTempLayerList = [];//临时面标注列表
+                //临时标注数据
+                for (var i in markProject_temp) {                 
+                    if (markProject_temp[i].projetid == "null"){
+                        if (markProject_temp[i].marktype == "point") {
+                            var pointobj = new Object;
+                            pointobj.showCheckbox = true;//显示复选框
+                            pointobj.checked = true;
+                            pointobj.id = markProject_temp[i].id;
+                            pointobj.title = markProject_temp[i].title;
+                            pointobj.projetid = markProject_temp[i].projetid;
+                            pointobj.position = markProject_temp[i].position;
+                            pointobj.style = markProject_temp[i].style;
+                            pointobj.color = markProject_temp[i].color;
+                            pointobj.info = markProject_temp[i].info;
+                            pointobj.type = "PROJECTMARKPOINT";
+                            markProjectPointTempLayerList.push(pointobj);
+
+                        }
+                        else if (markProject_temp[i].marktype == "line") {
+                            var lineobj = new Object;
+                            lineobj.showCheckbox = true;//显示复选框
+                            lineobj.checked = true;
+                            lineobj.id = markProject_temp[i].id;
+                            lineobj.title = markProject_temp[i].title;
+                            lineobj.projetid = markProject_temp[i].projetid;
+                            lineobj.position = markProject_temp[i].position;
+                            lineobj.style = markProject_temp[i].style;
+                            lineobj.color = markProject_temp[i].color;
+                            lineobj.info = markProject_temp[i].info;
+                            markProjectLineTempLayerList.push(lineobj);
+                        }
+                        else if (markProject_temp[i].marktype == "polygon") {
+                            var polygonobj = new Object;
+                            polygonobj.showCheckbox = true;//显示复选框
+                            polygonobj.checked = true;
+                            polygonobj.title = markProject_temp[i].title;
+                            polygonobj.id = markProject_temp[i].id;
+                            polygonobj.projetid = markProject_temp[i].projetid;
+                            polygonobj.position = markProject_temp[i].position;
+                            polygonobj.style = markProject_temp[i].style;
+                            polygonobj.color = markProject_temp[i].color;
+                            polygonobj.info = markProject_temp[i].info;
+                            markProjectPolygonTempLayerList.push(polygonobj);
+                        }
+                    }
+                }
+
                 //临时标注一级菜单
                 var marktempobj = new Object;
                 marktempobj.title = "临时标注";
@@ -377,7 +344,7 @@ function loadMarkProjectLayersTree() {
 function loadMarkAddLayersTree() {
     var addpointmarkobj = new Object;
     addpointmarkobj.title = "点标注";
-    addpointmarkobj.type = "point";
+    addpointmarkobj.type = "markadd_point";
     addpointmarkobj.children = markAddPointLayerList;
     addpointmarkobj.spread = true;
     markAddLayer.push(addpointmarkobj);
@@ -385,18 +352,35 @@ function loadMarkAddLayersTree() {
 
     var addlinemarkobj = new Object;
     addlinemarkobj.title = "线标注";
-    addlinemarkobj.type = "line";
+    addlinemarkobj.type = "markadd_line";
     addlinemarkobj.children = markAddLineLayerList;
     addlinemarkobj.spread = true;
     markAddLayer.push(addlinemarkobj);
 
     var addpolygonmarkobj = new Object;
     addpolygonmarkobj.title = "面标注";
-    addpolygonmarkobj.type = "polygon";
+    addpolygonmarkobj.type = "markadd_polygon";
     addpolygonmarkobj.children = markAddPolygonLayerList;
     addpolygonmarkobj.spread = true;
     markAddLayer.push(addpolygonmarkobj);
 
+    layui.tree.render({
+        elem: '#addmarklayerlist'
+        , id: 'addmarklayerTree'
+        , showCheckbox: true
+        //, customCheckbox: true
+        , customOperate: false
+        , showLine: true
+        , data: markAddLayer
+        , edit: ['update', 'del']
+        , accordion: true
+        , click: function (obj) {
+            addMarkLayerClick(obj);
+        }
+        , oncheck: function (obj) {
+            addMarkLayerCheck(obj);
+        }
+    });
 
 };
 
@@ -414,12 +398,26 @@ function pointMark() {
     handler.setInputAction(function (leftclick) {
         var pickedOject;
 
+        var iscontain = false;
+        for (var i = 0; i < viewer.scene.primitives.length; i++) {
+            var obj = viewer.scene.primitives.get(i);
+            if (obj != undefined && obj._url != undefined && obj._url != "") {
+                viewer.scene.globe.depthTestAgainstTerrain = false;
+                iscontain = true;
+            }
+        }
+        if (!iscontain) {
+            viewer.scene.globe.depthTestAgainstTerrain = true;
+        }
+
         if (viewer.scene.globe.depthTestAgainstTerrain) {
-            pickedOject = viewer.scene.pick(leftclick.position);//模型标注
+            pickedOject = viewer.scene.pickPosition(leftclick.position);//地形测量
+        } else {
+            pickedOject = viewer.scene.pick(leftclick.position);//模型测量
         }
-        else {
-            pickedOject = viewer.scene.pickPosition(leftclick.position);//地形标注
-        }
+
+
+
 
         if (pickedOject != undefined) {
             var pointmarktemp = new Object;
@@ -434,49 +432,21 @@ function pointMark() {
                     longitude = Cesium.Math.toDegrees(blh.longitude);
                     latitude = Cesium.Math.toDegrees(blh.latitude);
                     height = blh.height;
+
                 }
                 else {
                     var blh = CGCS2000XYZ2BLH(position.x, position.y, position.z);
                     longitude = blh.y;
                     latitude = blh.x;
                     height = blh.z;
+
                 }
 
                 if (height > 0) {
-                    var id_temp = "add_mark_point_" + NewGuid();
                     if (Cesium.defined(position)) {
-                        viewer.entities.add({
-                            name: "add_mark_point_" + NewGuid(),
-                            id: id_temp,
-                            position: position,
-                            billboard: {
-                                image: currentmarkpointstyle,
-                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                                color: Cesium.Color.fromCssColorString(currentmarkcolor),
-                                width: 25,
-                                height: 25,
-                                disableDepthTestDistance: Number.POSITIVE_INFINITY
-                            }
-                        });
-                        viewer.entities.add({
-                            name: "add_mark_point_label_" + NewGuid(),
-                            position: position,
-                            label: {
-                                text: longitude.toFixed(6) + '，' + latitude.toFixed(6) + '，' + (height).toFixed(3),
-                                showBackground: true,
-                                fillColor: Cesium.Color.AQUA,
-                                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                                font: '18px Times New Roman',
-                                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                                verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                                pixelOffset: new Cesium.Cartesian2(0.0, -50),
-                                scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
-                            }
-                        });
                         pointmarktemp.showCheckbox = true;//显示复选框
                         pointmarktemp.checked = true;
-                        pointmarktemp.id = id_temp;
+                        pointmarktemp.id = "add_mark_point_" + NewGuid();
                         pointmarktemp.title = "点标注";
                         pointmarktemp.projetid = markprojectid;//
                         pointmarktemp.position = JSON.stringify(position);//
@@ -514,7 +484,8 @@ function lineMark() {
     markType = "1";
     selectAddMarkTypeOperate("mark_line_id");
     viewer._container.style.cursor = "crosshair";//修改鼠标样式
-
+    var lineid = "add_mark_line" + NewGuid();
+    var order = 0;
     markwidget_temppoints = [];//清除临时点
     markwidget_tempentities = [];//清除临时图形
 
@@ -528,17 +499,19 @@ function lineMark() {
 
         var pickedOject;
         if (viewer.scene.globe.depthTestAgainstTerrain) {
-            pickedOject = viewer.scene.pick(leftclick.position);//模型标注
+            pickedOject = viewer.scene.pickPosition(leftclick.position);//地形标注
         }
         else {
-            pickedOject = viewer.scene.pickPosition(leftclick.position);//地形标注
+            pickedOject = viewer.scene.pick(leftclick.position);//模型标注
+
         }
 
         if (pickedOject != undefined) {
             var xyz = viewer.scene.pickPosition(leftclick.position);
             if (xyz != undefined) {
                 var tempentity = viewer.entities.add({
-                    name: "add_mark_line" + NewGuid(),
+                    name: lineid + "_" + order + "_point",
+                    id: lineid + "_" + order + "_point",
                     position: xyz,
                     point: {
                         pixelSize: 8,
@@ -548,9 +521,11 @@ function lineMark() {
                 });
                 markwidget_temppoints.push(xyz);
                 markwidget_tempentities.push(tempentity);
+             
                 if (markwidget_temppoints.length > 1) {
                     var tempentity_line = viewer.entities.add({
                         name: "add_mark_line" + NewGuid(),
+                        id: lineid + "_"+order,
                         polyline: {
                             positions: [markwidget_temppoints[markwidget_temppoints.length - 2], xyz],
                             width: currentmarklinewidth,
@@ -571,6 +546,8 @@ function lineMark() {
                     }
                     markwidget_tempentities.push(tempentity_line);
                 }
+                order++;
+
             }
         }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
@@ -607,6 +584,7 @@ function lineMark() {
             }
             viewer.entities.add({
                 name: "add_mark_line_label_" + NewGuid(),
+                id: lineid + "_label",
                 position: markwidget_temppoints[markwidget_temppoints.length - 1],
                 label: {
                     text: '空间距离：' + lens.toFixed(3) + 'm',
@@ -626,7 +604,7 @@ function lineMark() {
 
             linemarktemp.showCheckbox = true;//显示复选框
             linemarktemp.checked = true;
-            linemarktemp.id = "add_mark_line_" + NewGuid();
+            linemarktemp.id = lineid;
             linemarktemp.title = "线标注";
             linemarktemp.projetid = markprojectid;//
             linemarktemp.position = JSON.stringify(markwidget_temppoints);//
@@ -708,7 +686,9 @@ function polygonMark() {
     markType = "2";
     selectAddMarkTypeOperate("mark_polygon_id");
     viewer._container.style.cursor = "crosshair";//修改鼠标样式
-
+    var polygonid = "add_mark_polygon" + NewGuid();
+    var lineorder = 0;
+    var pointorder = 0;
     markwidget_temppoints = [];//清除临时点
     markwidget_tempentities = [];//清除临时图形
 
@@ -717,23 +697,27 @@ function polygonMark() {
     }
     handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
+   
+
     //左键（开始标注）
-    handler.setInputAction(function (leftclik) {
+    handler.setInputAction(function (leftclick) {
 
         var pickedOject;
         if (viewer.scene.globe.depthTestAgainstTerrain) {
-            pickedOject = viewer.scene.pick(leftclick.position);//模型标注
+            pickedOject = viewer.scene.pickPosition(leftclick.position);//地形标注
         }
         else {
-            pickedOject = viewer.scene.pickPosition(leftclick.position);//地形标注
+            pickedOject = viewer.scene.pick(leftclick.position);//模型标注
+
         }
 
         if (pickedOject != undefined) {
-            var position = viewer.scene.pickPosition(leftclik.position);
+            var position = viewer.scene.pickPosition(leftclick.position);
             if (position != undefined) {
                 if (Cesium.defined(position)) {
                     var tempentity = viewer.entities.add({
                         name: "add_mark_polygon" + NewGuid(),
+                        id: polygonid + "_" + pointorder+"_point",
                         position: position,
                         point: {
                             pixelSize: 8,
@@ -743,22 +727,35 @@ function polygonMark() {
                     });
                     markwidget_temppoints.push(position);
                     markwidget_tempentities.push(tempentity);
+                    pointorder++;
                 }
                 if (markwidget_temppoints.length > 1) {
                     var tempentity_line = viewer.entities.add({
                         name: "add_mark_polygon" + NewGuid(),
+                        id: polygonid + "_" + lineorder,
                         polyline: {
                             positions: [markwidget_temppoints[markwidget_temppoints.length - 2], position],
                             width: 2,
                             arcType: Cesium.ArcType.RHUMB,
-                            material: Cesium.Color.fromCssColorString(currentmarkcolor),
                             depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
                                 color: Cesium.Color.fromCssColorString(currentmarkcolor),
                             }),
                         }
                     });
+                    var styletemp = currentmarkpolygonstylesrc.replace('../Resources/img/mark/', '').replace('.png', '');
+
+                    if (styletemp == "img_mark_A1") {
+                        tempentity_line.polyline.material = Cesium.Color.fromCssColorString(currentmarkcolor);
+                    }
+                    else if (styletemp == "img_mark_A2") {
+                        tempentity_line.polyline.material = new Cesium.PolylineDashMaterialProperty({
+                            color: Cesium.Color.fromCssColorString(currentmarkcolor)
+                        });
+                    }
                     markwidget_tempentities.push(tempentity_line);
+                    lineorder++;
                 }
+
             }
         }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
@@ -775,11 +772,11 @@ function polygonMark() {
         if (markwidget_temppoints.length > 2) {
             var polygonmarktemp = new Object;
 
-
             //绘制多边形闭合线
-            viewer.entities.add({
-                name: "add_mark_polygon" + NewGuid(),
-                polyline: {
+           var tempentity_linelast=viewer.entities.add({
+               name: "add_mark_polygon" + NewGuid(),
+               id: polygonid + "_" + lineorder,
+               polyline: {
                     positions: [markwidget_temppoints[0], markwidget_temppoints[markwidget_temppoints.length - 1]],
                     width: 2,
                     arcType: Cesium.ArcType.RHUMB,
@@ -789,7 +786,16 @@ function polygonMark() {
                     }),
                 }
             });
+            var styletemp = currentmarkpolygonstylesrc.replace('../Resources/img/mark/', '').replace('.png', '');
 
+            if (styletemp == "img_mark_A1") {
+                tempentity_linelast.polyline.material = Cesium.Color.fromCssColorString(currentmarkcolor);
+            }
+            else if (styletemp == "img_mark_A2") {
+                tempentity_linelast.polyline.material = new Cesium.PolylineDashMaterialProperty({
+                    color: Cesium.Color.fromCssColorString(currentmarkcolor)
+                });
+            }
             var xsum = 0;
             var ysum = 0;
             var zsum = 0;
@@ -802,6 +808,7 @@ function polygonMark() {
             var area=getEntityArea(markwidget_temppoints);
             viewer.entities.add({
                 name: "add_mark_polygon_label_" + NewGuid(),
+                id: polygonid + "_label",
                 position: new Cesium.Cartesian3(xsum / markwidget_temppoints.length, ysum / markwidget_temppoints.length, zsum / markwidget_temppoints.length),
                 label: {
                     text: '平面面积：' + area.toFixed(3) + 'm²',
@@ -816,6 +823,23 @@ function polygonMark() {
                 }
             });
 
+
+            var style = {};
+            style.stylesrc = currentmarkpolygonstylesrc;
+            style.width = currentmarkpolygonwidth;
+            polygonmarktemp.showCheckbox = true;//显示复选框
+            polygonmarktemp.checked = true;
+            polygonmarktemp.id = polygonid;
+            polygonmarktemp.title = "面标注";
+            polygonmarktemp.projetid = markprojectid;
+            polygonmarktemp.position = JSON.stringify(markwidget_temppoints);
+            polygonmarktemp.marktype = "polygon";
+            polygonmarktemp.style = JSON.stringify(style);
+            polygonmarktemp.color = currentmarkcolor;
+            polygonmarktemp.info = "null";
+            markAddPolygonLayerList.push(polygonmarktemp);
+            updateAddMarkInfoPanel(polygonmarktemp);
+
             if (handler != undefined) {
                 handler.destroy();
                 layer.msg("结束线标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -824,18 +848,6 @@ function polygonMark() {
                 markwidget_tipsentity.label.show = false;
                 markwidget_tipsentity.label.text = "";
             }
-            polygonmarktemp.showCheckbox = true;//显示复选框
-            polygonmarktemp.checked = true;
-            polygonmarktemp.id = "add_mark_polygon_" + NewGuid();
-            polygonmarktemp.title = "面标注";
-            polygonmarktemp.projetid = markprojectid;//
-            polygonmarktemp.position = JSON.stringify(markwidget_temppoints);//
-            polygonmarktemp.marktype = "polygon";//
-            polygonmarktemp.style = "null";//
-            polygonmarktemp.color = currentmarkcolor;//
-            polygonmarktemp.info = "null";//
-            markAddPolygonLayerList.push(polygonmarktemp);
-            updateAddMarkInfoPanel(polygonmarktemp);
             tree.reload('addmarklayerTree', {
                 data: markAddLayer
             });
@@ -926,6 +938,7 @@ function polygonMark() {
 
 };
 
+
 //保存标注
 function saveMark() {
     var postmarks = [];
@@ -974,6 +987,8 @@ function saveMark() {
                     data: markAddLayer
                 });
                 loadMarkProjectLayersTree();
+                var divtemp = document.getElementById("addmarkinfo");
+                divtemp.innerHTML = '';
             }
         }, datatype: "json"
     });
@@ -1002,17 +1017,28 @@ function updateAddMarkInfoPanel(markobject) {
     if (markType == "1" || markClickType == "line") {
         var divtemp = document.getElementById("addmarkinfo");
         divtemp.innerHTML = '<!--新增线标注信息面板--><form class="layui-form" style="margin-top:10px;margin-left:0px;" lay-filter="marklineinfoform">    <div class="layui-row" >        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称：</label>                <div class="layui-input-block">                    <input type="text" name="addmarklineinfo_name" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">距离：</label>                <div class="layui-input-block">                    <input type="text" name="addmarklineinfo_distance" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">线宽：</label>                <div class="layui-input-block">                    <input type="text" name="addmarklineinfo_width" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;width: 45px;">样式：</label>                <img id="addmarklineinfo_style" src="/Resources/img/mark/img_mark_l1.png" style=" width: 25px; height: 25px;margin: 5px;" class="markPointStyle">            </div>        </div>    </div></form>';
-        changeMarkImageColor("addmarklineinfo_style", JSON.parse(markobject.style).stylesrc, markobject.color);
         layui.form.val("markpointinfoform", {
             "addmarklineinfo_name": markobject.title
             , "addmarklineinfo_distance": getEntityLength(JSON.parse(markobject.position)).toFixed(2) + " m"
             , "addmarklineinfo_width": JSON.parse(markobject.style).width
         });
+        changeMarkImageColor("addmarklineinfo_style", JSON.parse(markobject.style).stylesrc, markobject.color);
         $('#mark-point-color-select').val(markobject.color);
-
     }
     if (markType == "2" || markClickType == "polygon") {
-
+        var divtemp = document.getElementById("addmarkinfo");
+        divtemp.innerHTML = '<!--新增面标注信息面板--><form class="layui-form" style="margin-top:10px;margin-left:0px;" lay-filter="markpolygoninfoform">    <div class="layui-row">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称：</label>                <div class="layui-input-block">                    <input type="text" name="addmarkpolygoninfo_name" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">周长：</label>                <div class="layui-input-block">                    <input type="text" name="addmarkpolygoninfo_length" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>        <div class="layui-col-md6">            <div class="grid-demo">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">面积：</label>                <div class="layui-input-block">                    <input type="text" name="addmarkpolygoninfo_area" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">线宽：</label>                <div class="layui-input-block">                    <input type="text" name="addmarkpolygoninfo_width" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;width: 45px;">样式：</label>                <img id="addmarkpolygoninfo_style" src="/Resources/img/mark/img_mark_A1.png" style=" width: 25px; height: 25px;margin: 5px;" class="markPolygonStyle">            </div>        </div>    </div></form>';
+        var polygonposition = JSON.parse(markobject.position);
+        polygonposition.push(polygonposition[0]);
+        var area = getEntityArea(polygonposition);
+        layui.form.val("markpointinfoform", {
+            "addmarkpolygoninfo_name": markobject.title
+            , "addmarkpolygoninfo_length": getEntityLength(JSON.parse(markobject.position)).toFixed(2) + " m"
+            , "addmarkpolygoninfo_area": area.toFixed(2) + " ㎡"
+            , "addmarkpolygoninfo_width": JSON.parse(markobject.style).width
+        });
+        changeMarkImageColor("addmarkpolygoninfo_style", JSON.parse(markobject.style).stylesrc, markobject.color);
+        $('#mark-point-color-select').val(markobject.color);
     }
 };
 //项目标注信息面板更新
@@ -1043,7 +1069,7 @@ function updateProjectMarkInfoPanel(markobject) {
         });
     }
     else if (markobject.type == "PROJECTMARKPOLYGON") {
-        divtemp.innerHTML = '<!--项目面注信息面板--><form class="layui-form" style="margin-top:10px;margin-left:0px;" lay-filter="projectmarkpolygoninfoform">    <div class="layui-row"style="margin-top: 15px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称：</label>                <div class="layui-input-block">                    <input type="text" name="projectmarkpolygoninfo_name" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">周长：</label>                <div class="layui-input-block">                    <input type="text" name="projectmarkpolygoninfo_length" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">面积：</label>                <div class="layui-input-block">                    <input type="text" name="projectmarkpolygoninfo_area" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div></form>';
+        divtemp.innerHTML = '<!--项目面标注信息面板--><form class="layui-form" style="margin-top:10px;margin-left:0px;" lay-filter="projectmarkpolygoninfoform">    <div class="layui-row" style="margin-top: 15px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称：</label>                <div class="layui-input-block">                    <input type="text" name="projectmarkpolygoninfo_name" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">周长：</label>                <div class="layui-input-block">                    <input type="text" name="projectmarkpolygoninfo_length" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">面积：</label>                <div class="layui-input-block">                    <input type="text" name="projectmarkpolygoninfo_area" class="layui-input" readonly="readonly" style="width: 90px;margin-left: -70px;" />                </div>            </div>        </div>    </div></form>';
         var polygonposition = JSON.parse(markobject.position);
         polygonposition.push(polygonposition[0]);
         var area = getEntityArea(polygonposition);
@@ -1057,12 +1083,13 @@ function updateProjectMarkInfoPanel(markobject) {
     }
 }
 
-//节点操作(编辑、删除)
+//项目标注节点操作(编辑、删除)
 function projectMarkNodeOperate(obj) {
     if (obj.type === 'update') {
         markClickType = obj.data.type;
         currentmarkcolor = obj.data.color;
         if (markClickType == "PROJECTMARKPOINT") {
+            updateProjectMarkInfoPanel(obj.data);
             currentmarkpointstyle = obj.data.style;
             markupdatelayerinex = layer.open({
                 type: 1
@@ -1156,10 +1183,10 @@ function projectMarkNodeOperate(obj) {
             });
         }
 
-        if (markClickType == "PROJECTMARKLINE") {
+        else if (markClickType == "PROJECTMARKLINE") {
             currentmarklinestylesrc = JSON.parse(obj.data.style).stylesrc;
             currentmarklinewidth = JSON.parse(obj.data.style).width;
-
+            updateProjectMarkInfoPanel(obj.data);
             markupdatelayerinex = layer.open({
                 type: 1
                 , title: ['信息修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
@@ -1257,7 +1284,106 @@ function projectMarkNodeOperate(obj) {
             });
         }
 
+        else if (markClickType == "PROJECTMARKPOLYGON") {
+            currentmarkpolygonstylesrc = JSON.parse(obj.data.style).stylesrc;
+            currentmarkpolygonwidth = JSON.parse(obj.data.style).width;
+            updateProjectMarkInfoPanel(obj.data);
+            markupdatelayerinex = layer.open({
+                type: 1
+                , title: ['信息修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                , area: ['300px', '300px']
+                , shade: 0.3
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: true
+                , moveOut: true
+                , content: '<!--项目线标注信息修改面板--><form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="updatemarkinfoform">    <div class="layui-form-item" style="margin-top:15px;margin-left:20px;">        <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6" style="margin-left:20px;">                <div class="grid-demo grid-demo-bg1">             <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称</label>                        <div class="layui-input-block">                            <input type="text" id ="updateprojectmark_name"name="name" class="layui-input" style="width: 120px;margin-left: -70px;">                           </div>                     </div>                    </div>                  </div>         <div class="layui-row" style="margin-top: 20px;">        <div class="layui-col-md6" style="margin-left:20px;">            <div class="grid-demo">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">颜色</label>                    <div class="layui-input-block">                    <div class="layui-input-inline" style="width: 100px;">                        <input type="text" name="color" value="" style="width: 120px;margin-left: -70px;" placeholder="请选择颜色" class="layui-input" id="mark-project-color-select">                            <div class="layui-input-inline" style="left: -11px;width: 100px;">                            <div id="mark-project-color" class="layui-inline" style="   margin-top: -50px;   margin-left: 60px;">                            </div>                        </div>                    </div>                </div>            </div>        </div>    </div>          <div class="layui-row" style="margin-top: 5px;">               <div class="layui-col-md6" style="margin-left:20px;">               <div class="grid-demo">                     <label class="layui-form-label" style="padding-left: 0px;text-align: left;">样式</label>                     <div class="layui-input-block">                    <button type="button" id="mark-point-style-select" onclick="selectMarkStyle(this)" class="layui-btn layui-btn-radius layui-btn-primary layui-btn-s" style="border-radius: 5px;width: 120px;margin-left: -70px;">                        选择样式<i class="layui-icon layui-icon-down layui-font-14"></i>                    </button>                    <div id="projectmark_style">                    </div>                </div>                  </div>              </div>     </div>    </div>       <div class="layui-form-item" style="margin-top:25px">          <div style="position:absolute;right:30px;">                <button type="reset" class="layui-btn layui-btn-primary" style="width:100px;margin-right: 20px;">重置</button>             <button type="submit" class="layui-btn" lay-submit="" lay-filter="updateinfosubmit" style="width:100px">提交</button>              </div>      </div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    //置顶
+                    layer.setTop(layero);
+                    //选择颜色
+                    layui.colorpicker.render({
+                        elem: '#mark-project-color'
+                        , color: '#cc0000'
+                        , format: 'RGB'
+                        , predefine: true
+                        , alpha: true
+                        , done: function (color) {
+                            $('#mark-project-color-select').val(color);//向隐藏域赋值
+                            currentmarkcolor = color;
+                            color || this.change(color); //清空时执行 change
+                        }
+                        , change: function (color) {
+                        }
+                    });
 
+                    var divtemp = document.getElementById("projectmark_style");
+                    divtemp.innerHTML = '<img id="projectmarkpointinfo_style" src="" style=" width: 25px; height: 25px;margin: 5px;margin-top: -50px;margin-left: 80px;" class="markPointStyle">';
+                    changeMarkImageColor("projectmarkpointinfo_style", currentmarkpolygonstylesrc, obj.data.color);
+
+
+
+                    layui.form.render();
+                    form.val("updatemarkinfoform", {
+                        "name": obj.data.title
+                        , "color": obj.data.color
+                    });
+
+                    form.on('submit(updatemarkinfoform)', function (postdata) {
+                        postdata.field.id = obj.data.id;
+                        postdata.field.cookie = document.cookie;
+                        postdata.field.title = document.getElementById("updateprojectmark_name").value;
+                        postdata.field.color = currentmarkcolor;
+                        var style = {};
+                        style.stylesrc = currentmarkpolygonstylesrc;
+                        style.width = currentmarkpolygonwidth;
+                        postdata.field.style = JSON.stringify(style);
+                        $.ajax({
+                            url: servicesurl + "/api/Mark/UpdateMark", type: "post", data: postdata.field,
+                            success: function (result) {
+                                var data = JSON.parse(result);
+                                layer.msg(data.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                //更新成功后操作
+                                if (data.code == "1") {
+                                    layer.close(markupdatelayerinex);
+                                    removeProjectMarkEntity(obj.data.id, obj.data.type);
+                                    //uploadProjectLineMarkEntity(postdata.field.id, postdata.field.title, obj.data.position, postdata.field.style, postdata.field.color);
+                                    //更新选中状态
+                                    for (var i in markProjectLayer) {
+                                        for (var j in markProjectLayer[i].children) {
+                                            for (var n in markProjectLayer[i].children[j].children) {
+                                                if (markProjectLayer[i].children[j].children[n].id == obj.data.id) {
+                                                    markProjectLayer[i].children[j].children[n].title = postdata.field.title;
+                                                    markProjectLayer[i].children[j].children[n].style = postdata.field.style;
+                                                    markProjectLayer[i].children[j].children[n].color = postdata.field.color;
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                    tree.reload('markProjectlayerTree', {
+                                        data: markProjectLayer
+                                    });
+                                }
+
+
+                            }, datatype: "json"
+                        });
+                        return false;
+                    });
+
+                }
+                , end: function () {
+                    layer.close(markupdatelayerinex);
+                    layer.close(markstylelayerindex);
+                    currentmarkcolor = '#cc0000';
+                    currentmarkpolygonstylesrc = '../Resources/img/mark/img_mark_A1.png';//默认线标注样式
+                    currentmarkpolygonwidth = 2;//默认线标注线宽
+
+                }
+            });
+        }
        
     }
     else if (obj.type === 'del') {
@@ -1275,7 +1401,7 @@ function projectMarkNodeOperate(obj) {
     }
 }
 
-//项目标注树节点选中
+//项目标注树节点check
 function projectMarkNodeChecked(obj) {
     //选中
     if (obj.checked) {
@@ -1295,7 +1421,7 @@ function projectMarkNodeChecked(obj) {
                     }
                     else if (obj.data.children[i].type == "polygon") {
                         for (var j in obj.data.children[i].children) {
-                            uploadProjectPolygonMarkEntity(obj.data.children[i].children[j].id, obj.data.children[i].children[j].title, obj.data.children[i].children[j].position, obj.data.children[i].children[j].color);                           
+                            uploadProjectPolygonMarkEntity(obj.data.children[i].children[j].id, obj.data.children[i].children[j].title, obj.data.children[i].children[j].position, obj.data.children[i].children[j].style,obj.data.children[i].children[j].color);                           
                         }
                     }
                 }
@@ -1309,7 +1435,7 @@ function projectMarkNodeChecked(obj) {
                         uploadProjectLineMarkEntity(obj.data.children[i].id, obj.data.children[i].title, obj.data.children[i].position, obj.data.children[i].style, obj.data.children[i].color);                                                             
                     }
                     else if (obj.data.children[i].type == "PROJECTMARKPOLYGON") {
-                        uploadProjectPolygonMarkEntity(obj.data.children[i].id, obj.data.children[i].title, obj.data.children[i].position, obj.data.children[i].color);                                                   
+                        uploadProjectPolygonMarkEntity(obj.data.children[i].id, obj.data.children[i].title, obj.data.children[i].position, obj.data.children[i].style,obj.data.children[i].color);                                                   
                     }
                 }
             }
@@ -1323,7 +1449,7 @@ function projectMarkNodeChecked(obj) {
                 uploadProjectLineMarkEntity(obj.data.id, obj.data.title, obj.data.position, obj.data.style, obj.data.color);               
             }
             else if ((obj.data.type == "PROJECTMARKPOLYGON")) {
-                uploadProjectPolygonMarkEntity(obj.data.id, obj.data.title, obj.data.position, obj.data.color);
+                uploadProjectPolygonMarkEntity(obj.data.id, obj.data.title, obj.data.position, obj.data.style,obj.data.color);
             }
         }
     }
@@ -1352,7 +1478,7 @@ function projectMarkNodeChecked(obj) {
     }
 }
 
-//项目标注树节点点击
+//项目标注树节点click
 function projectMarkNodeClick(obj) {
     if (obj.data.children != undefined) {
         if (obj.data.type == "markproject") {
@@ -1438,7 +1564,7 @@ function projectMarkNodeClick(obj) {
 
 
 
-//点击新增标注节点操作
+//点击新增标注节点click
 function addMarkLayerClick(obj) {
 
     if (JSON.stringify(obj.data.id) == undefined) {
@@ -1447,17 +1573,62 @@ function addMarkLayerClick(obj) {
         markClickType = obj.data.marktype;
         if (markClickType == "point") {
             updateAddMarkInfoPanel(obj.data);
+            viewer.zoomTo(viewer.entities.getById(obj.data.id), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 20));
         }
         if (markClickType == "line") {
             updateAddMarkInfoPanel(obj.data);
+            var entities_temp = [];
+            for (var i in JSON.parse(obj.data.position)) {
+                var entity = viewer.entities.getById(obj.data.id +"_"+ i)
+                if (entity != undefined) {
+                    entities_temp.push(entity);
+                }
+            }
+            if (entities_temp.length > 0) {
+                viewer.zoomTo(entities_temp);
+            }
         }
         if (markClickType == "polygon") {
             updateAddMarkInfoPanel(obj.data);
+            var entities_temp = [];
+            for (var i in JSON.parse(obj.data.position)) {
+                var entity = viewer.entities.getById(obj.data.id + "_" + i)
+                if (entity != undefined) {
+                    entities_temp.push(entity);
+                }
+            }
+            if (entities_temp.length > 0) {
+                viewer.zoomTo(entities_temp);
+            }
         }
     }
 };
-//选中新增标注节点操作
+//选中新增标注节点check
 function addMarkLayerCheck(obj) {
+    //选中
+    if (obj.checked) {
+        if (obj.data.children != undefined) {
+            for (var i in obj.data.children) {
+                uploadAddMarkEntity(obj.data.children[i]);
+            }
+        }
+        else {
+            uploadAddMarkEntity(obj.data);
+        }
+    }
+    //不选中
+    else {
+        if (obj.data.children != undefined) {
+            for (var i in obj.data.children) {
+                removeAddMarkEntity(obj.data.children[i]);
+            }
+        }
+        else {
+            removeAddMarkEntity(obj.data);
+        }
+    }
+
+
     //更新选中状态
     for (var i in markAddLayer) {
         if (markAddLayer[i].type == obj.data.marktype) {
@@ -1468,6 +1639,8 @@ function addMarkLayerCheck(obj) {
             }
         }
     }
+
+
 };
 
 
@@ -1573,9 +1746,19 @@ $(document).on("click", "img[class='markLineStyle']", function (event) {
         currentmarklinestylesrc = '../Resources/img/mark/' + styleid + '.png';
         changeMarkImageColor("marklineselected_style", currentmarklinestylesrc, '#cc0000');
         changeMarkImageColor("projectmarkpointinfo_style", currentmarklinestylesrc , currentmarkcolor);
-
     }
 });
+//监听面标注选中样式
+$(document).on("click", "img[class='markPolygonStyle']", function (event) {
+    //面样式设置
+    if (markType == "2" || markClickType == "PROJECTMARKPOLYGON") {
+        var styleid = event.target.id;
+        currentmarkpolygonstylesrc = '../Resources/img/mark/' + styleid + '.png';
+        changeMarkImageColor("markpolygonselected_style", currentmarkpolygonstylesrc, '#cc0000');
+        changeMarkImageColor("projectmarkpointinfo_style", currentmarkpolygonstylesrc, currentmarkcolor);
+    }
+});
+
 
 //选择标注样式
 function selectMarkStyle(obj) {
@@ -1641,20 +1824,50 @@ function selectMarkStyle(obj) {
         });
     }
     //多边形设置
-    if (markType == "2" || markClickType == "polygon") {
+    if (markType == "2" || markClickType == "polygon" || markClickType == "PROJECTMARKPOLYGON") {
+        markstylelayerindex = layer.open({
+            type: 1
+            , title: false
+            , area: ['320px', '280px']
+            , shade: 0
+            , offset: [stylebtnpos.y + 40, stylebtnpos.x - 120]
+            , closeBtn: 0
+            , moveOut: true
+            , resize: false
+            , content:'<!--选择面样式面板--><form class="layui-form" style="margin-top:10px;margin-left:0px;" lay-filter="markpolygoninfoform">    <fieldset class="layui-elem-field" style="margin-left: 10px;margin-right: 10px;">        <div class="layui-field-box">            <img id="img_mark_A1" src="/Resources/img/mark/img_mark_A1.png" style=" width: 30px; height: 30px;margin: 5px;" class="markPolygonStyle">            <img id="img_mark_A2" src="/Resources/img/mark/img_mark_A2.png" style=" width: 30px; height: 30px;margin: 5px;" class="markPolygonStyle">        </div>    </fieldset>    <div class="layui-row" style="margin-top: 20px;">        <div class="layui-col-md6">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 15px;text-align: left;">线宽：</label>                <div class="layui-input-block">                    <input type="text" id="addmarkpolygon_width" name="addmarkpolygon_width" class="layui-input" lay-verify="number" placeholder="默认为2" style="width: 90px;margin-left: -50px;text-align:center;vertical-align:middle;" />                </div>            </div>        </div>    </div>    <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md12" style="margin-top: 20px;">            <div class="grid-demo grid-demo-bg1">                <label class="layui-form-label" style="padding-left: 15px;text-align: left;width: 80px;">选中样式：</label>                <img id="markpolygonselected_style" src="/Resources/img/mark/img_mark_A1.png" style=" width: 25px; height: 25px;margin: 5px;" class="markPolygonStyle">                <button type="button" class="layui-btn  layui-btn-sm" style="margin-left: 60px;" id="select_mark_style_id" onclick="getMarkStyle()">确定</button>            </div>        </div>    </div></form>'
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                layer.setTop(layero);
+                var stylelist = document.getElementsByClassName("markPolygonStyle");
+                for (var i in stylelist) {
+                    var imgid = stylelist[i].id;
+                    var src = stylelist[i].src;
+                    changeMarkImageColor(imgid, src, '#cc0000');
+                }
+            }
+            , end: function () {
+                layer.close(markstylelayerindex);
+                markstylelayerindex = null;
+            }
+        });
     }
 }
 //关闭选择样式的页面
 function getMarkStyle() {
-
-
-    if (markType == "1" || markClickType =="PROJECTMARKLINE") {
+    if (markType == "1" || markClickType == "PROJECTMARKLINE") {
         //获取线宽
         var width = document.getElementById("addmarkline_width").value;
         if (width !== "") {
             currentmarklinewidth = parseInt(width);
         }
 
+    }
+    else if ((markType == "2" || markClickType == "PROJECTMARKPOLYGON")) {
+        //获取线宽
+        var width = document.getElementById("addmarkpolygon_width").value;
+        if (width !== "") {
+            currentmarkpolygonwidth = parseInt(width);
+        }
     }
     layer.close(markstylelayerindex);
 }
@@ -1732,8 +1945,6 @@ function uploadProjectLineMarkEntity(id, title,position,style, color) {
 
     }
     
-   
-
     var entitylabel = viewer.entities.getById("project_mark_line_label_" +id);
     if (entitylabel == undefined) {
         viewer.entities.add({
@@ -1757,23 +1968,33 @@ function uploadProjectLineMarkEntity(id, title,position,style, color) {
     }
 }
 //地图加载项目面标注
-function uploadProjectPolygonMarkEntity(id, title, position, color) {
+function uploadProjectPolygonMarkEntity(id, title, position,style, color) {
     var entity = viewer.entities.getById("project_mark_polygon_" + id);
     if (entity == undefined) {
         var polygonposition = JSON.parse(position);
         polygonposition.push(polygonposition[0]);
-        viewer.entities.add({
+
+        var tempentity_line=viewer.entities.add({
             id: "project_mark_polygon_" + id,
             name: "project_mark_polygon_" + id,
             polyline: {
                 positions: polygonposition,
-                width: 2,
-                material: Cesium.Color.fromCssColorString(color),
+                width: JSON.parse(style).width,
                 depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
                     color: Cesium.Color.fromCssColorString(color),
                 }),
             }
         });
+        var styletemp = JSON.parse(style).stylesrc.replace('../Resources/img/mark/', '').replace('.png', '');
+        if (styletemp == "img_mark_A1") {
+            tempentity_line.polyline.material = Cesium.Color.fromCssColorString(color);
+        }
+        else if (styletemp == "img_mark_A2") {
+            tempentity_line.polyline.material = new Cesium.PolylineDashMaterialProperty({
+                color: Cesium.Color.fromCssColorString(color)
+            });
+        }
+
     }
     var entitylabel = viewer.entities.getById("project_mark_polygon_label_" +id);
     if (entitylabel == undefined) {
@@ -1797,7 +2018,7 @@ function uploadProjectPolygonMarkEntity(id, title, position, color) {
         });
     }
 }
-//地图移除标注
+//地图移除项目标注
 function removeProjectMarkEntity(id, type) {
     if (type== "PROJECTMARKPOINT") {
         viewer.entities.removeById("project_mark_point_" + id);
@@ -1812,6 +2033,140 @@ function removeProjectMarkEntity(id, type) {
         viewer.entities.removeById("project_mark_polygon_label_" + id);
     }
 }
+
+//地图加载新增标注
+function uploadAddMarkEntity(data) {
+    if (data.marktype == "point") {
+        var entity = viewer.entities.getById(data.id);
+        if (entity == undefined) {
+            //添加项目点标注
+            viewer.entities.add({
+                id: data.id,
+                name: data.id,
+                position: JSON.parse(data.position),
+                billboard: {
+                    image: data.style,
+                    color: Cesium.Color.fromCssColorString(data.color),
+                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                    width: 24,
+                    height: 24,
+                    disableDepthTestDistance: Number.POSITIVE_INFINITY
+                }
+            });
+        }
+        var entitylabel = viewer.entities.getById(data.id+"_label");
+        if (entitylabel == undefined) {
+            viewer.entities.add({
+                id: data.id + "_label",
+                name: data.id + "_label",
+                position: JSON.parse(data.position),
+                label: {
+                    text: data.title,
+                    font: '18px Times New Roman',
+                    showBackground: true,
+                    backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                    fillColor: Cesium.Color.AQUA,
+                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                    pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                    eyeOffset: new Cesium.Cartesian3(0, 0, -10),
+                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                    scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+                }
+            });
+        }
+
+
+    }
+    else if (data.marktype == "line") {
+        //for (var i in JSON.parse(data.position)) {
+        //    var entity = viewer.entities.getById(data.id + "_" + i);
+        //    if (entity == undefined) {
+        //        var lineposition = JSON.parse(data.position);
+        //        var tempentity_line;
+        //        if (i <lineposition.length) {
+        //            var tempentity_line = viewer.entities.add({
+        //                id: data.id + "_" + i,
+        //                name: data.id + "_" + i,
+        //                polyline: {
+        //                    positions: [lineposition[i], lineposition[i + 1]],
+        //                    width: JSON.parse(data.style).width,
+        //                    material: Cesium.Color.fromCssColorString(data.color),
+        //                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+        //                        color: Cesium.Color.fromCssColorString(data.color),
+        //                    }),
+        //                }
+        //            });
+
+        //            var styletemp = JSON.parse(data.style).stylesrc.replace('../Resources/img/mark/', '').replace('.png', '');
+        //            if (styletemp == "img_mark_l1") {
+        //                tempentity_line.polyline.material = Cesium.Color.fromCssColorString(data.color);
+        //            }
+        //            else if (styletemp == "img_mark_l2") {
+        //                tempentity_line.polyline.material = new Cesium.PolylineDashMaterialProperty({
+        //                    color: Cesium.Color.fromCssColorString(data.color)
+        //                });
+        //            }
+        //        }
+               
+        //    }          
+        //}
+        
+
+        //var entitylabel = viewer.entities.getById(data.id+"_label");
+        //if (entitylabel == undefined) {
+        //    viewer.entities.add({
+        //        id: data.id + "_label",
+        //        name: data.id + "_label",
+        //        position: JSON.parse(data.position)[0],
+        //        label: {
+        //            text: data.title,
+        //            font: '18px Times New Roman',
+        //            showBackground: true,
+        //            backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+        //            fillColor: Cesium.Color.AQUA,
+        //            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+        //            verticalOrigin: Cesium.VerticalOrigin.CENTER,
+        //            pixelOffset: new Cesium.Cartesian2(0.0, -36),
+        //            eyeOffset: new Cesium.Cartesian3(0, 0, -10),
+        //            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        //            scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
+        //        }
+        //    });
+        //}
+    }
+    else if (data.marktype == "polygon") {
+       
+    }
+}
+//地图移除新增标注
+function removeAddMarkEntity(data){
+    if (data.marktype == "point") {
+        viewer.entities.removeById(data.id);
+        viewer.entities.removeById(data.id + "_label");
+
+    }
+    else if (data.marktype == "line") {
+        for (var i in JSON.parse(data.position)) {
+            viewer.entities.removeById(data.id + "_" + i);
+            viewer.entities.removeById(data.id + "_" + i+"_point");
+        }
+        viewer.entities.removeById(data.id + "_label");
+    }
+    else if (data.marktype == "polygon") {
+        for (var i in JSON.parse(data.position)) {
+            viewer.entities.removeById(data.id + "_" + i);
+            viewer.entities.removeById(data.id + "_" + i + "_point");
+        }
+        viewer.entities.removeById(data.id + "_label");
+    }
+}
+
+
+
+
+
+
 //获取周长
 function getEntityLength(position) {
     var distances = 0;
