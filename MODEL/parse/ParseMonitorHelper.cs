@@ -4709,6 +4709,7 @@ namespace MODEL
                     roadLength = row[6].ToString(),
                     projectName = row[7].ToString(),
                     roadRec = row[8].ToString(),
+                    patrolTime = row[9].ToString(),
                 };
                 return constPhotoInfo;
             }

@@ -49,5 +49,9 @@ namespace MODEL
         /// 备注
         /// </summary>
         public string roadRec { get; set; }
+        /// <summary>
+        /// 上传时间
+        /// </summary>
+        public string patrolTime { get; set; }
     }
 }

@@ -468,6 +468,7 @@ namespace SERVICE.Controllers
                 string name = HttpContext.Current.Request.Form["name"];
                 string roadLength = HttpContext.Current.Request.Form["roadLength"];
                 string roadRec = HttpContext.Current.Request.Form["roadRec"];
+                string patrolTime = HttpContext.Current.Request.Form["patrolTime"];
                 string value = "("
                     + SQLHelper.UpdateString(photoUrl) + ","
                     + SQLHelper.UpdateString(projectId) + ","
@@ -498,6 +499,11 @@ namespace SERVICE.Controllers
                 {
                     sql = sql + ",road_rec ";
                     value = value + "," + SQLHelper.UpdateString(roadRec);
+                }
+                if (!string.IsNullOrEmpty(patrolTime))
+                {
+                    sql = sql + ",patrol_time ";
+                    value = value + "," + SQLHelper.UpdateString(patrolTime);
                 }
                 value = value + ")";
                 sql = sql + ") VALUES ";
