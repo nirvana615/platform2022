@@ -10,7 +10,7 @@
  * 必须先创建handler变量
  */
 var markwidgetlayerindex = null;//标绘弹出层
-var markpointlayerindex = null;//点标注弹出层
+var markpointlayerindex = null;//点标注弹出层 
 var marklinelayerindex = null;//线标注弹出层
 var markpolygonlayerindex = null;//面标注弹出层
 var markstylelayerindex = null;//样式弹出层
@@ -476,8 +476,38 @@ function pointMark() {
                 layer.msg("结束点标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 unselectAddMarkTypeOperate();
                 markType = "";
+                markwidget_tipsentity.label.show = false;
+                markwidget_tipsentity.label.text = "";
             }
-        }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+    }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+
+    //移动（操作提示）
+    handler.setInputAction(function (move) {
+        var pickedOject;
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            pickedOject = viewer.scene.pickPosition(move.endPosition);//地形标注
+        } else {
+            pickedOject = viewer.scene.pick(move.endPosition);//模型标注
+        }
+
+        if (pickedOject != undefined) {
+            var position = viewer.scene.pickPosition(move.endPosition);
+            if (position != undefined) {
+                markwidget_tipsentity.position = position;
+                markwidget_tipsentity.label.show = true;
+                markwidget_tipsentity.label.text = "左键点击开始标注，右键点击结束标注";              
+            }
+            else {
+                markwidget_tipsentity.label.show = false;
+                markwidget_tipsentity.label.text = "";
+            }
+        }
+        else {
+            markwidget_tipsentity.label.show = false;
+            markwidget_tipsentity.label.text = "";
+        }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
 };
 //线标注
 function lineMark() {
@@ -2092,7 +2122,7 @@ function selectMarkStyle(obj) {
 }
 //关闭选择样式的页面
 function getMarkStyle() {
-    if (markType == "1" || markClickType == "PROJECTMARKLINE") {
+    if (markType == "1" || markClickType == "PROJECTMARKLINE" || markClickType == "line") {
         //获取线宽
         var width = document.getElementById("addmarkline_width").value;
         if (width !== "") {
@@ -2100,7 +2130,7 @@ function getMarkStyle() {
         }
 
     }
-    else if ((markType == "2" || markClickType == "PROJECTMARKPOLYGON")) {
+    else if ((markType == "2" || markClickType == "PROJECTMARKPOLYGON" || markClickType == "polygon")) {
         //获取线宽
         var width = document.getElementById("addmarkpolygon_width").value;
         if (width !== "") {
