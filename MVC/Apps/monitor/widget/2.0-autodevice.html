@@ -7,6 +7,7 @@
         <li style="width:10%;padding-top: 10px;">临时道路</li>
         <li style="width:10%;padding-top: 10px;">设备到场</li>
         <li style="width:10%;padding-top: 10px;">二次搬运</li>
+        <li style="width:10%;padding-top: 10px;">项目检查</li>
     </ul>
 
     <div class="layui-tab-content">
@@ -169,6 +170,19 @@
                 <div class="layui-card">
                     <div class="layui-card-body">
                         <table id="road-carry-manage" lay-filter="road-carry-manage"></table>
+                        <script type="text/html" id="table-toolbar-road">
+                            <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+            <!--项目检查-->
+            <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <table id="road-jiancha-manage" lay-filter="road-jiancha-manage"></table>
                         <script type="text/html" id="table-toolbar-road">
                             <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a>
                         </script>

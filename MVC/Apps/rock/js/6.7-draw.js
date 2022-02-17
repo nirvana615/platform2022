@@ -1156,9 +1156,23 @@ function LoadBiaozhunListLayer() {
                             rockpointlayer.type = "ROCKPOINTFA";
                             rockpointlayer.checked = false;
                             rockpointlayer.showCheckbox = true;//显示复选框
+
                             var rockpointlayerchild = [];
+                            var tempList = [];
                             for (var i = 0; i < pointList.length; i++) {
                                 var postion = JSON.parse(pointList[i].postion);
+                                var cartesian3 = Cesium.Cartographic.fromCartesian(postion);
+                                var longitude = Cesium.Math.toDegrees(cartesian3.longitude);                         //经度
+                                var latitude = Cesium.Math.toDegrees(cartesian3.latitude);                           //纬度
+                                var height = cartesian3.height;  
+                                var temp = {};
+                                temp.longitude = longitude;
+                                temp.latitude = latitude;
+                                temp.height = height;
+                                temp.name = pointList[i].name;;
+
+                                tempList.push(temp);
+
                                 var rockpoint = new Object;
                                 rockpoint.title = pointList[i].name;
                                 rockpoint.id = "ROCKPOINT_" + pointList[i].id;
@@ -1174,8 +1188,11 @@ function LoadBiaozhunListLayer() {
                                 rockpoint.datas = pointList[i];
                                 rockpointlayerchild.push(rockpoint);
 
+
                             }
                             rockpointlayer.children = rockpointlayerchild;
+                            rockpointlayer.datas = tempList;
+                            console.log(tempList);
                             biaoLayers.push(rockpointlayer);
 
                         }
@@ -1193,7 +1210,7 @@ function LoadBiaozhunListLayer() {
 
                                 console.log(pointListtem);
                                 var xSum = 0;//求一个平均点，用于定位
-                                var ySum = 0; console.log();
+                                var ySum = 0; 
                                 var zSum = 0;
                                 for (var m = 0; m < pointListtem.length; m++) {
                                     xSum = xSum + parseFloat(pointListtem[m].x);
@@ -1219,7 +1236,7 @@ function LoadBiaozhunListLayer() {
                                 rockline.showCheckbox = true;//显示复选框
                                 var linetemplist = [];
                                 for (var x = 0; x < pointListtem.length; x++) {
-                                    var cartesian3 = Cesium.Cartographic.fromCartesian(pointListtem[x]);;
+                                    var cartesian3 = Cesium.Cartographic.fromCartesian(pointListtem[x]);
                                     var xy = bl2xy(cartesian3.latitude * 180 / Math.PI, cartesian3.longitude * 180 / Math.PI, 6378137.0, 1 / 298.257223563, 3, 108, false);
 
                                     var xyz = {};
@@ -1779,7 +1796,32 @@ function LoadBiaozhunListLayer() {
 
                                         }
                                     });
-                                }
+                                }else if (data.type == "ROCKPOINTFA") {//点标注
+                                        console.log(data);
+                                        biaoZhudrwInfox = layer.open({
+                                            type: 1
+                                            , title: ['点标注查看', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                                            , area: '700px'
+                                            , shade: 0.3
+                                            , offset: '60px'
+                                            , closeBtn: 1
+                                            , maxmin: true
+                                            , moveOut: true
+                                            //, content: '<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="addpointinfoform"><div class="layui-form-item" style="margin-top:15px;margin-right:5px;"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">点名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" autocomplete="off" readonly="readonly" class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">描述</label><div class="layui-input-block"><input type="text" name="remarks" lay-verify="required" autocomplete="off" readonly="readonly"  class="layui-input" style="width:160px;"  /></div></div></div></div></div></form><div><table class="layui-hide" id="postion-view" lay-filter=postion-view"></table></div>'
+                                            , content: '<div style="height:500px;"><table class="layui-hide" id="rockPoint-views" lay-filter=postion-view"></table></div>'
+                                            , zIndex: layer.zIndex
+                                            , success: function (layero) {
+                                                layer.setTop(layero);
+
+
+                                                //展示项目设备总览
+
+                                            }
+                                            , end: function () {
+
+                                            }
+                                        });
+                                    }
 
                                     var postionviewtable = table.render({
                                         elem: '#postion-view'
@@ -1823,6 +1865,29 @@ function LoadBiaozhunListLayer() {
                                         , data: []
                                     });
                                     postionviewtables.reload({ id: 'postionviewids', data: data.data });
+
+                                    //点位信息查看
+                                    var rockPointviewtables = table.render({
+                                        elem: '#rockPoint-views'
+                                        , id: 'rockPointviewids'
+                                        , title: '点位信息'
+                                        , skin: 'line'
+                                        , even: false
+                                        , page: true
+                                        , toolbar: true
+                                        , totalRow: true
+                                        , limit: 10
+                                        // , initSort: { field: 'ls', type: 'asc' }
+
+                                        , cols: [[
+                                            { field: 'name', title: '名称', align: "center" }
+                                            , { field: 'longitude', title: '经度', align: "center" }
+                                            , { field: 'latitude', title: '纬度', align: "center" }
+                                            , { field: 'height', title: '高程', align: "center" }
+                                        ]]
+                                        , data: []
+                                    });
+                                    rockPointviewtables.reload({ id: 'rockPointviewids', data: data.datas });
 
                                     return;
                                 } else if (type === 'update') { //修改节点
