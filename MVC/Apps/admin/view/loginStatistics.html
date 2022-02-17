@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>用户授权</title>
+    <title>用户统计</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -14,14 +14,13 @@
     <script src="../layuiadmin/layui2.5.6/layui.all.js"></script>
     <!--ECharts-->
     <script src="../layuiadmin/lib/echarts.min.js"></script>
-    <!--<script src="../../../Scripts/ECharts/echarts.min.js"></script>-->
     <!--CSS样式-->
     <link href="../layuiadmin/style/loginStatistics.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="layui-fluid">
-        <div class="layui-card">
-            <div class="layui-card-body">
+    <div class="layui-fluid" style="padding:5px;">
+        <div class="layui-card" style="margin-bottom:5px;">
+            <div class="layui-card-body" style="padding: 5px 10px 5px 10px;">
                 <div class="welcome-module">
                     <div class="layui-row layui-col-space15">
                         <div class="layui-col-xs3">
@@ -31,9 +30,8 @@
                                         <span class="label layui-bg-red" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                         <h5>总登录次数</h5>
                                     </div>
-                                    <div class="panel-content">
+                                    <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                         <h1 id="count_all" class="no-margins" style="color:red">--</h1>
-                                        <small>当前分类总记录数</small>
                                     </div>
                                 </div>
                             </div>
@@ -45,9 +43,8 @@
                                         <span class="label layui-bg-blue" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                         <h5>本年登录次数</h5>
                                     </div>
-                                    <div class="panel-content">
+                                    <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                         <h1 id="count_year" class="no-margins" style="color:dodgerblue">--</h1>
-                                        <small>当前分类总记录数</small>
                                     </div>
                                 </div>
                             </div>
@@ -59,9 +56,8 @@
                                         <span class="label layui-bg-orange" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                         <h5>本月登录次数</h5>
                                     </div>
-                                    <div class="panel-content">
+                                    <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                         <h1 id="count_month" class="no-margins" style="color:orange">--</h1>
-                                        <small>当前分类总记录数</small>
                                     </div>
                                 </div>
                             </div>
@@ -73,23 +69,20 @@
                                         <span class="label layui-bg-green" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                         <h5>今日登录次数</h5>
                                     </div>
-                                    <div class="panel-content">
+                                    <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                         <h1 id="count_day" class="no-margins" style="color:green">--</h1>
-                                        <small>当前分类总记录数</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
         <div class="layui-card">
-            <div class="layui-card-body">
-                <div class="layui-card">
-                    <div class="layui-card-header layui-font-12" style="border-bottom:2px solid #a7a9a9;">系统报表</div>
-                    <div class="layui-card-body">
+            <div class="layui-card-body" style="padding: 5px;">
+                <div class="layui-card" style="margin-bottom:2px;">
+                    <div class="layui-card-body" style="padding: 5px;">
                         <div class="layui-row">
                             <div class="layui-col-md6" style="position:relative">
                                 <div id="login_allusersort" style="width: 100%;height:350px;"></div>
@@ -103,9 +96,6 @@
                                     </select>
                                     <select id="login_year" name="login_year" style="border:1px solid #e6e6e6; margin-left:10px;"></select>
                                 </div>
-
-
-
                             </div>
                             <div class="layui-col-md6">
                                 <div id="login_allcount" style="width: 95%;height:350px;"></div>
@@ -116,8 +106,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-card">
-                    <div class="layui-card-body" style="border-bottom:2px solid #a7a9a9">
+                <div class="layui-card" style="margin-bottom:2px;">
+                    <div class="layui-card-body" style="padding:5px;">
                         <div class="layui-row">
                             <div class="layui-col-md6">
                                 <div id="login_sys_pieyear" style="width: 95%;height:350px;"></div>
@@ -131,13 +121,12 @@
                                     <select id="sys_lineyear" name="sys_year" style="border:1px solid #e6e6e6"></select>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
 
                 <div class="layui-card">
-                    <div class="layui-card-body">
+                    <div class="layui-card-body" style="padding:5px;">
                         <div class="layui-row" style="position:relative;">
                             <div class="layui-col-md6">
                                 <div class="layui-row layui-col-space15">
@@ -148,9 +137,8 @@
                                                     <span class="label layui-bg-red" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                                     <h5>总登录次数</h5>
                                                 </div>
-                                                <div class="panel-content">
+                                                <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                                     <h1 id="user_all" class="no-margins" style="color:red">--</h1>
-                                                    <small>当前分类总记录数</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -162,9 +150,8 @@
                                                     <span class="label layui-bg-blue" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                                     <h5>本年登录次数</h5>
                                                 </div>
-                                                <div class="panel-content">
+                                                <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                                     <h1 id="user_year" class="no-margins" style="color:dodgerblue">--</h1>
-                                                    <small>当前分类总记录数</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -176,9 +163,8 @@
                                                     <span class="label layui-bg-orange" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                                     <h5>本月登录次数</h5>
                                                 </div>
-                                                <div class="panel-content">
+                                                <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                                     <h1 id="user_month" class="no-margins" style="color:orange">--</h1>
-                                                    <small>当前分类总记录数</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -190,9 +176,8 @@
                                                     <span class="label layui-bg-green" style="float:right;margin:5px 5px;padding:0px 2px">实时</span>
                                                     <h5>今日登录次数</h5>
                                                 </div>
-                                                <div class="panel-content">
+                                                <div class="panel-content" style="padding-top: 5px;padding-bottom: 5px;">
                                                     <h1 id="user_day" class="no-margins" style="color:green">--</h1>
-                                                    <small>当前分类总记录数</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -224,10 +209,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 
     <script>
