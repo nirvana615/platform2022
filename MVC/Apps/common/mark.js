@@ -458,6 +458,9 @@ function pointMark() {
                         pointmarktemp.color = currentmarkcolor;//
                         pointmarktemp.info = "null";//
                         markAddPointLayerList.push(pointmarktemp);
+                        tree.reload('addmarklayerTree', {
+                            data: markAddLayer
+                        });
                         updateAddMarkInfo(pointmarktemp);
 
                         if (handler != undefined) {
@@ -489,7 +492,7 @@ function pointMark() {
             if (position != undefined) {
                 markwidget_tipsentity.position = position;
                 markwidget_tipsentity.label.show = true;
-                markwidget_tipsentity.label.text = "左键点击开始标注，右键点击结束标注";              
+                markwidget_tipsentity.label.text = "左键点击开始标注";              
             }
             else {
                 markwidget_tipsentity.label.show = false;
@@ -844,8 +847,9 @@ function polygonMark() {
             polygonmarktemp.color = currentmarkcolor;
             polygonmarktemp.info = "null";
             markAddPolygonLayerList.push(polygonmarktemp);
-            //updateAddMarkInfoPanel(polygonmarktemp);
-            console.log(polygonid);
+            tree.reload('addmarklayerTree', {
+                data: markAddLayer
+            });
             updateAddMarkInfo(polygonmarktemp);
 
             if (handler != undefined) {
@@ -856,9 +860,7 @@ function polygonMark() {
                 markwidget_tipsentity.label.show = false;
                 markwidget_tipsentity.label.text = "";
             }
-            //tree.reload('addmarklayerTree', {
-            //    data: markAddLayer
-            //});
+
 
             markwidget_temppoints = [];
             markwidget_tempentities = [];
