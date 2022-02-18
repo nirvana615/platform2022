@@ -609,7 +609,7 @@ function lineMark() {
                     text: "线标注",
                     showBackground: true,
                     backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                    font: '18px Times New Roman',
+                    font: '16px Times New Roman',
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                     verticalOrigin: Cesium.VerticalOrigin.CENTER,
                     disableDepthTestDistance: Number.POSITIVE_INFINITY,
@@ -830,7 +830,7 @@ function polygonMark() {
                     text: "面标注",
                     showBackground: true,
                     backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                    font: '18px Times New Roman',
+                    font: '16px Times New Roman',
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                     verticalOrigin: Cesium.VerticalOrigin.CENTER,
                     disableDepthTestDistance: Number.POSITIVE_INFINITY,
@@ -1407,8 +1407,8 @@ function projectMarkNodeOperate(obj) {
         //删除项目
         $.ajax({
             url: servicesurl + "/api/Mark/DeleteMark", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
-            success: function (data) {
-                layer.msg(data.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            success: function (data) {                
+                layer.msg(JSON.parse(data).message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 markProjectLayer = [];
                 loadMarkProjectLayersTree();
                 removeProjectMarkEntity(obj.data.id, obj.data.type);
@@ -2169,13 +2169,13 @@ function uploadProjectPointMarkEntity(id, title, position,style,color) {
             position: JSON.parse(position),
             label: {
                 text: title,
-                font: '18px Times New Roman',
+                font: '16px Times New Roman',
                 showBackground: true,
                 backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                 fillColor: Cesium.Color.AQUA,
                 horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                 verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                pixelOffset: new Cesium.Cartesian2(0.0, -45),
                 eyeOffset: new Cesium.Cartesian3(0, 0, -10),
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
                 scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
@@ -2221,7 +2221,7 @@ function uploadProjectLineMarkEntity(id, title,position,style, color) {
             position: JSON.parse(position)[0],
             label: {
                 text: title,
-                font: '18px Times New Roman',
+                font: '16px Times New Roman',
                 showBackground: true,
                 backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                 fillColor: Cesium.Color.AQUA,
@@ -2272,7 +2272,7 @@ function uploadProjectPolygonMarkEntity(id, title, position,style, color) {
             position: JSON.parse(position)[0],
             label: {
                 text: title,
-                font: '18px Times New Roman',
+                font: '16px Times New Roman',
                 showBackground: true,
                 backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                 fillColor: Cesium.Color.AQUA,
@@ -2334,12 +2334,12 @@ function uploadAddMarkEntity(data) {
                 position: JSON.parse(data.position),
                 label: {
                     text: data.title,
-                    font: '18px Times New Roman',
+                    font: '16px Times New Roman',
                     showBackground: true,
                     backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                     verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                    pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                    pixelOffset: new Cesium.Cartesian2(0.0, -45),
                     eyeOffset: new Cesium.Cartesian3(0, 0, -10),
                     disableDepthTestDistance: Number.POSITIVE_INFINITY,
                     scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
@@ -2402,7 +2402,7 @@ function uploadAddMarkEntity(data) {
                 position: new Cesium.Cartesian3(xsum / lineposition.length, ysum / lineposition.length, zsum / lineposition.length),
                 label: {
                     text: data.title,
-                    font: '18px Times New Roman',
+                    font: '16px Times New Roman',
                     showBackground: true,
                     backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
@@ -2496,7 +2496,7 @@ function uploadAddMarkEntity(data) {
                 position: new Cesium.Cartesian3(xsum / lineposition.length, ysum / lineposition.length, zsum / lineposition.length),
                 label: {
                     text: data.title,
-                    font: '18px Times New Roman',
+                    font: '16px Times New Roman',
                     showBackground: true,
                     backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
