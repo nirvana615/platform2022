@@ -50,6 +50,8 @@ var biaoZhudrwInfox = null;
 var drowinfoAddlayerindex = null;
 var colorpicker = layui.colorpicker;//
 var biaoZhuindex = null;
+
+var kmlList = [];
 //清除
 function Clear() {
     ClearAction();
@@ -141,9 +143,85 @@ function biaozhuMangan() {
        , zIndex: layer.zIndex
         , success: function (layero) {
             LoadBiaozhunListLayer();
+
+            
+            form.on('submit(dowminfosubmit)', function (temp) {
+                if (kmlList.length==0) {
+                    layer.msg('没有标注');
+                    return false;
+                }
+                console.log(kmlList);
+
+
+                var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+                var pointList = [];//点
+                var lineList = [];//线
+                //var noodlesList = [];//面
+                for (var i = 0; i < kmlList.length; i++) {
+                    if ("1" == kmlList[i].type) {
+                        pointList.push(kmlList[i]);
+                    } else if ("2" == kmlList[i].type || "3" == kmlList[i].type) {
+                        lineList.push(kmlList[i]);
+                    } 
+                }
+                var pointKml = "";
+                for (var i = 0; i < pointList.length; i++) {
+                    var postion = JSON.parse(pointList[i].postion);
+                    var cartesian3 = Cesium.Cartographic.fromCartesian(postion);
+                    var L = Cesium.Math.toDegrees(cartesian3.longitude);                         //经度
+                    var B = Cesium.Math.toDegrees(cartesian3.latitude);                           //纬度
+
+                    pointKml = pointKml + "<Placemark><name>" + pointList[i].name + "</name><LookAt><longitude>" + L + "</longitude><latitude>" + B
+                        + " </latitude> <altitude>0</altitude> <gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode></LookAt> <styleUrl>#m_ylw-pushpin0</styleUrl> <Point><gx:drawOrder>1</gx:drawOrder> <coordinates>"
+                        + L + "," + B + ",0</coordinates></Point></Placemark>";
+                }
+                var lineKml = "";
+                for (var i = 0; i < lineList.length; i++) {
+                    var pointListtem = JSON.parse(lineList[i].postion);
+                    var lineJson = "";
+                    for (var x = 0; x < pointListtem.length; x++) {
+                        var cartesian3 = Cesium.Cartographic.fromCartesian(pointListtem[x]);
+                        var L = Cesium.Math.toDegrees(cartesian3.longitude);                         //经度
+                        var B = Cesium.Math.toDegrees(cartesian3.latitude);                           //纬度
+                        lineJson = lineJson + " " + L + "," + B + "," + "0 ";
+                    }
+                    lineKml = lineKml + "<Placemark><name>" + lineList[i].name + "</name><styleUrl>#m_ylw-pushpin</styleUrl><LineString><tessellate>1</tessellate><coordinates>" + lineJson + " </coordinates></LineString></Placemark>";
+                }
+
+                var xmname = "监测立杆设计";
+                try {
+                    if (currentprojectinfo.xmmc) {
+                        xmname = currentprojectinfo.xmmc;
+                    } else {
+                        //hGaizhengshu = parseFloat(modleInfo.gcgz);
+                    }
+                } catch (e) {
+                    console.log(e.message);//sojson is undefined
+                }
+                var kml = '<?xml version="1.0" encoding="UTF-8"?><kml xmlns = "http://www.opengis.net/kml/2.2" xmlns:gx = "http://www.google.com/kml/ext/2.2" xmlns:kml = "http://www.opengis.net/kml/2.2" xmlns:atom = "http://www.w3.org/2005/Atom" ><Document><name>' + xmname +'</name><Style id="s_ylw-pushpin"><IconStyle><scale>1.1</scale><Icon>	<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels" /></IconStyle></Style><StyleMap id="m_ylw-pushpin"><Pair><key>normal</key><styleUrl>#s_ylw-pushpin0</styleUrl></Pair><Pair><key>highlight</key><styleUrl>#s_ylw-pushpin_hl</styleUrl></Pair></StyleMap><Style id="s_ylw-pushpin_hl"><IconStyle><scale>1.3</scale><Icon>	<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels" /></IconStyle><LineStyle><color>ffffaa55</color><width>2</width></LineStyle></Style><Style id="s_ylw-pushpin_hl0"><IconStyle><scale>1.3</scale><Icon>	<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels" /></IconStyle></Style><Style id="s_ylw-pushpin0"><IconStyle><scale>1.1</scale><Icon>	<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels" /></IconStyle><LineStyle><color>ffffaa55</color><width>2</width></LineStyle></Style><StyleMap id="m_ylw-pushpin0"><Pair><key>normal</key><styleUrl>#s_ylw-pushpin</styleUrl></Pair><Pair><key>highlight</key><styleUrl>#s_ylw-pushpin_hl0</styleUrl></Pair></StyleMap><Folder><name>点数据</name>' + pointKml + '</Folder><Folder><name>线数据</name>' + lineKml+'</Folder></Document></kml>';
+                console.log(kml);
+                var blob = new Blob([kml], { type: "text/plain;charset=utf-8" });
+                if (currentprojectinfo) {
+
+                }
+                var name = "kml数据";
+                try {
+                    if (currentprojectinfo.xmmc) {
+                        name = currentprojectinfo.xmmc;
+                    } else {
+                        //hGaizhengshu = parseFloat(modleInfo.gcgz);
+                    }
+                } catch (e) {
+                    console.log(e.message);//sojson is undefined
+                }
+                saveAs(blob, name + ".kml");
+                layer.close(loadingceindex);
+                return false;
+            });
             //置顶
             layer.setTop(layero);
             $(window).resize();
+
 
         }
         , end: function () {
@@ -1130,6 +1208,7 @@ function LoadBiaozhunListLayer() {
                 }
                 else {
                     var biaoZhuList = JSON.parse(data);
+                    kmlList = biaoZhuList;
                     console.log(biaoZhuList);
                     biaoLayers = [];//图层列表数据
 
@@ -1807,11 +1886,17 @@ function LoadBiaozhunListLayer() {
                                             , closeBtn: 1
                                             , maxmin: true
                                             , moveOut: true
-                                            //, content: '<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="addpointinfoform"><div class="layui-form-item" style="margin-top:15px;margin-right:5px;"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">点名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" autocomplete="off" readonly="readonly" class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">描述</label><div class="layui-input-block"><input type="text" name="remarks" lay-verify="required" autocomplete="off" readonly="readonly"  class="layui-input" style="width:160px;"  /></div></div></div></div></div></form><div><table class="layui-hide" id="postion-view" lay-filter=postion-view"></table></div>'
-                                            , content: '<div style="height:500px;"><table class="layui-hide" id="rockPoint-views" lay-filter=postion-view"></table></div>'
+                                            , content: '<div style="height:500px;"><table class="layui-hide" id="rockPoint-views" lay-filter=postion-view"></table>	<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="dowminfoform">	 <div class="layui-form-item" style="margin-top:15px">	 <div style="position:absolute;right:15px;">	 <button type="submit" class="layui-btn" lay-submit="" lay-filter="dowminfosubmit" style="width:100px">下载</button>	</div>	</div>	</form></div>'
                                             , zIndex: layer.zIndex
                                             , success: function (layero) {
                                                 layer.setTop(layero);
+                                                console.log(data);
+                                                form.on('submit(dowminfosubmit)', function (temp) {
+                                                    console.log(data);
+                                                    var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+                                                    layer.close(loadingceindex);
+                                                    return false;
+                                                });
 
 
                                                 //展示项目设备总览
@@ -2106,7 +2191,7 @@ var dianBiaozhuHtml =
     + "				 <span style='margin-left: 20px;'>标注面</span>			"
     + "			</div>						"
     + "			<div class='layui-tab-item'>						"
-    + "				 <div id='prjbiaoZhuList'></div>			"
+    + "				 <div id='prjbiaoZhuList'></div>	<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='dowminfoform'>	 <div class='layui-form-item' style='margin-top:15px'>	 <div style='position:absolute;right:15px;'>	 <button type='submit' class='layui-btn' lay-submit='' lay-filter='dowminfosubmit' style='width:100px'>下载kml</button>	</div>	</div>	</form>			"
     + "			</div>						"
     + "		</div>							"
     + "		<div  class='yanseShoiw'>							"

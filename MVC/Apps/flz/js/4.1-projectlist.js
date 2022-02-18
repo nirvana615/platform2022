@@ -186,7 +186,8 @@ function ProjectNodeClick(obj) {
                 currentprojectdisastertype = JSON.stringify(obj.data.type);                         //更新当前项目灾害类型
                 document.getElementById("currentproject").style.visibility = "visible";
                 document.getElementById("currentproject").innerHTML = "<option>" + JSON.stringify(obj.data.xmmc).replace(/\"/g, "") + "</option><option>清除当前项目</option>";
-
+                currentprojectinfo = obj.data;
+                console.log(currentprojectinfo);
                 //TODO请求项目相关信息（图层、监测点）
                 //GetProjectMonitor(currentprojectid);
 
@@ -198,7 +199,7 @@ function ProjectNodeClick(obj) {
                             document.getElementById("currentproject").innerHTML = "";
                             document.getElementById("currentproject").style.visibility = "hidden";
                             currentprojectid = null;
-
+                            currentprojectinfo = null;
                             CloseAllLayer();                               //关闭弹出图层
                             viewer.entities.removeAll();
                             AddEntitiesInViewer(projectentities);
