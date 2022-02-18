@@ -858,7 +858,7 @@ function polygonMark() {
 
             if (handler != undefined) {
                 handler.destroy();
-                layer.msg("结束线标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                layer.msg("结束面标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 unselectAddMarkTypeOperate();
                 markType = "";
                 markwidget_tipsentity.label.show = false;
@@ -1420,6 +1420,8 @@ function projectMarkNodeOperate(obj) {
 //项目标注树节点click
 function projectMarkNodeClick(obj) {
     if (obj.data.children != undefined) {
+        var divtemp = document.getElementById("projectmarkinfo");
+        divtemp.innerHTML = "";
         if (obj.data.type == "markproject") {
             var entities_temp1 = [];
             for (var i in obj.data.children) {
@@ -1492,10 +1494,10 @@ function projectMarkNodeClick(obj) {
             viewer.zoomTo(viewer.entities.getById("project_mark_point_" + obj.data.id), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 20));
         }
         else if (obj.data.type == "PROJECTMARKLINE") {
-            viewer.zoomTo(viewer.entities.getById("project_mark_line_" + obj.data.id), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 20));
+            viewer.zoomTo(viewer.entities.getById("project_mark_line_" + obj.data.id));
         }
         else if (obj.data.type == "PROJECTMARKPOLYGON") {
-            viewer.zoomTo(viewer.entities.getById("project_mark_polygon_" + obj.data.id), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 20));            
+            viewer.zoomTo(viewer.entities.getById("project_mark_polygon_" + obj.data.id));            
         }
 
     }
@@ -1860,9 +1862,11 @@ function addMarkNodeOperate(obj) {
 //点击新增标注节点click
 function addMarkLayerClick(obj) {
 
-    if (JSON.stringify(obj.data.id) == undefined) {
-        //表示父节点则无操作
-    } else {
+    if (obj.data.children != undefined) {
+        var divtemp = document.getElementById("addmarkinfo");
+        divtemp.innerHTML = "";
+    }
+    else {
         markClickType = obj.data.marktype;
         if (markClickType == "point") {
             updateAddMarkInfoPanel(obj.data);
@@ -1872,7 +1876,7 @@ function addMarkLayerClick(obj) {
             updateAddMarkInfoPanel(obj.data);
             var entities_temp = [];
             for (var i in JSON.parse(obj.data.position)) {
-                var entity = viewer.entities.getById(obj.data.id +"_"+ i)
+                var entity = viewer.entities.getById(obj.data.id + "_" + i)
                 if (entity != undefined) {
                     entities_temp.push(entity);
                 }
@@ -1895,6 +1899,8 @@ function addMarkLayerClick(obj) {
             }
         }
     }
+
+   
     markClickType = "";
 
 };
