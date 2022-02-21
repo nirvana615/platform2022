@@ -104,9 +104,9 @@ namespace SERVICE.Controllers
                         }
                         else
                         {
-                            //企业微信推送消息
-                            string message = "任务提醒：\n" + user.AliasName + ":创建'" + rwmc + "'新的模型任务，请及时处理!";
-                            //企业微信推送地址
+                            //企业微信推送消息                       
+                            string message = "### 您有1个新任务，请及时处理! \n" + @">采集人员：" + @"<font color=\""warning\"">" + user.AliasName + @"</font>" + "\n" + @">任务名称：" + @"<font color=\""warning\"">" + rwmc + @"</font>";
+
                             string webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=130fddf5-d47c-413a-836e-f095571998c9";
 
                             if (!string.IsNullOrEmpty(message))
