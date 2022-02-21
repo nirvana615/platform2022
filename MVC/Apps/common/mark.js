@@ -10,7 +10,7 @@
  * 必须先创建handler变量
  */
 var markwidgetlayerindex = null;//标绘弹出层
-var markpointlayerindex = null;//点标注弹出层
+var markpointlayerindex = null;//点标注弹出层 
 var marklinelayerindex = null;//线标注弹出层
 var markpolygonlayerindex = null;//面标注弹出层
 var markstylelayerindex = null;//样式弹出层
@@ -458,10 +458,19 @@ function pointMark() {
                         pointmarktemp.color = currentmarkcolor;//
                         pointmarktemp.info = "null";//
                         markAddPointLayerList.push(pointmarktemp);
-                        updateAddMarkInfoPanel(pointmarktemp);
                         tree.reload('addmarklayerTree', {
                             data: markAddLayer
                         });
+                        updateAddMarkInfo(pointmarktemp);
+
+                        if (handler != undefined) {
+                            handler.destroy();
+                            layer.msg("结束点标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            unselectAddMarkTypeOperate();
+                            markType = "";
+                            markwidget_tipsentity.label.show = false;
+                            markwidget_tipsentity.label.text = "";
+                        }
                     }
                 }
             }
@@ -469,15 +478,33 @@ function pointMark() {
 
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-        //右击结束标注
-     handler.setInputAction(function () {
-            if (handler != undefined) {
-                handler.destroy();
-                layer.msg("结束点标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                unselectAddMarkTypeOperate();
-                markType = "";
+    //移动（操作提示）
+    handler.setInputAction(function (move) {
+        var pickedOject;
+        if (viewer.scene.globe.depthTestAgainstTerrain) {
+            pickedOject = viewer.scene.pickPosition(move.endPosition);//地形标注
+        } else {
+            pickedOject = viewer.scene.pick(move.endPosition);//模型标注
+        }
+
+        if (pickedOject != undefined) {
+            var position = viewer.scene.pickPosition(move.endPosition);
+            if (position != undefined) {
+                markwidget_tipsentity.position = position;
+                markwidget_tipsentity.label.show = true;
+                markwidget_tipsentity.label.text = "左键点击开始标注";              
             }
-        }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+            else {
+                markwidget_tipsentity.label.show = false;
+                markwidget_tipsentity.label.text = "";
+            }
+        }
+        else {
+            markwidget_tipsentity.label.show = false;
+            markwidget_tipsentity.label.text = "";
+        }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
 };
 //线标注
 function lineMark() {
@@ -579,7 +606,7 @@ function lineMark() {
                     text: "线标注",
                     showBackground: true,
                     backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                    font: '18px Times New Roman',
+                    font: '16px Times New Roman',
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                     verticalOrigin: Cesium.VerticalOrigin.CENTER,
                     disableDepthTestDistance: Number.POSITIVE_INFINITY,
@@ -602,11 +629,8 @@ function lineMark() {
             linemarktemp.color = currentmarkcolor;//
             linemarktemp.info = "null";//
             markAddLineLayerList.push(linemarktemp);
-            updateAddMarkInfoPanel(linemarktemp);
-            tree.reload('addmarklayerTree', {
-                data: markAddLayer
-            });
-   
+ 
+            updateAddMarkInfo(linemarktemp);
             markwidget_temppoints = [];
             markwidget_tempentities = [];        
 
@@ -758,11 +782,10 @@ function polygonMark() {
 
         if (markwidget_temppoints.length > 2) {
             var polygonmarktemp = new Object;
-
             //绘制多边形闭合线
            var tempentity_linelast=viewer.entities.add({
                name: "add_mark_polygon" + NewGuid(),
-               id: polygonid + "_" + lineorder,
+               id: polygonid + "_last",
                polyline: {
                     positions: [markwidget_temppoints[0], markwidget_temppoints[markwidget_temppoints.length - 1]],
                     width: 2,
@@ -800,7 +823,7 @@ function polygonMark() {
                     text: "面标注",
                     showBackground: true,
                     backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                    font: '18px Times New Roman',
+                    font: '16px Times New Roman',
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                     verticalOrigin: Cesium.VerticalOrigin.CENTER,
                     disableDepthTestDistance: Number.POSITIVE_INFINITY,
@@ -824,19 +847,20 @@ function polygonMark() {
             polygonmarktemp.color = currentmarkcolor;
             polygonmarktemp.info = "null";
             markAddPolygonLayerList.push(polygonmarktemp);
-            updateAddMarkInfoPanel(polygonmarktemp);
+            tree.reload('addmarklayerTree', {
+                data: markAddLayer
+            });
+            updateAddMarkInfo(polygonmarktemp);
 
             if (handler != undefined) {
                 handler.destroy();
-                layer.msg("结束线标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                layer.msg("结束面标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 unselectAddMarkTypeOperate();
                 markType = "";
                 markwidget_tipsentity.label.show = false;
                 markwidget_tipsentity.label.text = "";
             }
-            tree.reload('addmarklayerTree', {
-                data: markAddLayer
-            });
+
 
             markwidget_temppoints = [];
             markwidget_tempentities = [];
@@ -924,7 +948,10 @@ function polygonMark() {
 
 };
 
-
+$(document).bind("contextmenu", function (e) {
+    e.preventDefault();
+    return false;
+})
 //保存标注
 function saveMark() {
     var postmarks = [];
@@ -1066,7 +1093,7 @@ function updateProjectMarkInfoPanel(markobject) {
 
         });
     }
-}
+};
 
 
 
@@ -1377,8 +1404,8 @@ function projectMarkNodeOperate(obj) {
         //删除项目
         $.ajax({
             url: servicesurl + "/api/Mark/DeleteMark", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
-            success: function (data) {
-                layer.msg(data.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            success: function (data) {                
+                layer.msg(JSON.parse(data).message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 markProjectLayer = [];
                 loadMarkProjectLayersTree();
                 removeProjectMarkEntity(obj.data.id, obj.data.type);
@@ -1386,10 +1413,12 @@ function projectMarkNodeOperate(obj) {
         });
 
     }
-}
+};
 //项目标注树节点click
 function projectMarkNodeClick(obj) {
     if (obj.data.children != undefined) {
+        var divtemp = document.getElementById("projectmarkinfo");
+        divtemp.innerHTML = "";
         if (obj.data.type == "markproject") {
             var entities_temp1 = [];
             for (var i in obj.data.children) {
@@ -1462,14 +1491,14 @@ function projectMarkNodeClick(obj) {
             viewer.zoomTo(viewer.entities.getById("project_mark_point_" + obj.data.id), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 20));
         }
         else if (obj.data.type == "PROJECTMARKLINE") {
-            viewer.zoomTo(viewer.entities.getById("project_mark_line_" + obj.data.id), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 20));
+            viewer.zoomTo(viewer.entities.getById("project_mark_line_" + obj.data.id));
         }
         else if (obj.data.type == "PROJECTMARKPOLYGON") {
-            viewer.zoomTo(viewer.entities.getById("project_mark_polygon_" + obj.data.id), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 20));            
+            viewer.zoomTo(viewer.entities.getById("project_mark_polygon_" + obj.data.id));            
         }
 
     }
-}
+};
 //项目标注树节点check
 function projectMarkNodeChecked(obj) {
     //选中
@@ -1549,267 +1578,14 @@ function projectMarkNodeChecked(obj) {
         }
 
     }
-}
+};
 
 
 
 //项目标注节点操作(编辑、删除)
 function addMarkNodeOperate(obj) {
     if (obj.type === 'update') {
-        markClickType = obj.data.marktype;
-        currentmarkcolor = obj.data.color;
-        if (markClickType == "point") {
-            updateAddMarkInfoPanel(obj.data);
-            currentmarkpointstyle = obj.data.style;
-            markupdatelayerinex = layer.open({
-                type: 1
-                , title: ['信息修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-                , area: ['300px', '300px']
-                , shade: 0.3
-                , offset: 'auto'
-                , closeBtn: 1
-                , maxmin: true
-                , moveOut: true
-                , content: '<!--项目点标注信息修改面板--><form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="updatemarkinfoform">    <div class="layui-form-item" style="margin-top:15px;margin-left:20px;">        <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6" style="margin-left:20px;">                <div class="grid-demo grid-demo-bg1">             <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称</label>                        <div class="layui-input-block">                            <input type="text" id ="updateprojectmark_name"name="name" class="layui-input" style="width: 120px;margin-left: -70px;">                           </div>                     </div>                    </div>                  </div>         <div class="layui-row" style="margin-top: 20px;">        <div class="layui-col-md6" style="margin-left:20px;">            <div class="grid-demo">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">颜色</label>                    <div class="layui-input-block">                    <div class="layui-input-inline" style="width: 100px;">                        <input type="text" name="color" value="" style="width: 120px;margin-left: -70px;" placeholder="请选择颜色" class="layui-input" id="mark-project-color-select">                            <div class="layui-input-inline" style="left: -11px;width: 100px;">                            <div id="mark-project-color" class="layui-inline" style="   margin-top: -50px;   margin-left: 60px;">                            </div>                        </div>                    </div>                </div>            </div>        </div>    </div>          <div class="layui-row" style="margin-top: 5px;">               <div class="layui-col-md6" style="margin-left:20px;">               <div class="grid-demo">                     <label class="layui-form-label" style="padding-left: 0px;text-align: left;">样式</label>                     <div class="layui-input-block">                    <button type="button" id="mark-point-style-select" onclick="selectMarkStyle(this)" class="layui-btn layui-btn-radius layui-btn-primary layui-btn-s" style="border-radius: 5px;width: 120px;margin-left: -70px;">                        选择样式<i class="layui-icon layui-icon-down layui-font-14"></i>                    </button>                    <div id="projectmark_style">                    </div>                </div>                  </div>              </div>     </div>    </div>       <div class="layui-form-item" style="margin-top:25px">          <div style="position:absolute;right:30px;">                <button type="reset" class="layui-btn layui-btn-primary" style="width:100px;margin-right: 20px;">重置</button>             <button type="submit" class="layui-btn" lay-submit="" lay-filter="updateinfosubmit" style="width:100px">提交</button>              </div>      </div></form>'
-                , zIndex: layer.zIndex
-                , success: function (layero) {
-                    //置顶
-                    layer.setTop(layero);
-                    //选择颜色
-                    layui.colorpicker.render({
-                        elem: '#mark-project-color'
-                        , color: '#cc0000'
-                        , format: 'RGB'
-                        , predefine: true
-                        , alpha: true
-                        , done: function (color) {
-                            $('#mark-project-color-select').val(color);//向隐藏域赋值
-                            currentmarkcolor = color;
-                            color || this.change(color); //清空时执行 change
-                        }
-                        , change: function (color) {
-                        }
-                    });
-                    var divtemp = document.getElementById("projectmark_style");
-                    divtemp.innerHTML = '<img id="projectmarkpointinfo_style" src="" style=" width: 25px; height: 25px;margin: 5px;margin-top: -50px;margin-left: 80px;" class="markPointStyle">';
-                    changeMarkImageColor("projectmarkpointinfo_style", obj.data.style, obj.data.color);
-
-                    layui.form.render();
-                    form.val("updatemarkinfoform", {
-                        "name": obj.data.title
-                        , "color": obj.data.color
-                    });
-
-                    form.on('submit(updatemarkinfoform)', function (postdata) {
-                        layer.close(markupdatelayerinex);
-                        removeAddMarkEntity(obj.data);
-                        for (var i in markAddLayer) {
-                            for (var j in markAddLayer[i].children) {                        
-                                if (markAddLayer[i].children[j].id == obj.data.id) {
-                                    markAddLayer[i].children[j].title = document.getElementById("updateprojectmark_name").value;;
-                                    markAddLayer[i].children[j].style = currentmarkpointstyle;
-                                    markAddLayer[i].children[j].color = currentmarkcolor                                       ;
-                                    uploadAddMarkEntity(markAddLayer[i].children[j]);
-                                    updateAddMarkInfoPanel(markAddLayer[i].children[j]);
-                                    break;
-                                }                                
-                            }
-                        }
-                        tree.reload('addmarklayerTree', {
-                            data: markAddLayer
-                        });
-                        return false;
-                    });
-
-                }
-                , end: function () {
-                    layer.close(markupdatelayerinex);
-                    layer.close(markstylelayerindex);
-                    currentmarkcolor = '#cc0000';
-                    currentmarkpointstyle = '../Resources/img/mark/img_mark_P1.png';//默认点标注样式
-                    markClickType = "";
-
-
-                }
-            });
-        }
-        else if (markClickType == "line") {
-            updateAddMarkInfoPanel(obj.data);
-            currentmarklinestylesrc = JSON.parse(obj.data.style).stylesrc;
-            currentmarklinewidth = JSON.parse(obj.data.style).width;
-            markupdatelayerinex = layer.open({
-                type: 1
-                , title: ['信息修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-                , area: ['300px', '300px']
-                , shade: 0.3
-                , offset: 'auto'
-                , closeBtn: 1
-                , maxmin: true
-                , moveOut: true
-                , content: '<!--项目线标注信息修改面板--><form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="updatemarkinfoform">    <div class="layui-form-item" style="margin-top:15px;margin-left:20px;">        <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6" style="margin-left:20px;">                <div class="grid-demo grid-demo-bg1">             <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称</label>                        <div class="layui-input-block">                            <input type="text" id ="updateprojectmark_name"name="name" class="layui-input" style="width: 120px;margin-left: -70px;">                           </div>                     </div>                    </div>                  </div>         <div class="layui-row" style="margin-top: 20px;">        <div class="layui-col-md6" style="margin-left:20px;">            <div class="grid-demo">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">颜色</label>                    <div class="layui-input-block">                    <div class="layui-input-inline" style="width: 100px;">                        <input type="text" name="color" value="" style="width: 120px;margin-left: -70px;" placeholder="请选择颜色" class="layui-input" id="mark-project-color-select">                            <div class="layui-input-inline" style="left: -11px;width: 100px;">                            <div id="mark-project-color" class="layui-inline" style="   margin-top: -50px;   margin-left: 60px;">                            </div>                        </div>                    </div>                </div>            </div>        </div>    </div>          <div class="layui-row" style="margin-top: 5px;">               <div class="layui-col-md6" style="margin-left:20px;">               <div class="grid-demo">                     <label class="layui-form-label" style="padding-left: 0px;text-align: left;">样式</label>                     <div class="layui-input-block">                    <button type="button" id="mark-point-style-select" onclick="selectMarkStyle(this)" class="layui-btn layui-btn-radius layui-btn-primary layui-btn-s" style="border-radius: 5px;width: 120px;margin-left: -70px;">                        选择样式<i class="layui-icon layui-icon-down layui-font-14"></i>                    </button>                    <div id="projectmark_style">                    </div>                </div>                  </div>              </div>     </div>    </div>       <div class="layui-form-item" style="margin-top:25px">          <div style="position:absolute;right:30px;">                <button type="reset" class="layui-btn layui-btn-primary" style="width:100px;margin-right: 20px;">重置</button>             <button type="submit" class="layui-btn" lay-submit="" lay-filter="updateinfosubmit" style="width:100px">提交</button>              </div>      </div></form>'
-                , zIndex: layer.zIndex
-                , success: function (layero) {
-                    //置顶
-                    layer.setTop(layero);
-                    //选择颜色
-                    layui.colorpicker.render({
-                        elem: '#mark-project-color'
-                        , color: '#cc0000'
-                        , format: 'RGB'
-                        , predefine: true
-                        , alpha: true
-                        , done: function (color) {
-                            $('#mark-project-color-select').val(color);//向隐藏域赋值
-                            currentmarkcolor = color;
-                            color || this.change(color); //清空时执行 change
-                        }
-                        , change: function (color) {
-                        }
-                    });
-
-                    var divtemp = document.getElementById("projectmark_style");
-                    divtemp.innerHTML = '<img id="projectmarkpointinfo_style" src="" style=" width: 25px; height: 25px;margin: 5px;margin-top: -50px;margin-left: 80px;" class="markPointStyle">';
-                    changeMarkImageColor("projectmarkpointinfo_style", currentmarklinestylesrc, obj.data.color);
-
-
-
-                    layui.form.render();
-                    form.val("updatemarkinfoform", {
-                        "name": obj.data.title
-                        , "color": obj.data.color
-                    });
-
-                    form.on('submit(updatemarkinfoform)', function (postdata) {
-                        var style = {};
-                        style.stylesrc = currentmarklinestylesrc;
-                        style.width = currentmarklinewidth;
-                        layer.close(markupdatelayerinex);
-                        removeAddMarkEntity(obj.data);
-                        for (var i in markAddLayer) {
-                            for (var j in markAddLayer[i].children) {
-                                if (markAddLayer[i].children[j].id == obj.data.id) {
-                                    markAddLayer[i].children[j].title = document.getElementById("updateprojectmark_name").value;;
-                                    markAddLayer[i].children[j].style = JSON.stringify(style);
-                                    markAddLayer[i].children[j].color = currentmarkcolor;
-                                    uploadAddMarkEntity(markAddLayer[i].children[j]);
-                                    updateAddMarkInfoPanel(markAddLayer[i].children[j]);
-                                    break;
-                                }
-                            }
-                        }
-                        tree.reload('addmarklayerTree', {
-                            data: markAddLayer
-                        });          
-                        return false;
-                    });
-
-                }
-                , end: function () {
-                    layer.close(markupdatelayerinex);
-                    layer.close(markstylelayerindex);
-                    currentmarkcolor = '#cc0000';
-                    currentmarklinestylesrc = '../Resources/img/mark/img_mark_l1.png';//默认线标注样式
-                    currentmarklinewidth = 2;//默认线标注线宽
-                    markClickType = "";
-                }
-            });
-
-
-        }
-        else if (markClickType == "polygon") {
-            updateAddMarkInfoPanel(obj.data);         
-            currentmarkpolygonstylesrc = JSON.parse(obj.data.style).stylesrc;
-            currentmarkpolygonwidth = JSON.parse(obj.data.style).width;
-            removeAddMarkEntity(obj.data);
-            markupdatelayerinex = layer.open({
-                type: 1
-                , title: ['信息修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-                , area: ['300px', '300px']
-                , shade: 0.3
-                , offset: 'auto'
-                , closeBtn: 1
-                , maxmin: true
-                , moveOut: true
-                , content: '<!--项目线标注信息修改面板--><form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="updatemarkinfoform">    <div class="layui-form-item" style="margin-top:15px;margin-left:20px;">        <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6" style="margin-left:20px;">                <div class="grid-demo grid-demo-bg1">             <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称</label>                        <div class="layui-input-block">                            <input type="text" id ="updateprojectmark_name"name="name" class="layui-input" style="width: 120px;margin-left: -70px;">                           </div>                     </div>                    </div>                  </div>         <div class="layui-row" style="margin-top: 20px;">        <div class="layui-col-md6" style="margin-left:20px;">            <div class="grid-demo">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">颜色</label>                    <div class="layui-input-block">                    <div class="layui-input-inline" style="width: 100px;">                        <input type="text" name="color" value="" style="width: 120px;margin-left: -70px;" placeholder="请选择颜色" class="layui-input" id="mark-project-color-select">                            <div class="layui-input-inline" style="left: -11px;width: 100px;">                            <div id="mark-project-color" class="layui-inline" style="   margin-top: -50px;   margin-left: 60px;">                            </div>                        </div>                    </div>                </div>            </div>        </div>    </div>          <div class="layui-row" style="margin-top: 5px;">               <div class="layui-col-md6" style="margin-left:20px;">               <div class="grid-demo">                     <label class="layui-form-label" style="padding-left: 0px;text-align: left;">样式</label>                     <div class="layui-input-block">                    <button type="button" id="mark-point-style-select" onclick="selectMarkStyle(this)" class="layui-btn layui-btn-radius layui-btn-primary layui-btn-s" style="border-radius: 5px;width: 120px;margin-left: -70px;">                        选择样式<i class="layui-icon layui-icon-down layui-font-14"></i>                    </button>                    <div id="projectmark_style">                    </div>                </div>                  </div>              </div>     </div>    </div>       <div class="layui-form-item" style="margin-top:25px">          <div style="position:absolute;right:30px;">                <button type="reset" class="layui-btn layui-btn-primary" style="width:100px;margin-right: 20px;">重置</button>             <button type="submit" class="layui-btn" lay-submit="" lay-filter="updateinfosubmit" style="width:100px">提交</button>              </div>      </div></form>'
-                , zIndex: layer.zIndex
-                , success: function (layero) {
-                    //置顶
-                    layer.setTop(layero);
-                    //选择颜色
-                    layui.colorpicker.render({
-                        elem: '#mark-project-color'
-                        , color: '#cc0000'
-                        , format: 'RGB'
-                        , predefine: true
-                        , alpha: true
-                        , done: function (color) {
-                            $('#mark-project-color-select').val(color);//向隐藏域赋值
-                            currentmarkcolor = color;
-                            color || this.change(color); //清空时执行 change
-                        }
-                        , change: function (color) {
-                        }
-                    });
-
-                    var divtemp = document.getElementById("projectmark_style");
-                    divtemp.innerHTML = '<img id="projectmarkpointinfo_style" src="" style=" width: 25px; height: 25px;margin: 5px;margin-top: -50px;margin-left: 80px;" class="markPointStyle">';
-                    changeMarkImageColor("projectmarkpointinfo_style", currentmarkpolygonstylesrc, obj.data.color);
-
-
-
-                    layui.form.render();
-                    form.val("updatemarkinfoform", {
-                        "name": obj.data.title
-                        , "color": obj.data.color
-                    });
-
-                    form.on('submit(updatemarkinfoform)', function (postdata) {
-                        var style = {};
-                        style.stylesrc = currentmarkpolygonstylesrc;
-                        style.width = currentmarkpolygonwidth;
-                        layer.close(markupdatelayerinex);
-                        for (var i in markAddLayer) {
-                            for (var j in markAddLayer[i].children) {
-                                if (markAddLayer[i].children[j].id == obj.data.id) {
-                                    removeAddMarkEntity(markAddLayer[i].children[j]);
-                                    //viewer.entities.removeById(obj.data.id + "_" + i);
-                                    //viewer.entities.removeById(obj.data.id + "_" + i + "_point");
-                                    //viewer.entities.removeById(data.id + "_label");
-
-                                    markAddLayer[i].children[j].title = document.getElementById("updateprojectmark_name").value;
-
-                                    markAddLayer[i].children[j].style = JSON.stringify(style);
-                                    markAddLayer[i].children[j].color = currentmarkcolor;
-                                    updateAddMarkInfoPanel(markAddLayer[i].children[j]);
-                                    break;
-                                }
-                            }
-                        }
-                        tree.reload('addmarklayerTree', {
-                            data: markAddLayer
-                        });
-                        return false;
-                    });
-
-
-
-
-                    
-
-                }
-                , end: function () {
-                    layer.close(markupdatelayerinex);
-                    layer.close(markstylelayerindex);
-                    currentmarkcolor = '#cc0000';
-                    currentmarkpolygonstylesrc = '../Resources/img/mark/img_mark_A1.png';//默认线标注样式
-                    currentmarkpolygonwidth = 2;//默认线标注线宽
-                    markClickType = "";
-
-                }
-            });
-
-        }
-
+        updateAddMarkInfo(obj.data);
     }
     else if (obj.type === 'del') {
         removeAddMarkEntity(obj.data);
@@ -1830,9 +1606,11 @@ function addMarkNodeOperate(obj) {
 //点击新增标注节点click
 function addMarkLayerClick(obj) {
 
-    if (JSON.stringify(obj.data.id) == undefined) {
-        //表示父节点则无操作
-    } else {
+    if (obj.data.children != undefined) {
+        var divtemp = document.getElementById("addmarkinfo");
+        divtemp.innerHTML = "";
+    }
+    else {
         markClickType = obj.data.marktype;
         if (markClickType == "point") {
             updateAddMarkInfoPanel(obj.data);
@@ -1842,7 +1620,7 @@ function addMarkLayerClick(obj) {
             updateAddMarkInfoPanel(obj.data);
             var entities_temp = [];
             for (var i in JSON.parse(obj.data.position)) {
-                var entity = viewer.entities.getById(obj.data.id +"_"+ i)
+                var entity = viewer.entities.getById(obj.data.id + "_" + i)
                 if (entity != undefined) {
                     entities_temp.push(entity);
                 }
@@ -1865,6 +1643,8 @@ function addMarkLayerClick(obj) {
             }
         }
     }
+
+   
     markClickType = "";
 
 };
@@ -1911,6 +1691,257 @@ function addMarkLayerCheck(obj) {
 };
 
 
+//新增标注修改信息
+function updateAddMarkInfo(data) {
+    markClickType = data.marktype;
+    currentmarkcolor = data.color;
+    if (markClickType == "point") {
+        updateAddMarkInfoPanel(data);
+        currentmarkpointstyle = data.style;
+        markupdatelayerinex = layer.open({
+            type: 1
+            , title: ['信息修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+            , area: ['300px', '300px']
+            , shade: 0.3
+            , offset: 'auto'
+            , closeBtn: 1
+            , maxmin: true
+            , moveOut: true
+            , content: '<!--项目点标注信息修改面板--><form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="updatemarkinfoform">    <div class="layui-form-item" style="margin-top:15px;margin-left:20px;">        <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6" style="margin-left:20px;">                <div class="grid-demo grid-demo-bg1">             <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称</label>                        <div class="layui-input-block">                            <input type="text" id ="updateprojectmark_name"name="name" class="layui-input" style="width: 120px;margin-left: -70px;">                           </div>                     </div>                    </div>                  </div>         <div class="layui-row" style="margin-top: 20px;">        <div class="layui-col-md6" style="margin-left:20px;">            <div class="grid-demo">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">颜色</label>                    <div class="layui-input-block">                    <div class="layui-input-inline" style="width: 100px;">                        <input type="text" name="color" value="" style="width: 120px;margin-left: -70px;" placeholder="请选择颜色" class="layui-input" id="mark-project-color-select">                            <div class="layui-input-inline" style="left: -11px;width: 100px;">                            <div id="mark-project-color" class="layui-inline" style="   margin-top: -50px;   margin-left: 60px;">                            </div>                        </div>                    </div>                </div>            </div>        </div>    </div>          <div class="layui-row" style="margin-top: 5px;">               <div class="layui-col-md6" style="margin-left:20px;">               <div class="grid-demo">                     <label class="layui-form-label" style="padding-left: 0px;text-align: left;">样式</label>                     <div class="layui-input-block">                    <button type="button" id="mark-point-style-select" onclick="selectMarkStyle(this)" class="layui-btn layui-btn-radius layui-btn-primary layui-btn-s" style="border-radius: 5px;width: 120px;margin-left: -70px;">                        选择样式<i class="layui-icon layui-icon-down layui-font-14"></i>                    </button>                    <div id="projectmark_style">                    </div>                </div>                  </div>              </div>     </div>    </div>       <div class="layui-form-item" style="margin-top:25px">          <div style="position:absolute;right:30px;">                <button type="reset" class="layui-btn layui-btn-primary" style="width:100px;margin-right: 20px;">重置</button>             <button type="submit" class="layui-btn" lay-submit="" lay-filter="updateinfosubmit" style="width:100px">提交</button>              </div>      </div></form>'
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                //置顶
+                layer.setTop(layero);
+                //选择颜色
+                layui.colorpicker.render({
+                    elem: '#mark-project-color'
+                    , color: '#cc0000'
+                    , format: 'RGB'
+                    , predefine: true
+                    , alpha: true
+                    , done: function (color) {
+                        $('#mark-project-color-select').val(color);//向隐藏域赋值
+                        currentmarkcolor = color;
+                        color || this.change(color); //清空时执行 change
+                    }
+                    , change: function (color) {
+                    }
+                });
+                var divtemp = document.getElementById("projectmark_style");
+                divtemp.innerHTML = '<img id="projectmarkpointinfo_style" src="" style=" width: 25px; height: 25px;margin: 5px;margin-top: -50px;margin-left: 80px;" class="markPointStyle">';
+                changeMarkImageColor("projectmarkpointinfo_style", data.style, data.color);
+
+                layui.form.render();
+                form.val("updatemarkinfoform", {
+                    "name": data.title
+                    , "color": data.color
+                });
+
+                form.on('submit(updatemarkinfoform)', function (postdata) {
+
+                    layer.close(markupdatelayerinex);
+                    removeAddMarkEntity(data);
+                    for (var i in markAddLayer) {
+                        for (var j in markAddLayer[i].children) {
+                            if (markAddLayer[i].children[j].id == data.id) {
+                                markAddLayer[i].children[j].title = document.getElementById("updateprojectmark_name").value;;
+                                markAddLayer[i].children[j].style = currentmarkpointstyle;
+                                markAddLayer[i].children[j].color = currentmarkcolor;
+                                uploadAddMarkEntity(markAddLayer[i].children[j]);
+                                updateAddMarkInfoPanel(markAddLayer[i].children[j]);
+                                break;
+                            }
+                        }
+                    }
+                    tree.reload('addmarklayerTree', {
+                        data: markAddLayer
+                    });
+                    return false;
+                });
+
+            }
+            , end: function () {
+                layer.close(markupdatelayerinex);
+                layer.close(markstylelayerindex);
+                currentmarkcolor = '#cc0000';
+                currentmarkpointstyle = '../Resources/img/mark/img_mark_P1.png';//默认点标注样式
+                markClickType = "";
+
+
+            }
+        });
+    }
+    else if (markClickType == "line") {
+        updateAddMarkInfoPanel(data);
+        currentmarklinestylesrc = JSON.parse(data.style).stylesrc;
+        currentmarklinewidth = JSON.parse(data.style).width;
+        markupdatelayerinex = layer.open({
+            type: 1
+            , title: ['信息修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+            , area: ['300px', '300px']
+            , shade: 0.3
+            , offset: 'auto'
+            , closeBtn: 1
+            , maxmin: true
+            , moveOut: true
+            , content: '<!--项目线标注信息修改面板--><form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="updatemarkinfoform">    <div class="layui-form-item" style="margin-top:15px;margin-left:20px;">        <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6" style="margin-left:20px;">                <div class="grid-demo grid-demo-bg1">             <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称</label>                        <div class="layui-input-block">                            <input type="text" id ="updateprojectmark_name"name="name" class="layui-input" style="width: 120px;margin-left: -70px;">                           </div>                     </div>                    </div>                  </div>         <div class="layui-row" style="margin-top: 20px;">        <div class="layui-col-md6" style="margin-left:20px;">            <div class="grid-demo">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">颜色</label>                    <div class="layui-input-block">                    <div class="layui-input-inline" style="width: 100px;">                        <input type="text" name="color" value="" style="width: 120px;margin-left: -70px;" placeholder="请选择颜色" class="layui-input" id="mark-project-color-select">                            <div class="layui-input-inline" style="left: -11px;width: 100px;">                            <div id="mark-project-color" class="layui-inline" style="   margin-top: -50px;   margin-left: 60px;">                            </div>                        </div>                    </div>                </div>            </div>        </div>    </div>          <div class="layui-row" style="margin-top: 5px;">               <div class="layui-col-md6" style="margin-left:20px;">               <div class="grid-demo">                     <label class="layui-form-label" style="padding-left: 0px;text-align: left;">样式</label>                     <div class="layui-input-block">                    <button type="button" id="mark-point-style-select" onclick="selectMarkStyle(this)" class="layui-btn layui-btn-radius layui-btn-primary layui-btn-s" style="border-radius: 5px;width: 120px;margin-left: -70px;">                        选择样式<i class="layui-icon layui-icon-down layui-font-14"></i>                    </button>                    <div id="projectmark_style">                    </div>                </div>                  </div>              </div>     </div>    </div>       <div class="layui-form-item" style="margin-top:25px">          <div style="position:absolute;right:30px;">                <button type="reset" class="layui-btn layui-btn-primary" style="width:100px;margin-right: 20px;">重置</button>             <button type="submit" class="layui-btn" lay-submit="" lay-filter="updateinfosubmit" style="width:100px">提交</button>              </div>      </div></form>'
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                //置顶
+                layer.setTop(layero);
+                //选择颜色
+                layui.colorpicker.render({
+                    elem: '#mark-project-color'
+                    , color: '#cc0000'
+                    , format: 'RGB'
+                    , predefine: true
+                    , alpha: true
+                    , done: function (color) {
+                        $('#mark-project-color-select').val(color);//向隐藏域赋值
+                        currentmarkcolor = color;
+                        color || this.change(color); //清空时执行 change
+                    }
+                    , change: function (color) {
+                    }
+                });
+
+                var divtemp = document.getElementById("projectmark_style");
+                divtemp.innerHTML = '<img id="projectmarkpointinfo_style" src="" style=" width: 25px; height: 25px;margin: 5px;margin-top: -50px;margin-left: 80px;" class="markPointStyle">';
+                changeMarkImageColor("projectmarkpointinfo_style", currentmarklinestylesrc, data.color);
+
+
+
+                layui.form.render();
+                form.val("updatemarkinfoform", {
+                    "name": data.title
+                    , "color": data.color
+                });
+
+                form.on('submit(updatemarkinfoform)', function (postdata) {
+                    var style = {};
+                    style.stylesrc = currentmarklinestylesrc;
+                    style.width = currentmarklinewidth;
+                    layer.close(markupdatelayerinex);
+                    removeAddMarkEntity(data);
+                    for (var i in markAddLayer) {
+                        for (var j in markAddLayer[i].children) {
+                            if (markAddLayer[i].children[j].id == data.id) {
+                                markAddLayer[i].children[j].title = document.getElementById("updateprojectmark_name").value;;
+                                markAddLayer[i].children[j].style = JSON.stringify(style);
+                                markAddLayer[i].children[j].color = currentmarkcolor;
+                                uploadAddMarkEntity(markAddLayer[i].children[j]);
+                                updateAddMarkInfoPanel(markAddLayer[i].children[j]);
+                                break;
+                            }
+                        }
+                    }
+                    tree.reload('addmarklayerTree', {
+                        data: markAddLayer
+                    });
+                    return false;
+                });
+
+            }
+            , end: function () {
+                layer.close(markupdatelayerinex);
+                layer.close(markstylelayerindex);
+                currentmarkcolor = '#cc0000';
+                currentmarklinestylesrc = '../Resources/img/mark/img_mark_l1.png';//默认线标注样式
+                currentmarklinewidth = 2;//默认线标注线宽
+                markClickType = "";
+            }
+        });
+
+
+    }
+    else if (markClickType == "polygon") {
+        updateAddMarkInfoPanel(data);
+        currentmarkpolygonstylesrc = JSON.parse(data.style).stylesrc;
+        currentmarkpolygonwidth = JSON.parse(data.style).width;
+        markupdatelayerinex = layer.open({
+            type: 1
+            , title: ['信息修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+            , area: ['300px', '300px']
+            , shade: 0.3
+            , offset: 'auto'
+            , closeBtn: 1
+            , maxmin: true
+            , moveOut: true
+            , content: '<!--项目线标注信息修改面板--><form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="updatemarkinfoform">    <div class="layui-form-item" style="margin-top:15px;margin-left:20px;">        <div class="layui-row" style="margin-top: 10px;">        <div class="layui-col-md6" style="margin-left:20px;">                <div class="grid-demo grid-demo-bg1">             <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称</label>                        <div class="layui-input-block">                            <input type="text" id ="updateprojectmark_name"name="name" class="layui-input" style="width: 120px;margin-left: -70px;">                           </div>                     </div>                    </div>                  </div>         <div class="layui-row" style="margin-top: 20px;">        <div class="layui-col-md6" style="margin-left:20px;">            <div class="grid-demo">                <label class="layui-form-label" style="padding-left: 0px;text-align: left;">颜色</label>                    <div class="layui-input-block">                    <div class="layui-input-inline" style="width: 100px;">                        <input type="text" name="color" value="" style="width: 120px;margin-left: -70px;" placeholder="请选择颜色" class="layui-input" id="mark-project-color-select">                            <div class="layui-input-inline" style="left: -11px;width: 100px;">                            <div id="mark-project-color" class="layui-inline" style="   margin-top: -50px;   margin-left: 60px;">                            </div>                        </div>                    </div>                </div>            </div>        </div>    </div>          <div class="layui-row" style="margin-top: 5px;">               <div class="layui-col-md6" style="margin-left:20px;">               <div class="grid-demo">                     <label class="layui-form-label" style="padding-left: 0px;text-align: left;">样式</label>                     <div class="layui-input-block">                    <button type="button" id="mark-point-style-select" onclick="selectMarkStyle(this)" class="layui-btn layui-btn-radius layui-btn-primary layui-btn-s" style="border-radius: 5px;width: 120px;margin-left: -70px;">                        选择样式<i class="layui-icon layui-icon-down layui-font-14"></i>                    </button>                    <div id="projectmark_style">                    </div>                </div>                  </div>              </div>     </div>    </div>       <div class="layui-form-item" style="margin-top:25px">          <div style="position:absolute;right:30px;">                <button type="reset" class="layui-btn layui-btn-primary" style="width:100px;margin-right: 20px;">重置</button>             <button type="submit" class="layui-btn" lay-submit="" lay-filter="updateinfosubmit" style="width:100px">提交</button>              </div>      </div></form>'
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                //置顶
+                layer.setTop(layero);
+                //选择颜色
+                layui.colorpicker.render({
+                    elem: '#mark-project-color'
+                    , color: '#cc0000'
+                    , format: 'RGB'
+                    , predefine: true
+                    , alpha: true
+                    , done: function (color) {
+                        $('#mark-project-color-select').val(color);//向隐藏域赋值
+                        currentmarkcolor = color;
+                        color || this.change(color); //清空时执行 change
+                    }
+                    , change: function (color) {
+                    }
+                });
+
+                var divtemp = document.getElementById("projectmark_style");
+                divtemp.innerHTML = '<img id="projectmarkpointinfo_style" src="" style=" width: 25px; height: 25px;margin: 5px;margin-top: -50px;margin-left: 80px;" class="markPointStyle">';
+                changeMarkImageColor("projectmarkpointinfo_style", currentmarkpolygonstylesrc, data.color);
+
+
+
+                layui.form.render();
+                form.val("updatemarkinfoform", {
+                    "name": data.title
+                    , "color": data.color
+                });
+
+                form.on('submit(updatemarkinfoform)', function (postdata) {
+                    var style = {};
+                    style.stylesrc = currentmarkpolygonstylesrc;
+                    style.width = currentmarkpolygonwidth;
+                    for (var i in markAddLayer) {
+                        for (var j in markAddLayer[i].children) {
+                            if (markAddLayer[i].children[j].id == data.id) {
+                                removeAddMarkEntity(markAddLayer[i].children[j]);
+                                markAddLayer[i].children[j].title = document.getElementById("updateprojectmark_name").value;
+                                markAddLayer[i].children[j].style = JSON.stringify(style);
+                                markAddLayer[i].children[j].color = currentmarkcolor;
+                                updateAddMarkInfoPanel(markAddLayer[i].children[j]);
+                                break;
+                            }
+                        }
+                    }
+                    layer.close(markupdatelayerinex);
+                    return false;
+
+                });
+
+
+
+
+
+
+            }
+            , end: function () {
+                layer.close(markupdatelayerinex);
+                layer.close(markstylelayerindex);
+                currentmarkcolor = '#cc0000';
+                currentmarkpolygonstylesrc = '../Resources/img/mark/img_mark_A1.png';//默认线标注样式
+                currentmarkpolygonwidth = 2;//默认线标注线宽
+                markClickType = "";
+                tree.reload('addmarklayerTree', {
+                    data: markAddLayer
+                });
+            }
+        });
+
+    }
+};
 
 
 //选中标注方式操作
@@ -2089,10 +2120,10 @@ function selectMarkStyle(obj) {
             }
         });
     }
-}
+};
 //关闭选择样式的页面
 function getMarkStyle() {
-    if (markType == "1" || markClickType == "PROJECTMARKLINE") {
+    if (markType == "1" || markClickType == "PROJECTMARKLINE" || markClickType == "line") {
         //获取线宽
         var width = document.getElementById("addmarkline_width").value;
         if (width !== "") {
@@ -2100,7 +2131,7 @@ function getMarkStyle() {
         }
 
     }
-    else if ((markType == "2" || markClickType == "PROJECTMARKPOLYGON")) {
+    else if ((markType == "2" || markClickType == "PROJECTMARKPOLYGON" || markClickType == "polygon")) {
         //获取线宽
         var width = document.getElementById("addmarkpolygon_width").value;
         if (width !== "") {
@@ -2108,7 +2139,7 @@ function getMarkStyle() {
         }
     }
     layer.close(markstylelayerindex);
-}
+};
 
 
 
@@ -2139,20 +2170,20 @@ function uploadProjectPointMarkEntity(id, title, position,style,color) {
             position: JSON.parse(position),
             label: {
                 text: title,
-                font: '18px Times New Roman',
+                font: '16px Times New Roman',
                 showBackground: true,
                 backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                 fillColor: Cesium.Color.AQUA,
                 horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                 verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                pixelOffset: new Cesium.Cartesian2(0.0, -45),
                 eyeOffset: new Cesium.Cartesian3(0, 0, -10),
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
                 scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
             }
         });
     }
-}
+};
 //地图加载项目线标注
 function uploadProjectLineMarkEntity(id, title,position,style, color) {
     var entity = viewer.entities.getById("project_mark_line_" + id);
@@ -2191,7 +2222,7 @@ function uploadProjectLineMarkEntity(id, title,position,style, color) {
             position: JSON.parse(position)[0],
             label: {
                 text: title,
-                font: '18px Times New Roman',
+                font: '16px Times New Roman',
                 showBackground: true,
                 backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                 fillColor: Cesium.Color.AQUA,
@@ -2204,7 +2235,7 @@ function uploadProjectLineMarkEntity(id, title,position,style, color) {
             }
         });
     }
-}
+};
 //地图加载项目面标注
 function uploadProjectPolygonMarkEntity(id, title, position,style, color) {
     var entity = viewer.entities.getById("project_mark_polygon_" + id);
@@ -2242,7 +2273,7 @@ function uploadProjectPolygonMarkEntity(id, title, position,style, color) {
             position: JSON.parse(position)[0],
             label: {
                 text: title,
-                font: '18px Times New Roman',
+                font: '16px Times New Roman',
                 showBackground: true,
                 backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                 fillColor: Cesium.Color.AQUA,
@@ -2255,7 +2286,7 @@ function uploadProjectPolygonMarkEntity(id, title, position,style, color) {
             }
         });
     }
-}
+};
 //地图移除项目标注
 function removeProjectMarkEntity(id, type) {
     if (type== "PROJECTMARKPOINT") {
@@ -2270,7 +2301,7 @@ function removeProjectMarkEntity(id, type) {
         viewer.entities.removeById("project_mark_polygon_" + id);
         viewer.entities.removeById("project_mark_polygon_label_" + id);
     }
-}
+};
 
 //地图加载新增标注
 function uploadAddMarkEntity(data) {
@@ -2304,12 +2335,12 @@ function uploadAddMarkEntity(data) {
                 position: JSON.parse(data.position),
                 label: {
                     text: data.title,
-                    font: '18px Times New Roman',
+                    font: '16px Times New Roman',
                     showBackground: true,
                     backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                     verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                    pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                    pixelOffset: new Cesium.Cartesian2(0.0, -45),
                     eyeOffset: new Cesium.Cartesian3(0, 0, -10),
                     disableDepthTestDistance: Number.POSITIVE_INFINITY,
                     scaleByDistance: new Cesium.NearFarScalar(20000, 1, 8000000, 0),
@@ -2372,7 +2403,7 @@ function uploadAddMarkEntity(data) {
                 position: new Cesium.Cartesian3(xsum / lineposition.length, ysum / lineposition.length, zsum / lineposition.length),
                 label: {
                     text: data.title,
-                    font: '18px Times New Roman',
+                    font: '16px Times New Roman',
                     showBackground: true,
                     backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
@@ -2389,9 +2420,11 @@ function uploadAddMarkEntity(data) {
         }
     }
     else if (data.marktype == "polygon") {
+        var tempentity_linelast = viewer.entities.getById(data.id + "_last");
         for (var i in lineposition) {
             var num = parseInt(i) + 1;
-            var tempentity_line = viewer.entities.getById(data.id + "_" + num);;
+            var tempentity_line = viewer.entities.getById(data.id + "_" + i);
+
             var tempentity_point = viewer.entities.getById(data.id + "_" + i + "_point");
             if (tempentity_point == undefined) {
                 tempentity_point = viewer.entities.add({
@@ -2406,7 +2439,7 @@ function uploadAddMarkEntity(data) {
                 });
             }
             if ((tempentity_line == undefined) && (num < lineposition.length)) {
-                var tempentity_line = viewer.entities.add({
+                    tempentity_line = viewer.entities.add({
                     id: data.id + "_" + i,
                     name: data.id + "_" + i,
                     polyline: {
@@ -2429,10 +2462,11 @@ function uploadAddMarkEntity(data) {
                     });
                 }
             }
-            if ((tempentity_line == undefined) && (num = lineposition.length)) {
-                var tempentity_line = viewer.entities.add({
-                    id: data.id + "_" + i,
-                    name: data.id + "_" + i,
+            if ((tempentity_linelast == undefined) && (num = lineposition.length)) {
+
+                   tempentity_linelast = viewer.entities.add({
+                    id: data.id + "_last",
+                    name: data.id + "_" + num,
                     polyline: {
                         positions: [lineposition[i], lineposition[0]],
                         width: JSON.parse(data.style).width,
@@ -2445,10 +2479,10 @@ function uploadAddMarkEntity(data) {
 
                 var styletemp = JSON.parse(data.style).stylesrc.replace('../Resources/img/mark/', '').replace('.png', '');
                 if (styletemp == "img_mark_A1") {
-                    tempentity_line.polyline.material = Cesium.Color.fromCssColorString(data.color);
+                    tempentity_linelast.polyline.material = Cesium.Color.fromCssColorString(data.color);
                 }
                 else if (styletemp == "img_mark_A2") {
-                    tempentity_line.polyline.material = new Cesium.PolylineDashMaterialProperty({
+                    tempentity_linelast.polyline.material = new Cesium.PolylineDashMaterialProperty({
                         color: Cesium.Color.fromCssColorString(data.color)
                     });
                 }
@@ -2466,7 +2500,7 @@ function uploadAddMarkEntity(data) {
                 position: new Cesium.Cartesian3(xsum / lineposition.length, ysum / lineposition.length, zsum / lineposition.length),
                 label: {
                     text: data.title,
-                    font: '18px Times New Roman',
+                    font: '16px Times New Roman',
                     showBackground: true,
                     backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
@@ -2479,7 +2513,7 @@ function uploadAddMarkEntity(data) {
             });
         }
     }
-}
+};
 //地图移除新增标注
 function removeAddMarkEntity(data) {
     if (data.marktype == "point") {
@@ -2495,9 +2529,12 @@ function removeAddMarkEntity(data) {
         viewer.entities.removeById(data.id + "_label");
     }
     else if (data.marktype == "polygon") {
-        for (var i in JSON.parse(data.position)) {
+
+        for (var i in JSON.parse(data.position)) {            
+            viewer.entities.removeById(data.id + "_last");
             viewer.entities.removeById(data.id + "_" + i);
             viewer.entities.removeById(data.id + "_" + i + "_point");
+
         }
         viewer.entities.removeById(data.id + "_label");
     }
