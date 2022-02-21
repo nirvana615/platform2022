@@ -105,9 +105,26 @@ function LoadNewModelTask() {
                     }
 
                 });
-
-
-
+                // 监听排序实现全表排序（解决分页后只能单页排序问题）
+                table.on('sort(newtasktable_Pending)', function (obj) {
+                    let type = obj.type,
+                        field = obj.field,
+                        data = newmodeltasktablePending,//表格的配置Data
+                        thisData = [];
+                    if (type === 'asc') { //升序
+                        thisData = layui.sort(data, field);
+                    } else if (type === 'desc') { //降序
+                        thisData = layui.sort(data, field, true);
+                    } else { //清除排序
+                        thisData = layui.sort(data, tables.config.indexName);
+                    }
+                    //将排好序的Data重载表格
+                    table.reload('newTaskTablePendingid', {
+                        initSort: obj,
+                        data: thisData
+                    });
+                });
+               
 
                 //正在处理任务
                 var newTaskTableProcessing = table.render({
@@ -139,26 +156,27 @@ function LoadNewModelTask() {
                     if (layEvent === 'Processing_detail') {
                         ModelTaskInfo(obj.data.Id, "view");
                     }
-                    //else if (layEvent === 'Processing_edit') {
-                    //    layer.confirm('是否确认完成?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
-                    //        //同步更新缓存对应的值
-                    //        data.RWZT = "已完成";
-                    //        for (var i in newmodeltasktableProcess) {
-                    //            if (newmodeltasktableProcess[i].Id == data.Id) {
-                    //                newmodeltasktableProcess.splice(i, 1);
-                    //            }
-                    //        }
-                    //        newmodeltasktableFinished.unshift(data);
-                    //        newTaskTableProcessing.reload({ id: 'newTaskTableProcessingid', data: newmodeltasktableProcess });
-                    //        newTaskTableFinished.reload({ id: 'newTaskTableFinishedid', data: newmodeltasktableFinished });
-                    //        obj.del();
-                    //        //更新任务状态
-                    //        UpdateModelTaskStatus(data);
-                    //        layer.close(index);
-                    //    });
-                    //}
+                    
                 });
-
+                // 监听排序实现全表排序（解决分页后只能单页排序问题）
+                table.on('sort(newtasktable_Processing)', function (obj) {
+                    let type = obj.type,
+                        field = obj.field,
+                        data = newmodeltasktableProcess,//表格的配置Data
+                        thisData = [];
+                    if (type === 'asc') { //升序
+                        thisData = layui.sort(data, field);
+                    } else if (type === 'desc') { //降序
+                        thisData = layui.sort(data, field, true);
+                    } else { //清除排序
+                        thisData = layui.sort(data, tables.config.indexName);
+                    }
+                    //将排好序的Data重载表格
+                    table.reload('newTaskTableProcessingid', {
+                        initSort: obj,
+                        data: thisData
+                    });
+                });
 
 
 
@@ -194,8 +212,27 @@ function LoadNewModelTask() {
 
                     }
                 });
+                // 监听排序实现全表排序（解决分页后只能单页排序问题）
+                table.on('sort(newtasktable_Finished)', function (obj) {
+                    let type = obj.type,
+                        field = obj.field,
+                        data = newmodeltasktableFinished,//表格的配置Data
+                        thisData = [];
+                    if (type === 'asc') { //升序
+                        thisData = layui.sort(data, field);
+                    } else if (type === 'desc') { //降序
+                        thisData = layui.sort(data, field, true);
+                    } else { //清除排序
+                        thisData = layui.sort(data, tables.config.indexName);
+                    }
+                    //将排好序的Data重载表格
+                    table.reload('newTaskTableFinishedid', {
+                        initSort: obj,
+                        data: thisData
+                    });
+                });
 
-
+               
 
                 //翻译任务状态
                 if (rwzts.length > 0) {

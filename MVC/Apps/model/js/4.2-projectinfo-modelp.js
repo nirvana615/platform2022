@@ -6,7 +6,7 @@ function ModelProjectInfo(id, style) {
             modelprojectinfoviewlayerindex = layer.open({
                 type: 1
                 , title: ['查看项目信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['420px', '400px']
+                , area: ['500px', '420px']
                 , shade: 0
                 , offset: 'auto'
                 , closeBtn: 1

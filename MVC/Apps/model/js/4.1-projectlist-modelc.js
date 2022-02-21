@@ -30,7 +30,7 @@ var toIndex = layer.open({
             , customCheckbox: true
             , edit: ['add', 'update', 'del']    //项目操作选项
             , customOperate: true
-            , accordion: true
+            , accordion: false
             , cancelNodeFileIcon: true
             , click: function (obj) {
                 ModelProjectNodeClick(obj);
@@ -40,45 +40,41 @@ var toIndex = layer.open({
             }
             , oncheck: function (obj) {
                 if (obj.checked) {
+                    
                     if (obj.data.type == "task") {
-
+                        
                         //for (var i in modelprojectlist) {
                         //    for (var j in modelprojectlist[i].children) {
                         //        for (var k in modelprojectlist[i].children[j].children) {
-                        //            if (modelprojectlist[i].children[j].children[k].id == obj.data.id) {
-                        //                modelprojectlist[i].children[j].children[k].checked = true;
-                        //                modelprojectlist[i].spread = true;
-                        //                modelprojectlist[i].children[j].spread = true;
-                        //                modelprojectlist[i].children[j].children[k].spread = true;
-
+                        //            if (obj.data.id!=modelprojectlist[i].children[j].children[k].id) {
+                        //                modelprojectlist[i].children[j].children[k].checked = false;
                         //            }
                         //            else {
-
-                        //                modelprojectlist[i].children[j].children[k].checked = false;
-
+                        //                modelprojectlist[i].children[j].children[k].checked = true;
+                        //                modelprojectlist[i].children[j].spread = true;
+                        //                modelprojectlist[i].spread = true;
                         //            }
                         //        }
                         //    }
                         //}
-
                         LoadModel(obj.data);//加载模型
-                        DelEntitiesInViewer(projectentities);//移除项目标注图标
-
+                        DelEntitiesInViewer(projectentities);//移除项目标注图标 
+                        
                     }
-                    //重载项目树：将项目列表数据ModelProjectlist给data
-                    //tree.reload('areaprojectlistid', {
-                    //        data: modelprojectlist
-                    //    });    
+                    //tree.reload('areaprojectlistid', { data: modelprojectlist });
+                    //tree.setChecked('areaprojectlistid', obj.data.id); //单个勾选 id 为 1 的节点
+                    
                 }
                 else {
+                    viewer.scene.globe.depthTestAgainstTerrain = measurewidget_depthTestAgainstTerrain;//还原当前深度检测值
                     viewer.scene.primitives.remove(curtileset);
                     AddEntitiesInViewer(projectentities);
                     curtileset = null;
                 }
-
+                
             }
         });
-
+       
         //时间树
         tree.render({
             elem: '#projectbyyear'
@@ -701,28 +697,57 @@ function ModelProjectNodeOperate(obj) {
         //删除
         //编辑
         if (obj.data.type == 'project') {
-            //项目删除操作del                      
-            $.ajax({
-                url: servicesurl + "/api/ModelProject/DeleteModelProject", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
-                success: function (data) {
-                    var result = JSON.parse(data);
-                    //layer.msg(result.data, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    //TODO————清除项目位置及标注
-                    //刷新项目列表
-                    GetUserAllModelProjects();
-                    ////欲删除项目未选定为当前项目，或当前项目为空。
-                    if (obj.data.id == currentprojectid) {
-                        document.getElementById("currentproject").innerHTML = "";
-                        document.getElementById("currentproject").style.visibility = "hidden";
-                        currentprojectid = null;
-                        CloseAllLayer();                               //关闭弹出图层
-                    }
-                    if ((modelprojectinfoviewlayerindex != null) || (modelprojectinfoeditlayerindex != null) || (modelprojectinfoaddlayerindex != null)) {
-                        CloseAllLayer();
-                    }
-                }, datatype: "json"
-            })
+            //项目删除操作del   
+            if (obj.data.children.length >= 1) {
+                layer.confirm('当前项目存在子任务，是否确定删除?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                    $.ajax({
+                        url: servicesurl + "/api/ModelProject/DeleteModelProject", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
+                        success: function (data) {
+                            var result = JSON.parse(data);
+                            //layer.msg(result.data, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            //TODO————清除项目位置及标注
+                            //刷新项目列表
+                            GetUserAllModelProjects();
+                            ////欲删除项目未选定为当前项目，或当前项目为空。
+                            if (obj.data.id == currentprojectid) {
+                                document.getElementById("currentproject").innerHTML = "";
+                                document.getElementById("currentproject").style.visibility = "hidden";
+                                currentprojectid = null;
+                                CloseAllLayer();                               //关闭弹出图层
+                            }
+                            if ((modelprojectinfoviewlayerindex != null) || (modelprojectinfoeditlayerindex != null) || (modelprojectinfoaddlayerindex != null)) {
+                                CloseAllLayer();
+                            }
+                        }, datatype: "json"
+                    })
+                });
+
+            }
+            else {
+                $.ajax({
+                    url: servicesurl + "/api/ModelProject/DeleteModelProject", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
+                    success: function (data) {
+                        var result = JSON.parse(data);
+                        //layer.msg(result.data, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        //TODO————清除项目位置及标注
+                        //刷新项目列表
+                        GetUserAllModelProjects();
+                        ////欲删除项目未选定为当前项目，或当前项目为空。
+                        if (obj.data.id == currentprojectid) {
+                            document.getElementById("currentproject").innerHTML = "";
+                            document.getElementById("currentproject").style.visibility = "hidden";
+                            currentprojectid = null;
+                            CloseAllLayer();                               //关闭弹出图层
+                        }
+                        if ((modelprojectinfoviewlayerindex != null) || (modelprojectinfoeditlayerindex != null) || (modelprojectinfoaddlayerindex != null)) {
+                            CloseAllLayer();
+                        }
+                    }, datatype: "json"
+                })
+            }
+            
         }
         else if (obj.data.type == 'task') {
             //任务删除操作

@@ -389,7 +389,7 @@ namespace SERVICE.Controllers
                         int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_map_data_user SET ztm={0} WHERE userid={1} AND projectid={2} AND ztm={3}", (int)MODEL.Enum.State.NoUse, userid, delmodelprojectidlist[i], (int)MODEL.Enum.State.InUse));
                         if (updatecount != 1)
                         {
-                            return "更新用户授权（删除原有授权）失败！";
+                            return "更新用户授权失败！";
                         }
                     }
                 }

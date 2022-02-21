@@ -387,7 +387,7 @@ namespace SERVICE.Controllers
                 List<ModelTask> newModelTaskPending = new List<ModelTask>();//存储待处理任务
                 List<ModelTask> newModelTaskFinished = new List<ModelTask>();//存储已完成任务
                 List<ModelTask> newModelTaskProcess = new List<ModelTask>();//存储已完成任务
-                string modelTasks = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
+                string modelTasks = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE ztm={0} ORDER BY rwcjsj DESC", (int)MODEL.Enum.State.InUse));
                 if (!string.IsNullOrEmpty(modelTasks))
                 {
                     string[] maprows = modelTasks.Split(new char[] { COM.ConstHelper.rowSplit });
