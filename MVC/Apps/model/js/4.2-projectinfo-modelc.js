@@ -1,5 +1,6 @@
 ﻿var newprojectentities = [];
-
+//记录当前深度检测值
+var depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
 
 
 //地图选点
@@ -36,9 +37,7 @@ function mapPosition(type) {
                     , "model_zxwd_add": latitude.toFixed(6)
                 });
             }
-            //记录当前深度检测值
-            depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
-
+           
             viewer.scene.globe.depthTestAgainstTerrain = true;
             if (Cesium.defined(position)) {
                 var projectentity = new Cesium.Entity({
@@ -66,8 +65,7 @@ function mapPosition(type) {
 
 
 };
-//记录当前深度检测值
-depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
+
 //清除地图选点
 function ClearMapPoint() {
     //删除地图选点标注

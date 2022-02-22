@@ -45,6 +45,8 @@ var curtileset = null;//当前模型
 
 var projectlayerlistlayerindex = null  //标注窗口
 
+//记录当前深度检测值
+measurewidget_depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
 /*
  * 图标常量
  */

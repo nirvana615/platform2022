@@ -82,7 +82,7 @@ function LoadNewModelTask() {
                     var data = obj.data //获得当前行数据
                         , layEvent = obj.event; //获得 lay-event 对应的值
                     if (layEvent === 'Pending_detail') {
-                        ModelTaskInfo(obj.data.Id, "view");
+                        ModelTaskInfo(obj.data.Id, "taskview");
                     }
                     else if (layEvent === 'Pending_edit') {
                         layer.confirm('是否开始处理?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
@@ -154,7 +154,7 @@ function LoadNewModelTask() {
                     var data = obj.data //获得当前行数据
                         , layEvent = obj.event; //获得 lay-event 对应的值
                     if (layEvent === 'Processing_detail') {
-                        ModelTaskInfo(obj.data.Id, "view");
+                        ModelTaskInfo(obj.data.Id, "taskview");
                     }
                     
                 });
@@ -208,7 +208,7 @@ function LoadNewModelTask() {
                     var data = obj.data //获得当前行数据
                         , layEvent = obj.event; //获得 lay-event 对应的值
                     if (layEvent === 'Finished_detail') {
-                        ModelTaskInfo(obj.data.Id, "view");
+                        ModelTaskInfo(obj.data.Id, "taskview");
 
                     }
                 });

@@ -11,7 +11,7 @@ function LoadLocalToolLayer() {
         , closeBtn: 1
         , maxmin: true
         , moveOut: true
-        , content: ''
+        , content: '待扩展......'
         , zIndex: layer.zIndex
         , success: function (layero) {
             //置顶

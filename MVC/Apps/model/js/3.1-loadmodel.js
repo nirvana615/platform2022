@@ -5,11 +5,7 @@
 function LoadModel(obj) {
     var modelurl = datasurl + "/AllModel/" + obj.path;
     //删除上一个模型（保证只有一个模型）
-
-    //记录当前深度检测值
-    measurewidget_depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
-    viewer.scene.globe.depthTestAgainstTerrain = false;
-
+    
     if (curtileset != null) {
         viewer.scene.primitives.remove(curtileset);
     }
@@ -29,4 +25,8 @@ function LoadModel(obj) {
     } else {
         viewer.zoomTo(curtileset);
     }
+
+    //测量工具测量类型（跳转到模型测量）
+    viewer.scene.globe.depthTestAgainstTerrain = false;
+    elem.tabChange('measureway', 'modelMeasure');//模型测量
 };
