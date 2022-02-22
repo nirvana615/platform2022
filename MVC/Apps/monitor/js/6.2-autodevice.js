@@ -295,7 +295,7 @@ function FuConstPhotoData(projectid) {
         , toolbar: false
         , totalRow: false
         , cols: [[
-            { field: 'Id', title: 'ID', width: 123, fixed: 'left', align: "center" }
+            { type: 'numbers', title: '序号', width: 123, fixed: 'left', align: "center" }
             , { field: 'JCDMC', title: '监测点名称', width: 280, align: "center" }
             , { field: 'JCDBH', title: '监测点编号', width: 180, align: "center" }
             , {
@@ -515,7 +515,6 @@ function FuConstPhotoData(projectid) {
         url: servicesurl + "/api/Monitor/GetMonitor", type: "get", data: { "id": projectid, "cookie": document.cookie },
         success: function (data1) {
             var monitorinfos = JSON.parse(data1);
-            console.log(monitorinfos);
             $.ajax({
                 url: window.parent.servicesurl + "/api/PatrolEquipment/getConstPhotoInfo", type: "get", data: { 'projectId': projectid, 'monitorId': "" },
                 success: function (data) {
@@ -552,19 +551,25 @@ function FuConstPhotoData(projectid) {
                         }
                         MonitorString.photoList = photoList;
                         MonitorString.mointorStatus = mointorStatus;
-                        if (mointorStatus == 1) {
+                        if (mointorStatus >0) {
                             yifangyang++;
-                        } else if (mointorStatus == 2) {
+                        }
+                        if (mointorStatus > 1) {
                             yiWakeng++;
-                        } else if (mointorStatus == 3) {
+                        }
+                        if (mointorStatus > 2) {
                             yiJiaozhu++;
-                        } else if (mointorStatus == 4) {
+                        }
+                        if (mointorStatus > 3) {
                             yiligan++;
-                        } else if (mointorStatus == 5) {
+                        }
+                        if (mointorStatus > 4) {
                             yitiaoshi++;
-                        } else if (mointorStatus == 6) {
+                        }
+                        if (mointorStatus > 5) {
                             yiWancheng++;
                         }
+                   
                         MonitorStringList.push(MonitorString);
                     }
                     
@@ -633,7 +638,7 @@ function FuRoadPhotoData(projectid) {
         , toolbar: false
         , totalRow: false
         , cols: [[
-            { field: 'id', title: 'ID', width: 123, fixed: 'left', align: "center" }
+            { type: 'numbers', title: '序号', width: 123, fixed: 'left', align: "center" }
             , { field: 'name', title: '道路名称', width: 200, align: "center" }
             , { field: 'roadLength', title: '道路长度', width: 180, align: "center" }
             , { field: 'patrolTime', title: '开路时间', width: 150, align: "center", }
@@ -747,7 +752,7 @@ function FuArrivalPhotoData(projectid) {
         , toolbar: false
         , totalRow: false
         , cols: [[
-            { field: 'id', title: 'ID', width: 123, fixed: 'left', align: "center" }
+            { type: 'numbers', title: '序号', width: 123, fixed: 'left', align: "center" }
             , { field: 'projectName', title: '项目名称', width: 200, align: "center" }
             , { field: 'roadLength', title: '设备数量', width: 180, align: "center" }
             , { field: 'patrolTime', title: '到场时间', width: 150, align: "center", }
@@ -861,9 +866,9 @@ function FuErCiPhotoData(projectid) {
         , toolbar: false
         , totalRow: false
         , cols: [[
-            { field: 'id', title: 'ID', width: 123, fixed: 'left', align: "center" }
+            { type: 'numbers', title: '序号', width: 123, fixed: 'left', align: "center" }
             , { field: 'projectName', title: '项目名称', width: 200, align: "center" }
-            , { field: 'monitorId', title: '监测点', width: 150, align: "center" }
+            , { field: 'monitorId', title: '危岩单体', width: 150, align: "center" }
             , { field: 'roadLength', title: '搬运距离', width: 80, align: "center" }
             , { field: 'patrolTime', title: '搬运时间', width: 100, align: "center", }
             , { field: 'roadRec', title: '说明', width: 150, align: "center", }
@@ -955,7 +960,7 @@ function FujianchaPhotoData(projectid) {
         , toolbar: false
         , totalRow: false
         , cols: [[
-            { field: 'id', title: 'ID', width: 123, fixed: 'left', align: "center" }
+            { type: 'numbers', title: '序号', width: 123, fixed: 'left', align: "center" }
             , { field: 'projectName', title: '项目名称', width: 200, align: "center" }
             , { field: 'patrolTime', title: '检查时间', width: 100, align: "center", }
             , { field: 'roadRec', title: '说明', width: 150, align: "center", }
