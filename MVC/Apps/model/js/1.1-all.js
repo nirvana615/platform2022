@@ -5,18 +5,19 @@ var viewer;
 var handler;
 
 
-var tree = layui.tree;              //layui初始化
-var form = layui.form;              //layui初始化
-var table = layui.table;            //layui初始化
-var util = layui.util;              //layui初始化
-var date = layui.laydate;           //layui初始化
-var elem = layui.element;           //layui初始化
-var colorpicker = layui.colorpicker;//
+var tree = layui.tree;
+var form = layui.form;
+var table = layui.table;
+var util = layui.util;
+var date = layui.laydate;
+var elem = layui.element;
+var colorpicker = layui.colorpicker;
 
 
 var modelprojectinfoviewlayerindex = null;                           //项目信息模块（查看）
 var modelprojectinfoaddlayerindex = null;                            //项目信息模块（新建）
 var modelprojectinfoeditlayerindex = null;                           //项目信息模块（编辑）
+
 var modelprojectrightuserlayerindex = null;                          //项目权限模块
 
 var modeltaskinfoviewlayerindex = null;                           //模型信息模块（查看）
@@ -46,7 +47,7 @@ var curtileset = null;//当前模型
 var projectlayerlistlayerindex = null  //标注窗口
 
 //记录当前深度检测值
-measurewidget_depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
+//measurewidget_depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
 /*
  * 图标常量
  */

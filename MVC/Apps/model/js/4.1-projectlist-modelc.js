@@ -4,33 +4,36 @@ var modelprojectlistyear = [];//按时间组织
 var newprojecttype = false;
 
 
-var toIndex = layer.open({
+layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-    , area: ['340px', '90%']
+    , area: ['350px', '90%']
     , shade: 0
     , offset: ['60px', '10px']
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
     , resize: false
-    , content: '<!--项目列表--> <div class="layui-tab layui-tab-brief" lay-filter="projectListTab"> <!--选项卡--> <ul class="layui-tab-title"> <li lay-id="list_area" class="layui-this" style="width:40%;padding-top: 10px;">地区</li> <li lay-id="list_year" style="width:40%;padding-top: 10px;">时间</li> </ul> <!--tree--> <div class="layui-tab-content"> <div class="layui-tab-item layui-show"> <div id="projectbyarea"></div> </div> <div class="layui-tab-item"> <div id="projectbyyear"></div> </div> </div> </div> <!--搜索--> <div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "> <div class="layui-input-inline"> <input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"> </div> <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"> <i class="layui-icon layui-icon-search"></i> </button> </div>'
+    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;"><!--选项卡--><ul class="layui-tab-title"><li lay-id="list_area" class="layui-this" style="width:40%;">地区</li><li lay-id="list_year" style="width:40%;">时间</li></ul><!--tree--><div class="layui-tab-content"><div class="layui-tab-item layui-show"><div id="projectbyarea"></div></div><div class="layui-tab-item"><div id="projectbyyear"></div></div></div></div><!--搜索--><div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "><div class="layui-input-inline"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"><i class="layui-icon layui-icon-search"></i></button></div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
 
         //获取用户全部项目信息
         GetUserAllModelProjects();
+
         //地区树
         tree.render({
             elem: '#projectbyarea'
             , id: 'areaprojectlistid'
             , data: []
             , showCheckbox: true
+            , accordion: true
+            , showLine: true
+            , edit: ['add', 'update', 'del']
             , customCheckbox: true
-            , edit: ['add', 'update', 'del']    //项目操作选项
+            , customSpread: false
             , customOperate: true
-            , accordion: false
             , cancelNodeFileIcon: true
             , click: function (obj) {
                 ModelProjectNodeClick(obj);
@@ -40,9 +43,9 @@ var toIndex = layer.open({
             }
             , oncheck: function (obj) {
                 if (obj.checked) {
-                    
+
                     if (obj.data.type == "task") {
-                        
+
                         //for (var i in modelprojectlist) {
                         //    for (var j in modelprojectlist[i].children) {
                         //        for (var k in modelprojectlist[i].children[j].children) {
@@ -59,11 +62,11 @@ var toIndex = layer.open({
                         //}
                         LoadModel(obj.data);//加载模型
                         DelEntitiesInViewer(projectentities);//移除项目标注图标 
-                        
+
                     }
                     //tree.reload('areaprojectlistid', { data: modelprojectlist });
                     //tree.setChecked('areaprojectlistid', obj.data.id); //单个勾选 id 为 1 的节点
-                    
+
                 }
                 else {
                     viewer.scene.globe.depthTestAgainstTerrain = measurewidget_depthTestAgainstTerrain;//还原当前深度检测值
@@ -71,10 +74,10 @@ var toIndex = layer.open({
                     AddEntitiesInViewer(projectentities);
                     curtileset = null;
                 }
-                
+
             }
         });
-       
+
         //时间树
         tree.render({
             elem: '#projectbyyear'
@@ -747,7 +750,7 @@ function ModelProjectNodeOperate(obj) {
                     }, datatype: "json"
                 })
             }
-            
+
         }
         else if (obj.data.type == 'task') {
             //任务删除操作

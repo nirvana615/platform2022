@@ -2,7 +2,7 @@
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-    , area: ['400px', '800px']
+    , area: ['400px', '90%']
     , shade: 0
     , offset: ['83px', '10px']
     , closeBtn: 0
@@ -19,8 +19,8 @@ layer.open({
             , data: []
             , id: 'uav-project-list-treeid'
             , showCheckbox: true
-            , customCheckbox: true
             , edit: ['add', 'update', 'del']
+            , customCheckbox: true
             , customOperate: true
             , customSpread: true
             , accordion: false
@@ -167,9 +167,10 @@ layer.open({
                 }
             }
         });
+        document.getElementById('uav-project-list-tree').parentNode.style.maxHeight = (parseInt(document.getElementById('uav-project-list-tree').parentNode.style.height.replace("px", "")) - 30).toString() + "px";
 
         //获取用户无人机项目信息
-        GetUserUavProject(-1, -1);
+        GetUserUavProject(-1, -1);   
     }
 });
 
