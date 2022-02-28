@@ -25,6 +25,7 @@ layer.open({
             , customSpread: true
             , accordion: false
             , showLine: true
+            , cancelNodeFileIcon: true
             , click: function (obj) {
                 if (obj.data.type == "uavproject") {
                     if (current_project_id == null) {

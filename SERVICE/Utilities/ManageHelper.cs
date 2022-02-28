@@ -360,7 +360,7 @@ namespace SERVICE
                 }
                 else
                 {
-                    Systems sys = ParseManageHelper.ParseSystems(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM manage_system WHERE sysalias={0}", SQLHelper.UpdateString(roleinfo))));
+                    Systems sys = ParseManageHelper.ParseSystems(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM manage_system WHERE syscode=(SELECT syscode FROM manage_role WHERE rolealias={0})", SQLHelper.UpdateString(roleinfo))));
                     if (sys == null)
                     {
                         return CookieHelper.CookieResult.FailureCookkie;
