@@ -2,7 +2,7 @@
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-    , area: ['350px', '600px']
+    , area: ['350px', '700px']
     , shade: 0
     , offset: ['60px', '10px']
     , closeBtn: 0
@@ -161,7 +161,6 @@ function GetUserProjects() {
                         ProjectNodeOperate(obj);
                     }
                 });
-
 
                 projectentities = [];                   //项目位置及标注
                 var bs = [];//纬度集合
@@ -416,7 +415,10 @@ function CloseAllLayer() {
         layer.close(warninganalysislayerindex);
         warninganalysislayerindex = null;
     }
-
+    if (automonitoreltlayerindex != null) {
+        layer.close(automonitoreltlayerindex);
+        automonitoreltlayerindex = null;
+    }
 
     //TODO更多关闭图层
 };

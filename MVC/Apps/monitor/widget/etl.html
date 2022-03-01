@@ -1,23 +1,25 @@
 ﻿<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBriefitem" style="margin:0px;width:100%;height:100%;">
 
-    <ul class="layui-tab-title" style="float: left;width:18%;border-color:white;">
-        <li class="layui-this" style="display: block;">监测设备</li>
-        <li style="display: block;">监测数据库</li>
-        <li style="display: block;">ETL SQL</li>
-        <li style="display: block;">设备厂家</li>
-        <li style="display: block;">设备经销商</li>
+    <ul class="layui-tab-title">
+        <li class="layui-this" style="width:15%;">监测设备</li>
+        <li style="width:15%;">监测数据库</li>
+        <li style="width:15%;">SQL</li>
+        <li style="width:15%;">设备厂家</li>
+        <li style="width:15%;">设备经销商</li>
     </ul>
 
-    <div class="layui-tab-content" style="width:80%;height:98%;float: right;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;">
+    <div class="layui-tab-content" style="margin:0px 0px;padding:0px;">
         <div class="layui-tab-item layui-show">
             <!--监测设备-->
-            <div class="layui-fluid">
+            <div class="layui-fluid" style="padding: 0px;">
                 <div class="layui-card">
-                    <div class="layui-card-body" style="position:relative;">
-                        <div style="padding-bottom:10px;position:absolute;top:16px;left:25px;z-index:99999">
-                            <button id="adddevice" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新监测设备</button>
+                    <div class="layui-card-body" style="position:relative;padding:5px;">
+                        <div style="position:absolute;top:12px;left:10px;z-index:99999">
+                            <button id="adddevice" class="layui-btn layui-btn-primary layui-border-green" data-type="add">添加监测设备</button>
                         </div>
+
                         <table id="LAY-device-manage" lay-filter="LAY-device-manage"></table>
+
                         <script type="text/html" id="table-toolbar-device">
                             <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="deviceview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
                             <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="deviceedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
@@ -30,18 +32,18 @@
 
         <div class="layui-tab-item">
             <!--监测数据库-->
-            <div class="layui-fluid">
+            <div class="layui-fluid" style="padding: 0px;">
                 <div class="layui-card">
-                    <div class="layui-card-body" style="position:relative;">
-                        <div style="padding-bottom: 10px;position:absolute;top:16px;left:25px;z-index:99999">
-                            <button id="adddatabase" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新监测数据库</button>
+                    <div class="layui-card-body" style="position:relative;padding:5px;">
+                        <div style="position:absolute;top:12px;left:10px;z-index:99999">
+                            <button id="adddatabase" class="layui-btn layui-btn-primary layui-border-green" data-type="add">添加监测数据库</button>
                         </div>
 
                         <table id="LAY-database-manage" lay-filter="LAY-database-manage"></table>
+
                         <script type="text/html" id="table-toolbar-database">
                             <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="databaseedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
                             <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="databasedel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
-
                         </script>
                     </div>
                 </div>
@@ -50,18 +52,18 @@
 
         <div class="layui-tab-item">
             <!--ETL SQL-->
-            <div class="layui-fluid">
+            <div class="layui-fluid" style="padding: 0px;">
                 <div class="layui-card">
-                    <div class="layui-card-body" style="position:relative;">
-                        <div style="padding-bottom:10px;position:absolute;top:16px;left:25px;z-index:99999">
-                            <button id="addsql" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新SQL</button>
+                    <div class="layui-card-body" style="position:relative;padding:5px;">
+                        <div style="position:absolute;top:12px;left:10px;z-index:99999">
+                            <button id="addsql" class="layui-btn layui-btn-primary layui-border-green" data-type="add">添加SQL</button>
                         </div>
 
                         <table id="LAY-sql-manage" lay-filter="LAY-sql-manage"></table>
+
                         <script type="text/html" id="table-toolbar-sql">
                             <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="sqledit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
                             <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="sqldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
-
                         </script>
                     </div>
                 </div>
@@ -70,18 +72,17 @@
 
         <div class="layui-tab-item">
             <!--设备厂家-->
-            <div class="layui-fluid">
+            <div class="layui-fluid" style="padding: 0px;">
                 <div class="layui-card">
-                    <div class="layui-card-body" style="position:relative;">
-                        <div style="padding-bottom: 10px;position:absolute;top:16px;left:25px;z-index:99999">
-                            <button id="addfactory" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新设备厂家</button>
+                    <div class="layui-card-body" style="position:relative;padding:5px;">
+                        <div style="position:absolute;top:12px;left:10px;z-index:99999">
+                            <button id="addfactory" class="layui-btn layui-btn-primary layui-border-green" data-type="add">添加设备厂家</button>
                         </div>
 
                         <table id="LAY-factory-manage" lay-filter="LAY-factory-manage"></table>
                         <script type="text/html" id="table-toolbar-factory">
                             <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="factoryedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
                             <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="factorydel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
-
                         </script>
                     </div>
                 </div>
@@ -90,18 +91,18 @@
 
         <div class="layui-tab-item">
             <!--设备经销商-->
-            <div class="layui-fluid">
+            <div class="layui-fluid" style="padding: 0px;">
                 <div class="layui-card">
-                    <div class="layui-card-body" style="position:relative;">
-                        <div style="padding-bottom: 10px;position:absolute;top:16px;left:25px;z-index:99999">
-                            <button id="addsale" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新设备经销商</button>
+                    <div class="layui-card-body" style="position:relative;padding:5px;">
+                        <div style="position:absolute;top:12px;left:10px;z-index:99999">
+                            <button id="addsale" class="layui-btn layui-btn-primary layui-border-green" data-type="add">添加设备经销商</button>
                         </div>
 
                         <table id="LAY-sale-manage" lay-filter="LAY-sale-manage"></table>
+
                         <script type="text/html" id="table-toolbar-sale">
                             <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="saleedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
                             <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="saledel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
-
                         </script>
                     </div>
                 </div>

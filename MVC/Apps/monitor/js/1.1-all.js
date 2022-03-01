@@ -2,13 +2,14 @@
  * 全局对象
  */
 var viewer = null;
+var handler = null;
 
-var tree = layui.tree;              //layui初始化
-var form = layui.form;              //layui初始化
-var table = layui.table;            //layui初始化
-var util = layui.util;              //layui初始化
-var date = layui.laydate;           //layui初始化
-var elem = layui.element;           //layui初始化
+var tree = layui.tree;
+var form = layui.form;
+var table = layui.table;
+var util = layui.util;
+var date = layui.laydate;
+var elem = layui.element;
 
 var projectinfoviewlayerindex = null;                           //项目信息模块（查看）
 var projectinfoaddlayerindex = null;                            //项目信息模块（新建）
@@ -17,6 +18,8 @@ var projectlayerlistlayerindex = null;                          //项目图层�
 var automonitordatalayerindex = null;                           //自动化监测数据可视化模块
 var automonitordevicelayerindex = null;                         //自动化监测设备可视化模块
 var warninganalysislayerindex = null;                           //预警分析模块
+
+var automonitoreltlayerindex = null;                            //自动化监测ETL模块
 
 var headeruserlayerindex = null;                                //用户信息
 var headernoticelayerindex = null;                              //通知消息
@@ -43,23 +46,4 @@ var modleInfo = null;//当前模型数据
  */
 var LANDSLIDEICON = '<span style="margin-left:5px;margin-right:5px;"><img src="../../../Resources/img/map/project_type_landslide.png" style="width:14px;height:14px;"/></span>';
 var ROCKFALLICON = '<span style="margin-left:5px;margin-right:5px;"><img src="../../../Resources/img/map/project_type_rockfall.png" style="width:14px;height:14px;"/></span>';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -1,47 +1,40 @@
 ﻿//ETL widget
-jQuery.support.cors = true;
-var layer = layui.layer;
-var table = layui.table;
-var form = layui.form;
-
 function LoadETLLayer() {
+    if (automonitoreltlayerindex == null) {
+        automonitoreltlayerindex = layer.open({
+            type: 1
+            , title: ['ETL 管理', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+            , area: ['1000px', '620px']
+            , shade: 0
+            , offset: 'auto'
+            , closeBtn: 1
+            , maxmin: true
+            , moveOut: true
+            , content: '<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBriefitem" style="margin:0px;width:100%;height:100%;"><ul class="layui-tab-title"><li class="layui-this" style="width:15%;">监测设备</li><li style="width:15%;">监测数据库</li><li style="width:15%;">SQL</li><li style="width:15%;">设备厂家</li><li style="width:15%;">设备经销商</li></ul><div class="layui-tab-content" style="margin:0px 0px;padding:0px;"><div class="layui-tab-item layui-show"><!--监测设备--><div class="layui-fluid" style="padding: 0px;"><div class="layui-card"><div class="layui-card-body" style="position:relative;padding:5px;"><div style="position:absolute;top:12px;left:10px;z-index:99999"><button id="adddevice" class="layui-btn layui-btn-primary layui-border-green" data-type="add">添加监测设备</button></div><table id="LAY-device-manage" lay-filter="LAY-device-manage"></table><script type="text/html" id="table-toolbar-device"><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="deviceview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="deviceedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="devicedel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div><div class="layui-tab-item"><!--监测数据库--><div class="layui-fluid" style="padding: 0px;"><div class="layui-card"><div class="layui-card-body" style="position:relative;padding:5px;"><div style="position:absolute;top:12px;left:10px;z-index:99999"><button id="adddatabase" class="layui-btn layui-btn-primary layui-border-green" data-type="add">添加监测数据库</button></div><table id="LAY-database-manage" lay-filter="LAY-database-manage"></table><script type="text/html" id="table-toolbar-database"><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="databaseedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="databasedel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div><div class="layui-tab-item"><!--ETL SQL--><div class="layui-fluid" style="padding: 0px;"><div class="layui-card"><div class="layui-card-body" style="position:relative;padding:5px;"><div style="position:absolute;top:12px;left:10px;z-index:99999"><button id="addsql" class="layui-btn layui-btn-primary layui-border-green" data-type="add">添加SQL</button></div><table id="LAY-sql-manage" lay-filter="LAY-sql-manage"></table><script type="text/html" id="table-toolbar-sql"><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="sqledit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="sqldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div><div class="layui-tab-item"><!--设备厂家--><div class="layui-fluid" style="padding: 0px;"><div class="layui-card"><div class="layui-card-body" style="position:relative;padding:5px;"><div style="position:absolute;top:12px;left:10px;z-index:99999"><button id="addfactory" class="layui-btn layui-btn-primary layui-border-green" data-type="add">添加设备厂家</button></div><table id="LAY-factory-manage" lay-filter="LAY-factory-manage"></table><script type="text/html" id="table-toolbar-factory"><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="factoryedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="factorydel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div><div class="layui-tab-item"><!--设备经销商--><div class="layui-fluid" style="padding: 0px;"><div class="layui-card"><div class="layui-card-body" style="position:relative;padding:5px;"><div style="position:absolute;top:12px;left:10px;z-index:99999"><button id="addsale" class="layui-btn layui-btn-primary layui-border-green" data-type="add">添加设备经销商</button></div><table id="LAY-sale-manage" lay-filter="LAY-sale-manage"></table><script type="text/html" id="table-toolbar-sale"><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="saleedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a><a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="saledel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div></div></div>'
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                layer.setTop(layero);
 
 
-    var etllayerindex = layer.open({
-        type: 1
-        , title: ['ETL管理', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-        , area: ['1000px', '800px']
-        , shade: 0
-        , offset: 'auto'
-        , closeBtn: 1
-        , maxmin: true
-        , moveOut: true
-        , content: '<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBriefitem" style="margin:0px;width:100%;height:100%;"><ul class="layui-tab-title" style="float: left;width:18%;border-color:white;"> <li class="layui-this" style="display: block;">监测设备</li> <li style="display: block;">监测数据库</li> <li style="display: block;">ETL SQL</li> <li style="display: block;">设备厂家</li> <li style="display: block;">设备经销商</li> </ul><div class="layui-tab-content" style="width:80%;height:98%;float: right;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;"> <div class="layui-tab-item layui-show"> <!--监测设备--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body" style="position:relative;"> <div style="padding-bottom:10px;position:absolute;top:16px;left:25px;z-index:99999"> <button id="adddevice" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新监测设备</button> </div> <table id="LAY-device-manage" lay-filter="LAY-device-manage"></table> <script type="text/html" id="table-toolbar-device"> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="deviceview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="deviceedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="devicedel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> </script> </div> </div> </div> </div><div class="layui-tab-item"> <!--监测数据库--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body" style="position:relative;"> <div style="padding-bottom: 10px;position:absolute;top:16px;left:25px;z-index:99999"> <button id="adddatabase" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新监测数据库</button> </div><table id="LAY-database-manage" lay-filter="LAY-database-manage"></table> <script type="text/html" id="table-toolbar-database"> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="databaseedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="databasedel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> </div> </div> </div><div class="layui-tab-item"> <!--ETL SQL--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body" style="position:relative;"> <div style="padding-bottom:10px;position:absolute;top:16px;left:25px;z-index:99999"> <button id="addsql" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新SQL</button> </div><table id="LAY-sql-manage" lay-filter="LAY-sql-manage"></table> <script type="text/html" id="table-toolbar-sql"> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="sqledit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="sqldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> </div> </div> </div><div class="layui-tab-item"> <!--设备厂家--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body" style="position:relative;"> <div style="padding-bottom: 10px;position:absolute;top:16px;left:25px;z-index:99999"> <button id="addfactory" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新设备厂家</button> </div><table id="LAY-factory-manage" lay-filter="LAY-factory-manage"></table> <script type="text/html" id="table-toolbar-factory"> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="factoryedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="factorydel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> </div> </div> </div><div class="layui-tab-item"> <!--设备经销商--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body" style="position:relative;"> <div style="padding-bottom: 10px;position:absolute;top:16px;left:25px;z-index:99999"> <button id="addsale" class="layui-btn layui-bg-gray" style="border:1px solid #e6e6e6" data-type="add">添加新设备经销商</button> </div><table id="LAY-sale-manage" lay-filter="LAY-sale-manage"></table> <script type="text/html" id="table-toolbar-sale"> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="saleedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a> <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="saledel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script> </div> </div> </div> </div> </div> </div>'
-        , zIndex: layer.zIndex
-        , success: function (layero) {
-            //置顶
-            layer.setTop(layero);
-            //监测设备
-            DeviceData();
-            //监测数据库
-            DataBase();
-            //SQL
-            SqlData();
-            //设备厂家
-            FactoryData();
-            //设备供销商
-            SaleData();
-        }
-    });
-
-
-
-
-
-
+                GetDeviceData();//监测设备
+                GetDataBase();//监测数据库
+                GetSqlData();//SQL
+                GetFactoryData();//设备厂家
+                GetSaleData();//设备供销商
+            }
+            , end: function () {
+                automonitoreltlayerindex = null;
+            }
+        });
+    }
+    else {
+        ayer.setTop(automonitoreltlayerindex);//置顶
+    }
 }
+
+
 //监测设备
-function DeviceData() {
+function GetDeviceData() {
     var devicedatas = [];
     var adddevicelayerindex = null;
 
@@ -159,7 +152,7 @@ function DeviceData() {
         , title: '自动化监测设备信息'
         , page: true
         , even: true
-        , limit: 15
+        , limit: 10
         , initSort: { field: 'id', type: 'asc' }
         , toolbar: true
         , totalRow: false
@@ -168,10 +161,10 @@ function DeviceData() {
             , { field: 'code', title: '唯一编码', width: 130, align: "center" }
             , { field: 'sbmc', title: '设备名称', width: 150, align: "center" }
             , { field: 'sbbh', title: '设备编号', width: 100, align: "center" }
-            , { field: 'sbxh', title: '设备型号', hide: 'false', align: "center" }
+            , { field: 'sbxh', title: '设备型号', width: 100, align: "center" }
             , { field: 'sblx', title: '设备类型', width: 100, align: "center" }
             , { field: 'gdfs', title: '供电方式', width: 80, align: "center" }
-            , { field: 'cjsj', title: '创建时间', width: 150, hide: 'false', align: "center" }
+            , { field: 'cjsj', title: '创建时间', width: 150, align: "center" }
             , { field: 'bsm', title: '标识码', width: 280, hide: 'false', align: "center" }
             , { field: 'bz', title: '备注', width: 100, hide: 'false', align: "center" }
             , { fixed: 'right', width: 120, align: 'center', toolbar: '#table-toolbar-device' }
@@ -739,8 +732,8 @@ function DeviceData() {
     }
 }
 //监测数据库
-function DataBase() {
-    
+function GetDataBase() {
+
     var databasedatas = [];
     var adddatabaselayerindex = null;
 
@@ -752,22 +745,22 @@ function DataBase() {
         , title: '自动化监测数据库信息'
         , page: true
         , even: true
-        , limit: 15
+        , limit: 10
         , initSort: { field: 'id', type: 'asc' }
         , toolbar: true
         , totalRow: false
         , cols: [[
             { field: 'id', title: 'ID', width: 52, fixed: 'left', align: "center" }
-            , { field: 'dblx', title: '数据库类型', width: 100,  align: "center" }
-            , { field: 'dbip', title: 'IP', width: 120,  align: "center" }
-            , { field: 'dbport', title: '端口', width: 60,  align: "center" }
-            , { field: 'dbname', title: '数据库名称', width: 120,  hide: 'false', align: "center" }
-            , { field: 'dbuser', title: '账户', width: 100,  align: "center" }
-            , { field: 'dbpw', title: '密码', width: 200,  align: "center" }
-            , { field: 'dbadd', title: '数据库地址', width: 100,  hide: 'false', align: "center" }
-            , { field: 'dbconn', title: '连接信息', width: 100,  hide: 'false', align: "center" }
-            , { field: 'cjsj', title: '创建时间', width: 150,  hide: 'false', align: "center" }
-            , { field: 'bz', title: '备注', width: 100,  hide: 'false', align: "center" }
+            , { field: 'dblx', title: '数据库类型', width: 100, align: "center" }
+            , { field: 'dbip', title: 'IP', width: 120, align: "center" }
+            , { field: 'dbport', title: '端口', width: 60, align: "center" }
+            , { field: 'dbname', title: '数据库名称', width: 120, hide: 'false', align: "center" }
+            , { field: 'dbuser', title: '账户', width: 100, align: "center" }
+            , { field: 'dbpw', title: '密码', width: 200, align: "center" }
+            , { field: 'dbadd', title: '数据库地址', width: 100, hide: 'false', align: "center" }
+            , { field: 'dbconn', title: '连接信息', width: 100, hide: 'false', align: "center" }
+            , { field: 'cjsj', title: '创建时间', width: 150, hide: 'false', align: "center" }
+            , { field: 'bz', title: '备注', width: 100, hide: 'false', align: "center" }
             , { fixed: 'right', width: 100, align: 'center', toolbar: '#table-toolbar-database' }
         ]]
         , data: databasedatas
@@ -1029,8 +1022,8 @@ function DataBase() {
     }
 }
 //SQL
-function SqlData() {
-    
+function GetSqlData() {
+
     var sqldatas = [];
     var addsqllayerindex = null;
 
@@ -1042,7 +1035,7 @@ function SqlData() {
         , title: 'SQL信息'
         , page: true
         , even: true
-        , limit: 15
+        , limit: 10
         , initSort: { field: 'id', type: 'asc' }
         , toolbar: true
         , totalRow: false
@@ -1188,8 +1181,7 @@ function SqlData() {
 
 }
 //设备厂家
-function FactoryData(){
-    
+function GetFactoryData() {
     var factorydatas = [];
     var addfactorylayerindex = null;
 
@@ -1202,7 +1194,7 @@ function FactoryData(){
         , title: '自动化监测设备厂家信息'
         , page: true
         , even: true
-        , limit: 15
+        , limit: 10
         , initSort: { field: 'id', type: 'asc' }
         , toolbar: true
         , totalRow: false
@@ -1211,7 +1203,7 @@ function FactoryData(){
             , { field: 'cjmc', title: '厂家名称', width: 130, align: "center" }
             , { field: 'cjjc', title: '厂家简称', width: 100, align: "center" }
             , { field: 'cjbm', title: '厂家编码', width: 100, align: "center" }
-            , { field: 'cjsj', title: '创建时间',width:150, align: "center" }
+            , { field: 'cjsj', title: '创建时间', width: 150, align: "center" }
             , { field: 'bz', title: '备注', width: 100, align: "center" }
             , { fixed: 'right', width: 100, align: 'center', toolbar: '#table-toolbar-factory' }
         ]]
@@ -1340,7 +1332,7 @@ function FactoryData(){
     }
 }
 //设备经销商
-function SaleData() {
+function GetSaleData() {
     var saledatas = [];
     var addsalelayerindex = null;
 
@@ -1354,7 +1346,7 @@ function SaleData() {
         , title: '自动化监测设备经销商信息'
         , page: true
         , even: true
-        , limit: 15
+        , limit: 10
         , initSort: { field: 'id', type: 'asc' }
         , toolbar: true
         , totalRow: false
@@ -1363,7 +1355,7 @@ function SaleData() {
             , { field: 'jxsmc', title: '经销商名称', width: 130, align: "center" }
             , { field: 'jxsjc', title: '经销商简称', width: 100, align: "center" }
             , { field: 'jxsbm', title: '经销商编码', width: 100, align: "center" }
-            , { field: 'cjsj', title: '创建时间', width:150, align: "center" }
+            , { field: 'cjsj', title: '创建时间', width: 150, align: "center" }
             , { field: 'bz', title: '备注', width: 100, align: "center" }
             , { fixed: 'right', width: 100, align: 'center', toolbar: '#table-toolbar-sale' }
         ]]
