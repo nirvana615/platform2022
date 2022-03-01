@@ -51,6 +51,10 @@ var drowinfoAddlayerindex = null;
 var colorpicker = layui.colorpicker;//
 var biaoZhuindex = null;
 
+
+var pickedEntity = null;
+var leftDownFlag = false;
+
 var kmlList = [];
 //清除
 function Clear() {
@@ -221,7 +225,17 @@ function biaozhuMangan() {
             //置顶
             layer.setTop(layero);
             $(window).resize();
+            //viewer.screenSpaceEventHandler.setInputAction((e) => {
+            //    leftDownAction(e);
+            //}, Cesium.ScreenSpaceEventType.LEFT_DOWN);
 
+            //viewer.screenSpaceEventHandler.setInputAction((e) => {
+            //    mouseMoveAction(e);
+            //}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+            //viewer.screenSpaceEventHandler.setInputAction((e) => {
+            //    leftUpAction(e);
+            //}, Cesium.ScreenSpaceEventType.LEFT_UP);
 
         }
         , end: function () {
@@ -452,7 +466,7 @@ function lengthBiaoZhu() {
                             point: {
                                 pixelSize: 10,
                                 color: Cesium.Color.YELLOW,
-                                disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                disableDepthTestDistance: 2000
                             }
                         });
 
@@ -597,7 +611,7 @@ function areaBiaoZhu() {
                             point: {
                                 pixelSize: 10,
                                 color: Cesium.Color.YELLOW,
-                                disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                disableDepthTestDistance: 2000
                             }
                         });
 
@@ -1473,7 +1487,7 @@ function LoadBiaozhunListLayer() {
                                                             verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                                                             width: 24,
                                                             height: 24,
-                                                            disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                                            disableDepthTestDistance: 2000
                                                         }
                                                     });
                                                 }
@@ -1493,7 +1507,7 @@ function LoadBiaozhunListLayer() {
                                                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
                                                             pixelOffset: new Cesium.Cartesian2(0.0, -36),
                                                             eyeOffset: new Cesium.Cartesian3(0, 0, -10),
-                                                            disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                                            disableDepthTestDistance: 2000
                                                         }
                                                     });
                                                 }
@@ -1548,7 +1562,7 @@ function LoadBiaozhunListLayer() {
                                                             horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                                                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
                                                             pixelOffset: new Cesium.Cartesian2(0.0, -60),
-                                                            disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                                            disableDepthTestDistance: 2000
                                                         }
 
                                                     });
@@ -1598,7 +1612,7 @@ function LoadBiaozhunListLayer() {
                                                             horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                                                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
                                                             pixelOffset: new Cesium.Cartesian2(0.0, -10),
-                                                            disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                                            disableDepthTestDistance: 2000
                                                         }
                                                     });
 
@@ -1627,7 +1641,7 @@ function LoadBiaozhunListLayer() {
                                                         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                                                         width: 24,
                                                         height: 24,
-                                                        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                                        disableDepthTestDistance: 2000
                                                     }
                                                 });
                                             }
@@ -1647,7 +1661,7 @@ function LoadBiaozhunListLayer() {
                                                         pixelOffset: new Cesium.Cartesian2(0.0, -36),
                                                         eyeOffset: new Cesium.Cartesian3(0, 0, -10),
                                                         fillColor: Cesium.Color.fromCssColorString(data.colour),
-                                                        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                                        disableDepthTestDistance: 2000
                                                     }
                                                 });
                                             }
@@ -1701,7 +1715,7 @@ function LoadBiaozhunListLayer() {
                                                         horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                                                         verticalOrigin: Cesium.VerticalOrigin.CENTER,
                                                         pixelOffset: new Cesium.Cartesian2(0.0, -60),
-                                                        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                                        disableDepthTestDistance: 2000
                                                     }
 
 
@@ -1730,11 +1744,6 @@ function LoadBiaozhunListLayer() {
                                                         }),
                                                     }
                                                 });
-
-
-
-                                                data.checked = true;
-
                                                 var areamianji = jisumianji(points);
                                                 //计算重心
                                                 viewer.entities.add({
@@ -1750,7 +1759,7 @@ function LoadBiaozhunListLayer() {
                                                         horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                                                         verticalOrigin: Cesium.VerticalOrigin.CENTER,
                                                         pixelOffset: new Cesium.Cartesian2(0.0, -10),
-                                                        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                                        disableDepthTestDistance: 2000
                                                     }
                                                 });
 
@@ -1976,83 +1985,182 @@ function LoadBiaozhunListLayer() {
 
                                     return;
                                 } else if (type === 'update') { //修改节点
-                                    var temptitle = data.title;
-                                    biaoZhudrwInfox = layer.open({
-                                        type: 1
-                                        , title: ['确认修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-                                        , area: ['300px', '300px']
-                                        , shade: 0.3
-                                        , offset: 'auto'
-                                        , closeBtn: 1
-                                        , maxmin: true
-                                        , moveOut: true
-                                        , content: jiegouupd
-                                        , zIndex: layer.zIndex
-                                        , success: function (layero) {
-                                            //置顶
-                                            layer.setTop(layero);
-                                            form.render();
-                                            form.val("updpointinfoform", {
-                                                "name": data.title
-                                                , "remarks": data.remarks,
-
-                                            });
-
-                                            form.on('submit(updpointinfosubmit)', function (temp) {
-                                                data.title = temp.field.name;
-                                                data.remarks = temp.field.remarks;
-                                                temp.field.id = data.id.split("_")[1];//把id往后面传
-                                                temp.field.cookie = document.cookie;
-                                                var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
-
-                                                $.ajax({
-                                                    url: servicesurl + "/api/RockData/UpdateRockPoint", type: "post", data: temp.field,
-                                                    success: function (result) {
-                                                        layer.close(loadingceindex);
-                                                        //创建失败
-                                                        layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-
-                                                        if ("更新成功" == result) {
 
 
+                                    if (data.type == "ROCKPOINT") {
+                                        var temptitle = data.title;
+                                        biaoZhudrwInfox = layer.open({
+                                            type: 1
+                                            , title: ['点标注修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                                            , area: ['300px', '300px']
+                                            , shade: 0
+                                            , offset: 'auto'
+                                            , closeBtn: 1
+                                            , maxmin: true
+                                            , moveOut: true
+                                            , content: pointUpdate
+                                            , zIndex: layer.zIndex
+                                            , success: function (layero) {
+                                                //置顶
+                                                layer.setTop(layero);
+                                                form.render();
+                                                form.val("updpointinfoform", {
+                                                    "name": data.title
+                                                    , "remarks": data.remarks,
+                                                    "postion": JSON.stringify(data.postion) 
 
-                                                            for (var i in biaoLayers) {
-                                                                for (var j in biaoLayers[i].children) {
-                                                                    if (data.id == biaoLayers[i].children[j].id) {
-                                                                        biaoLayers[i].children[j].title = temp.field.name;
-                                                                        biaoLayers[i].children[j].remarks = temp.field.remarks;
-                                                                        biaoLayers[i].children[j].datas.remarks = temp.field.remarks;
-                                                                        biaoLayers[i].children[j].datas.name = temp.field.name;
-                                                                        biaoLayers[i].children[j].spread = true;
-                                                                        biaoLayers[i].spread = true;
-                                                                        break;
+                                                });
+
+                                                form.on('submit(updpointinfosubmit)', function (temp) {
+                                                    data.title = temp.field.name;
+                                                    data.remarks = temp.field.remarks;
+                                                    data.postion = JSON.parse(temp.field.postion);
+                                                    temp.field.id = data.id.split("_")[1];//把id往后面传
+                                                    temp.field.cookie = document.cookie;
+                                                    var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                                                    $.ajax({
+                                                        url: servicesurl + "/api/RockData/UpdateRockPoint", type: "post", data: temp.field,
+                                                        success: function (result) {
+                                                            layer.close(loadingceindex);
+                                                            //创建失败
+                                                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+
+                                                            if ("更新成功" == result) {
+                                                                ClearTemp();
+                                                                //关闭,更改图上显示
+                                                                if (data.checked) {
+                                                                    //var entity = viewer.entities.getById(data.id + "_LABEL");
+                                                                    //console.log(entity);
+                                                                    //entity.label.text = entity.label.text._value.replace(temptitle, temp.field.name);
+                                                                    //var entity = viewer.entities.getById(data.id);
+                                                                    viewer.entities.removeById(data.id);
+                                                                    viewer.entities.removeById(data.id + "_LABEL");
+
+                                                                }
+                                                                
+                                                                
+
+                                                                for (var i in biaoLayers) {
+                                                                    for (var j in biaoLayers[i].children) {
+                                                                        if (data.id == biaoLayers[i].children[j].id) {
+                                                                            biaoLayers[i].children[j].title = temp.field.name;
+                                                                            biaoLayers[i].children[j].remarks = temp.field.remarks;
+                                                                            biaoLayers[i].children[j].postion = data.postion;
+                                                                            biaoLayers[i].children[j].datas.remarks = temp.field.remarks;
+                                                                            biaoLayers[i].children[j].datas.name = temp.field.name;
+                                                                            biaoLayers[i].children[j].datas.postion = temp.field.postion;
+                                                                            biaoLayers[i].children[j].spread = true;
+                                                                            biaoLayers[i].spread = true;
+                                                                            break;
+                                                                        }
                                                                     }
                                                                 }
+                                                                tree.reload('prjbiaoZhuListid', { data: biaoLayers });
+
+
+                                                                
+
+                                                                layer.close(biaoZhudrwInfox);
                                                             }
-                                                            tree.reload('prjbiaoZhuListid', { data: biaoLayers });
 
-
-                                                            //关闭,更改图上显示
-                                                            if (data.checked) {
-                                                                var entity = viewer.entities.getById(data.id + "_LABEL");
-                                                                console.log(entity);
-                                                                entity.label.text = entity.label.text._value.replace(temptitle, temp.field.name);
-
-                                                            }
-                                                            var entity = viewer.entities.getById(data.id);
-                                                            layer.close(biaoZhudrwInfox);
-                                                        }
-
-                                                    }, datatype: "json"
+                                                        }, datatype: "json"
+                                                    });
+                                                    return false;
                                                 });
-                                                return false;
-                                            });
 
-                                        }
-                                        , end: function () {
-                                            layer.close(biaoZhudrwInfox);
-                                        }
-                                    });
+                                            }
+                                            , end: function () {
+                                                layer.close(biaoZhudrwInfox);
+                                                handler.destroy();
+                                                ClearTemp();
+                                            }
+                                        });
+                                    } else {//修改线和范围。
+                                        var temptitle = data.title;
+                                        biaoZhudrwInfox = layer.open({
+                                            type: 1
+                                            , title: ['确认修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                                            , area: ['300px', '300px']
+                                            , shade: 0
+                                            , offset: 'auto'
+                                            , closeBtn: 1
+                                            , maxmin: true
+                                            , moveOut: true
+                                            , content: lineupd
+                                            , zIndex: layer.zIndex
+                                            , success: function (layero) {
+                                                //置顶
+                                                layer.setTop(layero);
+                                                form.render();
+
+                                                console.log(data);
+                                                form.val("updlineinfoform", {
+                                                    "name": data.title
+                                                    , "remarks": data.remarks,
+                                                    "postion": JSON.stringify(data.pointList),
+                                                    "lineType": data.type
+                                                    
+
+                                                });
+
+                                                form.on('submit(updlineinfosubmit)', function (temp) {
+                                                    data.title = temp.field.name;
+                                                    data.remarks = temp.field.remarks;
+                                                    data.pointList = JSON.parse(temp.field.postion);
+                                                    temp.field.id = data.id.split("_")[1];//把id往后面传
+                                                    temp.field.cookie = document.cookie;
+                                                    var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                                                    $.ajax({
+                                                        url: servicesurl + "/api/RockData/UpdateRockPoint", type: "post", data: temp.field,
+                                                        success: function (result) {
+                                                            layer.close(loadingceindex);
+                                                            //创建失败
+                                                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+
+                                                            if ("更新成功" == result) {
+
+                                                                ClearTemp();
+                                                                //关闭,更改图上显示
+                                                                if (data.checked) {
+                                                                    viewer.entities.removeById(data.id);
+                                                                    viewer.entities.removeById(data.id + "_LABEL");
+
+                                                                }
+
+                                                                for (var i in biaoLayers) {
+                                                                    for (var j in biaoLayers[i].children) {
+                                                                        if (data.id == biaoLayers[i].children[j].id) {
+                                                                            biaoLayers[i].children[j].title = temp.field.name;
+                                                                            biaoLayers[i].children[j].remarks = temp.field.remarks;
+                                                                            biaoLayers[i].children[j].pointList = data.pointList;
+                                                                            biaoLayers[i].children[j].datas.remarks = temp.field.remarks;
+                                                                            biaoLayers[i].children[j].datas.name = temp.field.name;
+                                                                            biaoLayers[i].children[j].datas.postion = temp.field.postion;
+                                                                            biaoLayers[i].children[j].spread = true;
+                                                                            biaoLayers[i].spread = true;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                tree.reload('prjbiaoZhuListid', { data: biaoLayers });
+                                                                layer.close(biaoZhudrwInfox);
+                                                            }
+
+                                                        }, datatype: "json"
+                                                    });
+                                                    return false;
+                                                });
+
+                                            }
+                                            , end: function () {
+                                                layer.close(biaoZhudrwInfox);
+                                                ClearTemp();
+                                            }
+                                        });
+                                    }
+                                    
 
 
 
@@ -2158,10 +2266,10 @@ function jisumianji(postList) {
 var dianBiaozhuHtml =
     "	<div class='layui-tab layui-tab-brief'  style='width: 300px' lay-filter='biaozhuguanli'>								"
     + "		<ul class='layui-tab-title'>							"
-    + "			<li lay-id='1' class='layui-this' style='width:15%;padding-top: 2px;'>点标注</li>						"
-    + "			<li lay-id='2' style='width:40px;padding-top: 2px;'>多段线</li>						"
-    + "			<li lay-id='3' style='width:20px;padding-top: 2px;'>面积</li>						"
-    + "			<li lay-id='4' style='width:15%;padding-top: 2px;'>标注列表</li>						"
+    + "			<li lay-id='1' class='layui-this' style='width:15%;padding-top: 2px; padding-left: 5px; padding-right: 5px;'>点标注</li>						"
+    + "			<li lay-id='2' style='width:15%;padding-top: 2px; padding-left: 5px; padding-right: 5px;'>多段线</li>						"
+    + "			<li lay-id='3' style='width:15%;padding-top: 2px; padding-left: 5px; padding-right: 5px;'>面积</li>						"
+    + "			<li lay-id='4' style='width:15%;padding-top: 2px; padding-left: 5px; padding-right: 5px;'>列表</li>						"
     + "		</ul>							"
     + "		<div class='layui-tab-content'>							"
     + "			<div class='layui-tab-item layui-show'>						"
@@ -2273,3 +2381,631 @@ var addbiaozhuareaHtml = "<form class='layui-form' style='margin-top:5px;margin-
     + "		</div>                                                                                                                                                       "
     + "	</div>                                                                                                                                                           "
     + "</form>  ";
+
+
+//节狗修改
+var pointUpdate = "	<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='updpointinfoform'>	"
+    + "	    <div class='layui-form-item' style='margin-top:15px;margin-right:5px;'>	"
+    + "	        <div class='layui-row'>	"
+    + "	            <div class='layui-col-md6'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>名称</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='name' lay-verify='required' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>描述</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='remarks' lay-verify='required' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>点坐标</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='postion' lay-verify='required' readonly='readonly' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	    <div class='layui-form-item' style='margin-top:15px'>	"
+    + "	        <div style='position:absolute;right:15px;'>	"
+    + "	            <button type='Button' onclick='getPointPostion()' class='layui-btn layui-btn-primary' style='width:100px'>移动点位</button>	"
+    + "	            <button type='submit' class='layui-btn' lay-submit='' lay-filter='updpointinfosubmit' style='width:100px'>提交</button>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	</form>	";
+
+var lineupd = "	<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='updlineinfoform'>	"
+    + "	    <div class='layui-form-item' style='margin-top:15px;margin-right:5px;'>	"
+    + "	        <div class='layui-row'>	"
+    + "	            <div class='layui-col-md6'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>名称</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='name' lay-verify='required' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>描述</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='remarks' lay-verify='required' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div  class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>坐标</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='postion' lay-verify='required' readonly='readonly' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div   style='height:0px;width:0px;'>	"
+
+    + "	              <input type='hidden' name='lineType' lay-verify='required' readonly='readonly' autocomplete='off' placeholder='请输入' />	"
+
+    + "	            </div>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	    <div class='layui-form-item' style='margin-top:15px'>	"
+    + "	        <div style='position:absolute;right:15px;'>	"
+    + "	            <button type='Button' onclick='getlinePostion()' class='layui-btn layui-btn-primary' style='width:100px'>重绘</button>	"
+    + "	            <button type='submit' class='layui-btn' lay-submit='' lay-filter='updlineinfosubmit' style='width:100px'>提交</button>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	</form>	";
+//点
+function getPointPostion() {
+    ClearTemp();
+
+    isPoint = true;
+    isLength = false;
+    isHeight = false;
+    isAraa = false;
+    isAzimuth = false;
+    isRedo = false;
+    isPointLabel = false;
+    isPolylineLabel = false;
+    isPolygonLabel = false;
+    isOccurrence = false;
+    isWindowZiDingyi = false;
+
+
+    if (isPoint) {
+        if (handler != undefined) {
+            handler.destroy();
+        }
+        handler = new Cesium.ScreenSpaceEventHandler(canvas);
+
+        //左击
+        handler.setInputAction(function (leftclick) {
+            if (isPoint) {
+                var pickedOject = scene.pick(leftclick.position);
+                if (pickedOject != undefined) {
+                    var position = scene.pickPosition(leftclick.position);
+                    if (position != undefined) {
+                        var cartesian3 = Cesium.Cartographic.fromCartesian(position);                        //笛卡尔XYZ
+
+                        if (cartesian3.height > 0) {
+
+                            if (Cesium.defined(position)) {
+                                //var drowinfoAddlayerindex = null;                           //画点新增，弹出框
+                               // DrowBiaoZhu("point", cartesian3, position);
+                                ClearTemp();
+                                console.log(form.getValue("updpointinfoform"));
+
+                                viewer.entities.add({
+                                    name: "ptMeasue" + NewGuidCL(),
+                                    position: position,
+                                    point: {
+                                        pixelSize: 12,
+                                        color: Cesium.Color.RED,
+                                        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                    }
+                                });
+                                //测试用
+                                viewer.entities.add({
+                                    name: "ptlMeasue" + NewGuidCL(),
+                                    position: position,
+                                    label: {
+                                        text: form.getValue("updpointinfoform").name+'-新位置',
+                                        showBackground: true,
+                                        backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                        font: '16px Times New Roman',
+                                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                        verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                        pixelOffset: new Cesium.Cartesian2(0.0, -60),
+
+                                    }
+                                });
+
+                                form.val("updpointinfoform", {
+
+                                    "postion": JSON.stringify(position)
+
+                                });
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    }
+   
+};
+//线
+function getlinePostion() {
+
+    console.log(form.getValue("updlineinfoform"));
+    console.log(form.getValue("updlineinfoform").lineType);
+    var lineType = form.getValue("updlineinfoform").lineType;
+    ClearTemp();
+    points = [];
+    if (lineType == "ROCKLINE") {
+        isPoint = false;
+        isLength = true;
+        isHeight = false;
+        isAraa = false;
+        isAzimuth = false;
+        isRedo = false;
+        isPointLabel = false;
+        isPolylineLabel = false;
+        isPolygonLabel = false;
+        isOccurrence = false;
+        isWindowZiDingyi = false;
+        
+        if (isLength) {
+            if (handler != undefined) {
+                handler.destroy();
+            }
+
+            handler = new Cesium.ScreenSpaceEventHandler(canvas);
+            viewer._container.style.cursor = "crosshair";//修改鼠标样式
+            //左击
+            handler.setInputAction(function (leftclik) {
+                if (isRedo) {
+                    ClearTemp();
+                    isRedo = false;
+                    linepoints = [];
+                    points = [];
+                }
+
+                var pickedOject = scene.pick(leftclik.position);
+                if (pickedOject != undefined) {
+                    var position = scene.pickPosition(leftclik.position);
+                    if (position != undefined) {
+                        if (Cesium.defined(position)) {
+                            var cartesian3 = new Cesium.Cartesian3(position.x, position.y, position.z);
+                            linepoints.push(Cesium.Cartographic.fromCartesian(position));
+                            points.push(position);
+
+                            viewer.entities.add({
+                                name: "ptMeasue" + NewGuid(),
+                                position: position,
+                                point: {
+                                    pixelSize: 10,
+                                    color: Cesium.Color.RED,
+                                    disableDepthTestDistance: 2000
+                                }
+                            });
+
+                            if (points.length > 1) {
+                                var point = points[points.length - 2];
+                                //polylineOnModel("plMeasue" + NewGuid(), [point, position], 0.05, 10, Cesium.Color.AQUAMARINE);             
+                                viewer.entities.add({
+                                    name: "plMeasue" + NewGuid(),
+                                    polyline: {
+                                        positions: [point, position],
+                                        width: 2,
+                                        arcType: Cesium.ArcType.RHUMB,
+                                        material: Cesium.Color.YELLOW,
+                                        depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                            color: Cesium.Color.YELLOW,
+                                        }),
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+            //移动
+            handler.setInputAction(function (move) {
+                if (points.length > 0) {
+                    //清除多边形临时边线
+
+                    var pick = viewer.scene.pick(move.endPosition);
+                    if (pick != undefined) {
+                        var XYZ = viewer.scene.pickPosition(move.endPosition);
+                        if (XYZ != undefined) {
+                            //删除
+                            if (viewer.entities.getById("line_temp9999") != null) {
+                                viewer.entities.removeById("line_temp9999");
+                            }
+
+                            //绘制多边形临时边线
+                            viewer.entities.add({
+                                id: "line_temp9999",
+                                polyline: {
+                                    positions: [points[points.length - 1], XYZ],
+                                    width: 2,
+                                    arcType: Cesium.ArcType.RHUMB,
+                                    material: Cesium.Color.fromCssColorString(pointColor),
+                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                        color: Cesium.Color.fromCssColorString(pointColor),
+                                    }),
+                                }
+                            });
+
+                        }
+                    }
+                }
+
+            }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+            //右击
+            if (isMobile.any()) {//双指
+                handler.setInputAction(function (pinch) {
+                    if (viewer.entities.getById("line_temp9999") != null) {
+                        viewer.entities.removeById("line_temp9999");
+                    }
+                    if (handler != undefined) {
+                        handler.destroy();
+                    }
+                    viewer._container.style.cursor = "default";//还原鼠标样式
+                    if (points.length > 1) {
+                        // DrowBiaoZhu("line", linepoints, points);
+                        //测试用
+                        viewer.entities.add({
+                            name: "ptlMeasue" + NewGuidCL(),
+                            position: points[0],
+                            label: {
+                                text: form.getValue("updlineinfoform").name + '-新位置',
+                                showBackground: true,
+                                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                font: '16px Times New Roman',
+                                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                pixelOffset: new Cesium.Cartesian2(0.0, -60),
+
+                            }
+                        });
+                        form.val("updlineinfoform", {
+
+                            "postion": JSON.stringify(points)
+
+                        });
+                    }
+
+                }, Cesium.ScreenSpaceEventType.PINCH_START);
+            }
+            else {//右击
+
+                handler.setInputAction(function (rightclik) {
+                    if (viewer.entities.getById("line_temp9999") != null) {
+                        viewer.entities.removeById("line_temp9999");
+                    }
+                    if (handler != undefined) {
+                        handler.destroy();
+                    }
+                    viewer._container.style.cursor = "default";//还原鼠标样式
+                    if (points.length > 1) {
+                        viewer.entities.add({
+                            name: "ptlMeasue" + NewGuidCL(),
+                            position: points[0],
+                            label: {
+                                text: form.getValue("updlineinfoform").name + '-新位置',
+                                showBackground: true,
+                                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                font: '16px Times New Roman',
+                                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                pixelOffset: new Cesium.Cartesian2(0.0, -60),
+
+                            }
+                        });
+                        form.val("updlineinfoform", {
+
+                            "postion": JSON.stringify(points)
+
+                        });
+                    }
+
+                }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+            }
+        }
+
+    } else {
+        isPoint = false;
+        isLength = false;
+        isHeight = false;
+        isAraa = true;
+        isAzimuth = false;
+        isRedo = false;
+        isPointLabel = false;
+        isPolylineLabel = false;
+        isPolygonLabel = false;
+        isOccurrence = false;
+        isWindowZiDingyi = false;
+        if (isAraa) {
+            if (handler != undefined) {
+                handler.destroy();
+            }
+
+            handler = new Cesium.ScreenSpaceEventHandler(canvas);
+
+            //左击
+            handler.setInputAction(function (leftclik) {
+                if (isRedo) {
+                    ClearTemp();
+                    isRedo = false;
+                    linepoints = [];
+                    points = [];
+                }
+
+                var pickedOject = scene.pick(leftclik.position);
+                if (pickedOject != undefined) {
+                    var position = scene.pickPosition(leftclik.position);
+                    if (position != undefined) {
+                        if (Cesium.defined(position)) {
+
+                            points.push(position);
+                            viewer.entities.add({
+                                name: "ptMeasue" + NewGuid(),
+                                position: position,
+                                point: {
+                                    pixelSize: 10,
+                                    color: Cesium.Color.YELLOW,
+                                    disableDepthTestDistance: 2000
+                                }
+                            });
+
+                            if (points.length > 1) {
+                                var point = points[points.length - 2];
+                                //polylineOnModel("plMeasue" + NewGuid(), [point, position], 0.05, 10, Cesium.Color.AQUAMARINE);             
+                                viewer.entities.add({
+                                    name: "plMeasue" + NewGuid(),
+                                    polyline: {
+                                        positions: [point, position],
+                                        width: 2,
+                                        arcType: Cesium.ArcType.RHUMB,
+                                        material: Cesium.Color.RED,
+                                        depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                            color: Cesium.Color.RED,
+                                        }),
+                                    }
+                                });
+                            }
+
+                        }
+                    }
+                }
+            }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+            //移动
+            handler.setInputAction(function (move) {
+                if (points.length > 0) {
+                    //清除多边形临时边线
+
+                    var pick = viewer.scene.pick(move.endPosition);
+                    if (pick != undefined) {
+                        var XYZ = viewer.scene.pickPosition(move.endPosition);
+                        if (XYZ != undefined) {
+                            //删除
+                            if (viewer.entities.getById("line_temp9999") != null) {
+                                viewer.entities.removeById("line_temp9999");
+                            }
+
+                            //绘制多边形临时边线
+                            viewer.entities.add({
+                                id: "line_temp9999",
+                                polyline: {
+                                    positions: [points[points.length - 1], XYZ],
+                                    width: 2,
+                                    arcType: Cesium.ArcType.RHUMB,
+                                    material: Cesium.Color.RED,
+                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                        color: Cesium.Color.RED,
+                                    }),
+                                }
+                            });
+
+                            if (points.length > 1) {
+                                //绘制多边形临时闭合线
+                                if (viewer.entities.getById("line_temp9998") != null) {
+                                    viewer.entities.removeById("line_temp9998");
+                                }
+                                viewer.entities.add({
+                                    id: "line_temp9998",
+                                    polyline: {
+                                        positions: [points[0], XYZ],
+                                        width: 2,
+                                        arcType: Cesium.ArcType.RHUMB,
+                                        material: Cesium.Color.RED,
+                                        depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                            color: Cesium.Color.RED,
+                                        }),
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+
+            }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+            if (isMobile.any()) {
+                //双指
+                handler.setInputAction(function (pinch) {
+                    if (points.length > 2) {
+                        if (viewer.entities.getById("line_temp9999") != null) {
+                            viewer.entities.removeById("line_temp9999");
+                        }
+                        if (viewer.entities.getById("line_temp9998") != null) {
+                            viewer.entities.removeById("line_temp9998");
+                        }
+                        if (handler != undefined) {
+                            handler.destroy();
+                        }
+                        viewer.entities.add({
+                            name: "plMeasue" + NewGuid(),
+                            polyline: {
+                                positions: [points[0], points[points.length-1]],
+                                width: 2,
+                                arcType: Cesium.ArcType.RHUMB,
+                                material: Cesium.Color.RED,
+                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                    color: Cesium.Color.RED,
+                                }),
+                            }
+                        });
+                        viewer.entities.add({
+                            name: "ptlMeasue" + NewGuidCL(),
+                            position: points[0],
+                            label: {
+                                text: form.getValue("updlineinfoform").name + '-新位置',
+                                showBackground: true,
+                                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                font: '16px Times New Roman',
+                                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                pixelOffset: new Cesium.Cartesian2(0.0, -60),
+
+                            }
+                        });
+                        form.val("updlineinfoform", {
+
+                            "postion": JSON.stringify(points)
+
+                        });
+
+
+                    }
+
+                }, Cesium.ScreenSpaceEventType.PINCH_START);
+            }
+            else {
+                //右击
+                handler.setInputAction(function (rightclik) {
+                    if (points.length > 2) {
+                        if (viewer.entities.getById("line_temp9999") != null) {
+                            viewer.entities.removeById("line_temp9999");
+                        }
+                        if (viewer.entities.getById("line_temp9998") != null) {
+                            viewer.entities.removeById("line_temp9998");
+                        }
+                        if (handler != undefined) {
+                            handler.destroy();
+                        }
+                        viewer.entities.add({
+                            name: "plMeasue" + NewGuid(),
+                            polyline: {
+                                positions: [points[0], points[points.length - 1]],
+                                width: 2,
+                                arcType: Cesium.ArcType.RHUMB,
+                                material: Cesium.Color.RED,
+                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                    color: Cesium.Color.RED,
+                                }),
+                            }
+                        });
+                        viewer.entities.add({
+                            name: "ptlMeasue" + NewGuidCL(),
+                            position: points[0],
+                            label: {
+                                text: form.getValue("updlineinfoform").name + '-新位置',
+                                showBackground: true,
+                                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                font: '16px Times New Roman',
+                                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                pixelOffset: new Cesium.Cartesian2(0.0, -60),
+
+                            }
+                        });
+                        form.val("updlineinfoform", {
+
+                            "postion": JSON.stringify(points)
+
+                        });
+                        
+                    }
+
+                }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+            }
+        }
+    }
+   
+};
+
+function leftDownAction(e) {
+    console.log(e);
+
+    var pickedOject = scene.pick(e.position);
+    var position = scene.pickPosition(e.position);
+    console.log(pickedOject);
+    console.log(position);
+    leftDownFlag = true;
+    let picked = this.viewer.scene.pick(e.position);
+    console.log(picked);
+    if (picked && picked.collection) {
+        document.body.style.cursor = 'move';
+        pickedEntity = picked;//Cesium.defaultValue(picked.id, picked.primitive.id);
+        console.log(pickedEntity.id.position);
+        //锁定相机
+        this.viewer.scene.screenSpaceCameraController.enableRotate = false;
+    }
+};
+function mouseMoveAction(e) {
+
+    
+    if (leftDownFlag && pickedEntity) {
+
+        console.log(e);
+        var pickedOject = scene.pick(e.endPosition);
+        console.log(pickedOject);
+        var position = scene.pickPosition(e.endPosition);
+        console.log(position);
+
+        console.log(11111111111);
+
+
+        let ray = this.viewer.camera.getPickRay(e.endPosition);
+        let cartesian = this.viewer.scene.globe.pick(ray, this.viewer.scene);
+
+        console.log(ray);
+        console.log(cartesian);
+        console.log(pickedEntity.id.position);
+        pickedEntity.id.position = new Cesium.CallbackProperty(function () {
+            return position;
+        }, false);//防止闪烁，在移动的过程
+    }
+};
+function leftUpAction(e) {
+    console.log(e);
+    console.log(pickedEntity);
+    console.log(pickedEntity.id.position);
+    document.body.style.cursor = 'default';
+    if (pickedEntity) {
+        //let position = Cesium.Cartesian3.clone(pickedEntity.id.position.getValue(Cesium.JulianDate.now()));
+        //let orientation = Cesium.Quaternion.clone(pickedEntity.id.orientation.getValue(Cesium.JulianDate.now()));
+        //console.log(position);
+        //console.log(orientation); 
+    }
+    leftDownFlag = false;
+    pickedEntity = null;
+    // 解除相机锁定
+    this.viewer.scene.screenSpaceCameraController.enableRotate = true;
+};

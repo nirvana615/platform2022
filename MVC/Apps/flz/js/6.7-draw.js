@@ -558,7 +558,9 @@ function areaMeasure() {
                             }),
                         }
                     });
+                    getEncryptionPoint(points, false, 6);
                     DrowHuaHua("area", linepoints, points);
+                    
                 }
 
             }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);

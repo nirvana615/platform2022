@@ -2238,8 +2238,8 @@ namespace SERVICE.Controllers
                                 {
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[xy].photoUrl;
-                                    imgInfo.Width = 200;
-                                    imgInfo.Height = 200;
+                                    imgInfo.Width = 186;
+                                    imgInfo.Height = 120;
                                     mhn[n].AddContent(imgInfo);
                                     xy++;
                                 }

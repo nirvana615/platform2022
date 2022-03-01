@@ -100,62 +100,7 @@ var dingWeilayerindex = null;
 var modelJiaMilayerindex = null;
 function celiang() {
 
-    //var lbh1 = xy2bl(604803.8989, 3423783.5091, 6378137.0, 1 / 298.257223563, 3, 108, false);
-    //var lbh2 = xy2bl(604255.5284, 3426368.1935, 6378137.0, 1 / 298.257223563, 3, 108, false);
-    //var lbh1 = xy2bl(606688.1907, 3424772.6813, 6378137.0, 1 / 298.257223563, 3, 108, false);
-    //var lbh2 = xy2bl(606525.0206, 3426634.7142, 6378137.0, 1 / 298.257223563, 3, 108, false);
-
-    // 两个点输出地形加密点
-    //var lbh1 = xy2bl(610183.0757, 3428274.9536, 6378137.0, 1 / 298.257223563, 3, 108, false);
-    //var lbh2 = xy2bl(610724.1006, 3427142.3797, 6378137.0, 1 / 298.257223563, 3, 108, false);
-
-    //var postionLB = new Cesium.Cartographic.fromDegrees(Math.PI / 180 * lbh1.l, Math.PI / 180 * lbh1.b);
-    //console.log(postionLB);
-    //var Heights = viewer.scene.sampleHeight(postionLB);
-
-    ////var postionLB = new Cesium.Cartographic.fromDegrees(lbh1.l, lbh1.b);
-    ////var Heights = viewer.scene.globe.getHeight(postionLB);
-    //var tempList = [];
-    //tempList.push(lbh1);
-    //tempList.push(lbh2);
-    //var pointList1 = [];
-    //for (var m in tempList) {
-    //    pointList1.push(new Cesium.Cartesian3.fromDegrees(tempList[m].l, tempList[m].b, 200));
-    //}
-    //var sum = Cesium.Cartesian3.distance(pointList1[0], pointList1[1]);
-    //var bilichi = 2 / sum;
-    //var lbian = (lbh1.l - lbh2.l) * bilichi;//jingdu 
-    //var bbian = (lbh1.b - lbh2.b) * bilichi;//weidu 
-    //var postionss = [];
-    //for (var i = 0; i <(sum/2+1);i++) {
-    //    var postionLB = new Cesium.Cartographic.fromDegrees(lbh2.l + lbian * i, lbh2.b + bbian * i);
-    //    var Heights = viewer.scene.globe.getHeight(postionLB);
-
-    //    var position = new Cesium.Cartesian3.fromDegrees((lbh2.l + lbian * i), (lbh2.b + bbian * i), Heights);
-
-    //    var cartesian3 = Cesium.Cartographic.fromCartesian(position);                        //笛卡尔XYZ
-    //    var longitude = Cesium.Math.toDegrees(cartesian3.longitude);                         //经度
-    //    var latitude = Cesium.Math.toDegrees(cartesian3.latitude);                           //纬度
-    //    var height = cartesian3.height;
-    //    var xy = bl2xy(cartesian3.latitude * 180 / Math.PI, cartesian3.longitude * 180 / Math.PI, 6378137.0, 1 / 298.257223563, 3, 108, false);
-    
-    //    var temp = { "x": xy.x, "y": xy.y, "H": Heights };
-    //    postionss.push(temp);
-    //}
-    //console.log(postionss);
-    //console.log(sum);
-    //viewer.entities.add({
-    //    name: "tieMo1" + NewGuidCL(),
-    //    polyline: {
-    //        positions: pointList1,
-    //        width: 5,
-    //        material: Cesium.Color.RED,
-    //        show: true,
-    //        clampToGround: true,
-    //        //classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
-    //    }
-    //});
-
+  
     if (projectlayerlistceliangindex != null) {
         layer.msg('已打开测量窗口');
         return;
@@ -179,11 +124,20 @@ function celiang() {
            // viewer.scene.globe.depthTestAgainstTerrain = true;
             // 进来就是地形测量
             form.render();
+
+            var descString = "模型测量";
+            //判断一下模型。项目
+            if (currentprojectid == null) {
+                descString = descString + '，请先选择项目、模型';
+            }
+            if (currentprojectid != null && curtileset == null) {
+                descString = descString + '，请先选择模型';
+            }
             form.val("celianginfoform", {
-                "desc": "",
+                "desc": descString,
                 "celiangfangfa": "请选择测量方法"
             });
-            viewer.scene.globe.depthTestAgainstTerrain = true;
+            //viewer.scene.globe.depthTestAgainstTerrain = true;
            // layer.min(projectindex)
             //置顶
         }
@@ -315,16 +269,23 @@ function NewGuidCL() {
 elem.on('tab(celianglayer)', function (data) {
     if (this.getAttribute('lay-id') == "222") {
         //判断一下模型。项目
+        var descString = "模型测量";
         if (currentprojectid == null) {
-            layer.msg('请先选择项目');
-            elem.tabChange('celianglayer', 111); //
-            return;
+            layer.msg('请先选择项目、模型');
+            descString = descString + '，请先选择项目、模型';
         }
-        if (curtileset == null) {
+        if (currentprojectid != null&&curtileset == null) {
             layer.msg('请先选择模型');
-            elem.tabChange('celianglayer', 111); //
-            return;
+            descString = descString + '，请先选择模型';
         }
+        
+        //判断一下模型。项目
+        
+
+        form.val("celianginfoform", {
+            "desc": descString,
+            "celiangfangfa": "请选择测量方法"
+        });
 
         viewer.scene.globe.depthTestAgainstTerrain = false;
     } else {
@@ -1749,21 +1710,8 @@ var celinghtml2 = "	<div class='layui-tab layui-tab-brief' lay-filter='celiangla
     + "	   </div>                                                                                                              "
     + "	                                                                                                                "
     + "	 </div>                                                                                                                "
-    //+ "	 <div class=' class='layui-form-item layui-form-tex'>                                                      "
-    //+ "	                                                                                       "
-    //+ "	   <label class='layui-form-label'>测量方式</label>                                                       "
-    //+ "	   <div class='layui-input-block' style='white-space':'pre'>                                                                                  "
-    //+ "		<input name='celiangfangfa'  class='layui-input' readonly></input>   "
-    //+ "	   </div>                                                                                                              "
-    //+ "	                                                                                                                "
-    //+ "	 </div>                                                                                                                "
-    + "	</form>                                                                                                                 "
-    //+ "<div class='layui-btn-container' style='margin-top:15px '>                          "
-    //+ "  <button type='button' class='layui-btn layui-btn-primary layui-btn-sm' onclick='pointMeasure2()'>坐标</button>"
-    //+ "  <button type='button' class='layui-btn layui-btn-primary layui-btn-sm' onclick='heightMeasure()'>距离</button>"
-    //+ "  <button type='button' class='layui-btn layui-btn-primary layui-btn-sm' onclick='areaMeasure2()'>面积</button>"
-    //+ "  <button type='button' class='layui-btn layui-btn-primary layui-btn-sm' onclick='pointMeasure2()'>体积</button>"
-    //+ "</div>"
+   + "	</form>                                                                                                                 "
+
     + "			</div>						"
     + "			<div class='layui-tab-item'>						"
     + "  <form class='layui-form' style='margin-top:5px;margin-right:15px;' lay-filter='celianginfoform'>                                                                                                              "
@@ -1799,8 +1747,9 @@ var celinghtml2 = "	<div class='layui-tab layui-tab-brief' lay-filter='celiangla
     + "	</div>								";
 var celinghtml = "	<div class='layui-tab layui-tab-brief' lay-filter='celianglayer'>								"
     + "		<ul class='layui-tab-title'>							"
-    + "			<li lay-id='111' class='layui-this' style='width:30%;padding-top: 10px;'>地形测量</li>						"
-    + "			<li lay-id='222' style='width:30%;padding-top: 10px;'>模型测量</li>						"
+    + "			<li lay-id='222' class='layui-this' style='width:30%;padding-top: 10px;' >模型测量</li>						"
+    + "			<li lay-id='111' style='width:30%;padding-top: 10px;' >地形测量</li>						"
+
     + "		</ul>							"
     + "		<div class='layui-tab-content'>							"
     + "			<div class='layui-tab-item layui-show'>						"

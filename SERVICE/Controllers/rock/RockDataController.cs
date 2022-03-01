@@ -207,6 +207,7 @@ namespace SERVICE.Controllers
             string name = HttpContext.Current.Request.Form["name"];
             string remarks = HttpContext.Current.Request.Form["remarks"];
             string id = HttpContext.Current.Request.Form["id"];
+            string postion = HttpContext.Current.Request.Form["postion"];
 
             #endregion
 
@@ -221,11 +222,28 @@ namespace SERVICE.Controllers
                 {
                     return "用户为空！";
                 }
-                
-                    int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(" UPDATE rock_data_point set name={0} ,remarks={1} where id={2}"
+      
+                int updatecount = 0;
+                if (!string.IsNullOrEmpty(postion)) 
+                {
+                    
+
+                     updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(" UPDATE rock_data_point set name ={0} ,remarks ={1},position={2} where id={3}"
                             , SQLHelper.UpdateString(name),
-                                SQLHelper.UpdateString(remarks),
+                                SQLHelper.UpdateString(remarks), 
+                                SQLHelper.UpdateString(postion),
                                 id));
+                }
+                else
+                {
+                    updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(" UPDATE rock_data_point set name ={0} ,remarks ={1} where id={2}"
+                          , SQLHelper.UpdateString(name),
+                              SQLHelper.UpdateString(remarks),
+                              id));
+                }
+            
+
+                
                     if (updatecount == 1)
                     {
                         return "更新成功";

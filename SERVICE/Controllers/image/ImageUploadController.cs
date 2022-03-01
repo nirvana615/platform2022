@@ -798,6 +798,57 @@ namespace SERVICE.Controllers
 
 
         }
+
+        /// <summary>
+        /// 陈小飞---删除施工图片
+        /// </summary>
+        /// <summary>
+        [HttpPost]
+        public string DeleteConstImage()
+        {
+            string id = HttpContext.Current.Request.Form["id"];
+            string photoUrl = HttpContext.Current.Request.Form["photoUrl"];
+            if (!string.IsNullOrEmpty(photoUrl))
+            {
+
+                try
+                {
+                    System.IO.FileInfo DeleFile = new System.IO.FileInfo(imgdir + photoUrl);
+                    if (DeleFile.Exists)
+                    {
+                        DeleFile.Delete();
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "路径传入错误！", string.Empty));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "路径传入错误！", string.Empty));
+            }
+
+
+            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE from const_photo_info  WHERE id={0}", id));
+            if (updatecount == 1)
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", string.Empty));
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除失败！", string.Empty));
+            }
+
+        }
+
+        
         /// <summary>
         /// 1---临时道路图片上传（表单提交、图片上传至服务器）  陈小飞
         /// </summary>
