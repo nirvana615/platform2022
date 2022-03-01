@@ -139,11 +139,13 @@ function loadMarkProjectLayersTree() {
         success: function (result) {
             var data = JSON.parse(result);
             var projecttext = $("#currentproject").find("option:selected").text();
-            if (data.code == "1") {
+
+            if (data.code == "1" && data.data!="") {
                 //清空数组
                 markProjectLayer = [];
-                var markProject_temp = JSON.parse(data.data);
                 var marktemp = [];
+                var markProject_temp = JSON.parse(data.data);
+
                 //项目标注数据
                 if (projecttext != "") {
 
@@ -465,7 +467,6 @@ function pointMark() {
 
                         if (handler != undefined) {
                             handler.destroy();
-                            layer.msg("结束点标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                             unselectAddMarkTypeOperate();
                             markType = "";
                             markwidget_tipsentity.label.show = false;
@@ -636,7 +637,6 @@ function lineMark() {
 
             if (handler != undefined) {
                 handler.destroy();
-                layer.msg("结束线标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 unselectAddMarkTypeOperate();
                 markType = "";
                 markwidget_tipsentity.label.show = false;
@@ -854,7 +854,6 @@ function polygonMark() {
 
             if (handler != undefined) {
                 handler.destroy();
-                layer.msg("结束面标注！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 unselectAddMarkTypeOperate();
                 markType = "";
                 markwidget_tipsentity.label.show = false;
@@ -2468,7 +2467,7 @@ function uploadAddMarkEntity(data) {
                     id: data.id + "_last",
                     name: data.id + "_" + num,
                     polyline: {
-                        positions: [lineposition[i], lineposition[0]],
+                        positions: [lineposition[0], lineposition[num-1]],
                         width: JSON.parse(data.style).width,
                         material: Cesium.Color.fromCssColorString(data.color),
                         depthFailMaterial: new Cesium.PolylineDashMaterialProperty({

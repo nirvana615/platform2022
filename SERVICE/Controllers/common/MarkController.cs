@@ -153,7 +153,7 @@ namespace SERVICE.Controllers
                 }
                 else
                 {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "获取项目标注列表失败，请重试！", string.Empty));
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "无项目标注！", string.Empty));
 
                 }
 
