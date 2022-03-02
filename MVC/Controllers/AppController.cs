@@ -98,7 +98,7 @@ namespace MVC.Controllers
         public ActionResult Uav()
         {
             List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
-            ViewBag.User = userinfo[0];
+            ViewBag.User = userinfo[1];
             logger.Info("【" + ViewBag.User + "】登录航线规划系统（航线规划员）");
             return View();
         }
@@ -112,7 +112,7 @@ namespace MVC.Controllers
         public ActionResult Flz()
         {
             List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
-            ViewBag.User = userinfo[0];
+            ViewBag.User = userinfo[1];
             logger.Info("【" + ViewBag.User + "】登录地质要素采集系统（消落带）");
             return View();
         }
@@ -124,7 +124,7 @@ namespace MVC.Controllers
         public ActionResult Rock()
         {
             List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
-            ViewBag.User = userinfo[0];
+            ViewBag.User = userinfo[1];
             logger.Info("【" + ViewBag.User + "】登录地质要素采集系统（危岩）");
             return View();
         }
@@ -150,7 +150,7 @@ namespace MVC.Controllers
         public ActionResult Pointcloud()
         {
             List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
-            ViewBag.User = userinfo[0];
+            ViewBag.User = userinfo[1];
             logger.Info("【" + ViewBag.User + "】登录点云分析系统");
             return View();
         }

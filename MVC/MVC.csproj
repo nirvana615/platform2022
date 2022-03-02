@@ -444,6 +444,9 @@
     <Content Include="Apps\admin\layuiadmin\tpl\system\theme.html" />
     <Content Include="Apps\admin\layuiadmin\tpl\system\说明.txt" />
     <Content Include="Apps\admin\layuiadmin\tpl\说明.txt" />
+    <Content Include="Apps\admin\view\auth_geology.html" />
+    <Content Include="Apps\admin\view\auth_model.html" />
+    <Content Include="Apps\admin\view\auth_uav.html" />
     <Content Include="Apps\admin\view\loginStatistics.html" />
     <Content Include="Apps\admin\view\home.html" />
     <Content Include="Apps\admin\view\device.html" />

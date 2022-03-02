@@ -24,7 +24,7 @@ namespace SERVICE.Controllers
 
 
         /// <summary>
-        /// 获取全部项目（后台）
+        /// 后台获取全部监测项目
         /// </summary>
         /// <param name="cookie"></param>
         /// <returns></returns>

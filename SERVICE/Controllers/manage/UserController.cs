@@ -23,7 +23,7 @@ namespace SERVICE.Controllers
 
 
         /// <summary>
-        /// 获取用户信息
+        /// 获取全部用户信息
         /// </summary>
         /// <returns>用户列表</returns>
         [HttpGet]
@@ -120,6 +120,52 @@ namespace SERVICE.Controllers
                 if (monitorusers.Count > 0)
                 {
                     return JsonHelper.ToJson(monitorusers);
+                }
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取全部航线用户信息
+        /// </summary>
+        /// <returns>监测用户列表</returns>
+        [HttpGet]
+        public string GetUavUserInfo()
+        {
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<User> uavusers = new List<User>();
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    User user = ParseManageHelper.ParseUser(rows[i]);
+                    if (user != null)
+                    {
+                        string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                        if (!string.IsNullOrEmpty(maps))
+                        {
+                            string[] maprows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                            for (int j = 0; j < maprows.Length; j++)
+                            {
+                                MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(maprows[j]);
+                                if (mapUserRole != null)
+                                {
+                                    Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE id={0}", mapUserRole.RoleId)));
+                                    if (role.SysCode == (int)MODEL.Enum.System.Uav)
+                                    {
+                                        uavusers.Add(user);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (uavusers.Count > 0)
+                {
+                    return JsonHelper.ToJson(uavusers);
                 }
             }
 

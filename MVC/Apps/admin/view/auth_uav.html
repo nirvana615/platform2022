@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>地质灾害监测项目授权</title>
+    <title>航线任务规划项目授权</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -23,7 +23,7 @@
                             <div class="grid-demo grid-demo-bg1">
                                 <label class="layui-form-label" style="width:120px;">用&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;户</label>
                                 <div class="layui-input-block" style="margin-left:170px;">
-                                    <select id="monitorusersid" name="users" lay-filter="selectmonitoruser">
+                                    <select id="uavusersid" name="users" lay-filter="selectuavuser">
                                         <option value="">请选择用户</option>
                                     </select>
                                 </div>
@@ -32,16 +32,16 @@
 
                         <div class="layui-col-md3">
                             <div class="grid-demo" style="position:absolute;right:5px;">
-                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="authmonitorusersubmit" style="width:120px;">更新授权</button>
+                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="authuavusersubmit" style="width:120px;">更新授权</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="grid-demo" style="margin-top:10px;">
                         <div class="layui-form-item">
-                            <label class="layui-form-label" style="width:120px;">地质灾害监测项目</label>
+                            <label class="layui-form-label" style="width:120px;">航线任务规划项目</label>
                             <div class="layui-input-block" style="margin-left:170px;height:auto;border:solid;border-color:#e6e6e6;border-width:1px;overflow:auto;max-height:80%;">
-                                <div id="monitorprojectid" style="padding:10px;"></div>
+                                <div id="uavprojectid" style="padding:10px;"></div>
                             </div>
                         </div>
                     </div>
@@ -55,100 +55,100 @@
         var form = layui.form;
         var tree = layui.tree;
 
-        var monitorprojects = [];
+        var uavprojects = [];
         var curuserid = null;
 
         //渲染监测项目
         tree.render({
-            elem: '#monitorprojectid'
-            , id: 'monitorprojecttreeid'
+            elem: '#uavprojectid'
+            , id: 'uavprojecttreeid'
             , data: []
             , accordion: true
             , showCheckbox: true
             , showLine: false
             , oncheck: function (obj) {
                 if (obj.checked) {
-                    for (var i in monitorprojects) {
-                        if (monitorprojects[i].id == obj.data.id) {
-                            monitorprojects[i].checked = true;
+                    for (var i in uavprojects) {
+                        if (uavprojects[i].id == obj.data.id) {
+                            uavprojects[i].checked = true;
                         }
                     }
                 }
                 else {
-                    for (var i in monitorprojects) {
-                        if (monitorprojects[i].id == obj.data.id) {
-                            monitorprojects[i].checked = false;
+                    for (var i in uavprojects) {
+                        if (uavprojects[i].id == obj.data.id) {
+                            uavprojects[i].checked = false;
                         }
                     }
                 }
             }
         });
 
-        GetMonitorUserInfo();
-        GetMonitorProjectInfo();
+        GetUavUserInfo();
+        GetUavProjectInfo();
 
         form.render();
         form.render('select');
 
         //获取用户信息
-        function GetMonitorUserInfo() {
+        function GetUavUserInfo() {
             $.ajax({
-                url: window.parent.servicesurl + "/api/User/GetMonitorUserInfo", type: "get",
+                url: window.parent.servicesurl + "/api/User/GetUavUserInfo", type: "get",
                 success: function (data) {
                     if (data == "") {
-                        layer.msg("无监测用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        layer.msg("无航线用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         curuserid = null;
                     }
                     else {
                         var userinfodatas = JSON.parse(data);
                         for (var i in userinfodatas) {
-                            document.getElementById('monitorusersid').innerHTML += '<option value="' + userinfodatas[i].Id + '">' + userinfodatas[i].AliasName + ' - ' + userinfodatas[i].UserName + '</option>';
+                            document.getElementById('uavusersid').innerHTML += '<option value="' + userinfodatas[i].Id + '">' + userinfodatas[i].AliasName + ' - ' + userinfodatas[i].UserName + '</option>';
                         }
 
                         form.render();
                         form.render('select');
 
                         //切换用户
-                        form.on('select(selectmonitoruser)', function (data) {
+                        form.on('select(selectuavuser)', function (data) {
                             if (data.value == "") {
                                 curuserid = null;
-                                for (var i in monitorprojects) {
-                                    monitorprojects[i].checked = false;
+                                for (var i in uavprojects) {
+                                    uavprojects[i].checked = false;
                                 }
 
-                                tree.reload('monitorprojecttreeid', {
-                                    data: monitorprojects
+                                tree.reload('uavprojecttreeid', {
+                                    data: uavprojects
                                 });
                             }
                             else {
                                 curuserid = data.value;
                                 $.ajax({
-                                    url: window.parent.servicesurl + "/api/Project/GetMapUserMonitorProject", type: "get", data: { "id": data.value },
+                                    url: window.parent.servicesurl + "/api/UavProject/GetMapUserUavProject", type: "get", data: { "id": data.value },
                                     success: function (data) {
                                         if (data == "") {
-                                            for (var i in monitorprojects) {
-                                                monitorprojects[i].checked = false;
+                                            for (var i in uavprojects) {
+                                                uavprojects[i].checked = false;
                                             }
                                         }
                                         else {
-                                            var mapusermonitorprojectdata = JSON.parse(data);
-                                            var usermonitorprojectids = [];
-                                            for (var i in mapusermonitorprojectdata) {
-                                                usermonitorprojectids.push(mapusermonitorprojectdata[i].MonitorProjectId);
+                                            var mapuseruavprojectdata = JSON.parse(data);
+                                            var useruavprojectids = [];
+                                            for (var i in mapuseruavprojectdata) {
+                                                useruavprojectids.push(mapuseruavprojectdata[i].UavProjectId);
                                             }
 
-                                            for (var i in monitorprojects) {
-                                                if (usermonitorprojectids.indexOf(monitorprojects[i].id) != -1) {
-                                                    monitorprojects[i].checked = true;
+                                            for (var i in uavprojects) {
+                                                if (useruavprojectids.indexOf(uavprojects[i].id) != -1) {
+                                                    uavprojects[i].checked = true;
                                                 }
                                                 else {
-                                                    monitorprojects[i].checked = false;
+                                                    uavprojects[i].checked = false;
                                                 }
                                             }
                                         }
 
-                                        tree.reload('monitorprojecttreeid', {
-                                            data: monitorprojects
+                                        tree.reload('uavprojecttreeid', {
+                                            data: uavprojects
                                         });
                                     }, datatype: "json"
                                 });
@@ -159,57 +159,57 @@
             });
         }
 
-        //获取监测项目信息
-        function GetMonitorProjectInfo() {
+        //获取航线项目信息
+        function GetUavProjectInfo() {
             $.ajax({
-                url: window.parent.servicesurl + "/api/Project/GetProjectList", type: "get",
+                url: window.parent.servicesurl + "/api/UavProject/GetUavProjectList", type: "get",
                 success: function (data) {
-                    monitorprojects = [];
+                    uavprojects = [];
                     if (data == "") {
-                        layer.msg("无监测项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        layer.msg("无航线项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     }
                     else {
-                        var monitorprojectdatas = JSON.parse(data);
-                        for (var i in monitorprojectdatas) {
-                            var monitorproject = new Object;
-                            monitorproject.id = monitorprojectdatas[i].Id;
-                            monitorproject.title = monitorprojectdatas[i].XMMC;
-                            monitorproject.checked = false;
-                            monitorprojects.push(monitorproject);
+                        var uavprojectdatas = JSON.parse(data);
+                        for (var i in uavprojectdatas) {
+                            var uavproject = new Object;
+                            uavproject.id = uavprojectdatas[i].Id;
+                            uavproject.title = uavprojectdatas[i].CJSJ.substring(0, 10) + " " + uavprojectdatas[i].XMMC;
+                            uavproject.checked = false;
+                            uavprojects.push(uavproject);
                         }
                     }
 
-                    tree.reload('monitorprojecttreeid', {
-                        data: monitorprojects
+                    tree.reload('uavprojecttreeid', {
+                        data: uavprojects
                     });
                 }, datatype: "json"
             });
         }
 
         //更新授权
-        form.on('submit(authmonitorusersubmit)', function (data) {
+        form.on('submit(authuavusersubmit)', function (data) {
             if (curuserid == null) {
-                layer.msg("请先选择监测用户！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                layer.msg("请先选择航线用户！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
             }
             else {
                 data.field.userid = curuserid;
-                var monitorprojectids = "";
-                for (var i = 0; i < monitorprojects.length; i++) {
-                    if (monitorprojects[i].checked == true) {
-                        monitorprojectids += monitorprojects[i].id + ",";
+                var uavprojectids = "";
+                for (var i = 0; i < uavprojects.length; i++) {
+                    if (uavprojects[i].checked == true) {
+                        uavprojectids += uavprojects[i].id + ",";
                     }
                 }
-                if (monitorprojectids != "") {
-                    if ((monitorprojectids.indexOf(",") != -1)) {
-                        data.field.monitorprojectids = monitorprojectids.substring(0, monitorprojectids.length - 1);
+                if (uavprojectids != "") {
+                    if ((uavprojectids.indexOf(",") != -1)) {
+                        data.field.uavprojectids = uavprojectids.substring(0, uavprojectids.length - 1);
                     }
                     else {
-                        data.field.monitorprojectids = monitorprojectids;
+                        data.field.uavprojectids = uavprojectids;
                     }
                 }
 
                 $.ajax({
-                    url: window.parent.servicesurl + "/api/Project/UpdateMapUserMonitorProject", type: "put", data: data.field,
+                    url: window.parent.servicesurl + "/api/UavProject/UpdateMapUserUavProject", type: "put", data: data.field,
                     success: function (result) {
                         if (result != "") {
                             layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });

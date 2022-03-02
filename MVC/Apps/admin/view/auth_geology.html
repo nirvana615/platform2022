@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>地质灾害监测项目授权</title>
+    <title>地质要素采集项目授权</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -23,7 +23,7 @@
                             <div class="grid-demo grid-demo-bg1">
                                 <label class="layui-form-label" style="width:120px;">用&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;户</label>
                                 <div class="layui-input-block" style="margin-left:170px;">
-                                    <select id="monitorusersid" name="users" lay-filter="selectmonitoruser">
+                                    <select id="geologyusersid" name="users" lay-filter="selectgeologyuser">
                                         <option value="">请选择用户</option>
                                     </select>
                                 </div>
@@ -32,16 +32,16 @@
 
                         <div class="layui-col-md3">
                             <div class="grid-demo" style="position:absolute;right:5px;">
-                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="authmonitorusersubmit" style="width:120px;">更新授权</button>
+                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="authgeologyusersubmit" style="width:120px;">更新授权</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="grid-demo" style="margin-top:10px;">
                         <div class="layui-form-item">
-                            <label class="layui-form-label" style="width:120px;">地质灾害监测项目</label>
+                            <label class="layui-form-label" style="width:120px;">地质要素采集项目</label>
                             <div class="layui-input-block" style="margin-left:170px;height:auto;border:solid;border-color:#e6e6e6;border-width:1px;overflow:auto;max-height:80%;">
-                                <div id="monitorprojectid" style="padding:10px;"></div>
+                                <div id="geologyprojectid" style="padding:10px;"></div>
                             </div>
                         </div>
                     </div>
@@ -84,8 +84,8 @@
             }
         });
 
-        GetMonitorUserInfo();
-        GetMonitorProjectInfo();
+        //GetMonitorUserInfo();
+        //GetMonitorProjectInfo();
 
         form.render();
         form.render('select');
@@ -126,9 +126,6 @@
                                     url: window.parent.servicesurl + "/api/Project/GetMapUserMonitorProject", type: "get", data: { "id": data.value },
                                     success: function (data) {
                                         if (data == "") {
-                                            for (var i in monitorprojects) {
-                                                monitorprojects[i].checked = false;
-                                            }
                                         }
                                         else {
                                             var mapusermonitorprojectdata = JSON.parse(data);
@@ -145,11 +142,11 @@
                                                     monitorprojects[i].checked = false;
                                                 }
                                             }
-                                        }
 
-                                        tree.reload('monitorprojecttreeid', {
-                                            data: monitorprojects
-                                        });
+                                            tree.reload('monitorprojecttreeid', {
+                                                data: monitorprojects
+                                            });
+                                        }
                                     }, datatype: "json"
                                 });
                             }
@@ -177,11 +174,11 @@
                             monitorproject.checked = false;
                             monitorprojects.push(monitorproject);
                         }
-                    }
 
-                    tree.reload('monitorprojecttreeid', {
-                        data: monitorprojects
-                    });
+                        tree.reload('monitorprojecttreeid', {
+                            data: monitorprojects
+                        });
+                    }
                 }, datatype: "json"
             });
         }
@@ -207,6 +204,7 @@
                         data.field.monitorprojectids = monitorprojectids;
                     }
                 }
+
 
                 $.ajax({
                     url: window.parent.servicesurl + "/api/Project/UpdateMapUserMonitorProject", type: "put", data: data.field,
