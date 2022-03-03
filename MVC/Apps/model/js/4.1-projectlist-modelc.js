@@ -135,12 +135,12 @@ layer.open({
 
         //搜索
         var lay_id;
-        elem.on('tab(projectListTab)', function (elem) {
+        elem.on('tab(modelprojectListTab)', function (elem) {
             lay_id = $(this).attr('lay-id');
         });
         //1点击按钮树搜索
         $('#projectsearch').click(function () {
-            viewer.scene.primitives.remove(curtileset);
+            
 
             if (lay_id == 'list_year') {
                 var value = $("#projectfiltersearch").val();
@@ -150,6 +150,8 @@ layer.open({
                     node.find('.layui-tree-txt').css('color', '');
 
                     tree.reload('yearprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
+                    viewer.scene.primitives.remove(curtileset);//删除加载的模型
+
                     $.each(node.find('.layui-tree-txt'), function (index, elem) {
                         elem = $(elem);
                         let textTemp = elem.text();
@@ -179,6 +181,8 @@ layer.open({
                     node.find('.layui-tree-txt').css('color', '');
 
                     tree.reload('areaprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
+                    viewer.scene.primitives.remove(curtileset);//删除加载的模型
+
                     $.each(node.find('.layui-tree-txt'), function (index, elem) {
                         elem = $(elem);
                         let textTemp = elem.text();
@@ -205,8 +209,7 @@ layer.open({
         //2点击回车树搜索
         $('#projectfiltersearch').keydown(function (e) {
             if (e.keyCode == 13) {
-                viewer.scene.primitives.remove(curtileset);
-
+               
                 if (lay_id == 'list_year') {
                     var value = $("#projectfiltersearch").val();
                     if (value) {
@@ -215,6 +218,8 @@ layer.open({
                         node.find('.layui-tree-txt').css('color', '');
 
                         tree.reload('yearprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
+                        viewer.scene.primitives.remove(curtileset);//删除加载的模型
+
                         $.each(node.find('.layui-tree-txt'), function (index, elem) {
                             elem = $(elem);
                             let textTemp = elem.text();
@@ -244,6 +249,8 @@ layer.open({
                         node.find('.layui-tree-txt').css('color', '');
 
                         tree.reload('areaprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
+                        viewer.scene.primitives.remove(curtileset);//删除加载的模型
+
                         $.each(node.find('.layui-tree-txt'), function (index, elem) {
                             elem = $(elem);
                             let textTemp = elem.text();
@@ -268,6 +275,18 @@ layer.open({
             }
 
         });
+        //搜索框为空时，将高亮恢复正常
+        $("#projectfiltersearch").blur(function () {
+            var search_txt = $(this).val();
+            if (search_txt == "") {
+                //将文本的颜色恢复正常
+                var node_area = $("#projectbyarea");
+                node_area.find('.layui-tree-txt').css('color', '');
+
+                var node_year = $("#projectbyyear");
+                node_year.find('.layui-tree-txt').css('color', '');
+            }
+        }) 
     }
 });
 

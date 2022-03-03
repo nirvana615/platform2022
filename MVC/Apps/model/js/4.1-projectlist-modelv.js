@@ -267,6 +267,18 @@ var toIndex = layer.open({
             }
 
         });
+        //搜索框为空时，将高亮恢复正常
+        $("#projectfiltersearch").blur(function () {
+            var search_txt = $(this).val();
+            if (search_txt == "") {
+                //将文本的颜色恢复正常
+                var node_area = $("#projectbyarea");
+                node_area.find('.layui-tree-txt').css('color', '');
+
+                var node_year = $("#projectbyyear");
+                node_year.find('.layui-tree-txt').css('color', '');
+            }
+        }) 
     }
 });
 
