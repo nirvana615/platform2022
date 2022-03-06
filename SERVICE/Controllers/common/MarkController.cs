@@ -137,7 +137,7 @@ namespace SERVICE.Controllers
                     sql = sql + " a.syscode = '" + syscode + "' AND a.projectid= 'null'";
 
                 }
-
+                sql = sql + "ORDER BY b.text ASC";
                 string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql));
                 if (!string.IsNullOrEmpty(data))
                 {
