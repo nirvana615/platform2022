@@ -40,7 +40,7 @@ $("#utilbar1").on("mouseleave", function () {
 
 $("#utilbar2").on("mouseenter", function () {
     if (tipslayer == -1) {
-        tipslayer = layer.tips('新测量', '#utilbar2', {
+        tipslayer = layer.tips('测量', '#utilbar2', {
             tips: [4, '#78BA32']
         });
     }
@@ -54,7 +54,7 @@ $("#utilbar2").on("mouseleave", function () {
 
 $("#utilbar3").on("mouseenter", function () {
     if (tipslayer == -1) {
-        tipslayer = layer.tips('新标注', '#utilbar3', {
+        tipslayer = layer.tips('标注', '#utilbar3', {
             tips: [4, '#78BA32']
         });
     }

@@ -211,7 +211,7 @@ function LoadLayerListLayer(id) {
 
                 
                         //监测图层（监测点、监测剖面）
-                        if (layerlist.FlzDataLayer != null && layerlist.FlzDataLayer.FlzDataList!=null) {
+                        if (layerlist.FlzDataLayer != null && layerlist.FlzDataLayer.FlzDataList!=null&&false) {
                             var flzDataLayer = new Object;
                             flzDataLayer.title = "模型标注";
                             flzDataLayer.type = "MODELTAG";
