@@ -10,7 +10,7 @@
 
             <div class="layui-row">
                 <div class="layui-input-block" style="margin:5px 5px 0px 5px;">
-                    <textarea name="measureresults" placeholder="请先选择测量方式后开始测量。" class="layui-textarea" style="height:200px;width: 100%;font-size: 15px;line-height:25px;"></textarea>
+                    <textarea name="measureresults" placeholder="请先选择测量方式后开始测量。" class="layui-textarea" style="height:110px;width: 100%;font-size: 15px;line-height:22px;" readonly="readonly"></textarea>
                 </div>
             </div>
 
@@ -39,15 +39,15 @@
         </form>
 
         <div class="layui-btn-container" style="margin-left:8px;margin-top:10px;text-align:center ">
-            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_point_id" onclick="pointMeasure()">坐标</button>
-            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_height_id" onclick="heightMeasure()">高差</button>
-            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_distance_id" onclick="distanceMeasure()">距离</button>
-            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_area_id" onclick="areaMeasure()">面积</button>
-            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_azimuth_id" onclick="azimuthMeasure()">方位角</button>
+            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:55px;" id="widget_measure_point_id" onclick="pointMeasure()">坐标</button>
+            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:55px;" id="widget_measure_height_id" onclick="heightMeasure()">高差</button>
+            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:55px;" id="widget_measure_distance_id" onclick="distanceMeasure()">距离</button>
+            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:55px;" id="widget_measure_area_id" onclick="areaMeasure()">面积</button>
+            <button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:55px;" id="widget_measure_azimuth_id" onclick="azimuthMeasure()">方位角</button>
         </div>
 
-        <div style="text-align:center;margin-top:2px;">
-            <button type="button" style="width:90%" class="layui-btn layui-btn-radius layui-btn-fluid layui-btn-danger" onclick="ClearCeliangTemp()">清除</button>
+        <div style="text-align:center;margin-top:0px;">
+            <button type="button" style="width:90%;background-color:#dddddd;" class="layui-btn layui-btn-radius layui-btn-sm" id="widget_measure_clear_id" onclick="ClearCeliangTemp()">清除</button>
         </div>
     </div>
 </div>

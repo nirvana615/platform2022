@@ -24,13 +24,14 @@ function Measurewidget() {
     measurewidget_layerindex = layer.open({
         type: 1
         , title: ['测量工具', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-        , area: ['400px', '430px']
+        , area: ['350px', '330px']
         , shade: 0
         , offset: ['85px', '1530px']
         , closeBtn: 1
+        , maxmin: true
         , moveOut: true
         , resize: false
-        , content: '<div class="layui-tab layui-tab-brief" lay-filter="measureway" style="margin:0px;"><ul class="layui-tab-title"><li lay-id="terrainMeasure" class="layui-this" style="width:40%;padding-top: 10px;line-height: normal;">地形测量</li><li lay-id="modelMeasure" style="width:40%;padding-top:10px;line-height:20px">模型测量</li></ul><div class="layui-tab-content" style="padding:0px;"><form class="layui-form" style="margin-top:0px;margin-left:0px;" lay-filter="measureinfoform"><div class="layui-row"><div class="layui-input-block" style="margin:5px 5px 0px 5px;"><textarea name="measureresults" placeholder="请先选择测量方式后开始测量。" class="layui-textarea" style="height:200px;width: 100%;font-size: 15px;line-height:25px;"></textarea></div></div><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">连续测量</label><div class="layui-input-block"><input type="checkbox" name="multiMeasure" lay-filter="multiMeasureswitch" lay-skin="switch" lay-text="是|否"></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">操作提示</label><div class="layui-input-block"><input type="checkbox" name="tipsMeasure" lay-filter="tipsMeasureswitch" lay-skin="switch" lay-text="是|否"></div></div></div></div></div></form><div class="layui-btn-container" style="margin-left:8px;margin-top:10px;text-align:center "><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_point_id" onclick="pointMeasure()">坐标</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_height_id" onclick="heightMeasure()">高差</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_distance_id" onclick="distanceMeasure()">距离</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_area_id" onclick="areaMeasure()">面积</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:65px;" id="widget_measure_azimuth_id" onclick="azimuthMeasure()">方位角</button></div><div style="text-align:center;margin-top:2px;"><button type="button" style="width:90%" class="layui-btn layui-btn-radius layui-btn-fluid layui-btn-danger" onclick="ClearCeliangTemp()">清除</button></div></div></div>'
+        , content: '<div class="layui-tab layui-tab-brief" lay-filter="measureway" style="margin:0px;"><ul class="layui-tab-title"><li lay-id="terrainMeasure" class="layui-this" style="width:40%;padding-top: 10px;line-height: normal;">地形测量</li><li lay-id="modelMeasure" style="width:40%;padding-top:10px;line-height:20px">模型测量</li></ul><div class="layui-tab-content" style="padding:0px;"><form class="layui-form" style="margin-top:0px;margin-left:0px;" lay-filter="measureinfoform"><div class="layui-row"><div class="layui-input-block" style="margin:5px 5px 0px 5px;"><textarea name="measureresults" placeholder="请先选择测量方式后开始测量。" class="layui-textarea" style="height:110px;width: 100%;font-size: 15px;line-height:22px;" readonly="readonly"></textarea></div></div><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">连续测量</label><div class="layui-input-block"><input type="checkbox" name="multiMeasure" lay-filter="multiMeasureswitch" lay-skin="switch" lay-text="是|否"></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">操作提示</label><div class="layui-input-block"><input type="checkbox" name="tipsMeasure" lay-filter="tipsMeasureswitch" lay-skin="switch" lay-text="是|否"></div></div></div></div></div></form><div class="layui-btn-container" style="margin-left:8px;margin-top:10px;text-align:center "><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:55px;" id="widget_measure_point_id" onclick="pointMeasure()">坐标</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:55px;" id="widget_measure_height_id" onclick="heightMeasure()">高差</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:55px;" id="widget_measure_distance_id" onclick="distanceMeasure()">距离</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:55px;" id="widget_measure_area_id" onclick="areaMeasure()">面积</button><button type="button" class="layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm" style="width:55px;" id="widget_measure_azimuth_id" onclick="azimuthMeasure()">方位角</button></div><div style="text-align:center;margin-top:0px;"><button type="button" style="width:90%;background-color:#dddddd;" class="layui-btn layui-btn-radius layui-btn-sm" id="widget_measure_clear_id" onclick="ClearCeliangTemp()">清除</button></div></div></div>'
         , zIndex: layer.zIndex
         , success: function (layero) {
             layer.setTop(layero);
@@ -200,7 +201,12 @@ function pointMeasure() {
                 }
 
                 if (height > 0) {
-                    measurewidget_result = "经  度： " + lon.toFixed(6) + "°\n纬  度： " + lat.toFixed(6) + "°\n高  程： " + (height).toFixed(3) + "m\n\n" + measurewidget_result;
+                    if (measurewidget_result == "") {
+                        measurewidget_result = "经  度： " + lon.toFixed(6) + "°\n纬  度： " + lat.toFixed(6) + "°\n高  程： " + (height).toFixed(3) + "m";
+                    }
+                    else {
+                        measurewidget_result = "经  度： " + lon.toFixed(6) + "°\n纬  度： " + lat.toFixed(6) + "°\n高  程： " + (height).toFixed(3) + "m\n\n" + measurewidget_result;
+                    }
 
                     if (Cesium.defined(position)) {
                         viewer.entities.add({
@@ -419,7 +425,12 @@ function heightMeasure() {
                         //    }
                         //});
 
-                        measurewidget_result = "空间距离：" + len.toFixed(3) + "m\n平面距离：" + dis.toFixed(3) + "m\n高       差：" + (rblh1.height - h).toFixed(3) + "m\n倾       角：" + (Math.acos(dis / len) * 180 / Math.PI).toFixed(2) + '°\n\n' + measurewidget_result;
+                        if (measurewidget_result == "") {
+                            measurewidget_result = "空间距离：" + len.toFixed(3) + "m\n平面距离：" + dis.toFixed(3) + "m\n高       差：" + (rblh1.height - h).toFixed(3) + "m\n倾       角：" + (Math.acos(dis / len) * 180 / Math.PI).toFixed(2) + '°';
+                        }
+                        else {
+                            measurewidget_result = "空间距离：" + len.toFixed(3) + "m\n平面距离：" + dis.toFixed(3) + "m\n高       差：" + (rblh1.height - h).toFixed(3) + "m\n倾       角：" + (Math.acos(dis / len) * 180 / Math.PI).toFixed(2) + '°\n\n' + measurewidget_result;
+                        }
 
                         if (measurewidget_result != "") {
                             layui.form.val("measureinfoform", {
@@ -509,7 +520,12 @@ function heightMeasure() {
                         //    }
                         //});
 
-                        measurewidget_result = "空间距离：" + len.toFixed(3) + "m\n平面距离：" + dis.toFixed(3) + "m\n高       差：" + (rblh.height - h).toFixed(3) + "m\n倾       角：" + (Math.acos(dis / len) * 180 / Math.PI).toFixed(2) + '°\n\n' + measurewidget_result;
+                        if (measurewidget_result == "") {
+                            measurewidget_result = "空间距离：" + len.toFixed(3) + "m\n平面距离：" + dis.toFixed(3) + "m\n高       差：" + (rblh.height - h).toFixed(3) + "m\n倾       角：" + (Math.acos(dis / len) * 180 / Math.PI).toFixed(2) + '°';
+                        }
+                        else {
+                            measurewidget_result = "空间距离：" + len.toFixed(3) + "m\n平面距离：" + dis.toFixed(3) + "m\n高       差：" + (rblh.height - h).toFixed(3) + "m\n倾       角：" + (Math.acos(dis / len) * 180 / Math.PI).toFixed(2) + '°\n\n' + measurewidget_result;
+                        }
 
                         if (measurewidget_result != "") {
                             layui.form.val("measureinfoform", {
@@ -686,7 +702,12 @@ function distanceMeasure() {
                 }
             });
 
-            measurewidget_result = "空间距离：" + lens.toFixed(3) + "m\n平面距离：" + diss.toFixed(3) + "m\n\n" + measurewidget_result;
+            if (measurewidget_result == "") {
+                measurewidget_result = "空间距离：" + lens.toFixed(3) + "m\n平面距离：" + diss.toFixed(3) + "m";
+            }
+            else {
+                measurewidget_result = "空间距离：" + lens.toFixed(3) + "m\n平面距离：" + diss.toFixed(3) + "m\n\n" + measurewidget_result;
+            }
 
             if (measurewidget_result != "") {
                 layui.form.val("measureinfoform", {
@@ -941,7 +962,12 @@ function areaMeasure() {
                 }
             });
 
-            measurewidget_result = "平面面积：" + area.toFixed(3) + "m²\n空间周长：" + lens.toFixed(3) + 'm\n平面周长：' + diss.toFixed(3) + 'm\n\n' + measurewidget_result;
+            if (measurewidget_result == "") {
+                measurewidget_result = "平面面积：" + area.toFixed(3) + "m²\n空间周长：" + lens.toFixed(3) + 'm\n平面周长：' + diss.toFixed(3) + 'm';
+            }
+            else {
+                measurewidget_result = "平面面积：" + area.toFixed(3) + "m²\n空间周长：" + lens.toFixed(3) + 'm\n平面周长：' + diss.toFixed(3) + 'm\n\n' + measurewidget_result;
+            }
 
             if (measurewidget_result != "") {
                 layui.form.val("measureinfoform", {
@@ -1145,7 +1171,12 @@ function azimuthMeasure() {
                         }
                     });
 
-                    measurewidget_result = "方位角：" + r.toFixed(2) + '°\n\n' + measurewidget_result;
+                    if (measurewidget_result == "") {
+                        measurewidget_result = "方位角：" + r.toFixed(2) + '°';
+                    }
+                    else {
+                        measurewidget_result = "方位角：" + r.toFixed(2) + '°\n\n' + measurewidget_result;
+                    }
 
                     if (measurewidget_result != null) {
                         layui.form.val("measureinfoform", {
@@ -1205,15 +1236,15 @@ function azimuthMeasure() {
 //选中测量操作按钮
 function selectMeasureOperate(id) {
     unselectMeasureOperate();
-    document.getElementById(id).style = "color:#FFFFFF;background-color:#009688;width:65px;";
+    document.getElementById(id).style = "color:#FFFFFF;background-color:#5FB878;width:55px;";
 };
 //取消测量操作按钮
 function unselectMeasureOperate() {
-    document.getElementById("widget_measure_point_id").style = "width:65px;";
-    document.getElementById("widget_measure_height_id").style = "width:65px;";
-    document.getElementById("widget_measure_distance_id").style = "width:65px;";
-    document.getElementById("widget_measure_area_id").style = "width:65px;";
-    document.getElementById("widget_measure_azimuth_id").style = "width:65px;";
+    document.getElementById("widget_measure_point_id").style = "width:55px;";
+    document.getElementById("widget_measure_height_id").style = "width:55px;";
+    document.getElementById("widget_measure_distance_id").style = "width:55px;";
+    document.getElementById("widget_measure_area_id").style = "width:55px;";
+    document.getElementById("widget_measure_azimuth_id").style = "width:55px;";
     document.getElementById("widget_measure_point_id").className = "layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm";
     document.getElementById("widget_measure_height_id").className = "layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm";
     document.getElementById("widget_measure_distance_id").className = "layui-btn  layui-btn-radius layui-btn-primary layui-btn-sm";

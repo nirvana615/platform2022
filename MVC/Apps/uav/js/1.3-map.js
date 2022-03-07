@@ -568,37 +568,44 @@ function ClearAllModelAndGeometry() {
 //}));
 
 
-//viewer.entities.add(new Cesium.Entity({
-//    id: "temp1",
-//    polyline: {
-//        positions: Cesium.Cartesian3.fromDegreesArray([
-//            107.16736321, 28.92949329,
-//            107.17050079, 28.92982759,
-//            107.17460544, 28.93073609,
-//            107.17797939, 28.93164317,
-//            107.18010684, 28.93287627,
-//            107.18072994, 28.93471641,
-//            107.18156790, 28.93695096,
-//            107.18223399, 28.93845334,
-//            107.18340509, 28.93981120,
-//            107.18380257, 28.94098936,
-//            107.18335122, 28.94217064,
-//            107.18167490, 28.94389379,
-//            107.17976220, 28.94522242,
-//            107.17434642, 28.94819553,
-//            107.17269166, 28.94787345,
-//            107.16871611, 28.94473258,
-//            107.16565400, 28.94079590,
-//            107.16465482, 28.93918972,
-//            107.16302172, 28.93729149,
-//            107.16168946, 28.93578786,
-//            107.16736321, 28.92949329,
-//        ]),
-//        width: 2,
-//        arcType: Cesium.ArcType.RHUMB,
-//        material: Cesium.Color.AQUA,
-//        show: true,
-//        clampToGround: true,
-//        classificationType: Cesium.ClassificationType.BOTH,
-//    },
-//}));
+viewer.entities.add(new Cesium.Entity({
+    id: "temp1",
+    polyline: {
+        positions: Cesium.Cartesian3.fromDegreesArray([
+            106.98130131, 29.97073592,
+            106.97975636, 29.96659062,
+            106.97741747, 29.95952650,
+            106.98276043, 29.95837388,
+            106.98797464, 29.96478746,
+            106.98566794, 29.97051286,
+            106.98125839, 29.97075451,
+        ]),
+        width: 2,
+        arcType: Cesium.ArcType.RHUMB,
+        material: Cesium.Color.AQUA,
+        show: true,
+        clampToGround: true,
+        classificationType: Cesium.ClassificationType.BOTH,
+    },
+}));
+
+
+viewer.entities.add(new Cesium.Entity({
+    id: "temp2",
+    polyline: {
+        positions: Cesium.Cartesian3.fromDegreesArray([
+            106.95694685, 29.9623708,
+            106.96106672, 29.96103232,
+            106.96542263, 29.96822646,
+            106.95902824, 29.9706058,
+            106.95422173, 29.96499195,
+            106.95422173, 29.96499195,
+        ]),
+        width: 2,
+        arcType: Cesium.ArcType.RHUMB,
+        material: Cesium.Color.AQUA,
+        show: true,
+        clampToGround: true,
+        classificationType: Cesium.ClassificationType.BOTH,
+    },
+}));

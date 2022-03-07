@@ -3326,6 +3326,8 @@ function AddAvoidTerrain() {
                         uav_route_add_avoids.push(uav_route_add_avoid);
                         uav_route_add_waypoint.push(uav_route_add_avoid);
 
+                        ExportPoint(uav_route_add_avoids);
+
                         //刷新航线树
                         current_waypoint_title = uav_route_add_avoid.title;
                         updateroutetree();

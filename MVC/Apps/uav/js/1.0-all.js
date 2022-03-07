@@ -60,7 +60,7 @@ var TARGETAREAICON = '<span style="margin-right:2px;"><img src="../../../Resourc
  */
 var routespeed = 15;             //(默认值)航线速度，单位m/s
 var takeoffheight = 400;         //(默认值)起飞点高度，单位m
-var avoidheight = 100;           //(默认值)避障点高度，单位m
+var avoidheight = 150;           //(默认值)避障点高度，单位m
 var landingheight = 100;         //(默认值)降落点高度，单位m
 var adjustdistance = 5;         //(默认值)调整距离，单位m
 var photodistance = 50;           //(默认值)拍照距离，单位m
