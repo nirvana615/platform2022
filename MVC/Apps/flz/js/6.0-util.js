@@ -16,8 +16,12 @@ util.fixbar({
             Measurewidget(); 
         }
         else if (type === 'bar3') {
+            if ( currentprojectid == null) {
+                layer.msg('请先选择项目');
+                return;
+            }
             //标注
-            Markwidget();
+            Markwidget(currentprojectid);
         }
     }
 });
