@@ -44,7 +44,7 @@ var markwidget_tipsentity = null;//操作提示
 //标绘widget
 function Markwidget(id) {
     if (markwidgetlayerindex != null) {
-        layer.setTop(markwidgetlayerindex);
+        layer.restore(markwidgetlayerindex);
         return;
     }
     markwidgetlayerindex = layer.open({
@@ -2260,7 +2260,7 @@ function uploadProjectPointMarkEntity(id, title, position,style,color) {
                 pixelOffset: new Cesium.Cartesian2(0.0, -45),
                 eyeOffset: new Cesium.Cartesian3(0, 0, -10),
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                scaleByDistance: new Cesium.NearFarScalar(200, 1, 15000, 0),
+                scaleByDistance: new Cesium.NearFarScalar(1000, 1, 15000, 0),
             }
         });
     }
@@ -2280,7 +2280,7 @@ function uploadProjectLineMarkEntity(id, title,position,style, color) {
                 depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
                     color: Cesium.Color.fromCssColorString(color),
                 }),
-                scaleByDistance: new Cesium.NearFarScalar(200, 1, 15000, 0),
+                distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0.0, 15000),
             }
         });
 
@@ -2313,7 +2313,7 @@ function uploadProjectLineMarkEntity(id, title,position,style, color) {
                 pixelOffset: new Cesium.Cartesian2(0.0, -36),
                 eyeOffset: new Cesium.Cartesian3(0, 0, -10),
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                scaleByDistance: new Cesium.NearFarScalar(200, 1, 8000, 0),
+                scaleByDistance: new Cesium.NearFarScalar(1000, 1, 15000, 0),
             }
         });
     }
@@ -2334,7 +2334,7 @@ function uploadProjectPolygonMarkEntity(id, title, position,style, color) {
                 depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
                     color: Cesium.Color.fromCssColorString(color),
                 }),
-                scaleByDistance: new Cesium.NearFarScalar(200, 1, 15000, 0),
+                distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0.0, 15000),
             }
         });
         var styletemp = JSON.parse(style).stylesrc.replace('../Resources/img/mark/', '').replace('.png', '');
@@ -2365,7 +2365,7 @@ function uploadProjectPolygonMarkEntity(id, title, position,style, color) {
                 pixelOffset: new Cesium.Cartesian2(0.0, -36),
                 eyeOffset: new Cesium.Cartesian3(0, 0, -10),
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                scaleByDistance: new Cesium.NearFarScalar(200, 1, 15000, 0),
+                scaleByDistance: new Cesium.NearFarScalar(1000, 1, 15000, 0),
             }
         });
     }
