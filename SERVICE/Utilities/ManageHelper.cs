@@ -181,6 +181,26 @@ namespace SERVICE
                     }
                     #endregion
 
+
+
+                    #region 地址采集项目
+                    string flzProjects = PostgresqlHelper.QueryData(connect, string.Format("SELECT a.* FROM flz_project a,flz_map_user_project b WHERE a.id=b.projectid and b.userid={0} AND b.ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                    if (!string.IsNullOrEmpty(flzProjects))
+                    {
+
+                        string[] rows = flzProjects.Split(new char[] { COM.ConstHelper.rowSplit });
+                        for (int i = 0; i < rows.Length; i++)
+                        {
+                            FlzProject project = ParseFlzoneHelper.ParseProject(rows[i]);
+                            if (project != null)
+                                {
+                                   bsminfo += project.BSM + ",";
+                                }
+                        }
+                        
+                    }
+                    #endregion
+
                     if (!string.IsNullOrEmpty(bsminfo))
                     {
                         bsminfo = bsminfo.TrimEnd(',');

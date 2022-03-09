@@ -42,7 +42,7 @@ namespace SERVICE.Controllers
             {
                 //有效cookie  ViewBag.User
                 List<FlzProject> projectList = new List<FlzProject>();
-                string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM flz_project WHERE fzr={0}  ORDER BY id ASC", SQLHelper.UpdateString(user)));
+                string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM flz_project WHERE bsm{0}  ORDER BY id ASC", userbsms));
                 if (string.IsNullOrEmpty(data))
                 {
                     //无项目信息
@@ -704,6 +704,172 @@ namespace SERVICE.Controllers
                 return "用户无权限！";
             }
         }
+
+        /// <summary>
+        /// 后台获取地质采集项目。
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetFlzProjectList()
+        {
+            List<UavProject> uavProjects = new List<UavProject>();
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM flz_project WHERE ztm={0} ORDER BY id DESC", (int)MODEL.Enum.State.InUse));
+            if (string.IsNullOrEmpty(datas))
+            {
+                return string.Empty;
+            }
+
+            string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+            if (rows.Length < 1)
+            {
+                return string.Empty;
+            }
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                UavProject uavProject = ParseUavHelper.ParseUavProject(rows[i]);
+                if (uavProject != null)
+                {
+                    uavProjects.Add(uavProject);
+                }
+            }
+
+            if (uavProjects.Count > 0)
+            {
+                return JsonHelper.ToJson(uavProjects);
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// 获取用户-采集项目映射
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetMapUserFlzProject(int id)
+        {
+            string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM flz_map_user_project WHERE userid={0} AND ztm={1} ORDER BY id ASC", id, (int)MODEL.Enum.State.InUse));
+            if (string.IsNullOrEmpty(maps))
+            {
+                return string.Empty;
+            }
+            else
+            {
+                List<MapUserUavProject> mapUserUavProjects = new List<MapUserUavProject>();
+
+                string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    MapUserUavProject mapUserUavProject = ParseUavHelper.ParseMapUserUavProject(rows[i]);
+                    if (mapUserUavProject != null)
+                    {
+                        mapUserUavProjects.Add(mapUserUavProject);
+                    }
+                }
+
+                if (mapUserUavProjects.Count > 0)
+                {
+                    return JsonHelper.ToJson(mapUserUavProjects);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 更新用户-航线项目映射
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public string UpdateMapUserFlzProject()
+        {
+            string userid = HttpContext.Current.Request.Form["userid"];
+            string geologyprojectids = HttpContext.Current.Request.Form["geologyprojectids"];
+
+            if (string.IsNullOrEmpty(geologyprojectids))
+            {
+                int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM flz_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
+                if (count > 0)
+                {
+                    int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE flz_map_user_project SET ztm={0} WHERE userid={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, userid, (int)MODEL.Enum.State.InUse));
+                    if (updatecount > 0)
+                    {
+                        return "更新用户授权成功！";
+                    }
+                    else
+                    {
+                        return "更新用户授权失败！";
+                    }
+                }
+            }
+            else
+            {
+                List<string> newuavprojectidlist = geologyprojectids.Split(new char[] { ',' }).ToList();
+
+                List<string> deluavprojectidlist = new List<string>();//需要删除的
+                List<string> uavprojectidlist = new List<string>();//保留的，不做更改
+
+                string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM flz_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(maps))
+                {
+                    string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        MapUserUavProject mapUserUavProject = ParseUavHelper.ParseMapUserUavProject(rows[i]);
+                        if (mapUserUavProject != null)
+                        {
+                            if (newuavprojectidlist.Contains(mapUserUavProject.UavProjectId.ToString()))
+                            {
+                                uavprojectidlist.Add(mapUserUavProject.UavProjectId.ToString());
+                            }
+                            else
+                            {
+                                deluavprojectidlist.Add(mapUserUavProject.UavProjectId.ToString());
+                            }
+                        }
+                    }
+                }
+
+                if (deluavprojectidlist.Count > 0)
+                {
+                    for (int i = 0; i < deluavprojectidlist.Count; i++)
+                    {
+                        int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE flz_map_user_project SET ztm={0} WHERE userid={1} AND projectid={2} AND ztm={3}", (int)MODEL.Enum.State.NoUse, userid, deluavprojectidlist[i], (int)MODEL.Enum.State.InUse));
+                        if (updatecount != 1)
+                        {
+                            return "更新用户授权（删除原有授权）失败！";
+                        }
+                    }
+                }
+
+                for (int i = 0; i < newuavprojectidlist.Count; i++)
+                {
+                    if (uavprojectidlist.Count > 0)
+                    {
+                        if (uavprojectidlist.Contains(newuavprojectidlist[i]))
+                        {
+                            continue;
+                        }
+                    }
+
+                    PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO flz_map_user_project (userid,projectid,cjsj,ztm) VALUES({0},{1},{2},{3})", userid, newuavprojectidlist[i], SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
+                }
+
+                return "更新用户授权成功！";
+            }
+
+            return string.Empty;
+        }
+
+
+
 
 
     }

@@ -55,45 +55,46 @@
         var form = layui.form;
         var tree = layui.tree;
 
-        var monitorprojects = [];
+        var geologyprojects = [];
         var curuserid = null;
 
         //渲染监测项目
         tree.render({
-            elem: '#monitorprojectid'
-            , id: 'monitorprojecttreeid'
+            elem: '#geologyprojectid'
+            , id: 'geologyprojecttreeid'
             , data: []
             , accordion: true
             , showCheckbox: true
             , showLine: false
             , oncheck: function (obj) {
                 if (obj.checked) {
-                    for (var i in monitorprojects) {
-                        if (monitorprojects[i].id == obj.data.id) {
-                            monitorprojects[i].checked = true;
+                    for (var i in geologyprojects) {
+                        if (geologyprojects[i].id == obj.data.id) {
+                            geologyprojects[i].checked = true;
                         }
                     }
                 }
                 else {
-                    for (var i in monitorprojects) {
-                        if (monitorprojects[i].id == obj.data.id) {
-                            monitorprojects[i].checked = false;
+                    for (var i in geologyprojects) {
+                        if (geologyprojects[i].id == obj.data.id) {
+                            geologyprojects[i].checked = false;
                         }
                     }
                 }
             }
         });
 
-        //GetMonitorUserInfo();
-        //GetMonitorProjectInfo();
+        GetFlzrUserInfo();
+        GetFlzProjectInfo();
 
         form.render();
         form.render('select');
 
         //获取用户信息
-        function GetMonitorUserInfo() {
+        function GetFlzrUserInfo() {
+            var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
             $.ajax({
-                url: window.parent.servicesurl + "/api/User/GetMonitorUserInfo", type: "get",
+                url: window.parent.servicesurl + "/api/User/GetFlzUserInfo", type: "get",
                 success: function (data) {
                     if (data == "") {
                         layer.msg("无监测用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -101,117 +102,130 @@
                     }
                     else {
                         var userinfodatas = JSON.parse(data);
+                        console.log();
                         for (var i in userinfodatas) {
-                            document.getElementById('monitorusersid').innerHTML += '<option value="' + userinfodatas[i].Id + '">' + userinfodatas[i].AliasName + ' - ' + userinfodatas[i].UserName + '</option>';
+                            document.getElementById('geologyusersid').innerHTML += '<option value="' + userinfodatas[i].Id + '">' + userinfodatas[i].AliasName + ' - ' + userinfodatas[i].UserName + '</option>';
                         }
 
                         form.render();
                         form.render('select');
 
                         //切换用户
-                        form.on('select(selectmonitoruser)', function (data) {
+                        form.on('select(selectgeologyuser)', function (data) {
                             if (data.value == "") {
                                 curuserid = null;
-                                for (var i in monitorprojects) {
-                                    monitorprojects[i].checked = false;
+                                for (var i in geologyprojects) {
+                                    geologyprojects[i].checked = false;
                                 }
 
-                                tree.reload('monitorprojecttreeid', {
-                                    data: monitorprojects
+                                tree.reload('geologyprojecttreeid', {
+                                    data: geologyprojects
                                 });
                             }
                             else {
                                 curuserid = data.value;
+                                var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                                 $.ajax({
-                                    url: window.parent.servicesurl + "/api/Project/GetMapUserMonitorProject", type: "get", data: { "id": data.value },
+                                    url: window.parent.servicesurl + "/api/Flz/GetMapUserFlzProject", type: "get", data: { "id": data.value },
                                     success: function (data) {
                                         if (data == "") {
-                                        }
-                                        else {
-                                            var mapusermonitorprojectdata = JSON.parse(data);
-                                            var usermonitorprojectids = [];
-                                            for (var i in mapusermonitorprojectdata) {
-                                                usermonitorprojectids.push(mapusermonitorprojectdata[i].MonitorProjectId);
+                                            for (var i in geologyprojects) {
+                                                geologyprojects[i].checked = false;
                                             }
-
-                                            for (var i in monitorprojects) {
-                                                if (usermonitorprojectids.indexOf(monitorprojects[i].id) != -1) {
-                                                    monitorprojects[i].checked = true;
-                                                }
-                                                else {
-                                                    monitorprojects[i].checked = false;
-                                                }
-                                            }
-
-                                            tree.reload('monitorprojecttreeid', {
-                                                data: monitorprojects
+                                            tree.reload('geologyprojecttreeid', {
+                                                data: geologyprojects
                                             });
                                         }
+                                        else {
+                                            var mapusergeologyprojectdata = JSON.parse(data);
+                                            var usergeologyprojectids = [];
+                                            for (var i in mapusergeologyprojectdata) {
+                                                usergeologyprojectids.push(mapusergeologyprojectdata[i].UavProjectId);
+                                            }
+
+                                            for (var i in geologyprojects) {
+                                                if (usergeologyprojectids.indexOf(geologyprojects[i].id) != -1) {
+                                                    geologyprojects[i].checked = true;
+                                                }
+                                                else {
+                                                    geologyprojects[i].checked = false;
+                                                }
+                                            }
+
+                                            tree.reload('geologyprojecttreeid', {
+                                                data: geologyprojects
+                                            });
+                                        }
+                                        layer.close(loadingminindex);
                                     }, datatype: "json"
                                 });
                             }
                         });
                     }
+                    layer.close(loadingminindex);
                 }, datatype: "json"
             });
         }
 
-        //获取监测项目信息
-        function GetMonitorProjectInfo() {
+        //获取要素项目信息
+        function GetFlzProjectInfo() {
+            var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
             $.ajax({
-                url: window.parent.servicesurl + "/api/Project/GetProjectList", type: "get",
+                url: window.parent.servicesurl + "/api/Flz/GetFlzProjectList", type: "get",
                 success: function (data) {
-                    monitorprojects = [];
+                    geologyprojects = [];
                     if (data == "") {
                         layer.msg("无监测项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     }
                     else {
-                        var monitorprojectdatas = JSON.parse(data);
-                        for (var i in monitorprojectdatas) {
-                            var monitorproject = new Object;
-                            monitorproject.id = monitorprojectdatas[i].Id;
-                            monitorproject.title = monitorprojectdatas[i].XMMC;
-                            monitorproject.checked = false;
-                            monitorprojects.push(monitorproject);
+                        var geologyprojectdatas = JSON.parse(data);
+                        for (var i in geologyprojectdatas) {
+                            var geologyproject = new Object;
+                            geologyproject.id = geologyprojectdatas[i].Id;
+                            geologyproject.title = geologyprojectdatas[i].XMMC;
+                            geologyproject.checked = false;
+                            geologyprojects.push(geologyproject);
                         }
 
-                        tree.reload('monitorprojecttreeid', {
-                            data: monitorprojects
+                        tree.reload('geologyprojecttreeid', {
+                            data: geologyprojects
                         });
                     }
+                    layer.close(loadingminindex);
                 }, datatype: "json"
             });
         }
 
         //更新授权
-        form.on('submit(authmonitorusersubmit)', function (data) {
+        form.on('submit(authgeologyusersubmit)', function (data) {
             if (curuserid == null) {
                 layer.msg("请先选择监测用户！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
             }
             else {
                 data.field.userid = curuserid;
-                var monitorprojectids = "";
-                for (var i = 0; i < monitorprojects.length; i++) {
-                    if (monitorprojects[i].checked == true) {
-                        monitorprojectids += monitorprojects[i].id + ",";
+                var geologyprojectids = "";
+                for (var i = 0; i < geologyprojects.length; i++) {
+                    if (geologyprojects[i].checked == true) {
+                        geologyprojectids += geologyprojects[i].id + ",";
                     }
                 }
-                if (monitorprojectids != "") {
-                    if ((monitorprojectids.indexOf(",") != -1)) {
-                        data.field.monitorprojectids = monitorprojectids.substring(0, monitorprojectids.length - 1);
+                if (geologyprojectids != "") {
+                    if ((geologyprojectids.indexOf(",") != -1)) {
+                        data.field.geologyprojectids = geologyprojectids.substring(0, geologyprojectids.length - 1);
                     }
                     else {
-                        data.field.monitorprojectids = monitorprojectids;
+                        data.field.geologyprojectids = geologyprojectids;
                     }
                 }
-
+                var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
 
                 $.ajax({
-                    url: window.parent.servicesurl + "/api/Project/UpdateMapUserMonitorProject", type: "put", data: data.field,
+                    url: window.parent.servicesurl + "/api/Flz/UpdateMapUserFlzProject", type: "put", data: data.field,
                     success: function (result) {
                         if (result != "") {
                             layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }
+                        layer.close(loadingminindex);
                     }, datatype: "json"
                 });
             }

@@ -1692,7 +1692,174 @@ function getChanzhuang(positList) {
 }
 
 
+//长度量测
+function lenMeasure() {
+    ClearTemp();
 
+    isPoint = false;
+    isLength = true;
+    isHeight = false;
+    isAraa = false;
+    isAzimuth = false;
+    isRedo = false;
+    isPointLabel = false;
+    isPolylineLabel = false;
+    isPolygonLabel = false;
+    isOccurrence = false;
+    isWindowZiDingyi = false;
+
+    if (isLength) {
+        if (handler != undefined) {
+            handler.destroy();
+        }
+
+        handler = new Cesium.ScreenSpaceEventHandler(canvas);
+
+        //左击
+        handler.setInputAction(function (leftclik) {
+            if (isRedo) {
+                ClearTemp();
+                isRedo = false;
+                linepoints = [];
+                points = [];
+            }
+
+            var pickedOject = scene.pick(leftclik.position);
+            if (pickedOject != undefined) {
+                var position = scene.pickPosition(leftclik.position);
+                if (position != undefined) {
+                    if (Cesium.defined(position)) {
+                        
+                        points.push(position);
+
+                        viewer.entities.add({
+                            name: "ptMeasue" + NewGuid(),
+                            position: position,
+                            point: {
+                                pixelSize: 10,
+                                color: Cesium.Color.YELLOW,
+                                disableDepthTestDistance: Number.POSITIVE_INFINITY
+                            }
+                        });
+
+                        if (points.length > 1) {
+                            var point = points[points.length - 2];
+                            viewer.entities.add({
+                                name: "plMeasue" + NewGuid(),
+                                polyline: {
+                                    positions: [point, position],
+                                    width: 2,
+                                    arcType: Cesium.ArcType.RHUMB,
+                                    material: Cesium.Color.RED,
+                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                        color: Cesium.Color.RED,
+                                    }),
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        //移动
+        handler.setInputAction(function (move) {
+            if (points.length > 0) {
+                //清除多边形临时边线
+
+                var pick = viewer.scene.pick(move.endPosition);
+                if (pick != undefined) {
+                    var XYZ = viewer.scene.pickPosition(move.endPosition);
+                    if (XYZ != undefined) {
+                        //删除
+                        if (viewer.entities.getById("line_temp9999") != null) {
+                            viewer.entities.removeById("line_temp9999");
+                        }
+
+                        //绘制多边形临时边线
+                        viewer.entities.add({
+                            id: "line_temp9999",
+                            polyline: {
+                                positions: [points[points.length - 1], XYZ],
+                                width: 2,
+                                arcType: Cesium.ArcType.RHUMB,
+                                material: Cesium.Color.RED,
+                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                    color: Cesium.Color.RED,
+                                }),
+                            }
+                        });
+
+                    }
+                }
+            }
+
+        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+        if (isMobile.any()) {//双指
+            handler.setInputAction(function (pinch) {
+                if (points.length > 1) {
+                    //删除
+                    if (viewer.entities.getById("line_temp9999") != null) {
+                        viewer.entities.removeById("line_temp9999");
+                    }
+
+
+                    var sum = 0;
+                    for (var j = 0; j < points.length-1; j++) {
+                        sum = sum + Cesium.Cartesian3.distance(points[j], points[j + 1]);
+                    }
+
+                    viewer.entities.add({
+                        name: "pylMeasue" + NewGuidCL(),
+                        position: points[0],
+                        label: {
+                            text:  '长度：' + sum.toFixed(2) + '米',
+                            showBackground: true,
+                            backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                            font: '20px Times New Roman',
+                            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                            verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                            pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                        }
+                    });
+                }
+                points = [];
+            }, Cesium.ScreenSpaceEventType.PINCH_START);
+        }
+        else {//右击
+            handler.setInputAction(function (rightclik) {
+                if (points.length > 1) {
+                    //删除
+                    if (viewer.entities.getById("line_temp9999") != null) {
+                        viewer.entities.removeById("line_temp9999");
+                    }
+                    var sum = 0;
+                    for (var j = 0; j < points.length-1; j++) {
+                        sum = sum + Cesium.Cartesian3.distance(points[j], points[j + 1]);
+                    }
+
+                    viewer.entities.add({
+                        name: "pylMeasue" + NewGuidCL(),
+                        position: points[0],
+                        label: {
+                            text: '长度：' + sum.toFixed(2) + '米',
+                            showBackground: true,
+                            backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                            font: '20px Times New Roman',
+                            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                            verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                            pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                        }
+                    });
+                    points = [];
+                }
+
+            }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+        }
+    }
+};
 
 var celinghtml2 = "	<div class='layui-tab layui-tab-brief' lay-filter='celianglayer'>								"
     + "		<ul class='layui-tab-title'>							"

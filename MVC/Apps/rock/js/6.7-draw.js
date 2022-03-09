@@ -241,7 +241,10 @@ function biaozhuMangan() {
         , end: function () {
             biaoZhulayerlistlayerindex = null;
             //删除图层数据
-
+            isPoint = false;                        //坐标量测
+            isLength = false;                     //长度量测
+            isAraa = false;                         //面积量测
+            Clear(); 
         }
     });
 
@@ -335,6 +338,19 @@ function pointBiaoZhu() {
         }
         handler = new Cesium.ScreenSpaceEventHandler(canvas);
 
+
+        handler = new Cesium.ScreenSpaceEventHandler(canvas);
+        //左击
+        handler.setInputAction(function (gundong) {
+            if (isRedo) {
+                ClearTemp();
+                isRedo = false;
+                linepoints = [];
+                points = [];
+            }
+            console.log(gundong);
+
+        }, Cesium.ScreenSpaceEventType.WHEEL);
         //左击
         handler.setInputAction(function (leftclick) {
             if (pointPic == null) {
@@ -771,7 +787,7 @@ function DrowBiaoZhu(flag, cartesian3, position) {
                     } else {
                         var xiabiao1 = 0;
                         for (var m in biaoLayers) {
-                            if (biaoLayers[m].type == "ROCKPOINT") {
+                            if (biaoLayers[m].type == "ROCKPOINTFA") {
                                 modleFlag = true;
                                 xiabiao1 = m;
                             }
@@ -1487,7 +1503,8 @@ function LoadBiaozhunListLayer() {
                                                             verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                                                             width: 24,
                                                             height: 24,
-                                                            disableDepthTestDistance: 2000
+                                                            disableDepthTestDistance: 2000,
+                                                            scaleByDistance: new Cesium.NearFarScalar(100, 1, 3000, 0),
                                                         }
                                                     });
                                                 }
@@ -1507,13 +1524,15 @@ function LoadBiaozhunListLayer() {
                                                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
                                                             pixelOffset: new Cesium.Cartesian2(0.0, -36),
                                                             eyeOffset: new Cesium.Cartesian3(0, 0, -10),
-                                                            disableDepthTestDistance: 2000
+                                                            disableDepthTestDistance: 2000,
+                                                            scaleByDistance: new Cesium.NearFarScalar(100, 1, 3000, 0),
                                                         }
                                                     });
                                                 }
 
                                                 data.children[i].checked = true;
                                             }
+                                            data.checked = true;
                                         }
                                         else if (data.type == "ROCKLINEFA") {
                                             //全选线
@@ -1571,10 +1590,10 @@ function LoadBiaozhunListLayer() {
 
                                                 data.children[i].checked = true;
                                             }
+                                            data.checked = true;
                                         } else if (data.type == "ROCKAREA") {
 
 
-                                            console.log(data);
                                             //点击的线
                                             //全选监测剖面
                                             for (var i in data.children) {
@@ -1620,10 +1639,11 @@ function LoadBiaozhunListLayer() {
 
                                                 data.children[i].checked = true;
                                             }
+                                            data.checked = true;
                                         }
 
 
-                                        data.checked = true;
+                                        
                                     }
                                     else {
                                         //单选
@@ -1641,7 +1661,8 @@ function LoadBiaozhunListLayer() {
                                                         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                                                         width: 24,
                                                         height: 24,
-                                                        disableDepthTestDistance: 2000
+                                                        disableDepthTestDistance: 2000,
+                                                        scaleByDistance: new Cesium.NearFarScalar(100, 1, 3000, 0),
                                                     }
                                                 });
                                             }
@@ -1661,7 +1682,8 @@ function LoadBiaozhunListLayer() {
                                                         pixelOffset: new Cesium.Cartesian2(0.0, -36),
                                                         eyeOffset: new Cesium.Cartesian3(0, 0, -10),
                                                         fillColor: Cesium.Color.fromCssColorString(data.colour),
-                                                        disableDepthTestDistance: 2000
+                                                        disableDepthTestDistance: 2000,
+                                                        scaleByDistance: new Cesium.NearFarScalar(100, 1, 3000, 0),
                                                     }
                                                 });
                                             }
@@ -1776,6 +1798,13 @@ function LoadBiaozhunListLayer() {
                                         for (var i in data.children) {
                                             viewer.entities.removeById(data.children[i].id);
                                             viewer.entities.removeById(data.children[i].id + "_LABEL");
+                                            //for (var m in biaoLayers) {
+                                            //    for (var j in biaoLayers[m].children) {
+                                            //        if (data.children[i].id == biaoLayers[m].children[j].id) {
+                                            //            biaoLayers[m].children[j].checked = false;
+                                            //        }
+                                            //    }
+                                            //}
                                             data.children[i].checked = false;
                                         }
 
@@ -1785,6 +1814,15 @@ function LoadBiaozhunListLayer() {
 
                                         viewer.entities.removeById(data.id);
                                         viewer.entities.removeById(data.id + "_LABEL");
+                                        //for (var i in biaoLayers) {
+                                        //    for (var j in biaoLayers[i].children) {
+                                        //        if (data.id == biaoLayers[i].children[j].id) {
+                                        //            biaoLayers[i].children[j].checked = false;
+                                        //            break;
+                                        //        }
+                                        //    }
+                                        //}
+                                        
                                         data.checked = false;
                                     }
 
@@ -2050,6 +2088,7 @@ function LoadBiaozhunListLayer() {
                                                                             biaoLayers[i].children[j].datas.remarks = temp.field.remarks;
                                                                             biaoLayers[i].children[j].datas.name = temp.field.name;
                                                                             biaoLayers[i].children[j].datas.postion = temp.field.postion;
+                                                                            biaoLayers[i].children[j].checked = true;
                                                                             biaoLayers[i].children[j].spread = true;
                                                                             biaoLayers[i].spread = true;
                                                                             break;
@@ -2139,6 +2178,7 @@ function LoadBiaozhunListLayer() {
                                                                             biaoLayers[i].children[j].datas.name = temp.field.name;
                                                                             biaoLayers[i].children[j].datas.postion = temp.field.postion;
                                                                             biaoLayers[i].children[j].spread = true;
+                                                                            biaoLayers[i].children[j].checked = true;
                                                                             biaoLayers[i].spread = true;
                                                                             break;
                                                                         }
@@ -2619,6 +2659,20 @@ function getlinePostion() {
                     }
                 }
             }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             //移动
             handler.setInputAction(function (move) {
                 if (points.length > 0) {
@@ -3009,3 +3063,5 @@ function leftUpAction(e) {
     // 解除相机锁定
     this.viewer.scene.screenSpaceCameraController.enableRotate = true;
 };
+
+
