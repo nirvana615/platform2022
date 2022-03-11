@@ -342,8 +342,13 @@ function FlyToChina() {
  * 加载3d tiles模型
  */
 function LoadModel(obj) {
-    //var modelurl = "../Data/SurModel" + obj.path;
-    var modelurl = datasurl + "/SurModel" + obj.path;
+    if (obj.type =="MODELPROJECTSURMODEL") {
+        var modelurl = datasurl + "/AllModel/" + obj.path;
+    }
+    else {
+        var modelurl = datasurl + "/SurModel" + obj.path;
+    }
+    
     //if (obj.MXST != null) {
     //    //使用设置的最优视图
     //}

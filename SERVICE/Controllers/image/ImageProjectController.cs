@@ -193,11 +193,136 @@ namespace SERVICE.Controllers
         /// </summary>
         /// <param name="cookie"></param>
         /// <returns></returns>
+        //[HttpGet]
+        //public string GetUserImageProjectList(string cookie)
+        //{
+        //    string userbsms = string.Empty;
+        //    COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+        //    if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+        //    {
+        //        List<ImageProjectInfo> imageProjectInfos = new List<ImageProjectInfo>();
+
+        //        string projectdatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM image_project WHERE bsm{0} AND ztm={1} ORDER BY id DESC", userbsms, (int)MODEL.Enum.State.InUse));
+        //        if (!string.IsNullOrEmpty(projectdatas))
+        //        {
+        //            string[] projectrows = projectdatas.Split(new char[] { COM.ConstHelper.rowSplit });
+
+        //            for (int i = 0; i < projectrows.Length; i++)
+        //            {
+        //                ImageProject imageProject = ParseImageHelper.ParseImageProject(projectrows[i]);
+        //                if (imageProject != null)
+        //                {
+        //                    ImageProjectInfo imageProjectInfo = new ImageProjectInfo();
+        //                    imageProjectInfo.ImageProject = imageProject;
+
+        //                    #region 项目对应模型
+        //                    string project_model_maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM image_map_project_surveymodel WHERE projectid={0} AND ztm={1} ORDER BY cjsj ASC", imageProject.Id, (int)MODEL.Enum.State.InUse));
+        //                    if(!string.IsNullOrEmpty(project_model_maps))
+        //                    {
+        //                        SurModelInfos surModelInfos = new SurModelInfos();
+        //                        surModelInfos.Title = "实景模型";
+        //                        #region 项目对应实景模型
+        //                        List<SurModel> models = new List<SurModel>();
+
+        //                        string[] maprows = project_model_maps.Split(new char[] { COM.ConstHelper.rowSplit });
+        //                        for (int j = 0; j < maprows.Length; j++)
+        //                        {
+        //                            MapImageProjecModel mapImageProjecModel = ParseImageHelper.ParseMapImageProjecModel(maprows[j]);
+        //                            if (mapImageProjecModel != null)
+        //                            {
+        //                                SurModel surModel = ParseMonitorHelper.ParseSurModel(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM survey_model WHERE id={0} AND ztm={2}", mapImageProjecModel.ModelId, userbsms, (int)MODEL.Enum.State.InUse)));
+        //                                if (surModel != null)
+        //                                {
+        //                                    models.Add(surModel);
+        //                                }
+        //                            }
+        //                        }
+        //                        #endregion
+
+        //                        if (models.Count>0)
+        //                        {
+        //                            surModelInfos.ModelList = models;
+        //                            imageProjectInfo.SurModels = surModelInfos;
+        //                        }    
+        //                    }
+        //                    #endregion                          
+
+        //                    #region 项目对应目标
+        //                    string project_target_maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM image_map_project_target WHERE projectid={0} AND ztm={1} ORDER BY cjsj ASC", imageProject.Id, (int)MODEL.Enum.State.InUse));
+        //                    if (!string.IsNullOrEmpty(project_target_maps))
+        //                    {
+        //                        TargetInfos targetInfos = new TargetInfos();
+        //                        targetInfos.Title = "目标";
+
+        //                        #region 项目对应的目标
+        //                        List<Target> targets = new List<Target>();
+
+        //                        string[] maprows = project_target_maps.Split(new char[] { COM.ConstHelper.rowSplit });
+        //                        for (int j = 0; j < maprows.Length; j++)
+        //                        {
+        //                            MapImageProjecTarget mapImageProjecTarget = ParseImageHelper.ParseMapImageProjecTarget(maprows[j]);
+        //                            if (mapImageProjecTarget != null)
+        //                            {
+        //                                Target target = ParseImageHelper.ParseTarget(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM image_target WHERE id={0} AND bsm{1} AND ztm={2}", mapImageProjecTarget.TargetId, userbsms, (int)MODEL.Enum.State.InUse)));
+        //                                if (target != null)
+        //                                {
+        //                                    targets.Add(target);
+        //                                }
+        //                            }
+        //                        }
+
+        //                        if (targets.Count > 0)
+        //                        {
+        //                            targetInfos.TargetList = targets;
+        //                            imageProjectInfo.Targets = targetInfos;
+        //                        }
+        //                        #endregion    
+        //                    }
+        //                    #endregion
+
+        //                    imageProjectInfos.Add(imageProjectInfo);
+        //                }
+        //            }
+        //            if (imageProjectInfos.Count > 0)
+        //            {
+        //                //有项目信息
+        //                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(imageProjectInfos)));
+        //            }
+        //            else
+        //            {
+        //                //无项目信息
+        //                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
+        //        }             
+        //    }
+        //    else
+        //    {
+        //        //验证失败
+        //        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+        //    }
+        //}
+
+
+
+        /// <summary>
+        /// 2---获取当前用户所有项目，以及各项目下的实景模型及目标信息
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
         [HttpGet]
         public string GetUserImageProjectList(string cookie)
         {
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            User user = null;
+            int syscode = 0;
+            COM.CookieHelper.CookieResult cookieResult1 = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user, ref syscode);
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
             {
@@ -216,9 +341,10 @@ namespace SERVICE.Controllers
                             ImageProjectInfo imageProjectInfo = new ImageProjectInfo();
                             imageProjectInfo.ImageProject = imageProject;
 
-                            #region 项目对应模型
+                            #region 项目对应Sur模型
                             string project_model_maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM image_map_project_surveymodel WHERE projectid={0} AND ztm={1} ORDER BY cjsj ASC", imageProject.Id, (int)MODEL.Enum.State.InUse));
-                            if(!string.IsNullOrEmpty(project_model_maps))
+
+                            if (!string.IsNullOrEmpty(project_model_maps))
                             {
                                 SurModelInfos surModelInfos = new SurModelInfos();
                                 surModelInfos.Title = "实景模型";
@@ -240,13 +366,50 @@ namespace SERVICE.Controllers
                                 }
                                 #endregion
 
-                                if (models.Count>0)
+                                if (models.Count > 0)
                                 {
                                     surModelInfos.ModelList = models;
                                     imageProjectInfo.SurModels = surModelInfos;
-                                }    
+                                }
                             }
-                            #endregion                          
+                            #endregion
+
+                            #region 项目对应任务模型
+                            string mapmodelprojectid = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT modelprojectid FROM model_map_project_modelproject WHERE projectid={0} AND syscode={1} AND ztm={2} ORDER BY cjsj ASC", imageProject.Id,syscode, (int)MODEL.Enum.State.InUse));
+                            if (!string.IsNullOrEmpty(mapmodelprojectid))
+                            {
+                                AllModelInfos allModelInfos = new AllModelInfos();
+                                allModelInfos.Title = "任务模型";
+                                #region 项目对应任务模型
+                                List<ModelTask> taskmodels = new List<ModelTask>();
+                                string[] modelprojectrows = mapmodelprojectid.Split(new char[] { COM.ConstHelper.rowSplit });
+
+                                for (int j = 0; j < modelprojectrows.Length; j++)
+                                {
+                                    string mapmodeltaskid = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT taskid FROM model_map_project_task WHERE projectid={0} AND ztm={1} ORDER BY cjsj ASC", modelprojectrows[j], (int)MODEL.Enum.State.InUse));
+                                    if (!string.IsNullOrEmpty(mapmodeltaskid))
+                                    {
+                                        string[] modeltaskrows = mapmodeltaskid.Split(new char[] { COM.ConstHelper.rowSplit });
+                                        for (int k = 0; k < modeltaskrows.Length; k++)
+                                        {
+                                            ModelTask taskmodel = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND rwzt={1} AND ztm={2}", modeltaskrows[k], (int)MODEL.EnumModel.TaskStatus.Finished, (int)MODEL.Enum.State.InUse)));
+                                            if (taskmodel!=null)
+                                            {
+                                                taskmodels.Add(taskmodel);
+                                            }
+                                        }
+                                    }
+                                }
+                                #endregion
+                                if (taskmodels.Count > 0)
+                                {
+                                    allModelInfos.ModelTaskList = taskmodels;
+                                    imageProjectInfo.AllModels = allModelInfos;
+                                }
+
+                            }
+                            #endregion
+
 
                             #region 项目对应目标
                             string project_target_maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM image_map_project_target WHERE projectid={0} AND ztm={1} ORDER BY cjsj ASC", imageProject.Id, (int)MODEL.Enum.State.InUse));
@@ -298,7 +461,7 @@ namespace SERVICE.Controllers
                 else
                 {
                     return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
-                }             
+                }
             }
             else
             {
@@ -306,7 +469,6 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
             }
         }
-
 
 
 

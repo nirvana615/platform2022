@@ -64,13 +64,10 @@ function ImageProjectInfo(id, style) {
                         , "image_bz_view": ""
                     });
                 }
-
                 //弹出消息————controller里定义的各类情况result.message
                 layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });   
             }, datatype: "json"
         });
-
-
     }
     else if (style == "edit") {
         //编辑项目
@@ -78,13 +75,13 @@ function ImageProjectInfo(id, style) {
             imageprojectinfoeditlayerindex = layer.open({
                 type: 1
                 , title: ['编辑项目信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['560px', '430px']
+                , area: ['560px', '380px']
                 , shade: 0  
                 , offset: 'auto'
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--编辑项目--><form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="editImageprojectinfoform"><div class="layui-form-item"><label class="layui-form-label">项目名称</label><div class="layui-input-block"><input type="text" name="image_xmmc_edit" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目编码</label><div class="layui-input-block"><input type="text" name="image_xmbm_edit" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">中心经度</label><div class="layui-input-block"><input type="text" name="image_zxjd_edit" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">中心纬度</label><div class="layui-input-block"><input type="text" name="image_zxwd_edit" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div></div></div></div></div><div class="layui-form-item"><label class="layui-form-label">坐标系统</label><div class="layui-input-block"><select id="kjckid" name="image_kjck_edit"></select></div></div><div class="layui-form-item"><label class="layui-form-label">描述</label><div class="layui-input-block"><input type="text" name="image_ms_edit" placeholder="请输入" autocomplete="off" class="layui-input"></div></div><div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="image_bz_edit" placeholder="请输入" autocomplete="off" class="layui-input"></div></div><div class="layui-form-item" style="margin-top:10px"><div style="position:absolute;right:15px;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="editImageprojectinfosubmit" style="width:100px">保存</button></div></div></form>'
+                , content: '<!--编辑项目--><form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="editImageprojectinfoform"><div class="layui-form-item"><label class="layui-form-label">项目名称</label><div class="layui-input-block"><input type="text" name="image_xmmc_edit" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目编码</label><div class="layui-input-block"><input type="text" name="image_xmbm_edit" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">中心经度</label><div class="layui-input-block"><input type="text" name="image_zxjd_edit" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">中心纬度</label><div class="layui-input-block"><input type="text" name="image_zxwd_edit" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div></div></div></div></div><div class="layui-form-item"><label class="layui-form-label">坐标系统</label><div class="layui-input-block"><select id="kjckid" name="image_kjck_edit"></select></div></div><div class="layui-form-item"><label class="layui-form-label">描述</label><div class="layui-input-block"><input type="text" name="image_ms_edit" placeholder="请输入" autocomplete="off" class="layui-input"></div></div><div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="image_bz_edit" placeholder="请输入" autocomplete="off" class="layui-input"></div></div><div class="layui-form-item" style="margin-top:10px"><div style="position:absolute;right:180px;"><button type="button" class="layui-btn layui-btn-primary layui-border-green" id="modelconnect" style="width:100px">模型关联</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="editImageprojectinfosubmit" style="width:100px">保存</button></div></div></form>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -136,6 +133,11 @@ function ImageProjectInfo(id, style) {
                         }, datatype: "json"   
                     });
 
+                    //模型关联
+                    $("#modelconnect").on("click", function (data) {
+                        ModelConnect(id, document.cookie);  
+                    });
+                   
                     //更新项目
                     form.on('submit(editImageprojectinfosubmit)', function (data) {
                         data.field.id = id;
@@ -149,7 +151,6 @@ function ImageProjectInfo(id, style) {
                                 layer.close(imageprojectinfoeditlayerindex);  //关闭模块
                             }, datatype: "json"  
                         });
-                        return false;
                     });
                 }
                 , end: function () {
@@ -164,13 +165,13 @@ function ImageProjectInfo(id, style) {
             imageprojectinfoaddlayerindex = layer.open({
                 type: 1
                 , title: ['新建项目', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['560px', '430px']
+                , area: ['560px', '370px']
                 , shade: 0
                 , offset: 'auto'
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--创建项目--><form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="addImageprojectinfoform"><div class="layui-form-item"><label class="layui-form-label">项目名称</label><div class="layui-input-block"><input type="text" name="image_xmmc_add" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目编码</label><div class="layui-input-block"><input type="text" name="image_xmbm_add" autocomplete="off" placeholder="请输入"  class="layui-input" /></div></div><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">中心经度</label><div class="layui-input-block"><input type="text" name="image_zxjd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">中心纬度</label><div class="layui-input-block"><input type="text" name="image_zxwd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div></div></div></div></div><div class="layui-form-item"><label class="layui-form-label">坐标系统</label><div class="layui-input-block"><select id="kjckid" name="image_kjck_add" ></select></div></div><div class="layui-form-item"><label class="layui-form-label">描述</label><div class="layui-input-block"><input type="text" name="image_ms_add"  placeholder="请输入" autocomplete="off" class="layui-input"></div></div><div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="image_bz_add"  placeholder="请输入" autocomplete="off" class="layui-input"></div></div><div class="layui-form-item" style="margin-top:10px"><div style="position:absolute;right:15px;"><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="addImageprojectinfosubmit" style="width:100px">提交</button></div></div></form>'
+                , content: '<!--创建项目--><form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="addImageprojectinfoform"><div class="layui-form-item"><label class="layui-form-label">项目名称</label><div class="layui-input-block"><input type="text" name="image_xmmc_add" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目编码</label><div class="layui-input-block"><input type="text" name="image_xmbm_add" autocomplete="off" placeholder="请输入"  class="layui-input" /></div></div><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><label class="layui-form-label">中心经度</label><div class="layui-input-block"><input type="text" name="image_zxjd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><label class="layui-form-label">中心纬度</label><div class="layui-input-block"><input type="text" name="image_zxwd_add" autocomplete="off" placeholder="请输入" lay-verify="required|number" class="layui-input" /></div></div></div></div></div><div class="layui-form-item"><label class="layui-form-label">坐标系统</label><div class="layui-input-block"><select id="kjckid" name="image_kjck_add" ></select></div></div><div class="layui-form-item"><label class="layui-form-label">描述</label><div class="layui-input-block"><input type="text" name="image_ms_add"  placeholder="请输入" autocomplete="off" class="layui-input"></div></div><div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="image_bz_add"  placeholder="请输入" autocomplete="off" class="layui-input"></div></div><div class="layui-form-item" style="margin-top:10px"><div style="position:absolute;right:130px;"><button type="button" class="layui-btn layui-btn-primary layui-border-green" id="modelconnect" style="width:100px">模型关联</button><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="addImageprojectinfosubmit" style="width:100px">提交</button></div></div></form>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);

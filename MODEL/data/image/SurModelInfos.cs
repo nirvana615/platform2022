@@ -18,4 +18,19 @@ namespace MODEL
         /// </summary>
         public List<SurModel> ModelList { get; set; }
     }
+
+    public class AllModelInfos
+    {
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string Title { get; set; } = "实景模型";
+
+        /// <summary>
+        /// 模型集
+        /// </summary>
+        public List<ModelTask> ModelTaskList { get; set; }
+    }
+
+
 }

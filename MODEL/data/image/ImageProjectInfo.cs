@@ -22,6 +22,9 @@ namespace MODEL
         /// </summary>
         public SurModelInfos SurModels { get; set; }
 
-        //TODO
+        /// <summary>
+        /// ALL实景模型
+        /// </summary>
+        public AllModelInfos AllModels { get; set; }
     }
 }

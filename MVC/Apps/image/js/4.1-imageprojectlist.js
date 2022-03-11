@@ -35,8 +35,9 @@ layer.open({
             }
             , oncheck: function (obj) {
                 if (obj.checked) {
-                    if (obj.data.type == "IMAGEPROJECTSURMODEL") {
+                    if (obj.data.type == "IMAGEPROJECTSURMODEL" || obj.data.type == "MODELPROJECTSURMODEL") {
                         LoadModel(obj.data);
+
                     }
                     //目标标注
                     else if (obj.data.type =="target") {
@@ -44,9 +45,10 @@ layer.open({
                     }
                 }
                 else {
-                    if (obj.data.type == "IMAGEPROJECTSURMODEL") {
+                    if (obj.data.type == "IMAGEPROJECTSURMODEL" || obj.data.type == "MODELPROJECTSURMODEL") {
                         viewer.scene.primitives.remove(current_project_tile);
                         current_project_tile = null;
+                        
                     }
                     //目标标注移除
                     else if (obj.data.type == "target") {
@@ -105,6 +107,31 @@ function GetUserAllImageProjects() {
                             items.push(models);
                         }
                     }
+
+                    //taskmodel
+                    if (imageprojectdata[i].AllModels != null) {
+                        var models = new Object;
+                        models.title = imageprojectdata[i].AllModels.Title;
+                        models.type = "models";
+
+                        var modelitem = [];
+                        if (imageprojectdata[i].AllModels.ModelTaskList != null) {
+                            for (var j in imageprojectdata[i].AllModels.ModelTaskList) {
+                                var model = new Object;
+                                model.type = "MODELPROJECTSURMODEL";
+                                model.title = imageprojectdata[i].AllModels.ModelTaskList[j].RWMC;
+                                model.path = imageprojectdata[i].AllModels.ModelTaskList[j].MXLJ;
+                                model.showCheckbox = true;
+                                model.checked = false;
+                                modelitem.push(model);
+                            }
+                            models.children = modelitem;
+                            items.push(models);
+                        }
+                    }
+
+
+
 
                     //target
                     if (imageprojectdata[i].Targets != null) {
