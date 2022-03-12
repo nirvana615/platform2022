@@ -184,7 +184,7 @@ viewer = new Cesium.Viewer("map", {
     fullscreenButton: false,
     vrButton: false,
     geocoder: false,
-    infoBox: true,
+    infoBox: false,//点击entity右上角弹出框
     sceneModePicker: false,
     selectionIndicator: true,
     timeline: false,

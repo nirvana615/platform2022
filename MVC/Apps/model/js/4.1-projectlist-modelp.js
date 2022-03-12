@@ -12,13 +12,15 @@ var toIndex = layer.open({
     , maxmin: true
     , moveOut: true
     , resize: false
-    , content: '<!--项目列表--> <div class="layui-tab layui-tab-brief" lay-filter="projectListTab"> <!--选项卡--> <ul class="layui-tab-title"> <li lay-id="list_area" class="layui-this" style="width:40%;padding-top: 10px;">地区</li> <li lay-id="list_year" style="width:40%;padding-top: 10px;">时间</li> </ul> <!--tree--> <div class="layui-tab-content"> <div class="layui-tab-item layui-show"> <div id="projectbyarea"></div> </div> <div class="layui-tab-item"> <div id="projectbyyear"></div> </div> </div> </div> <!--搜索--> <div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "> <div class="layui-input-inline"> <input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"> </div> <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"> <i class="layui-icon layui-icon-search"></i> </button> </div>'
+    , content: '<!--项目列表--> <div class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab"> <!--选项卡--> <ul class="layui-tab-title"> <li lay-id="list_area" class="layui-this" style="width:40%;padding-top: 10px;">地区</li> <li lay-id="list_year" style="width:40%;padding-top: 10px;">时间</li> </ul> <!--tree--> <div class="layui-tab-content"> <div class="layui-tab-item layui-show"> <div id="projectbyarea"></div> </div> <div class="layui-tab-item"> <div id="projectbyyear"></div> </div> </div> </div> <!--搜索--> <div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "> <div class="layui-input-inline"> <input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"> </div> <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"> <i class="layui-icon layui-icon-search"></i> </button> </div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
 
         //获取用户全部项目信息
         GetUserAllModelProjects();
+        //点击项目图标事件
+        ModelMarkClick();
         //地区树
         tree.render({
             elem: '#projectbyarea'
@@ -51,7 +53,7 @@ var toIndex = layer.open({
                     AddEntitiesInViewer(projectentities);
                     curtileset = null;
                 }
-
+                document.getElementById("info").style.display = "none";//隐藏点击项目图标弹窗
             }
         });
 
@@ -86,12 +88,13 @@ var toIndex = layer.open({
                     viewer.scene.primitives.remove(curtileset);
                     curtileset = null;
                 }
+                document.getElementById("info").style.display = "none";//隐藏点击项目图标弹窗
             }
         });
 
         //搜索
         var lay_id;
-        elem.on('tab(projectListTab)', function (elem) {
+        elem.on('tab(modelprojectListTab)', function (elem) {
             lay_id = $(this).attr('lay-id');
         });
         //1点击按钮树搜索
@@ -450,6 +453,7 @@ function GetUserAllModelProjects(newprojectcode) {
                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
                             pixelOffset: new Cesium.Cartesian2(0.0, -60),
                             disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                            scaleByDistance: new Cesium.NearFarScalar(90000, 1, 200000, 0)
                         }
                     });
 
@@ -573,6 +577,125 @@ function ModelProjectNodeClick(obj) {
 
 };
 
+//项目Mark点击操作
+function ModelMarkClick() {
+
+    //在地图div中增加html代码
+    $("#map").append('<!--查看项目信息--> <div id="info" style=" display: none;position: absolute;width: 400px; height: 400px; z-index: 1000; background: rgba(30, 144, 255, 0.6); border: 2px solid #4169E1; border-radius: 25px;"> <form class="layui-form" style="margin-top:30px;margin-right:20px; color:white;" lay-filter="infoModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_xmmc_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目编码：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_xmbm_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">行政区划：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_xzqh_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目位置：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_xmwz_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">中心经度：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_zxjd_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">中心纬度：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_zxwd_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目时间：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_xmsj_info" readonly="readonly" class="layui-input" /> </div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_bz_info" readonly="readonly" class="layui-input"> </div> </div> </form> </div>');
+
+    var canvas = viewer.scene.canvas;
+    const handler_modelmark = new Cesium.ScreenSpaceEventHandler(canvas);
+
+    //注册鼠标点击事件
+    handler_modelmark.setInputAction(function (e) {
+
+        var pick = viewer.scene.pick(e.position, 9, 9);
+        var earthPosition = viewer.camera.pickEllipsoid(e.position, viewer.scene.globe.ellipsoid);
+        var cartographic = Cesium.Cartographic.fromCartesian(earthPosition, viewer.scene.globe.ellipsoid, new Cesium.Cartographic());
+        var lat = Cesium.Math.toDegrees(cartographic.latitude);
+        var lng = Cesium.Math.toDegrees(cartographic.longitude);
+        var height = cartographic.height;
+        var htmlinfo = document.getElementById("info");
+
+        if (Cesium.defined(pick) && Cesium.defined(pick.id)) {
+            var project_id = pick.id.id.split("_")[1];
+            tree_reload(project_id);
+
+
+            //异步获取项目信息
+            $.ajax({
+                url: servicesurl + "/api/ModelProject/GetModelProjectInfo", type: "get", data: { "id": project_id, "cookie": document.cookie },
+                success: function (data) {
+                    var result = JSON.parse(data);
+                    if (result.code == 1) {
+                        var modelprojectinfo = JSON.parse(result.data);
+
+                        form.val("infoModelprojectinfoform", {
+                            "model_xmmc_info": modelprojectinfo.XMMC
+                            , "model_xmbm_info": modelprojectinfo.XMBM
+                            , "model_zxjd_info": modelprojectinfo.ZXJD
+                            , "model_zxwd_info": modelprojectinfo.ZXWD
+                            , "model_xmsj_info": modelprojectinfo.XMSJ
+                            , "model_xmwz_info": modelprojectinfo.XMWZ
+                            , "model_bz_info": modelprojectinfo.BZ
+                        });
+                        //翻译项目位置
+                        if (xjxzqs.length > 0) {
+                            for (var i in xjxzqs) {
+                                if (xjxzqs[i].value == modelprojectinfo.XZQBM) {
+                                    var xzqh = "重庆市" + xjxzqs[i].name;
+                                    form.val("infoModelprojectinfoform", {
+                                        "model_xzqh_info": xzqh
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        form.val("infoModelprojectinfoform", {
+                            "model_xmmc_info": ""
+                            , "model_xmbm_info": ""
+                            , "model_xmwz_info": ""
+                            , "model_zxjd_info": ""
+                            , "model_zxwd_info": ""
+                            , "model_xmsj_info": ""
+                            , "model_xzqh_info": ""
+                            , "model_bz_info": ""
+                        });
+                    }
+
+                }, datatype: "json"
+            });
+
+            const domHeight = htmlinfo.style.height.split('px').join(); // 
+            const domWidth = htmlinfo.style.width.split('px').join(); // 
+            const heightOffset = 10; // Y轴偏移量
+            const widthOffset = 10; // X轴偏移量
+
+            const scratch = new Cesium.Cartesian2();
+            viewer.scene.preRender.addEventListener(function () {
+                let position = Cesium.Cartesian3.fromDegrees(lng, lat, 2);
+                let canvasPosition = viewer.scene.cartesianToCanvasCoordinates(position, scratch);
+                if (Cesium.defined(canvasPosition)) {
+
+                    htmlinfo.style.top = canvasPosition.y - parseInt(domHeight) + heightOffset + 'px';
+                    htmlinfo.style.left = canvasPosition.x - parseInt(domWidth) / 2 + widthOffset + 'px';
+                }
+
+            });
+            htmlinfo.style.display = "block";
+        }
+        else {
+            htmlinfo.style.display = "none";
+        }
+
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+    //项目列表联动
+    function tree_reload(id) {
+        elem.tabChange('modelprojectListTab', 'list_area');
+        for (var i in modelprojectlist) {
+            modelprojectlist[i].spread = false;
+            for (var j in modelprojectlist[i].children) {
+                if (modelprojectlist[i].children[j].id != id) {
+                    modelprojectlist[i].children[j].spread = false;
+                }
+                else {
+                    modelprojectlist[i].spread = true;
+                    modelprojectlist[i].children[j].spread = true;
+                }
+
+            }
+        }
+        tree.reload('areaprojectlistid', {
+            data: modelprojectlist
+        });
+    }
+
+
+
+
+}
 //项目树（项目列表+目标）节点操作：add\update\del
 function ModelProjectNodeOperate(obj) {
     if (obj.type == 'add') {

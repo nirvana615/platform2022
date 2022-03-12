@@ -470,6 +470,7 @@
     <Content Include="Apps\admin\widget\user-add.html" />
     <Content Include="Apps\common\common.js" />
     <Content Include="Apps\common\mark.js" />
+    <Content Include="Apps\common\latlonview.js" />
     <Content Include="Apps\common\measure.js" />
     <Content Include="Apps\flz\css\main.css" />
     <Content Include="Apps\flz\js\1.1-all.js" />
@@ -825,6 +826,8 @@
     <Content Include="Apps\admin\layuiadmin\layui2.5.6\font\iconfont.ttf" />
     <Content Include="Apps\admin\layuiadmin\layui2.5.6\font\iconfont.woff" />
     <Content Include="Apps\admin\layuiadmin\layui2.5.6\font\iconfont.woff2" />
+    <Content Include="Data\ClampToGround.czml" />
+    <Content Include="Data\CesiumMilkTruck.glb" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Scripts\CesiumHeatmap\CesiumHeatmap.js" />
     <Content Include="Scripts\CesiumHeatmap\HeatmapImageryProvider.js" />
@@ -863,6 +866,7 @@
     <Content Include="Scripts\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui\font\iconfont.woff" />
     <Content Include="Scripts\layui\font\iconfont.woff2" />
+    <Content Include="Resources\img\map\ston.glb" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Cesium\Assets\Images\bing_maps_credit.png" />
     <Content Include="Scripts\Cesium\Assets\Images\cesium_credit.png" />
