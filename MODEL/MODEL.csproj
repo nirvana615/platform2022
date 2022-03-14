@@ -82,6 +82,7 @@
     <Compile Include="data\modelmap\MapModelProjecTask.cs" />
     <Compile Include="data\modelmap\MapDataUserModelProtect.cs" />
     <Compile Include="data\modelmap\MapUserModelProject.cs" />
+    <Compile Include="data\model\MapProjectModelProject.cs" />
     <Compile Include="data\model\ModelProject.cs" />
     <Compile Include="data\model\ModelProjectInfo.cs" />
     <Compile Include="data\model\ModelTask.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="enum\EnumFlz.cs" />
     <Compile Include="enum\EnumIMG.cs" />
     <Compile Include="enum\EnumMonitor.cs" />
+    <Compile Include="parse\ParseConnectModel.cs" />
     <Compile Include="parse\ParseFlzoneHelper.cs" />
     <Compile Include="parse\ParseImageHelper.cs" />
     <Compile Include="parse\ParseManageHelper.cs" />

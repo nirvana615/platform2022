@@ -88,13 +88,7 @@ function LoadChangeDataLayer(id) {
             });
         }
     }
-
-
-
 };
-
-
-
 
 
 //获取项目目标集合

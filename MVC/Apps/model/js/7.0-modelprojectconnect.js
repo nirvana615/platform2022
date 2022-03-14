@@ -89,16 +89,11 @@ function ModelConnect(id, cookie) {
                             layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }, datatype: "json"
                     });
-
-
-
-
-
                     return false;
                 });
             }
             , end: function () {
-                modelconnectlayerindex = null;           s  
+                modelconnectlayerindex = null; 
             }
             , cancel: function () {
                 modelconnectlayerindex = null;

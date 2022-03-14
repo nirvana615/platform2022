@@ -24,7 +24,7 @@ namespace MODEL
         /// <summary>
         /// 标题
         /// </summary>
-        public string Title { get; set; } = "实景模型";
+        public string Title { get; set; } = "任务模型";
 
         /// <summary>
         /// 模型集

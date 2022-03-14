@@ -26,13 +26,6 @@ util.fixbar({
             //绘制变化曲线
             LoadChangeDataLayer(currentprojectid);
         }
-
-
-
-
-
-
-
     }
 });
 
@@ -98,10 +91,3 @@ $("#utilbar4").on("mouseleave", function () {
     }
 });
 
-$("#utilbar5").on("mouseenter", function () {
-    if (tipslayer == -1) {
-        tipslayer = layer.tips('模型项目关联', '#utilbar5', {
-            tips: [4, '#78BA32']
-        });
-    }
-});

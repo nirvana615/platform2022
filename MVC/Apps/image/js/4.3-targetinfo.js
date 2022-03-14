@@ -331,17 +331,6 @@ function ImageTargetInfo(id, style) {
                                     layer.setTop(layero);
 
                                     $('#image_roi_img')[0].src = "data:image/jpeg;base64," + data.bqwj;
-
-
-                                    ////以下未实现图片的放大缩小查看
-                                    // $(function bigimg(image_roi_img) {
-                                    //    var zoom = parseInt(image_roi_img.style.zoom, 10) || 100;
-                                    //    zoom += event.wheelDelta / 12;
-                                    //    if (zoom > 0)
-                                    //        image_roi_img.style.zoom = zoom + '%';
-                                    //    return false;
-                                    //})
-
                                 }
                                 , end: function () { }
                             });
@@ -611,27 +600,21 @@ function ImageTargetInfo(id, style) {
                                                     }
                                                 }                                            
                                             }
-
-                                            , done: function (res) {
-                                                //上传完毕回调
-                                                if (res.code == 1) {
-                                                    layer.close(addtimeimagelayerindex);
-                                                    //刷新列表
-                                                    GettimeimageInfo();
-                                                }
+                                            , done: function (res) {   //上传完毕回调
                                                 
+                                                if (res.code == 1) {
+                                                    layer.close(addtimeimagelayerindex);                                                    
+                                                    GettimeimageInfo();//刷新列表
+                                                }                                               
                                                 layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                                             }
-                                            , error: function () {
-                                                //请求异常回调
+                                            , error: function () {//请求异常回调                                               
                                             }
                                         });
                                         form.render();
                                         form.render('select');
                                     }
                                     , end: function () {
-
-
                                     }
                                 });
                                 break;
@@ -650,8 +633,6 @@ function ImageTargetInfo(id, style) {
 
                         if (layEvent === 'timeimageview') {
                             //4.4.1查看影像
-                            //TODO 影像查看放大缩小功能
-
                             layer.open({
                                 type: 1
                                 , title: ['消息', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
@@ -665,7 +646,6 @@ function ImageTargetInfo(id, style) {
                                 , zIndex: layer.zIndex
                                 , success: function (layero) {
                                     layer.setTop(layero);
-
                                     //加载
                                     OpenSeadragon({
                                         id: "openseadragon1",
@@ -674,7 +654,6 @@ function ImageTargetInfo(id, style) {
                                             type: "zoomifytileservice",
                                             width: w,
                                             height: h,
-                                            //tilesUrl: "http://www.cq107chy.com:4022/SurDOMDSM/500243000001_1_20210725094538/"
                                             tilesUrl: "http://www.cq107chy.com:4022/SurDOMDSM/" + yxbh+"/"
                                         }]
                                     });
@@ -685,60 +664,6 @@ function ImageTargetInfo(id, style) {
                                     headernoticelayerindex = null;
                                 }
                             });
-
-
-
-
-
-
-                            //layer.open({
-                            //    type: 1
-                            //    , title: ['影像查看', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                            //    , area: ['720px', '600px']
-                            //    , shade: 0
-                            //    , offset: 'auto'
-                            //    , closeBtn: 1
-                            //    , maxmin: false
-                            //    , moveOut: true
-                            //    , content: '<form class="layui-form" style="margin-top:10px" lay-filter="viewtimeimageform">  <div class="layui-form-item" style="height: 560px;"><div class="layui-upload-list"><img class="layui-upload-img" id="image_timeimage_img" name="image_timeimage_img" style="width:100%;height:100%;vertical-align:middle"></div></div></form>'
-                            //    , zIndex: layer.zIndex
-                            //    , success: function (layero) {
-                            //        layer.setTop(layero);
-                            //        //点击单个影像 返回该影像信息并显示
-
-
-                            //        //加载大图片
-                            //        $.ajax({
-                            //            url: servicesurl + "/api/ImageUpload/GetImageFile", type: "get", data: { "id": imageid, "cookie": document.cookie },
-                            //            success: function (data) {
-                            //                var result = JSON.parse(data);
-                            //                //var result = data;
-                            //                if (result.code == 1) {
-                            //                    var imagefile = JSON.parse(result.data);
-                            //                    $('#image_timeimage_img')[0].src = "data:image/jpeg;base64," + imagefile;
-                            //                }
-                            //                layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                            //            }, datatype: "json"
-                            //        });
-
-
-
-                                   
-                            //    }
-                            //    , end: function () { }
-                            //});
-
-
-
-
-
-
-
-
-
-
-
-
                         }
 
                         //4.4.2删除影像
@@ -823,9 +748,7 @@ function ImageTargetInfo(id, style) {
                                     var info = JSON.parse(result);
                                     if (info.code == 1) {
                                         layer.close(imagetargetinfoaddlayerindex);
-
-                                        //刷新项目列表
-                                        GetUserAllImageProjects();
+                                        GetUserAllImageProjects();//刷新项目列表
                                     }
 
 
@@ -835,7 +758,6 @@ function ImageTargetInfo(id, style) {
                             return false;
                         });
                     }
-
                     , end: function () {
                         imagetargetinfoaddlayerindex = null;
                     }
