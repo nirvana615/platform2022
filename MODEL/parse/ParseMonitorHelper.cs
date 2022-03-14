@@ -4665,7 +4665,11 @@ namespace MODEL
                     constTime = row[5].ToString(),
                     insetNo = row[6].ToString(),
                     cardNo = row[7].ToString(),
-                };
+                    deviceId = row[8].ToString(),
+                    InitialAngle = row[9].ToString(),
+                    snNo = row[10].ToString(),
+                    
+               };
                 return constPhotoInfo;
             }
             catch (Exception ex)

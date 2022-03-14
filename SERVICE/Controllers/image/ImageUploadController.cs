@@ -735,6 +735,9 @@ namespace SERVICE.Controllers
                 string monitorId = HttpContext.Current.Request.Form["monitorId"];
                 string insetNo = HttpContext.Current.Request.Form["insetNo"];
                 string cardNo = HttpContext.Current.Request.Form["cardNo"];
+                string deviceId = HttpContext.Current.Request.Form["deviceId"];
+                string InitialAngle = HttpContext.Current.Request.Form["InitialAngle"];
+                string snNo = HttpContext.Current.Request.Form["snNo"];
 
 
                 if (file != null)
@@ -767,6 +770,21 @@ namespace SERVICE.Controllers
                     {
                         sql = sql + ",card_no ";
                         value = value + "," + SQLHelper.UpdateString(cardNo);
+                    }
+                    if (!string.IsNullOrEmpty(deviceId))
+                    {
+                        sql = sql + ",device_id ";
+                        value = value + "," + SQLHelper.UpdateString(deviceId);
+                    }
+                    if (!string.IsNullOrEmpty(InitialAngle))
+                    {
+                        sql = sql + ",initial_angle ";
+                        value = value + "," + SQLHelper.UpdateString(InitialAngle);
+                    }
+                    if (!string.IsNullOrEmpty(snNo))
+                    {
+                        sql = sql + ",sn_no ";
+                        value = value + "," + SQLHelper.UpdateString(snNo);
                     }
                     value = value + ")";
                     sql = sql + ") VALUES ";

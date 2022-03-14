@@ -46,5 +46,21 @@ namespace MODEL
         /// </summary>
         public string cardNo { get; set; }
 
+
+        /// <summary>
+        /// 设备id
+        /// </summary>
+        public string deviceId { get; set; }
+
+        /// <summary>
+        /// x轴方向角度
+        /// </summary>
+        public string InitialAngle { get; set; }
+
+        /// <summary>
+        ///网卡编码
+        /// </summary>
+        public string snNo { get; set; }
+
     }
 }
