@@ -27,7 +27,7 @@ function ProjectInfo(id, style) {
 
         //项目信息
         $.ajax({
-            url: servicesurl + "/api/Project/GetProjectInfo", type: "get", data: { "id": id, "cookie": document.cookie },
+            url: servicesurl + "/api/MonitorProject/GetProjectInfo", type: "get", data: { "id": id, "cookie": document.cookie },
             success: function (data) {
                 if (data == "") {
                     layer.msg("无项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -653,7 +653,7 @@ function ProjectInfo(id, style) {
 
                     //项目信息
                     $.ajax({
-                        url: servicesurl + "/api/Project/GetProjectInfo", type: "get", data: { "id": id, "cookie": document.cookie },
+                        url: servicesurl + "/api/MonitorProject/GetProjectInfo", type: "get", data: { "id": id, "cookie": document.cookie },
                         success: function (data) {
                             if (data == "") {
                                 layer.msg("无项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -951,7 +951,7 @@ function ProjectInfo(id, style) {
                         data.field.cookie = document.cookie;
 
                         $.ajax({
-                            url: servicesurl + "/api/Project/UpdateProject", type: "put", data: data.field,
+                            url: servicesurl + "/api/MonitorProject/UpdateProject", type: "put", data: data.field,
                             success: function (result) {
                                 layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                             }, datatype: "json"
@@ -2830,7 +2830,7 @@ function ProjectInfo(id, style) {
                     form.on('submit(addprojectinfosubmit)', function (data) {
                         data.field.cookie = document.cookie;
                         $.ajax({
-                            url: servicesurl + "/api/Project/AddProject", type: "post", data: data.field,
+                            url: servicesurl + "/api/MonitorProject/AddProject", type: "post", data: data.field,
                             success: function (result) {
                                 if (isNaN(parseInt(result))) {
                                     //创建失败

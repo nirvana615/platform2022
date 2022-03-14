@@ -17,9 +17,9 @@ namespace SERVICE.Controllers
     /// <summary>
     /// 监测项目
     /// </summary>
-    public class ProjectController : ApiController
+    public class MonitorProjectController : ApiController
     {
-        private static Logger logger = Logger.CreateLogger(typeof(ProjectController));
+        private static Logger logger = Logger.CreateLogger(typeof(MonitorProjectController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
 

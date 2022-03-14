@@ -468,9 +468,11 @@
     <Content Include="Apps\admin\widget\factory-add.html" />
     <Content Include="Apps\admin\widget\user-add.html" />
     <Content Include="Apps\common\common.js" />
+    <Content Include="Apps\common\map.js" />
     <Content Include="Apps\common\mark.js" />
     <Content Include="Apps\common\latlonview.js" />
     <Content Include="Apps\common\measure.js" />
+    <Content Include="Apps\common\model.js" />
     <Content Include="Apps\flz\css\main.css" />
     <Content Include="Apps\flz\js\1.1-all.js" />
     <Content Include="Apps\flz\js\1.2-para.js" />
@@ -520,8 +522,6 @@
     <Content Include="Apps\model\css\main.css" />
     <Content Include="Apps\model\js\1.1-all.js" />
     <Content Include="Apps\model\js\1.2-para.js" />
-    <Content Include="Apps\model\js\3.1-loadmodel.js" />
-    <Content Include="Apps\model\js\3.0-map.js" />
     <Content Include="Apps\model\js\4.1-projectlist-modelp.js" />
     <Content Include="Apps\model\js\4.1-projectlist-modelv.js" />
     <Content Include="Apps\model\js\4.1-projectlist-modelc.js" />
@@ -529,7 +529,6 @@
     <Content Include="Apps\model\js\4.2-projectinfo-modelv.js" />
     <Content Include="Apps\model\js\4.2-projectinfo-modelc.js" />
     <Content Include="Apps\model\js\4.3-projectright-modelc.js" />
-    <Content Include="Apps\model\js\3.2-modelview.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelp.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelv.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelc.js" />
@@ -554,7 +553,6 @@
     <Content Include="Apps\model\widget\3.0 projectrigth.html" />
     <Content Include="Apps\monitor\js\1.1-all.js" />
     <Content Include="Apps\monitor\js\1.2-para.js" />
-    <Content Include="Apps\monitor\js\3.0-map.js" />
     <Content Include="Apps\monitor\js\4.1-projectlist.js" />
     <Content Include="Apps\monitor\js\4.2-projectinfo.js" />
     <Content Include="Apps\monitor\js\5.0-header.js" />
@@ -638,7 +636,6 @@
     <Content Include="Apps\uav\css\main.css" />
     <Content Include="Apps\uav\js\1.0-all.js" />
     <Content Include="Apps\uav\js\1.2-para.js" />
-    <Content Include="Apps\uav\js\1.3-map.js" />
     <Content Include="Apps\uav\js\2.0-projectlist.js" />
     <Content Include="Apps\uav\js\4.0-route.js" />
     <Content Include="Apps\uav\js\3.0-project.js" />

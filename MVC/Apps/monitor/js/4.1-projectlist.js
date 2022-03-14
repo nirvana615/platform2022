@@ -23,7 +23,7 @@ var projectdatagrouparea = [];//按地区组织
 //获取项目列表
 function GetUserProjects() {
     $.ajax({
-        url: servicesurl + "/api/Project/GetUserProjectList", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/MonitorProject/GetUserProjectList", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             if (data == "") {
                 layer.msg("无项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -345,7 +345,7 @@ function ProjectNodeOperate(obj) {
     } else if (obj.type === 'del') {
         //删除项目
         $.ajax({
-            url: servicesurl + "/api/Project/DeleteProject", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
+            url: servicesurl + "/api/MonitorProject/DeleteProject", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
             success: function (data) {
                 layer.msg(data, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
 
@@ -636,25 +636,5 @@ function FlytoExtent(west, south, east, north) {
         setTimeout(() => {
             AddEntitiesInViewer(projectentities)
         }, 3000);
-    }
-};
-
-
-//向viewer添加entity
-function AddEntityInViewer(entity) {
-    if (entity != null) {
-        viewer.entities.add(entity);
-    }
-};
-//向viewer添加entity集合
-function AddEntitiesInViewer(entities) {
-    if (entities.length > 0) {
-        for (var i in entities) {
-            if (entities[i] != null) {
-                viewer.entities.add(entities[i]);
-            }
-        }
-
-        //viewer.flyTo(entities, { duration: 1, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 0) });
     }
 };

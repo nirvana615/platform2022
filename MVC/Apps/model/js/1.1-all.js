@@ -1,9 +1,7 @@
 ﻿/*
  * 全局对象
  */
-var viewer;
 var handler;
-
 
 var tree = layui.tree;
 var form = layui.form;
@@ -12,6 +10,9 @@ var util = layui.util;
 var date = layui.laydate;
 var elem = layui.element;
 var colorpicker = layui.colorpicker;
+
+var tipslayer = -1;//全局提示层
+
 
 
 var modelprojectinfoviewlayerindex = null;                           //项目信息模块（查看）
@@ -31,7 +32,7 @@ var headerselayerindex = null;                                  //设置
 
 
 
-var tipslayer = -1;//全局提示层
+
 
 
 var projectentities = [];//项目位置及标注
@@ -54,8 +55,37 @@ var MODELICON = '<span style="margin-left:5px;margin-right:5px;"><img src="../..
 
 
 
+//重写HomeButton功能
+viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) {
+    e.cancel = true;
+    if (projectentities.length > 0) {
+        viewer.flyTo(projectentities, { duration: 5, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 8000) });
+    }
+    else {
+        //缩放至中国
+        FlyToChina();
+    }
+});
 
 
+/*
+ * 修改样式
+ */
+//document.getElementsByClassName("cesium-viewer-fullscreenContainer")[0].style = "right:5px;top:7px;width:32px;height:32px;border-radius:14%;";    //修改全屏按钮样式
+//document.getElementsByClassName("cesium-viewer-toolbar")[0].style = "right:25px;top:245px;width:50px;height:50px";                                  //修改工具栏样式
+document.getElementsByClassName("cesium-viewer-toolbar")[0].style = "right:25px;top:105px;width:50px;height:50px";                                  //修改工具栏样式
+document.getElementsByClassName("cesium-button cesium-toolbar-button")[0].style = "width:50px;height:50px";                                         //修改工具栏样式
+document.getElementsByClassName("cesium-button cesium-toolbar-button")[1].style = "width:50px;height:50px";                                         //修改工具栏样式
+document.getElementsByClassName("cesium-baseLayerPicker-selected")[0].style = "width:50px;height:50px";                                             //修改工具栏样式
+
+
+//初始定位
+setTimeout(FlyToChina(), 3000);
+function FlyToChina() {
+    viewer.camera.flyTo({
+        destination: new Cesium.Rectangle.fromDegrees(73.66, 3.86, 135.05, 53.55)               //定位中国
+    }, { duration: 3 });
+};
 
 
 

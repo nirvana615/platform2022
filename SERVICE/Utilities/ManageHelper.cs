@@ -81,87 +81,7 @@ namespace SERVICE
                     #region 用户项目标识码
                     string bsminfo = string.Empty;
 
-                    #region 监测项目
-                    string monitormaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM monitor_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
-                    if (!string.IsNullOrEmpty(monitormaps))
-                    {
-                        string[] rows = monitormaps.Split(new char[] { COM.ConstHelper.rowSplit });
-                        for (int i = 0; i < rows.Length; i++)
-                        {
-                            MapUserMonitorProject mapUserMonitorProject = ParseMonitorHelper.ParseMapUserMonitorProject(rows[i]);
-                            if (mapUserMonitorProject != null)
-                            {
-                                MonitorProject project = ParseMonitorHelper.ParseMonitorProject(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM monitor_project WHERE id={0} AND ztm={1}", mapUserMonitorProject.MonitorProjectId, (int)MODEL.Enum.State.InUse)));
-                                if (project != null)
-                                {
-                                    bsminfo += project.BSM + ",";
-                                }
-                            }
-                        }
-                    }
-                    #endregion
-
-                    #region 无人机项目
-                    string uavmaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM uav_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
-                    if (!string.IsNullOrEmpty(uavmaps))
-                    {
-                        string[] rows = uavmaps.Split(new char[] { COM.ConstHelper.rowSplit });
-                        for (int i = 0; i < rows.Length; i++)
-                        {
-                            MapUserUavProject mapUserUavProject = ParseUavHelper.ParseMapUserUavProject(rows[i]);
-                            if (mapUserUavProject != null)
-                            {
-                                UavProject uavProject = ParseUavHelper.ParseUavProject(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM uav_project WHERE id={0} AND ztm={1}", mapUserUavProject.UavProjectId, (int)MODEL.Enum.State.InUse)));
-                                if (uavProject != null)
-                                {
-                                    bsminfo += uavProject.BSM + ",";
-                                }
-                            }
-                        }
-                    }
-                    #endregion
-
-                    #region 无人机影像项目
-                    string imagemaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM image_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
-                    if (!string.IsNullOrEmpty(imagemaps))
-                    {
-                        string[] rows = imagemaps.Split(new char[] { COM.ConstHelper.rowSplit });
-                        for (int i = 0; i < rows.Length; i++)
-                        {
-                            MapUserImageProject mapUserImageProject = ParseImageHelper.ParseMapUserImageProject(rows[i]);
-                            if (mapUserImageProject != null)
-                            {
-                                ImageProject imageProject = ParseImageHelper.ParseImageProject(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM image_project WHERE id={0} AND ztm={1}", mapUserImageProject.ImageProjectId, (int)MODEL.Enum.State.InUse)));
-                                if (imageProject != null)
-                                {
-                                    bsminfo += imageProject.BSM + ",";
-                                }
-                            }
-                        }
-                    }
-                    #endregion
-
-                    #region 点云项目
-                    string pointcloudmaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM pointcloud_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
-                    if (!string.IsNullOrEmpty(pointcloudmaps))
-                    {
-                        string[] rows = pointcloudmaps.Split(new char[] { COM.ConstHelper.rowSplit });
-                        for (int i = 0; i < rows.Length; i++)
-                        {
-                            MapUserPointCloudProject MapUserPointCloudProject = ParsePointCloudHelper.ParseMapUserPointCloudProject(rows[i]);
-                            if (MapUserPointCloudProject != null)
-                            {
-                                PCloudProject pointcloudProject = ParsePointCloudHelper.ParsePCloudProject(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM pointcloud_project WHERE id={0} AND ztm={1}", MapUserPointCloudProject.PointCloudProjectId, (int)MODEL.Enum.State.InUse)));
-                                if (pointcloudProject != null)
-                                {
-                                    bsminfo += pointcloudProject.BSM + ",";
-                                }
-                            }
-                        }
-                    }
-                    #endregion
-
-                    #region 实景模型项目
+                    #region 实景模型管理项目
                     string modelmaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM model_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
                     if (!string.IsNullOrEmpty(modelmaps))
                     {
@@ -181,9 +101,87 @@ namespace SERVICE
                     }
                     #endregion
 
+                    #region 地质灾害监测项目
+                    string monitormaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM monitor_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                    if (!string.IsNullOrEmpty(monitormaps))
+                    {
+                        string[] rows = monitormaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                        for (int i = 0; i < rows.Length; i++)
+                        {
+                            MapUserMonitorProject mapUserMonitorProject = ParseMonitorHelper.ParseMapUserMonitorProject(rows[i]);
+                            if (mapUserMonitorProject != null)
+                            {
+                                MonitorProject project = ParseMonitorHelper.ParseMonitorProject(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM monitor_project WHERE id={0} AND ztm={1}", mapUserMonitorProject.MonitorProjectId, (int)MODEL.Enum.State.InUse)));
+                                if (project != null)
+                                {
+                                    bsminfo += project.BSM + ",";
+                                }
+                            }
+                        }
+                    }
+                    #endregion
 
+                    #region 航线任务规划项目
+                    string uavmaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM uav_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                    if (!string.IsNullOrEmpty(uavmaps))
+                    {
+                        string[] rows = uavmaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                        for (int i = 0; i < rows.Length; i++)
+                        {
+                            MapUserUavProject mapUserUavProject = ParseUavHelper.ParseMapUserUavProject(rows[i]);
+                            if (mapUserUavProject != null)
+                            {
+                                UavProject uavProject = ParseUavHelper.ParseUavProject(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM uav_project WHERE id={0} AND ztm={1}", mapUserUavProject.UavProjectId, (int)MODEL.Enum.State.InUse)));
+                                if (uavProject != null)
+                                {
+                                    bsminfo += uavProject.BSM + ",";
+                                }
+                            }
+                        }
+                    }
+                    #endregion
 
-                    #region 地址采集项目
+                    #region *无人机影像项目
+                    string imagemaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM image_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                    if (!string.IsNullOrEmpty(imagemaps))
+                    {
+                        string[] rows = imagemaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                        for (int i = 0; i < rows.Length; i++)
+                        {
+                            MapUserImageProject mapUserImageProject = ParseImageHelper.ParseMapUserImageProject(rows[i]);
+                            if (mapUserImageProject != null)
+                            {
+                                ImageProject imageProject = ParseImageHelper.ParseImageProject(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM image_project WHERE id={0} AND ztm={1}", mapUserImageProject.ImageProjectId, (int)MODEL.Enum.State.InUse)));
+                                if (imageProject != null)
+                                {
+                                    bsminfo += imageProject.BSM + ",";
+                                }
+                            }
+                        }
+                    }
+                    #endregion
+
+                    #region *点云项目
+                    string pointcloudmaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM pointcloud_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                    if (!string.IsNullOrEmpty(pointcloudmaps))
+                    {
+                        string[] rows = pointcloudmaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                        for (int i = 0; i < rows.Length; i++)
+                        {
+                            MapUserPointCloudProject MapUserPointCloudProject = ParsePointCloudHelper.ParseMapUserPointCloudProject(rows[i]);
+                            if (MapUserPointCloudProject != null)
+                            {
+                                PCloudProject pointcloudProject = ParsePointCloudHelper.ParsePCloudProject(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM pointcloud_project WHERE id={0} AND ztm={1}", MapUserPointCloudProject.PointCloudProjectId, (int)MODEL.Enum.State.InUse)));
+                                if (pointcloudProject != null)
+                                {
+                                    bsminfo += pointcloudProject.BSM + ",";
+                                }
+                            }
+                        }
+                    }
+                    #endregion
+
+                    #region *地质要素采集项目
                     string flzProjects = PostgresqlHelper.QueryData(connect, string.Format("SELECT a.* FROM flz_project a,flz_map_user_project b WHERE a.id=b.projectid and b.userid={0} AND b.ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
                     if (!string.IsNullOrEmpty(flzProjects))
                     {
@@ -193,11 +191,11 @@ namespace SERVICE
                         {
                             FlzProject project = ParseFlzoneHelper.ParseProject(rows[i]);
                             if (project != null)
-                                {
-                                   bsminfo += project.BSM + ",";
-                                }
+                            {
+                                bsminfo += project.BSM + ",";
+                            }
                         }
-                        
+
                     }
                     #endregion
 

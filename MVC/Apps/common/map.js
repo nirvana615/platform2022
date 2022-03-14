@@ -1,6 +1,10 @@
 ﻿/*
- * 地图
+ * 引用CesiumJS
  */
+
+
+
+//地图
 var baseMaps = new Array(
     new Cesium.ProviderViewModel({
         name: '天地图矢量',
@@ -158,35 +162,28 @@ var baseMaps = new Array(
         }
     }),
 );
-
-/*
- * 地形
- */
+//地形
 var baseTerrains = Cesium.createDefaultTerrainProviderViewModels();
 baseTerrains[0].name = "WGS84 椭球体";
 baseTerrains[0].tooltip = "";
 baseTerrains[1].name = "STK 世界地形";
 baseTerrains[1].tooltip = "";
 
-/*
- * token
- */
+//token
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNDc5ZGE1NS1iOGI4LTRkMDAtODA1OC0xOTMwN2Y3M2QyZTIiLCJpZCI6MTAyOCwic2NvcGVzIjpbImFzbCIsImFzciIsImFzdyIsImdjIiwicHIiXSwiaWF0IjoxNTg1NTU0NzQyfQ.CUFsgTc17aKqruesY_plpr4l1FzqsSsWMXh1FK2fwfg';
 
 
-/*
- * 初始化viewer
- */
-viewer = new Cesium.Viewer("map", {
+//初始化viewer
+var viewer = new Cesium.Viewer("map", {
     homeButton: true,
     animation: false,
     baseLayerPicker: true,
     fullscreenButton: false,
     vrButton: false,
     geocoder: false,
-    infoBox: false,//点击entity右上角弹出框
+    infoBox: false,
     sceneModePicker: false,
-    selectionIndicator: true,
+    selectionIndicator: false,
     timeline: false,
     navigationHelpButton: false,
     navigationInstructionsInitiallyVisible: false,
@@ -196,13 +193,9 @@ viewer = new Cesium.Viewer("map", {
     selectedTerrainProviderViewModel: baseTerrains[1],
 });
 
-
-/*
- * 修改
- */
+//修改
 viewer._cesiumWidget._creditContainer.style.display = "none";           //隐藏版权信息
 viewer.scene.globe.enableLighting = false;                              //日夜区分
-viewer.scene.globe.depthTestAgainstTerrain = false;
 viewer.homeButton.viewModel.tooltip = "初始视图";
 viewer.baseLayerPicker.viewModel.buttonTooltip = "地图及地形";
 viewer.baseLayerPicker.viewModel.toggleDropDown.afterExecute.addEventListener(function () {
@@ -217,48 +210,10 @@ viewer.baseLayerPicker.viewModel.toggleDropDown.afterExecute.addEventListener(fu
         }
     }
 });
-
-
-//重写HomeButton功能
-viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) {
-    e.cancel = true;
-    if (projectentities.length > 0) {
-        viewer.flyTo(projectentities, { duration: 5, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 8000) });
-    }
-    else {
-        //缩放至中国
-        FlyToChina();
-    }
-});
-
-
-/*
- * 修改样式
- */
-//document.getElementsByClassName("cesium-viewer-fullscreenContainer")[0].style = "right:5px;top:7px;width:32px;height:32px;border-radius:14%;";    //修改全屏按钮样式
-//document.getElementsByClassName("cesium-viewer-toolbar")[0].style = "right:25px;top:245px;width:50px;height:50px";                                  //修改工具栏样式
-document.getElementsByClassName("cesium-viewer-toolbar")[0].style = "right:25px;top:105px;width:50px;height:50px";                                  //修改工具栏样式
-document.getElementsByClassName("cesium-button cesium-toolbar-button")[0].style = "width:50px;height:50px";                                         //修改工具栏样式
-document.getElementsByClassName("cesium-button cesium-toolbar-button")[1].style = "width:50px;height:50px";                                         //修改工具栏样式
-document.getElementsByClassName("cesium-baseLayerPicker-selected")[0].style = "width:50px;height:50px";                                             //修改工具栏样式
-
-
-/*
- * 扩展
- */
+//扩展
 viewer.extend(Cesium.viewerCesiumNavigationMixin, {});                                          //扩展导航功能
 document.getElementsByClassName("navigation-controls")[0].style = "visibility:hidden";          //修改工具栏样式
 document.getElementsByClassName("compass")[0].style = "top:10px";                               //修改指南针位置
-
-
-
-//初始定位
-setTimeout(FlyToChina(), 3000);
-function FlyToChina() {
-    viewer.camera.flyTo({
-        destination: new Cesium.Rectangle.fromDegrees(73.66, 3.86, 135.05, 53.55)               //定位中国
-    }, { duration: 3 });
-};
 
 
 //移动端判断
@@ -281,4 +236,57 @@ var isMobile = {
     any: function () {
         return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
     }
+};
+
+//viewer添加entity
+function AddEntityInViewer(entity) {
+    if (entity != null) {
+        viewer.entities.add(entity);
+    }
+};
+//viewer添加entity集合
+function AddEntitiesInViewer(entities) {
+    if (entities.length > 0) {
+        for (var i in entities) {
+            if (entities[i] != null) {
+                viewer.entities.add(entities[i]);
+            }
+        }
+    }
+};
+
+//viewer删除entity
+function RemoveEntityInViewer(entity) {
+    if (viewer.entities.contains(entity)) {
+        viewer.entities.remove(entity);
+    }
+};
+//viewer删除entity集合
+function RemoveEntitiesInViewer(entities) {
+    for (var i in entities) {
+        if (viewer.entities.contains(entities[i])) {
+            viewer.entities.remove(entities[i]);
+        }
+    }
+};
+
+//定位entity
+function ZoomToEntity(entity) {
+    viewer.zoomTo(entity, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-45), 5));
+};
+
+//清除全部模型和几何对象
+function ClearAllModelAndGeometry() {
+    //清除模型
+    viewer.scene.primitives.removeAll();
+    current_project_tile = null;
+
+    //清除几何
+    viewer.entities.removeAll();
+
+    if (handler != undefined) {
+        handler.destroy();
+    }
+
+    viewer._container.style.cursor = "default";//还原鼠标样式
 };

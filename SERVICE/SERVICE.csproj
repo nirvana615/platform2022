@@ -180,6 +180,7 @@
     <Compile Include="Controllers\model\ModelProjectRightController.cs" />
     <Compile Include="Controllers\model\ModelTaskController.cs" />
     <Compile Include="Controllers\monitor\DataController.cs" />
+    <Compile Include="Controllers\monitor\MonitorProjectController.cs" />
     <Compile Include="Controllers\monitor\PatrolEquipmentController.cs" />
     <Compile Include="Controllers\monitor\SurveyController.cs" />
     <Compile Include="Controllers\pointcloud\PointCloudChangesController.cs" />
@@ -200,18 +201,13 @@
     <Compile Include="Controllers\tool\AuthController.cs" />
     <Compile Include="Controllers\tool\MessageController.cs" />
     <Compile Include="Controllers\monitor\DisasterController.cs" />
-    <Compile Include="Controllers\monitor\DocumentController.cs" />
-    <Compile Include="Controllers\monitor\GeologyController.cs" />
     <Compile Include="Controllers\monitor\MonitorController.cs" />
     <Compile Include="Controllers\monitor\SectionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\monitor\LayerController.cs" />
-    <Compile Include="Controllers\monitor\ProjectController.cs" />
-    <Compile Include="Controllers\monitor\CompanyController.cs" />
     <Compile Include="Controllers\monitor\DatabaseController.cs" />
     <Compile Include="Controllers\monitor\DeviceController.cs" />
     <Compile Include="Controllers\monitor\FactoryController.cs" />
-    <Compile Include="Controllers\monitor\MemberController.cs" />
     <Compile Include="Controllers\manage\RoleController.cs" />
     <Compile Include="Controllers\monitor\SaleController.cs" />
     <Compile Include="Controllers\monitor\SqlController.cs" />

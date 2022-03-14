@@ -123,7 +123,7 @@
                             else {
                                 curuserid = data.value;
                                 $.ajax({
-                                    url: window.parent.servicesurl + "/api/Project/GetMapUserMonitorProject", type: "get", data: { "id": data.value },
+                                    url: window.parent.servicesurl + "/api/MonitorProject/GetMapUserMonitorProject", type: "get", data: { "id": data.value },
                                     success: function (data) {
                                         if (data == "") {
                                             for (var i in monitorprojects) {
@@ -162,7 +162,7 @@
         //获取监测项目信息
         function GetMonitorProjectInfo() {
             $.ajax({
-                url: window.parent.servicesurl + "/api/Project/GetProjectList", type: "get",
+                url: window.parent.servicesurl + "/api/MonitorProject/GetProjectList", type: "get",
                 success: function (data) {
                     monitorprojects = [];
                     if (data == "") {
@@ -209,7 +209,7 @@
                 }
 
                 $.ajax({
-                    url: window.parent.servicesurl + "/api/Project/UpdateMapUserMonitorProject", type: "put", data: data.field,
+                    url: window.parent.servicesurl + "/api/MonitorProject/UpdateMapUserMonitorProject", type: "put", data: data.field,
                     success: function (result) {
                         if (result != "") {
                             layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
