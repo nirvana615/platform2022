@@ -426,7 +426,6 @@
     <Content Include="Apps\admin\layuiadmin\modules\user.js" />
     <Content Include="Apps\admin\layuiadmin\modules\useradmin.js" />
     <Content Include="Apps\admin\layuiadmin\modules\workorder.js" />
-    <Content Include="Apps\admin\layuiadmin\style\loginStatistics.css" />
     <Content Include="Apps\admin\layuiadmin\style\admin.css" />
     <Content Include="Apps\admin\layuiadmin\style\login.css" />
     <Content Include="Apps\admin\layuiadmin\style\res\bg-none.jpg" />
@@ -447,9 +446,10 @@
     <Content Include="Apps\admin\view\auth_geology.html" />
     <Content Include="Apps\admin\view\auth_model.html" />
     <Content Include="Apps\admin\view\auth_uav.html" />
-    <Content Include="Apps\admin\view\loginStatistics.html" />
+    <Content Include="Apps\admin\view\login.html" />
     <Content Include="Apps\admin\view\home.html" />
     <Content Include="Apps\admin\view\device.html" />
+    <Content Include="Apps\admin\view\message.html" />
     <Content Include="Apps\admin\view\role.html" />
     <Content Include="Apps\admin\view\sale.html" />
     <Content Include="Apps\admin\view\factory.html" />
@@ -466,7 +466,6 @@
     <Content Include="Apps\admin\widget\sql-add.html" />
     <Content Include="Apps\admin\widget\srid-add.html" />
     <Content Include="Apps\admin\widget\factory-add.html" />
-    <Content Include="Apps\admin\widget\user-role-edit.html" />
     <Content Include="Apps\admin\widget\user-add.html" />
     <Content Include="Apps\common\common.js" />
     <Content Include="Apps\common\mark.js" />

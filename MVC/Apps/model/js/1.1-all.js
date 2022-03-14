@@ -34,11 +34,8 @@ var headerselayerindex = null;                                  //设置
 var tipslayer = -1;//全局提示层
 
 
-//*model
 var projectentities = [];//项目位置及标注
-//*model
 var currentprojectid = null;//当前项目id
-//*model
 
 
 
@@ -46,8 +43,7 @@ var curtileset = null;//当前模型
 
 var projectlayerlistlayerindex = null  //标注窗口
 
-//记录当前深度检测值
-//measurewidget_depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
+
 /*
  * 图标常量
  */
