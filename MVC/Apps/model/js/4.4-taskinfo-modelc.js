@@ -1,7 +1,7 @@
 ﻿//任务
 function ModelTaskInfo(id, style) {
     if (style == "view") {
-        //查看目标
+        //查看任务信息
         if (modeltaskinfoviewlayerindex == null) {
             modeltaskinfoviewlayerindex = layer.open({
                 type: 1
@@ -27,7 +27,7 @@ function ModelTaskInfo(id, style) {
                 }
             });
         }
-        //异步获取目标基本信息
+        //异步获取任务基本信息
         $.ajax({
             url: servicesurl + "/api/ModelTask/GetTaskInfo", type: "get", data: { "id": id, "cookie": document.cookie },
             success: function (data) {
@@ -123,7 +123,7 @@ function ModelTaskInfo(id, style) {
                 , success: function (layero) {
                     //置顶
                     layer.setTop(layero);
-                    //异步获取目标基本信息
+                    //异步获取任务基本信息
                     $.ajax({
                         url: servicesurl + "/api/ModelTask/GetTaskInfo", type: "get", data: { "id": id, "cookie": document.cookie },
                         success: function (data) {
@@ -194,7 +194,7 @@ function ModelTaskInfo(id, style) {
                         }, datatype: "json"
                     });
 
-                    //保存编辑--更新目标信息
+                    //保存编辑--更新任务信息
                     form.on('submit(editModeltaskinfosubmit)', function (data) {
                         //将页面全部复选框选中的值拼接到一个数组中
                         var arr_box = [];
@@ -238,7 +238,7 @@ function ModelTaskInfo(id, style) {
             layer.msg("请先选择当前项目！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         }
         else {
-            //②--再新建目标
+            //②--再新建任务
             if (modeltaskinfoaddlayerindex == null){
                 modeltaskinfoaddlayerindex = layer.open({
                     type: 1
@@ -250,8 +250,7 @@ function ModelTaskInfo(id, style) {
                     , maxmin: true
                     , moveOut: true
                     , resize: false
-                    , content: '<!--创建任务--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="addModeltaskinfoform"> <div class="layui-form-item"> <label class="layui-form-label">任务名称</label> <div class="layui-input-block"> <input type="text" name="model_rwmc_add" autocomplete="off" placeholder="航测对象具体描述，如：XX镇XX滑坡" lay-verify="required" class="layui-input" /> </div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label">采集时间</label> <div class="layui-input-block"> <input type="text" id="yxcjsjid" name="model_yxcjsj_add" lay-verify="required|date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" /> </div> </div> </div> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label">影像数量</label> <div class="layui-input-block"> <input type="text" name="model_yxsl_add" autocomplete="off" placeholder="请输入数字" lay-verify="required|number" class="layui-input" /> </div> </div> </div> </div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label">坐标系统</label> <div class="layui-input-block"> <select id="kjckid" name="model_kjck_add" lay-verify="required"></select> </div> </div> </div> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label">采集设备</label> <div class="layui-input-block"> <select id="yxcjsbid" name="model_yxcjsb_add" lay-verify="required"></select> </div> </div> </div> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">目标成果</label> <div class="layui-input-block" id="sxcgid"></div> </div> <div class="layui-form-item"> <label class="layui-form-label">影像链接</label> <div class="layui-input-block"> <input type="text" name="model_yxcflj_add" autocomplete="off" lay-verify="required" placeholder="请输入影像链接" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">控制点</label> <div class="layui-input-block"> <textarea name="model_yxkzd_add" class="layui-textarea" rows="6" style="resize:none"autocomplete="off" placeholder="请输入txt格式"></textarea> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">任务描述</label> <div class="layui-input-block"> <input type="text" name="model_rwms_add" autocomplete="off" placeholder="请输入任务描述信息" class="layui-input" /> </div> </div> <div class="layui-form-item" style="margin-top:20px"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="addModeltaskinfosubmit" style="width:100px;border-radius:5px;">提交</button> <button type="reset" class="layui-btn layui-btn-primary" style="width:100px;border-radius:5px;">重置</button></div> </div> </form>'
-                    , zIndex: layer.zIndex
+                    , content: '<!--创建任务--> <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="addModeltaskinfoform"> <div class="layui-form-item"> <label class="layui-form-label">任务名称</label> <div class="layui-input-block"> <input type="text" name="model_rwmc_add" autocomplete="off" placeholder="航测对象具体描述，如：XX镇XX滑坡" lay-verify="required" class="layui-input" /> </div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label">采集时间</label> <div class="layui-input-block"> <input type="text" id="yxcjsjid" name="model_yxcjsj_add" lay-verify="required|date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" /> </div> </div> </div> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label">影像数量</label> <div class="layui-input-block"> <input type="text" name="model_yxsl_add" autocomplete="off" placeholder="请输入数字" lay-verify="required|number" class="layui-input" /> </div> </div> </div> </div> </div> <div class="layui-form-item"> <div class="layui-row"> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label">坐标系统</label> <div class="layui-input-block"> <select id="kjckid" name="model_kjck_add" lay-verify="required"></select> </div> </div> </div> <div class="layui-col-md6"> <div class="grid-demo"> <label class="layui-form-label">采集设备</label> <div class="layui-input-block"> <select id="yxcjsbid" name="model_yxcjsb_add" lay-verify="required"></select> </div> </div> </div> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">目标成果</label> <div class="layui-input-block" id="sxcgid"></div> </div> <div class="layui-form-item"> <label class="layui-form-label">影像链接</label> <div class="layui-input-block"> <input type="text" name="model_yxcflj_add" autocomplete="off" lay-verify="required" placeholder="请输入影像链接" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">控制点</label> <div class="layui-input-block"> <textarea name="model_yxkzd_add" class="layui-textarea" rows="6" style="resize:none"autocomplete="off" placeholder="请输入txt格式"></textarea> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">任务描述</label> <div class="layui-input-block"> <input type="text" name="model_rwms_add" autocomplete="off" placeholder="请输入任务描述信息" class="layui-input" /> </div> </div> <div class="layui-form-item" style="margin-top:20px"> <div style="text-align:center"> <button type="submit" id="task_sub_add" class="layui-btn" lay-submit="" lay-filter="addModeltaskinfosubmit" style="width:100px;border-radius:5px;">提交</button> <button type="reset" class="layui-btn layui-btn-primary" style="width:100px;border-radius:5px;">重置</button></div> </div> </form>', zIndex: layer.zIndex
                     , success: function (layero) {
                         //置顶
                         layer.setTop(layero);
@@ -299,7 +298,7 @@ function ModelTaskInfo(id, style) {
                         form.render('select');//刷新
 
 
-                        //提交——创建目标
+                        //提交——创建任务
                         form.on('submit(addModeltaskinfosubmit)', function (data) {
                             //将页面全部复选框选中的值拼接到一个数组中
                             var arr_box = [];
@@ -309,6 +308,9 @@ function ModelTaskInfo(id, style) {
                             data.field.cookie = document.cookie;
                             data.field.projectid = currentprojectid;
                             data.field.model_sxcg_add = arr_box.toString();
+                            
+                            document.getElementById('task_sub_add').disabled = "disabled";//限制只能提交一次
+
                             $.ajax({
                                 url: servicesurl + "/api/ModelTask/AddTask", type: "post", data: data.field,
                                 success: function (result) {

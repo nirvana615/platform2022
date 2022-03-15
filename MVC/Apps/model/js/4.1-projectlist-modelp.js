@@ -560,7 +560,9 @@ function ModelProjectNodeClick(obj) {
                 tree.reload('yearprojectlistid', {
                     data: modelprojectlistyear
                 });
-
+                currentprojecttitle = obj.data.title;//赋值当前项目标题
+                //当前节点高亮显示
+                MarkNode();
 
                 FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
                 layer.close(index);

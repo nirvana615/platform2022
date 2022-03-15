@@ -69,11 +69,12 @@ function LoadNewModelTask() {
                     , totalRow: false
                     , initSort: { field: 'RWCJSJ', type: 'desc' }
                     , cols: [[
-                        { field: 'Id', title: 'ID', width: 50, sort: true, align: "center" }
-                        , { field: 'RWMC', title: '任务名称', sort: true, width: 250, align: "center" }
-                        , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 200, align: "center" }
-                        , { field: 'RWZT', title: '任务状态', width: 150, align: "center" }
-                        , { fixed: 'right', title: '操作', width: 100, align: "center", toolbar: '#barDemo_Pending' }
+                        { field: 'Id', title: 'ID', width: 52, sort: true, align: "center" }
+                        , { field: 'RWBM', title: '任务编码', sort: true, width: 150, align: "center" }
+                        , { field: 'RWMC', title: '任务名称', sort: true, width: 230, align: "center" }
+                        , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 140, align: "center" }
+                        , { field: 'RWZT', title: '任务状态', width: 100, align: "center" }
+                        , { fixed: 'right', title: '操作', width: 80, align: "center", toolbar: '#barDemo_Pending' }
                     ]]
                     , data: []
                 });
@@ -96,7 +97,7 @@ function LoadNewModelTask() {
                             newmodeltasktableProcess.unshift(data);
                             newTaskTablePending.reload({ id: 'newTaskTablePendingid', data: newmodeltasktablePending });
                             newTaskTableProcessing.reload({ id: 'newTaskTableProcessingid', data: newmodeltasktableProcess });
-                            ModelTaskInfo(obj.data.Id, "view");
+                            ModelTaskInfo(obj.data.Id, "taskview");
                             obj.del();
                             //更新任务状态
                             UpdateModelTaskStatus(data);
@@ -140,11 +141,12 @@ function LoadNewModelTask() {
                     , totalRow: false
                     , initSort: { field: 'RWCJSJ', type: 'desc' }
                     , cols: [[
-                        { field: 'Id', title: 'ID', width: 50, sort: true, align: "center" }
-                        , { field: 'RWMC', title: '任务名称', sort: true, width: 250, align: "center" }
-                        , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 200, align: "center" }
-                        , { field: 'RWZT', title: '任务状态', width: 150, align: "center" }
-                        , { fixed: 'right', title: '操作', width: 100, align: "center", toolbar: '#barDemo_Processing' }
+                        { field: 'Id', title: 'ID', width: 52, sort: true, align: "center" }
+                        , { field: 'RWBM', title: '任务编码', sort: true, width: 150, align: "center" }
+                        , { field: 'RWMC', title: '任务名称', sort: true, width: 230, align: "center" }
+                        , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 140, align: "center" }
+                        , { field: 'RWZT', title: '任务状态', width: 100, align: "center" }
+                        , { fixed: 'right', title: '操作', width: 80, align: "center", toolbar: '#barDemo_Processing' }
                     ]]
                     , data: []
                 });
@@ -195,11 +197,12 @@ function LoadNewModelTask() {
                     , totalRow: false
                     , initSort: { field: 'RWCJSJ', type: 'desc' }
                     , cols: [[
-                        { field: 'Id', title: 'ID', width: 50, sort: true, align: "center" }
-                        , { field: 'RWMC', title: '任务名称', sort: true, width: 250, align: "center" }
-                        , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 200, align: "center" }
-                        , { field: 'RWZT', title: '任务状态', width: 150, align: "center" }
-                        , { fixed: 'right', title: '操作', width: 100, align: "center", toolbar: '#barDemo_Finished' }
+                        { field: 'Id', title: 'ID', width: 52, sort: true, align: "center" }
+                        , { field: 'RWBM', title: '任务编码', sort: true, width: 150, align: "center" }
+                        , { field: 'RWMC', title: '任务名称', sort: true, width: 230, align: "center" }
+                        , { field: 'RWCJSJ', title: '任务时间', sort: true, width: 140, align: "center" }
+                        , { field: 'RWZT', title: '任务状态', width: 100, align: "center" }
+                        , { fixed: 'right', title: '操作', width: 80, align: "center", toolbar: '#barDemo_Finished' }
                     ]]
                     , data: []
                 });

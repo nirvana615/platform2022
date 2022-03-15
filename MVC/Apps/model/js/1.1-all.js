@@ -25,6 +25,7 @@ var modeltaskinfoviewlayerindex = null;                           //模型信息
 var modeltaskinfoaddlayerindex = null;                            //模型信息模块（新建）
 var modeltaskinfoeditlayerindex = null;                           //模型信息模块（编辑）
 var newmodeltaskinfolayerindex = null;                            //新模型任务信息
+var localtoolindex = null;                                        //工具扩展模块   
 
 var headeruserlayerindex = null;                                //用户信息
 var headernoticelayerindex = null;                              //通知消息
@@ -37,7 +38,7 @@ var headerselayerindex = null;                                  //设置
 
 var projectentities = [];//项目位置及标注
 var currentprojectid = null;//当前项目id
-
+var currentprojecttitle = null;//当前项目标题（用于高亮显示）
 
 
 var curtileset = null;//当前模型
@@ -88,7 +89,18 @@ function FlyToChina() {
 };
 
 
-
+//项目节点高亮
+function MarkNode() {
+    //选中节点高亮
+    var nodes = document.getElementsByClassName("layui-tree-txt");
+    for (var i = 0; i < nodes.length; i++) {
+        if ((nodes[i].innerHTML === currentprojecttitle)) {
+            nodes[i].style.color = "#009688";
+            nodes[i].style.fontSize = "15px";
+            nodes[i].style.fontWeight = "bold";
+        }
+    }
+};
 
 
 

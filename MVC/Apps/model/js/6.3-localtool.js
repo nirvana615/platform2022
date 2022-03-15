@@ -1,8 +1,11 @@
 ﻿//本地工具widget
 function LoadLocalToolLayer() {
 
-
-    var localtoolindex = layer.open({
+    if (localtoolindex != null) {
+        layer.setTop(localtoolindex);
+        return;
+    }
+    localtoolindex = layer.open({
         type: 1
         , title: ['工具集', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
         , area: ['500px', '500px']
@@ -18,6 +21,10 @@ function LoadLocalToolLayer() {
             layer.setTop(layero);
 
 
+        },
+        end: function () {
+            //还原参数
+            localtoolindex = null;
         }
     });
 
