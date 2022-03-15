@@ -541,6 +541,7 @@
     <Content Include="Apps\model\js\6.0-util-modelv.js" />
     <Content Include="Apps\model\js\6.0-util-modelc.js" />
     <Content Include="Apps\model\js\6.3-localtool.js" />
+    <Content Include="Apps\model\js\7.0-modelprojectconnect.js" />
     <Content Include="Apps\model\widget\0-projectlist.html" />
     <Content Include="Apps\model\widget\1.1 projectaddview.html" />
     <Content Include="Apps\model\widget\1.2 projectview.html" />
@@ -860,6 +861,7 @@
     <Content Include="Scripts\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui\font\iconfont.woff" />
     <Content Include="Scripts\layui\font\iconfont.woff2" />
+    <Content Include="Resources\img\map\CesiumMilkTruck.glb" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Cesium\Assets\Images\bing_maps_credit.png" />
     <Content Include="Scripts\Cesium\Assets\Images\cesium_credit.png" />
