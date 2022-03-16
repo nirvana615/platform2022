@@ -404,3 +404,57 @@
         </div>
     </div>
 </form>
+
+
+<!--项目点标注信息修改面板-->
+<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="updatemarkinfoform">
+    <div class="layui-form-item" style="margin-top:15px;margin-left:20px;">
+        <div class="layui-row" style="margin-top: 10px;">
+            <div class="layui-col-md6" style="margin-left:20px;">
+                <div class="grid-demo grid-demo-bg1">
+                    <label class="layui-form-label" style="padding-left: 0px;text-align: left;">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="updateprojectmark_name" name="name" class="layui-input" style="width: 120px;margin-left: -70px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row" style="margin-top: 20px;">
+            <div class="layui-col-md6" style="margin-left:20px;">
+                <div class="grid-demo">
+                    <label class="layui-form-label" style="padding-left: 0px;text-align: left;">颜色</label>
+                    <div class="layui-input-block">
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="color" value="" style="width: 120px;margin-left: -70px;" placeholder="请选择颜色" class="layui-input" id="mark-project-color-select">
+                            <div class="layui-input-inline" style="left: -11px;width: 100px;">
+                                <div id="mark-project-color" class="layui-inline" style="   margin-top: -50px;   margin-left: 60px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row" style="margin-top: 5px;">
+            <div class="layui-col-md6" style="margin-left:20px;">
+                <div class="grid-demo">
+                    <label class="layui-form-label" style="padding-left: 0px;text-align: left;">样式</label>
+                    <div class="layui-input-block">
+                        <button type="button" id="mark-point-style-select" onclick="selectMarkStyle(this)" class="layui-btn layui-btn-radius layui-btn-primary layui-btn-s" style="border-radius: 5px;width: 120px;margin-left: -70px;">
+                            选择样式<i class="layui-icon layui-icon-down layui-font-14"></i>
+                        </button>
+                        <div id="projectmark_style">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="layui-form-item" style="margin-top:15px">
+        <div style="position:absolute;right:30px;">
+            <button type="Button" class="layui-btn layui-btn-primary" id="updatemarkposition_id"style="width:100px;margin-right: 20px;" onclick="updateMarkPosition()">移位</button>
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="updateinfosubmit" style="width:100px">提交</button>
+        </div>
+    </div>
+</form>
