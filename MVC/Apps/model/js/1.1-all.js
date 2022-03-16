@@ -17,6 +17,8 @@ var modelprojectinfoviewlayerindex = null;                        //项目模块
 var modelprojectinfoaddlayerindex = null;                         //项目模块（新建）
 var modelprojectinfoeditlayerindex = null;                        //项目模块（编辑）
 
+var depthTestAgainstTerrain;//深度检测值
+
 var modeltaskinfoviewlayerindex = null;                           //任务模块（查看）
 var modeltaskinfoaddlayerindex = null;                            //任务模块（新建）
 var modeltaskinfoeditlayerindex = null;                           //任务模块（编辑）

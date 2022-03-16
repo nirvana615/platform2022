@@ -545,12 +545,12 @@
     <Content Include="Apps\model\widget\0-projectlist.html" />
     <Content Include="Apps\model\widget\1.1 projectadd.html" />
     <Content Include="Apps\model\widget\1.2 projectview.html" />
-    <Content Include="Apps\model\widget\1.3 projecteditview.html" />
-    <Content Include="Apps\model\widget\2.1 taskaddview.html" />
+    <Content Include="Apps\model\widget\1.3 projectedit.html" />
+    <Content Include="Apps\model\widget\2.1 taskadd.html" />
     <Content Include="Apps\model\widget\2.5 taskview-modelp.html" />
     <Content Include="Apps\model\widget\2.2 taskview.html" />
     <Content Include="Apps\model\widget\2.4 taskstatus.html" />
-    <Content Include="Apps\model\widget\2.3 taskeditview.html" />
+    <Content Include="Apps\model\widget\2.3 taskedit.html" />
     <Content Include="Apps\model\widget\3.0 projectrigth.html" />
     <Content Include="Apps\monitor\js\1.1-all.js" />
     <Content Include="Apps\monitor\js\1.2-para.js" />

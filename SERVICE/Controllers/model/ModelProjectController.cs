@@ -182,11 +182,6 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
 
-
-
-
-
-
         /// <summary>
         /// 新建项目
         /// </summary>
@@ -195,21 +190,19 @@ namespace SERVICE.Controllers
         public string AddProject()
         {
             #region 参数
-            string xmmc = HttpContext.Current.Request.Form["model_xmmc_add"];        //Request.Form  获取页面表单元素
-            string xmprovince = HttpContext.Current.Request.Form["model_province_add"];//省市
-            string xmdistrict = HttpContext.Current.Request.Form["model_district_add"];//县级行政区
-            string zxjd = HttpContext.Current.Request.Form["model_zxjd_add"];
-            string zxwd = HttpContext.Current.Request.Form["model_zxwd_add"];
-            string xmsj = HttpContext.Current.Request.Form["model_xmsj_add"];
+            string xmmc = HttpContext.Current.Request.Form["model_xmmc_add"];                   //项目名称
+            string xmprovince = HttpContext.Current.Request.Form["model_province_add"];         //省市
+            string xmdistrict = HttpContext.Current.Request.Form["model_district_add"];         //县级行政区
+            string zxjd = HttpContext.Current.Request.Form["model_zxjd_add"];                   //中心经度
+            string zxwd = HttpContext.Current.Request.Form["model_zxwd_add"];                   //中心纬度
+            string xmsj = HttpContext.Current.Request.Form["model_xmsj_add"];                   //项目时间
             string xzqbm = HttpContext.Current.Request.Form["model_district_add"];
             string xmwz = HttpContext.Current.Request.Form["model_xmwz_add"];
             string bz = HttpContext.Current.Request.Form["model_bz_add"];
             #endregion
 
-            #region 解析验证用户
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
-            #endregion
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
             {
@@ -217,7 +210,9 @@ namespace SERVICE.Controllers
                 {
                     return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户为空！", string.Empty));
                 }
-                string xmbm = CreateProjectCode(xzqbm);//项目编码
+
+                string xmbm = CreateModelProjectCode(xzqbm);//生成项目编码
+
                 if (
                     (!string.IsNullOrEmpty(xmmc))
                     && (!string.IsNullOrEmpty(zxjd))
@@ -274,6 +269,56 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "验证用户失败！", string.Empty));
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// 获取当前用户所有项目，以及各项目下的任务实景模型
@@ -638,14 +683,13 @@ namespace SERVICE.Controllers
 
 
 
-        #region 方法1
         /// <summary>
-        /// 创建项目编码
+        /// 生成模型项目编码
         /// </summary>
         /// <param name="xjxzq"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private string CreateProjectCode(string xjxzq)
+        private string CreateModelProjectCode(string xjxzq)
         {
             if (!string.IsNullOrEmpty(xjxzq) && !string.IsNullOrEmpty(xjxzq))
             {
@@ -681,7 +725,5 @@ namespace SERVICE.Controllers
                 return string.Empty;
             }
         }
-
-        #endregion
     }
 }

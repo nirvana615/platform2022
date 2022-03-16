@@ -196,6 +196,7 @@ var viewer = new Cesium.Viewer("map", {
 //修改
 viewer._cesiumWidget._creditContainer.style.display = "none";           //隐藏版权信息
 viewer.scene.globe.enableLighting = false;                              //日夜区分
+viewer.scene.globe.depthTestAgainstTerrain = false; 
 viewer.homeButton.viewModel.tooltip = "初始视图";
 viewer.baseLayerPicker.viewModel.buttonTooltip = "地图及地形";
 viewer.baseLayerPicker.viewModel.toggleDropDown.afterExecute.addEventListener(function () {
