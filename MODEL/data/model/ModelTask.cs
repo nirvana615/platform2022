@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace MODEL
 {
     /// <summary>
-    /// 任务信息
+    /// 航测任务
     /// </summary>
     public class ModelTask
     {
@@ -24,54 +24,73 @@ namespace MODEL
         /// </summary>
         public string RWBM { get; set; }
         /// <summary>
-        /// 任务创建时间        
+        /// 任务描述
         /// </summary>
-        public string RWCJSJ { get; set; }
+        public string RWMS { get; set; }
         /// <summary>
-        /// 影像采集人员
+        /// 任务范围
+        /// </summary>
+        public string YXFW { get; set; }
+        /// <summary>
+        /// 任务状态
+        /// </summary>
+        public int RWZT { get; set; }
+        /// <summary>
+        /// 影像采集人
         /// </summary>
         public string YXCJRY { get; set; }
-        /// <summary>
-        /// 影像采集设备
-        /// </summary>
-        public int? YXCJSB { get; set; }
         /// <summary>
         /// 影像采集时间
         /// </summary>
         public string YXCJSJ { get; set; }
         /// <summary>
+        /// 影像采集设备
+        /// </summary>
+        public int YXCJSB { get; set; }
+        /// <summary>
         /// 影像数量
         /// </summary>
-        public int? YXSL { get; set; }
+        public int YXSL { get; set; }
+        /// <summary>
+        /// 影像链接
+        /// </summary>
+        public string YXCFLJ { get; set; }
+        /// <summary>
+        /// 影像POS
+        /// </summary>
+        public string YXPOS { get; set; }
+        /// <summary>
+        /// 空间参考
+        /// </summary>
+        public int SRID { get; set; }
+        /// <summary>
+        /// 高程异常
+        /// </summary>
+        public double? GCYC { get; set; }
         /// <summary>
         /// 控制点
         /// </summary>
         public string YXKZD { get; set; }
         /// <summary>
-        /// 范围KML
-        /// </summary>
-        public string YXFW { get; set; }
-        /// <summary>
-        /// 百度云影像存放链接
-        /// </summary>
-        public string YXCFLJ { get; set; }
-        /// <summary>
-        /// 空间参考
-        /// </summary>
-        public int? SRID { get; set; }
-        /// <summary>
-        /// 所需成果
+        /// 成果
         /// </summary>
         public string SXCG { get; set; }
         /// <summary>
-        /// 任务描述
+        /// 模型视角
         /// </summary>
-        public string RWMS { get; set; }
+        public string MXSJ { get; set; }
         /// <summary>
         /// 模型路径
         /// </summary>
         public string MXLJ { get; set; }
-
+        /// <summary>
+        /// 模型等级
+        /// </summary>
+        public int? MXDJ { get; set; }
+        /// <summary>
+        /// 创建时间        
+        /// </summary>
+        public string RWCJSJ { get; set; }
         /// <summary>
         /// 标识码
         /// </summary>
@@ -80,13 +99,5 @@ namespace MODEL
         /// 备注
         /// </summary>
         public string BZ { get; set; }
-        /// <summary>
-        /// 模型视角
-        /// </summary>
-        public string MXSJ{ get; set; }
-        /// <summary>
-        /// 任务状态（未存数据库）
-        /// </summary>
-        public int? RWZT { get; set; }
     }
 }

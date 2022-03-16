@@ -65,7 +65,6 @@ function mapPosition(type) {
 
 
 };
-
 //清除地图选点
 function ClearMapPoint() {
     //删除地图选点标注
@@ -78,6 +77,10 @@ function ClearMapPoint() {
     //还原当前深度检测值
     viewer.scene.globe.depthTestAgainstTerrain = depthTestAgainstTerrain;
 }
+
+
+
+
 
 //项目信息
 function ModelProjectInfo(id, style) {

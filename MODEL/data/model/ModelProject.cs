@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace MODEL
 {
     /// <summary>
-    /// 实景模型项目信息
+    /// 实景模型项目
     /// </summary>
     public class ModelProject
     {
@@ -20,6 +20,10 @@ namespace MODEL
         /// </summary>
         public string XMMC { get; set; }
         /// <summary>
+        /// 项目简称
+        /// </summary>
+        public string XMJC { get; set; }
+        /// <summary>
         /// 项目编码
         /// </summary>
         public string XMBM { get; set; }
@@ -27,29 +31,26 @@ namespace MODEL
         /// 行政区编码
         /// </summary>
         public string XZQBM { get; set; }
-        
         /// <summary>
         /// 中心经度
         /// </summary>
-        public double? ZXJD { get; set; }
+        public double ZXJD { get; set; }
         /// <summary>
         /// 中心纬度
         /// </summary>
-        public double? ZXWD { get; set; }
-
+        public double ZXWD { get; set; }
         /// <summary>
         /// 项目时间
         /// </summary>
         public string XMSJ { get; set; }
         /// <summary>
-        /// 创建时间
-        /// </summary>
-        public string CJSJ { get; set; }
-        
-        /// <summary>
         /// 项目位置
         /// </summary>
         public string XMWZ { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public string CJSJ { get; set; }
         /// <summary>
         /// 标识码
         /// </summary>

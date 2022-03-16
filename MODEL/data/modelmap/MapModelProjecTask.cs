@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace MODEL
 {
     /// <summary>
-    /// 模型项目-实景模型映射
+    /// 模型项目-航测任务映射
     /// </summary>
     public class MapModelProjecTask
     {
@@ -20,7 +20,7 @@ namespace MODEL
         /// </summary>
         public int ModelProjectId { get; set; }
         /// <summary>
-        /// 实景模型id
+        /// 航测任务id
         /// </summary>
         public int TaskId { get; set; }
         /// <summary>

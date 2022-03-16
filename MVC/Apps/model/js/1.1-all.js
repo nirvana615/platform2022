@@ -13,18 +13,31 @@ var colorpicker = layui.colorpicker;
 
 var tipslayer = -1;//全局提示层
 
+var modelprojectinfoviewlayerindex = null;                        //项目模块（查看）
+var modelprojectinfoaddlayerindex = null;                         //项目模块（新建）
+var modelprojectinfoeditlayerindex = null;                        //项目模块（编辑）
+
+var modeltaskinfoviewlayerindex = null;                           //任务模块（查看）
+var modeltaskinfoaddlayerindex = null;                            //任务模块（新建）
+var modeltaskinfoeditlayerindex = null;                           //任务模块（编辑）
 
 
-var modelprojectinfoviewlayerindex = null;                           //项目信息模块（查看）
-var modelprojectinfoaddlayerindex = null;                            //项目信息模块（新建）
-var modelprojectinfoeditlayerindex = null;                           //项目信息模块（编辑）
+
+
+
 
 var modelprojectrightuserlayerindex = null;                          //项目权限模块
 
-var modeltaskinfoviewlayerindex = null;                           //模型信息模块（查看）
-var modeltaskinfoaddlayerindex = null;                            //模型信息模块（新建）
-var modeltaskinfoeditlayerindex = null;                           //模型信息模块（编辑）
+
+
+
+
+
 var newmodeltaskinfolayerindex = null;                            //新模型任务信息
+
+
+
+
 var localtoolindex = null;                                        //工具扩展模块   
 
 var headeruserlayerindex = null;                                //用户信息
@@ -100,6 +113,54 @@ function MarkNode() {
             nodes[i].style.fontWeight = "bold";
         }
     }
+};
+
+
+
+
+//关闭指定图层
+function CloseLayer(layerindex) {
+    if (layerindex != null) {
+        layer.close(layerindex);
+        layerindex = null;
+    }
+};
+
+//关闭所有图层
+function CloseAllLayer() {
+    if (uavprojectaddlayerindex != null) {
+        layer.close(uavprojectaddlayerindex);
+        uavprojectaddlayerindex = null;
+    }
+    if (uavprojectviewlayerindex != null) {
+        layer.close(uavprojectviewlayerindex);
+        uavprojectviewlayerindex = null;
+    }
+    if (uavprojecteditlayerindex != null) {
+        layer.close(uavprojecteditlayerindex);
+        uavprojecteditlayerindex = null;
+    }
+
+    if (selectroutetypelayerindex != null) {
+        layer.close(selectroutetypelayerindex);
+        selectroutetypelayerindex = null;
+    }
+
+    if (uavrouteaddlayerindex != null) {
+        layer.close(uavrouteaddlayerindex);
+        uavrouteaddlayerindex = null;
+    }
+    if (uavrouteviewlayerindex != null) {
+        layer.close(uavrouteviewlayerindex);
+        uavrouteviewlayerindex = null;
+    }
+    if (uavrouteeditlayerindex != null) {
+        layer.close(uavrouteeditlayerindex);
+        uavrouteeditlayerindex = null;
+    }
+
+
+    //TODO
 };
 
 
