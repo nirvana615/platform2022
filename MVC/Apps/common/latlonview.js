@@ -25,11 +25,15 @@ handler_latlong.setInputAction(function (movement) {
         var lat_String = Cesium.Math.toDegrees(cartographic.latitude).toFixed(4);//纬度
         var log_String = Cesium.Math.toDegrees(cartographic.longitude).toFixed(4);//经度
         var alti_String = (viewer.camera.positionCartographic.height).toFixed(2);//视角高度
-        var elec_String = viewer.scene.globe.getHeight(cartographic).toFixed(4);//海拔高度
+
+        var elec_String = "";
+        if (viewer.scene.globe.getHeight(cartographic) != undefined) {
+            elec_String = viewer.scene.globe.getHeight(cartographic).toFixed(4);//海拔高度
+        }
+
         longitude_show.innerHTML = log_String;
         latitude_show.innerHTML = lat_String;
         altitude_show.innerHTML = alti_String+"m";
-        elevation_show.innerHTML = elec_String+"m";
-        
+        elevation_show.innerHTML = elec_String+"m";   
     }
 }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);

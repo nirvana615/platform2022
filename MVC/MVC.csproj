@@ -543,7 +543,6 @@
     <Content Include="Apps\model\js\6.3-localtool.js" />
     <Content Include="Apps\model\js\7.0-modelprojectconnect.js" />
     <Content Include="Apps\model\widget\0-projectlist.html" />
-    <Content Include="Apps\model\widget\1.1 projectadd - 复制.html" />
     <Content Include="Apps\model\widget\1.1 projectadd.html" />
     <Content Include="Apps\model\widget\1.2 projectview.html" />
     <Content Include="Apps\model\widget\1.3 projecteditview.html" />

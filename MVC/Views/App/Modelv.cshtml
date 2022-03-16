@@ -62,11 +62,9 @@
     <!--地图-->
     <div id="map"></div>
 
-    <!--javascript-->
     <script>
         var servicesurl = @Html.Raw(Json.Encode(ViewBag.ServicesURL));
         var datasurl = @Html.Raw(Json.Encode(ViewBag.DatasURL));
-        var ViewBag = @Html.Raw(Json.Encode(ViewBag));
     </script>
 
     <script src="~/Apps/common/common.js"></script>
@@ -74,7 +72,6 @@
 
     <script src="~/Apps/model/js/1.1-all.js"></script>
     <script src="~/Apps/model/js/1.2-para.js"></script>
-    <script src="~/Apps/model/js/3.0-map.js"></script>
     <script src="~/Apps/model/js/4.1-projectlist-modelv.js"></script>
     <script src="~/Apps/model/js/4.2-projectinfo-modelv.js"></script>
     <script src="~/Apps/model/js/4.4-taskinfo-modelv.js"></script>

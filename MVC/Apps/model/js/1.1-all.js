@@ -125,45 +125,81 @@ function CloseLayer(layerindex) {
         layerindex = null;
     }
 };
-
-//关闭所有图层
+//关闭所有弹出图层
 function CloseAllLayer() {
-    if (uavprojectaddlayerindex != null) {
-        layer.close(uavprojectaddlayerindex);
-        uavprojectaddlayerindex = null;
+    //关闭项目信息图层
+    if (modelprojectinfoviewlayerindex != null) {
+        layer.close(modelprojectinfoviewlayerindex);
+        modelprojectinfoviewlayerindex = null;
     }
-    if (uavprojectviewlayerindex != null) {
-        layer.close(uavprojectviewlayerindex);
-        uavprojectviewlayerindex = null;
+    if (modelprojectinfoaddlayerindex != null) {
+        layer.close(modelprojectinfoaddlayerindex);
+        modelprojectinfoaddlayerindex = null;
     }
-    if (uavprojecteditlayerindex != null) {
-        layer.close(uavprojecteditlayerindex);
-        uavprojecteditlayerindex = null;
-    }
-
-    if (selectroutetypelayerindex != null) {
-        layer.close(selectroutetypelayerindex);
-        selectroutetypelayerindex = null;
+    if (modelprojectinfoeditlayerindex != null) {
+        layer.close(modelprojectinfoeditlayerindex);
+        modelprojectinfoeditlayerindex = null;
     }
 
-    if (uavrouteaddlayerindex != null) {
-        layer.close(uavrouteaddlayerindex);
-        uavrouteaddlayerindex = null;
+    //关闭模型信息图层
+    if (modeltaskinfoviewlayerindex != null) {
+        layer.close(modeltaskinfoviewlayerindex);
+        modeltaskinfoviewlayerindex = null;
     }
-    if (uavrouteviewlayerindex != null) {
-        layer.close(uavrouteviewlayerindex);
-        uavrouteviewlayerindex = null;
+    if (modeltaskinfoaddlayerindex != null) {
+        layer.close(modeltaskinfoaddlayerindex);
+        modeltaskinfoaddlayerindex = null;
     }
-    if (uavrouteeditlayerindex != null) {
-        layer.close(uavrouteeditlayerindex);
-        uavrouteeditlayerindex = null;
+    if (modeltaskinfoeditlayerindex != null) {
+        layer.close(modeltaskinfoeditlayerindex);
+        modeltaskinfoeditlayerindex = null;
     }
 
-
-    //TODO
+    if (newmodeltaskinfolayerindex != null) {
+        layer.close(newmodeltaskinfolayerindex);
+        newmodeltaskinfolayerindex = null;
+    }
+    //TODO更多关闭图层
 };
+//关闭项目信息相关图层
+function CloseModelProjectInfoLayer() {
+    if (modelprojectinfoviewlayerindex != null) {
+        layer.close(modelprojectinfoviewlayerindex);
+        modelprojectinfoviewlayerindex = null;
+    }
+    if (modelprojectinfoaddlayerindex != null) {
+        layer.close(modelprojectinfoaddlayerindex);
+        modelprojectinfoaddlayerindex = null;
+    }
+    if (modelprojectinfoeditlayerindex != null) {
+        layer.close(modelprojectinfoeditlayerindex);
+        modelprojectinfoeditlayerindex = null;
+    }
+    if (modelprojectrightuserlayerindex != null) {
+        layer.close(modelprojectrightuserlayerindex);
+        modelprojectrightuserlayerindex = null;
+    }
 
-
+};
+//关闭任务信息相关图层
+function CloseModelTaskInfoLayer() {
+    if (modeltaskinfoviewlayerindex != null) {
+        layer.close(modeltaskinfoviewlayerindex);
+        modeltaskinfoviewlayerindex = null;
+    }
+    if (modeltaskinfoaddlayerindex != null) {
+        layer.close(modeltaskinfoaddlayerindex);
+        modeltaskinfoaddlayerindex = null;
+    }
+    if (modeltaskinfoeditlayerindex != null) {
+        layer.close(modeltaskinfoeditlayerindex);
+        modeltaskinfoeditlayerindex = null;
+    }
+    if (newmodeltaskinfolayerindex != null) {
+        layer.close(newmodeltaskinfolayerindex);
+        newmodeltaskinfolayerindex = null;
+    }
+};
 
 
 

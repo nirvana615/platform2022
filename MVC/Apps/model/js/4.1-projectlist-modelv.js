@@ -62,7 +62,7 @@ var toIndex = layer.open({
                         //}
 
                         LoadModel(obj.data);//加载模型
-                        DelEntitiesInViewer(projectentities);//移除项目标注图标
+                        RemoveEntitiesInViewer(projectentities);//移除项目标注图标
 
                     }
                     //重载项目树：将项目列表数据ModelProjectlist给data
@@ -119,7 +119,7 @@ var toIndex = layer.open({
                         //    }
                         //}
                         LoadModel(obj.data);
-                        DelEntitiesInViewer(projectentities);//移除项目标注图标
+                        RemoveEntitiesInViewer(projectentities);//移除项目标注图标
 
                     }
                     //重载项目树：将项目列表数据ModelProjectlist给data
@@ -324,7 +324,7 @@ function GetUserAllModelProjects(newprojectcode) {
     //TODO 新增项目位置及标注
     var newprojectzxjd = null;
     var newprojectzxwd = null;
-    DelEntitiesInViewer(projectentities);//移除项目标注图标
+    RemoveEntitiesInViewer(projectentities);//移除项目标注图标
     projectentities = [];
 
     modelprojectlist = [];
@@ -825,111 +825,3 @@ function FlytoExtent(west, south, east, north) {
     }
 };
 
-
-//向viewer添加entity
-function AddEntityInViewer(entity) {
-    if (entity != null) {
-        viewer.entities.add(entity);
-    }
-};
-
-//向viewer添加entity集合
-function AddEntitiesInViewer(entities) {
-    if (entities.length > 0) {
-        for (var i in entities) {
-            if (entities[i] != null) {
-                viewer.entities.add(entities[i]);
-            }
-        }
-
-        //viewer.flyTo(entities, { duration: 1, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 0) });
-    }
-};
-//向viewer移除entity集合
-function DelEntitiesInViewer(entities) {
-    if (entities.length > 0) {
-        for (var i in entities) {
-            if (entities[i] != null) {
-                viewer.entities.remove(entities[i]);
-            }
-        }
-
-        //viewer.flyTo(entities, { duration: 1, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 0) });
-    }
-};
-//关闭所有弹出图层
-function CloseAllLayer() {
-    //关闭项目信息图层
-    if (modelprojectinfoviewlayerindex != null) {
-        layer.close(modelprojectinfoviewlayerindex);
-        modelprojectinfoviewlayerindex = null;
-    }
-    if (modelprojectinfoaddlayerindex != null) {
-        layer.close(modelprojectinfoaddlayerindex);
-        modelprojectinfoaddlayerindex = null;
-    }
-    if (modelprojectinfoeditlayerindex != null) {
-        layer.close(modelprojectinfoeditlayerindex);
-        modelprojectinfoeditlayerindex = null;
-    }
-
-    //关闭模型信息图层
-    if (modeltaskinfoviewlayerindex != null) {
-        layer.close(modeltaskinfoviewlayerindex);
-        modeltaskinfoviewlayerindex = null;
-    }
-    if (modeltaskinfoaddlayerindex != null) {
-        layer.close(modeltaskinfoaddlayerindex);
-        modeltaskinfoaddlayerindex = null;
-    }
-    if (modeltaskinfoeditlayerindex != null) {
-        layer.close(modeltaskinfoeditlayerindex);
-        modeltaskinfoeditlayerindex = null;
-    }
-
-    if (newmodeltaskinfolayerindex != null) {
-        layer.close(newmodeltaskinfolayerindex);
-        newmodeltaskinfolayerindex = null;
-    }
-    //TODO更多关闭图层
-};
-//关闭项目信息相关图层
-function CloseModelProjectInfoLayer() {
-    if (modelprojectinfoviewlayerindex != null) {
-        layer.close(modelprojectinfoviewlayerindex);
-        modelprojectinfoviewlayerindex = null;
-    }
-    if (modelprojectinfoaddlayerindex != null) {
-        layer.close(modelprojectinfoaddlayerindex);
-        modelprojectinfoaddlayerindex = null;
-    }
-    if (modelprojectinfoeditlayerindex != null) {
-        layer.close(modelprojectinfoeditlayerindex);
-        modelprojectinfoeditlayerindex = null;
-    }
-    if (modelprojectrightuserlayerindex != null) {
-        layer.close(modelprojectrightuserlayerindex);
-        modelprojectrightuserlayerindex = null;
-    }
-
-}
-
-//关闭任务信息相关图层
-function CloseModelTaskInfoLayer() {
-    if (modeltaskinfoviewlayerindex != null) {
-        layer.close(modeltaskinfoviewlayerindex);
-        modeltaskinfoviewlayerindex = null;
-    }
-    if (modeltaskinfoaddlayerindex != null) {
-        layer.close(modeltaskinfoaddlayerindex);
-        modeltaskinfoaddlayerindex = null;
-    }
-    if (modeltaskinfoeditlayerindex != null) {
-        layer.close(modeltaskinfoeditlayerindex);
-        modeltaskinfoeditlayerindex = null;
-    }
-    if (newmodeltaskinfolayerindex != null) {
-        layer.close(newmodeltaskinfolayerindex);
-        newmodeltaskinfolayerindex = null;
-    }
-}

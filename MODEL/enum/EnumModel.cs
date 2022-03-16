@@ -12,61 +12,83 @@ namespace MODEL
     /// </summary>
     public static class EnumModel
     {
-        
         /// <summary>
         /// 采集设备
         /// </summary>
         public enum AircrafType
         {
-            
-            [RemarkAttribute("精灵 PHANTOM 4 RTK")]
+
+            [RemarkAttribute("精灵 PHANTOM 4 RTK Camera")]
             P4R = 0,
 
-            [RemarkAttribute("精灵 PHANTOM 4 PRO")]
+            [RemarkAttribute("精灵 PHANTOM 4 PRO camera")]
             P4P = 1,
 
-            [RemarkAttribute("经纬 M300 RTK")]
+            [RemarkAttribute("经纬 M300 RTK P1 35mm")]
             JMR = 2
         }
 
         /// <summary>
-        /// 所需成果
+        /// 成果
         /// </summary>
         public enum ResultType
         {
-            [RemarkAttribute("系统模型")]
+            [RemarkAttribute("3D Tiles")]
             SystemModel = 0,
 
-            [RemarkAttribute("DOM/DSM")]
+            [RemarkAttribute("DOM&DSM")]
             DOMDSM = 1,
 
-            [RemarkAttribute("OSGB(特殊)")]
+            [RemarkAttribute("OSGB")]
             OSGB = 2,
 
-            [RemarkAttribute("点云PNTS")]
+            [RemarkAttribute("PNTS")]
             PNTS = 3,
 
-            [RemarkAttribute("点云LAS)")]
+            [RemarkAttribute("LAS)")]
             LAS = 4
         }
         /// <summary>
-        /// 采集设备
+        /// 任务状态
         /// </summary>
         public enum TaskStatus
         {
-
             [RemarkAttribute("待处理")]
             Pending = 0,
 
-           
             [RemarkAttribute("处理中")]
             Processing = 1,
 
             [RemarkAttribute("已完成")]
             Finished = 2
-
-
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// 模型系统角色
         /// </summary>
