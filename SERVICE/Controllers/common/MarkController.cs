@@ -209,13 +209,13 @@ namespace SERVICE.Controllers
             string color = HttpContext.Current.Request.Form["color"];
             string id = HttpContext.Current.Request.Form["id"];
             string style = HttpContext.Current.Request.Form["style"];
-
+            string position = HttpContext.Current.Request.Form["position"];
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
             {
-                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(" UPDATE common_mark set text={0} ,color={1},style={2} where id={3}", SQLHelper.UpdateString(title),SQLHelper.UpdateString(color), SQLHelper.UpdateString(style),id));
+                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(" UPDATE common_mark set text={0} ,color={1},style={2},pos={3} where id={4}", SQLHelper.UpdateString(title),SQLHelper.UpdateString(color), SQLHelper.UpdateString(style), SQLHelper.UpdateString(position),id));
                 if (updatecount == 1)
                 {
                     return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "更新成功！", string.Empty));
