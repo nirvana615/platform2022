@@ -58,7 +58,7 @@
         var modelprojects = [];
         var curuserid = null;
 
-        //渲染监测项目
+        //渲染模型项目
         tree.render({
             elem: '#modelprojectid'
             , id: 'modelprojecttreeid'
@@ -159,7 +159,7 @@
             });
         }
 
-        //获取监测项目信息
+        //获取模型项目信息
         function GetAllModelProject() {
             $.ajax({
                 url: window.parent.servicesurl + "/api/ModelProject/GetAllModelProjects", type: "get",

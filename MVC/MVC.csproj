@@ -528,7 +528,7 @@
     <Content Include="Apps\model\js\4.2-projectinfo-modelp.js" />
     <Content Include="Apps\model\js\4.2-projectinfo-modelv.js" />
     <Content Include="Apps\model\js\4.2-projectinfo-modelc.js" />
-    <Content Include="Apps\model\js\4.3-projectright-modelc.js" />
+    <Content Include="Apps\model\js\4.3-projectauth.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelp.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelv.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelc.js" />
@@ -540,7 +540,6 @@
     <Content Include="Apps\model\js\6.0-util-modelp.js" />
     <Content Include="Apps\model\js\6.0-util-modelv.js" />
     <Content Include="Apps\model\js\6.0-util-modelc.js" />
-    <Content Include="Apps\model\js\6.3-localtool.js" />
     <Content Include="Apps\model\js\7.0-modelprojectconnect.js" />
     <Content Include="Apps\model\widget\0-projectlist.html" />
     <Content Include="Apps\model\widget\1.1 projectadd.html" />
@@ -551,7 +550,7 @@
     <Content Include="Apps\model\widget\2.2 taskview.html" />
     <Content Include="Apps\model\widget\2.4 taskstatus.html" />
     <Content Include="Apps\model\widget\2.3 taskedit.html" />
-    <Content Include="Apps\model\widget\3.0 projectrigth.html" />
+    <Content Include="Apps\model\widget\3.0 projectauth.html" />
     <Content Include="Apps\monitor\js\1.1-all.js" />
     <Content Include="Apps\monitor\js\1.2-para.js" />
     <Content Include="Apps\monitor\js\4.1-projectlist.js" />

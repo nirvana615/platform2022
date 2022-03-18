@@ -81,6 +81,49 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
+        /// 获取除自己之外全部用户信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string GetUserInfoExceptSelf()
+        {
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                if (user != null)
+                {
+                    string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE ztm={0} AND id<>{1} ORDER BY id ASC", (int)MODEL.Enum.State.InUse, user.Id));
+                    if (!string.IsNullOrEmpty(datas))
+                    {
+                        List<User> otherusers = new List<User>();
+                        string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                        for (int i = 0; i < rows.Length; i++)
+                        {
+                            User otheruser = ParseManageHelper.ParseUser(rows[i]);
+                            if (otheruser != null)
+                            {
+                                otherusers.Add(otheruser);
+                            }
+                        }
+
+                        if (otherusers.Count > 0)
+                        {
+                            return JsonHelper.ToJson(otherusers);
+                        }
+                    }
+                }
+            }
+
+            return string.Empty;
+        }
+
+
+
+
+
+        /// <summary>
         /// 获取全部监测用户信息
         /// </summary>
         /// <returns>监测用户列表</returns>
@@ -171,6 +214,53 @@ namespace SERVICE.Controllers
 
             return string.Empty;
         }
+
+        /// <summary>
+        /// 获取全部Geology用户信息
+        /// </summary>
+        /// <returns>监测用户列表</returns>
+        [HttpGet]
+        public string GetFlzUserInfo()
+        {
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<User> flzusers = new List<User>();
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    User user = ParseManageHelper.ParseUser(rows[i]);
+                    if (user != null)
+                    {
+                        string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                        if (!string.IsNullOrEmpty(maps))
+                        {
+                            string[] maprows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                            for (int j = 0; j < maprows.Length; j++)
+                            {
+                                MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(maprows[j]);
+                                if (mapUserRole != null)
+                                {
+                                    Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE id={0}", mapUserRole.RoleId)));
+                                    if (role.RoleAlias == "Flz" && role.SysCode == (int)MODEL.Enum.System.Geology)
+                                    {
+                                        flzusers.Add(user);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (flzusers.Count > 0)
+                {
+                    return JsonHelper.ToJson(flzusers);
+                }
+            }
+
+            return string.Empty;
+        }
+
 
         /// <summary>
         /// 创建用户
@@ -396,50 +486,6 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
 
-        /// <summary>
-        /// 获取全部Geology用户信息
-        /// </summary>
-        /// <returns>监测用户列表</returns>
-        [HttpGet]
-        public string GetFlzUserInfo()
-        {
-            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE ztm={0}", (int)MODEL.Enum.State.InUse));
-            if (!string.IsNullOrEmpty(datas))
-            {
-                List<User> flzusers = new List<User>();
-                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    User user = ParseManageHelper.ParseUser(rows[i]);
-                    if (user != null)
-                    {
-                        string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
-                        if (!string.IsNullOrEmpty(maps))
-                        {
-                            string[] maprows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
-                            for (int j = 0; j < maprows.Length; j++)
-                            {
-                                MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(maprows[j]);
-                                if (mapUserRole != null)
-                                {
-                                    Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE id={0}", mapUserRole.RoleId)));
-                                    if (role.RoleAlias=="Flz"&&role.SysCode == (int)MODEL.Enum.System.Geology)
-                                    {
-                                        flzusers.Add(user);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
 
-                if (flzusers.Count > 0)
-                {
-                    return JsonHelper.ToJson(flzusers);
-                }
-            }
-
-            return string.Empty;
-        }
     }
 }

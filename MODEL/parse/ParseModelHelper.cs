@@ -222,24 +222,18 @@ namespace MODEL
                 return null;
             }
         }
-
-        #endregion
-
-
-
-
         /// <summary>
-        /// 数据用户项目映射
+        /// 业务项目-模型项目映射
         /// </summary>
         /// <param name="data"></param>
         /// <param name="c"></param>
         /// <param name="r"></param>
         /// <returns></returns>
-        public static MapDataUserModelProject ParseMapDataUserModelProject(string data)
+        public static MapProjectUse ParseMapProjectUse(string data)
         {
             if (string.IsNullOrEmpty(data))
             {
-                logger.Warn("用户-实景模型项目映射数据为空！");
+                logger.Warn("业务项目-模型项目映射数据为空！");
                 return null;
             }
 
@@ -248,27 +242,29 @@ namespace MODEL
                 string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
                 if (rows.Length != 1)
                 {
-                    logger.Warn("用户-实景模型项目映射不唯一！");
+                    logger.Warn("业务项目-模型项目映射不唯一！");
                     return null;
                 }
 
                 string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
-                MapDataUserModelProject mapDataUserModelProject = new MapDataUserModelProject()
+                MapProjectUse mapProjectUse = new MapProjectUse()
                 {
                     Id = Convert.ToInt32(row[0].ToString()),
-                    UserId = Convert.ToInt32(row[1].ToString()),
-                    ModelProjectId = Convert.ToInt32(row[2].ToString()),
-                    CJSJ = row[3].ToString()
+                    Syscode = Convert.ToInt16(row[1].ToString()),
+                    UseProjectId = Convert.ToInt32(row[2].ToString()),
+                    ModelProjectId = Convert.ToInt32(row[3].ToString()),
+                    ModelTaskId = Convert.ToInt32(row[4].ToString()),
+                    CJSJ = row[5].ToString()
                 };
 
-                return mapDataUserModelProject;
+                return mapProjectUse;
             }
             catch (Exception ex)
             {
-                logger.Error("MapDataUserModelProject解析失败：" + data, ex);
+                logger.Error("MapProjectUse解析失败：" + data, ex);
                 return null;
             }
         }
-
+        #endregion
     }
 }

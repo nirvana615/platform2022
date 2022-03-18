@@ -20,8 +20,8 @@ util.fixbar({
                     || modeltaskinfoviewlayerindex != null
                     || modeltaskinfoaddlayerindex != null
                     || modeltaskinfoeditlayerindex != null
-
-
+                    || modelprojectauthlayerindex != null
+                    || newmodeltaskinfolayerindex != null
                 ) {
                     layer.confirm('是否打开新的模块?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
                         CloseAllLayer();
@@ -40,8 +40,8 @@ util.fixbar({
             ModelTaskInfo(currentprojectid, "add");
         }
         else if (type === 'bar3') {
-            //项目权限
-            LoadProjectRight();
+            //项目授权
+            ModelProjectAuth();
         }
         else if (type === 'bar4') {
             //任务管理
@@ -56,8 +56,6 @@ util.fixbar({
             Markwidget(currentprojectid);
         }
         else if (type === 'bar7') {
-            ////本地工具
-            //LoadLocalToolLayer();
         }
     }
 });
@@ -106,6 +104,7 @@ $("#utilbar3").on("mouseleave", function () {
         tipslayer = -1;
     }
 });
+
 $("#task_count").hide();//隐藏图标
 $("#utilbar4").on("mouseenter", function () {
     if (tipslayer == -1) {
@@ -114,16 +113,16 @@ $("#utilbar4").on("mouseenter", function () {
         });
     }
 });
-
 $("#utilbar4").on("mouseleave", function () {
     if (tipslayer != -1) {
         layer.close(tipslayer);
         tipslayer = -1;
     }
 });
+
 $("#utilbar5").on("mouseenter", function () {
     if (tipslayer == -1) {
-        tipslayer = layer.tips('测量', '#utilbar5', {
+        tipslayer = layer.tips('测量工具', '#utilbar5', {
             tips: [4, '#78BA32']
         });
     }
@@ -137,26 +136,12 @@ $("#utilbar5").on("mouseleave", function () {
 
 $("#utilbar6").on("mouseenter", function () {
     if (tipslayer == -1) {
-        tipslayer = layer.tips('标注', '#utilbar6', {
+        tipslayer = layer.tips('标绘工具', '#utilbar6', {
             tips: [4, '#78BA32']
         });
     }
 });
 $("#utilbar6").on("mouseleave", function () {
-    if (tipslayer != -1) {
-        layer.close(tipslayer);
-        tipslayer = -1;
-    }
-});
-
-$("#utilbar7").on("mouseenter", function () {
-    if (tipslayer == -1) {
-        tipslayer = layer.tips('工具', '#utilbar7', {
-            tips: [4, '#78BA32']
-        });
-    }
-});
-$("#utilbar7").on("mouseleave", function () {
     if (tipslayer != -1) {
         layer.close(tipslayer);
         tipslayer = -1;

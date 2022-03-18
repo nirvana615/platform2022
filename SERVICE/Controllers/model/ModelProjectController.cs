@@ -270,6 +270,64 @@ namespace SERVICE.Controllers
             }
         }
 
+        /// <summary>
+        /// 获取用户全部模型项目
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string GetUserModelProjects()
+        {
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_user_project WHERE userid={0} AND ztm={1} ORDER BY id ASC", user.Id, (int)MODEL.Enum.State.InUse));
+                if (string.IsNullOrEmpty(maps))
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户验无项目！", string.Empty));
+                }
+                else
+                {
+                    List<ModelProject> modelProjects = new List<ModelProject>();
+                    string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        MapUserModelProject mapUserModelProject = ParseModelHelper.ParseMapUserModelProject(rows[i]);
+                        if (mapUserModelProject != null)
+                        {
+                            ModelProject modelProject = ParseModelHelper.ParseModelProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE id={0} AND ztm={1}", mapUserModelProject.ModelProjectId, (int)MODEL.Enum.State.InUse)));
+
+                            if (modelProject != null)
+                            {
+                                modelProjects.Add(modelProject);
+                            }
+                        }
+                    }
+
+                    if (modelProjects.Count > 0)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(modelProjects)));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目！", string.Empty));
+                    }
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户验证失败！", string.Empty));
+            }
+        }
+
+
+
+
+
+
+
+
 
 
 

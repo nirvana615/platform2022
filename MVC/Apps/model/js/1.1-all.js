@@ -23,32 +23,13 @@ var modeltaskinfoviewlayerindex = null;                           //任务模块
 var modeltaskinfoaddlayerindex = null;                            //任务模块（新建）
 var modeltaskinfoeditlayerindex = null;                           //任务模块（编辑）
 
+var modelprojectauthlayerindex = null;                            //模型项目授权
 
-
-
-
-
-var modelprojectrightuserlayerindex = null;                          //项目权限模块
-
-
-
-
-
-
-var newmodeltaskinfolayerindex = null;                            //新模型任务信息
-
-
-
-
-var localtoolindex = null;                                        //工具扩展模块   
+var newmodeltaskinfolayerindex = null;                            //处理任务信息
 
 var headeruserlayerindex = null;                                //用户信息
 var headernoticelayerindex = null;                              //通知消息
 var headerselayerindex = null;                                  //设置
-
-
-
-
 
 
 var projectentities = [];//项目位置及标注
@@ -129,7 +110,6 @@ function CloseLayer(layerindex) {
 };
 //关闭所有弹出图层
 function CloseAllLayer() {
-    //关闭项目信息图层
     if (modelprojectinfoviewlayerindex != null) {
         layer.close(modelprojectinfoviewlayerindex);
         modelprojectinfoviewlayerindex = null;
@@ -143,11 +123,6 @@ function CloseAllLayer() {
         modelprojectinfoeditlayerindex = null;
     }
 
-    //关闭模型信息图层
-    if (modeltaskinfoviewlayerindex != null) {
-        layer.close(modeltaskinfoviewlayerindex);
-        modeltaskinfoviewlayerindex = null;
-    }
     if (modeltaskinfoaddlayerindex != null) {
         layer.close(modeltaskinfoaddlayerindex);
         modeltaskinfoaddlayerindex = null;
@@ -156,11 +131,29 @@ function CloseAllLayer() {
         layer.close(modeltaskinfoeditlayerindex);
         modeltaskinfoeditlayerindex = null;
     }
+    if (modeltaskinfoviewlayerindex != null) {
+        layer.close(modeltaskinfoviewlayerindex);
+        modeltaskinfoviewlayerindex = null;
+    }
+
+    if (modelprojectauthlayerindex != null) {
+        layer.close(modelprojectauthlayerindex);
+        modelprojectauthlayerindex = null;
+    }
 
     if (newmodeltaskinfolayerindex != null) {
         layer.close(newmodeltaskinfolayerindex);
         newmodeltaskinfolayerindex = null;
     }
+
+
+
+
+
+
+
+
+
     //TODO更多关闭图层
 };
 //关闭项目信息相关图层
@@ -202,7 +195,3 @@ function CloseModelTaskInfoLayer() {
         newmodeltaskinfolayerindex = null;
     }
 };
-
-
-
-
