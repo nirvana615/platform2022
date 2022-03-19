@@ -229,7 +229,7 @@ namespace MODEL
         /// <param name="c"></param>
         /// <param name="r"></param>
         /// <returns></returns>
-        public static MapProjectUse ParseMapProjectUse(string data)
+        public static MapModelProjectUse ParseMapModelProjectUse(string data)
         {
             if (string.IsNullOrEmpty(data))
             {
@@ -247,7 +247,7 @@ namespace MODEL
                 }
 
                 string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
-                MapProjectUse mapProjectUse = new MapProjectUse()
+                MapModelProjectUse mapModelProjectUse = new MapModelProjectUse()
                 {
                     Id = Convert.ToInt32(row[0].ToString()),
                     Syscode = Convert.ToInt16(row[1].ToString()),
@@ -257,11 +257,11 @@ namespace MODEL
                     CJSJ = row[5].ToString()
                 };
 
-                return mapProjectUse;
+                return mapModelProjectUse;
             }
             catch (Exception ex)
             {
-                logger.Error("MapProjectUse解析失败：" + data, ex);
+                logger.Error("MapModelProjectUse解析失败：" + data, ex);
                 return null;
             }
         }

@@ -9,7 +9,7 @@ namespace MODEL
     /// <summary>
     /// 模型项目-业务项目映射
     /// </summary>
-    public class MapProjectUse
+    public class MapModelProjectUse
     {
         /// <summary>
         /// id

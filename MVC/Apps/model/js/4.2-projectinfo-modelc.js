@@ -292,13 +292,13 @@ function ModelProjectInfo(id, style) {
                         elem: '#xmsjid'
                     });
                     form.render();
-                    form.render('select');//刷新网页  数据库枚举选项，不然显示不出来
+                    form.render('select');
 
                     form.on('submit(addModelprojectinfosubmit)', function (data) {
                         data.field.cookie = document.cookie;
 
                         $.ajax({
-                            url: servicesurl + "/api/ModelProject/AddProject", type: "post", data: data.field,
+                            url: servicesurl + "/api/ModelProject/AddModelProject", type: "post", data: data.field,
                             success: function (result) {
                                 var info = JSON.parse(result);
                                 if (info.code == 1) {

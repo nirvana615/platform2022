@@ -80,7 +80,7 @@
     <Compile Include="data\manage\Role.cs" />
     <Compile Include="data\manage\LoginUser.cs" />
     <Compile Include="data\modelmap\MapModelProjecTask.cs" />
-    <Compile Include="data\modelmap\MapProjectUse.cs" />
+    <Compile Include="data\modelmap\MapModelProjectUse.cs" />
     <Compile Include="data\modelmap\MapUserModelProject.cs" />
     <Compile Include="data\MapProjectModelProject.cs" />
     <Compile Include="data\model\ModelProject.cs" />

@@ -21,7 +21,8 @@ layer.open({
 
         //获取用户全部项目信息
         GetUserAllModelProjects();
-       //点击项目图标事件
+
+        //点击项目图标事件
         ModelMarkClick();
         //地区树
         tree.render({
@@ -142,7 +143,7 @@ layer.open({
         });
         //1点击按钮树搜索
         $('#projectsearch').click(function () {
-            
+
 
             if (lay_id == 'list_year') {
                 var value = $("#projectfiltersearch").val();
@@ -211,7 +212,7 @@ layer.open({
         //2点击回车树搜索
         $('#projectfiltersearch').keydown(function (e) {
             if (e.keyCode == 13) {
-               
+
                 if (lay_id == 'list_year') {
                     var value = $("#projectfiltersearch").val();
                     if (value) {
@@ -288,43 +289,10 @@ layer.open({
                 var node_year = $("#projectbyyear");
                 node_year.find('.layui-tree-txt').css('color', '');
             }
-        }) 
+        })
     }
 });
 
-////树搜索
-//$('#projectsearch').click(function () {
-
-//    var value = $("#projectfilter").val();
-//    //console.log('value:', value);
-//    if (value) {
-//        //首选应将文本的颜色恢复正常
-//        var node = $("#projectbyarea");
-//        node.find('.layui-tree-txt').css('color', '');
-
-//        //tree.reload('modelprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
-//        $.each(node.find('.layui-tree-txt'), function (index, elem) {
-//            elem = $(elem);
-//            let textTemp = elem.text();
-//            if (textTemp.indexOf(value) !== -1) {//查询相当于模糊查找
-//                elem.addClass("tree-txt-active");
-//                console.log('elem:', elem);
-//                elem.filter(':contains(' + value + ')').css('color', '#FFB800'); //搜索文本并设置标志颜色
-//            }
-//        });
-
-//        $.each($("#projectbyarea").find('.tree-txt-active'), function (index, elem) {
-//            elem = $(elem);
-//            // 展开所有父节点
-//            elem.parents('.layui-tree-set').each(function (i, item) {
-//                if (!$(item).hasClass('layui-tree-spread')) {
-//                    $(item).find('.layui-tree-iconClick:first').click();
-//                }
-//            });
-//        });
-//    }
-//});
-////
 
 //获取用户所有项目列表
 function GetUserAllModelProjects(newprojectcode) {
@@ -408,7 +376,7 @@ function GetUserAllModelProjects(newprojectcode) {
                                     task.path = modelprojectdata[i].ModelTasks.TaskList[j].MXLJ;
                                     task.modelView = modelprojectdata[i].ModelTasks.TaskList[j].MXSJ;
 
-                                    if (modelprojectdata[i].ModelTasks.TaskList[j].MXLJ != null) {
+                                    if (modelprojectdata[i].ModelTasks.TaskList[j].MXLJ != null && modelprojectdata[i].ModelTasks.TaskList[j].MXLJ != "") {
                                         task.showCheckbox = true;
                                         task.checked = false;
                                     }
@@ -422,8 +390,6 @@ function GetUserAllModelProjects(newprojectcode) {
                             prj.children = tasks;
                             projects.push(prj);
                         }
-
-
                     }
                     xzq.children = projects;
                     modelprojectlist.push(xzq);
@@ -560,6 +526,8 @@ function GetUserAllModelProjects(newprojectcode) {
         }, datatype: "json"
     });
 };
+
+
 //项目节点点击:set currentproject
 function ModelProjectNodeClick(obj) {
     if (obj.data.type == "project") {
@@ -667,7 +635,7 @@ function ModelMarkClick() {
     //注册鼠标点击事件
     handler_modelmark.setInputAction(function (e) {
 
-        var pick = viewer.scene.pick(e.position,9, 9);
+        var pick = viewer.scene.pick(e.position, 9, 9);
         var earthPosition = viewer.camera.pickEllipsoid(e.position, viewer.scene.globe.ellipsoid);
         var cartographic = Cesium.Cartographic.fromCartesian(earthPosition, viewer.scene.globe.ellipsoid, new Cesium.Cartographic());
         var lat = Cesium.Math.toDegrees(cartographic.latitude);
@@ -745,13 +713,13 @@ function ModelMarkClick() {
                 });
                 htmlinfo.style.display = "block";
             }
-            
-            
+
+
         }
         else {
             htmlinfo.style.display = "none";
         }
-        
+
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
     //项目列表联动
@@ -774,10 +742,10 @@ function ModelMarkClick() {
             data: modelprojectlist
         });
     }
-   
-    
-    
-    
+
+
+
+
 }
 
 //项目树（项目列表+目标）节点操作：add\update\del
@@ -940,5 +908,3 @@ function FlytoExtent(west, south, east, north) {
         }, 100);
     }
 };
-
-
