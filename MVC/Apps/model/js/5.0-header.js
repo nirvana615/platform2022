@@ -56,11 +56,10 @@ $("#exitbtn").on("mouseleave", function () {
 });
 
 
-
 //用户
 $("#userbtn").on("click", function () {
-    if (headeruserlayerindex == null) {
-        headeruserlayerindex = layer.open({
+    if (modelheaderuserlayerindex == null) {
+        modelheaderuserlayerindex = layer.open({
             type: 1
             , title: ['修改密码', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
             , area: ['500px', '300px']
@@ -87,7 +86,12 @@ $("#userbtn").on("click", function () {
                                 "username": user.UserName
                             });
                         }
-                        //layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        else {
+                            form.val("monitor-header-user-update", {
+                                "username": ""
+                            });
+                            layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        }
                     }, datatype: "json"
                 });
 
@@ -105,21 +109,23 @@ $("#userbtn").on("click", function () {
                             layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }, datatype: "json"
                     });
+
                     return false;
                 });
             }
             , end: function () {
-                headeruserlayerindex = null;
+                modelheaderuserlayerindex = null;
             }
         });
+    } else {
+        layer.setTop(modelheaderuserlayerindex);
     }
 });
 
-
 //消息
 $("#noticebtn").on("click", function () {
-    if (headernoticelayerindex == null) {
-        headernoticelayerindex = layer.open({
+    if (modelheadernoticelayerindex == null) {
+        modelheadernoticelayerindex = layer.open({
             type: 1
             , title: ['消息', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
             , area: ['500px', '500px']
@@ -132,23 +138,21 @@ $("#noticebtn").on("click", function () {
             , zIndex: layer.zIndex
             , success: function (layero) {
                 layer.setTop(layero);
-
-
-
-
-
+                //TODO
             }
             , end: function () {
-                headernoticelayerindex = null;
+                modelheadernoticelayerindex = null;
             }
         });
+    } else {
+        layer.setTop(modelheadernoticelayerindex);
     }
 });
 
 //设置
 $("#setbtn").on("click", function () {
-    if (headerselayerindex == null) {
-        headerselayerindex = layer.open({
+    if (modelheadersetlayerindex == null) {
+        modelheadersetlayerindex = layer.open({
             type: 1
             , title: ['设置', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
             , area: ['500px', '500px']
@@ -161,15 +165,13 @@ $("#setbtn").on("click", function () {
             , zIndex: layer.zIndex
             , success: function (layero) {
                 layer.setTop(layero);
-
-
-
-
-
+                //TODO
             }
             , end: function () {
-                headerselayerindex = null;
+                modelheadersetlayerindex = null;
             }
         });
+    } else {
+        layer.setTop(modelheadersetlayerindex);
     }
 });

@@ -22,16 +22,17 @@ util.fixbar({
                     || modeltaskinfoeditlayerindex != null
                     || modelprojectauthlayerindex != null
                     || newmodeltaskinfolayerindex != null
+                    || modelheaderuserlayerindex != null
+                    || modelheadernoticelayerindex != null
+                    || modelheadersetlayerindex != null
                 ) {
                     layer.confirm('是否打开新的模块?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
                         CloseAllLayer();
                         ModelProjectInfo(null, "add");
                         layer.close(index);
                     });
-
                 }
                 else {
-                    //无弹出图层
                     ModelProjectInfo(null, "add");
                 }
             }
@@ -89,7 +90,6 @@ $("#utilbar2").on("mouseleave", function () {
         tipslayer = -1;
     }
 });
-
 
 $("#utilbar3").on("mouseenter", function () {
     if (tipslayer == -1) {

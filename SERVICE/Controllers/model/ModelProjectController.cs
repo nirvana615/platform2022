@@ -63,11 +63,11 @@ namespace SERVICE.Controllers
         /// 获取用户全部模型项目
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        public string GetUserModelProjects()
+        [HttpGet]
+        public string GetUserModelProjects(string cookie)
         {
             User user = null;
-            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user);
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
             {
@@ -156,78 +156,58 @@ namespace SERVICE.Controllers
         public string UpdateMapUserModelProject()
         {
             string userid = HttpContext.Current.Request.Form["userid"];
+            string allmodelprojectids = HttpContext.Current.Request.Form["allmodelprojectids"];
             string modelprojectids = HttpContext.Current.Request.Form["modelprojectids"];
 
-            if (string.IsNullOrEmpty(modelprojectids))
+            List<string> usermodelprojectlist = new List<string>();
+            List<string> authmodelprojectlist = new List<string>();
+            List<string> existmodelprojectlist = new List<string>();
+
+            if (!string.IsNullOrEmpty(allmodelprojectids))
             {
-                int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM model_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
-                if (count > 0)
+                usermodelprojectlist = allmodelprojectids.Split(new char[] { ',' }).ToList();//授权用户全部项目模型
+            }
+            if (!string.IsNullOrEmpty(modelprojectids))
+            {
+                authmodelprojectlist = modelprojectids.Split(new char[] { ',' }).ToList();//授权项目模型
+            }
+            
+            //查询用户已有模型项目
+            string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
+            if (!string.IsNullOrEmpty(maps))
+            {
+                string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
                 {
-                    int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_map_user_project SET ztm={0} WHERE userid={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, userid, (int)MODEL.Enum.State.InUse));
-                    if (updatecount > 0)
+                    MapUserModelProject mapUserModelProject = ParseModelHelper.ParseMapUserModelProject(rows[i]);
+                    if (mapUserModelProject != null)
                     {
-                        return "更新用户授权成功！";
-                    }
-                    else
-                    {
-                        return "更新用户授权失败！";
+                        ModelProject modelProject = ParseModelHelper.ParseModelProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE id={0} AND ztm={1}", mapUserModelProject.ModelProjectId, (int)MODEL.Enum.State.InUse)));
+                        if (modelProject != null)
+                        {
+                            existmodelprojectlist.Add(modelProject.Id.ToString());
+                        }
                     }
                 }
             }
-            else
+
+            //增加
+            for (int i = 0; i < authmodelprojectlist.Count; i++)
             {
-                List<string> newmodelprojectidlist = modelprojectids.Split(new char[] { ',' }).ToList();
-
-                List<string> delmodelprojectidlist = new List<string>();//需要删除的
-                List<string> modelprojectidlist = new List<string>();//保留的，不做更改
-
-                string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
-                if (!string.IsNullOrEmpty(maps))
+                if (!existmodelprojectlist.Contains(authmodelprojectlist[i]))
                 {
-                    string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
-                    for (int i = 0; i < rows.Length; i++)
-                    {
-                        MapUserModelProject mapUserModelProject = ParseModelHelper.ParseMapUserModelProject(rows[i]);
-                        if (mapUserModelProject != null)
-                        {
-                            if (newmodelprojectidlist.Contains(mapUserModelProject.ModelProjectId.ToString()))
-                            {
-                                modelprojectidlist.Add(mapUserModelProject.ModelProjectId.ToString());
-                            }
-                            else
-                            {
-                                delmodelprojectidlist.Add(mapUserModelProject.ModelProjectId.ToString());
-                            }
-                        }
-                    }
+                    PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO model_map_user_project (userid,projectid,cjsj,ztm) VALUES({0},{1},{2},{3})", userid, authmodelprojectlist[i], SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
                 }
+            }
 
-                if (delmodelprojectidlist.Count > 0)
+
+            //减少
+            for (int i = 0; i < existmodelprojectlist.Count; i++)
+            {
+                if (usermodelprojectlist.Contains(existmodelprojectlist[i]) && !authmodelprojectlist.Contains(existmodelprojectlist[i]))
                 {
-                    for (int i = 0; i < delmodelprojectidlist.Count; i++)
-                    {
-                        int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_map_user_project SET ztm={0} WHERE userid={1} AND projectid={2} AND ztm={3}", (int)MODEL.Enum.State.NoUse, userid, delmodelprojectidlist[i], (int)MODEL.Enum.State.InUse));
-                        if (updatecount != 1)
-                        {
-                            return "更新用户授权（删除原有授权）失败！";
-                        }
-                    }
+                    PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_map_user_project SET ztm={0} WHERE userid={1} AND ztm={2} AND projectid={3}", (int)MODEL.Enum.State.NoUse, userid, (int)MODEL.Enum.State.InUse, existmodelprojectlist[i]));
                 }
-
-                for (int i = 0; i < newmodelprojectidlist.Count; i++)
-                {
-                    if (modelprojectidlist.Count > 0)
-                    {
-                        if (modelprojectidlist.Contains(newmodelprojectidlist[i]))
-                        {
-                            continue;
-                        }
-                    }
-
-                    PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO model_map_user_project (userid,projectid,cjsj,ztm) VALUES({0},{1},{2},{3})", userid, newmodelprojectidlist[i], SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
-                }
-
-                return "更新用户授权成功！";
             }
 
             return string.Empty;

@@ -1,20 +1,22 @@
 ﻿//三维模型项目列表widget
-var modelprojectlist = [];//按地区组织
+var modelprojectlistarea = [];//按地区组织
 var modelprojectlistyear = [];//按时间组织
+
+
 var newprojecttype = false;
 
 
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-    , area: ['350px', '90%']
+    , area: ['350px', '60%']
     , shade: 0
-    , offset: ['60px', '10px']
+    , offset: ['60px', '5px']
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
     , resize: false
-    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;"><!--选项卡--><ul class="layui-tab-title"><li lay-id="list_area" class="layui-this" style="width:40%;">地区</li><li lay-id="list_year" style="width:40%;">时间</li></ul><!--tree--><div class="layui-tab-content"><div class="layui-tab-item layui-show"><div id="projectbyarea"></div></div><div class="layui-tab-item"><div id="projectbyyear"></div></div></div></div><!--搜索--><div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "><div class="layui-input-inline"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"><i class="layui-icon layui-icon-search"></i></button></div>'
+    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;"><!--选项卡--><ul class="layui-tab-title"><li lay-id="list_area" class="layui-this" style="width:40%;">地区</li><li lay-id="list_year" style="width:40%;">时间</li></ul><!--tree--><div class="layui-tab-content" style="padding:0px;"><div class="layui-tab-item layui-show"><div id="projectbyarea"></div></div><div class="layui-tab-item"><div id="projectbyyear"></div></div></div></div><!--搜索--><div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "><div class="layui-input-inline"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"><i class="layui-icon layui-icon-search"></i></button></div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
@@ -24,6 +26,7 @@ layer.open({
 
         //点击项目图标事件
         ModelMarkClick();
+
         //地区树
         tree.render({
             elem: '#projectbyarea'
@@ -302,7 +305,7 @@ function GetUserAllModelProjects(newprojectcode) {
     RemoveEntitiesInViewer(projectentities);//移除项目标注图标
     projectentities = [];
 
-    modelprojectlist = [];
+    modelprojectlistarea = [];
     modelprojectlistyear = [];
     $.ajax({
         url: servicesurl + "/api/ModelProject/GetUserModelProjectList", type: "get", data: { "cookie": document.cookie },
@@ -347,7 +350,7 @@ function GetUserAllModelProjects(newprojectcode) {
                             var prj = new Object;
                             prj.id = modelprojectdata[i].ModelProjects.Id;
                             prj.nodeOperate = true;
-                            prj.title = modelprojectdata[i].ModelProjects.XMSJ.split("-").join("") + modelprojectdata[i].ModelProjects.XMMC;
+                            prj.title = modelprojectdata[i].ModelProjects.XMSJ.split("-").join("") + " " + modelprojectdata[i].ModelProjects.XMMC;
                             prj.b = modelprojectdata[i].ModelProjects.ZXWD;
                             prj.l = modelprojectdata[i].ModelProjects.ZXJD;
                             prj.type = "project";
@@ -392,7 +395,7 @@ function GetUserAllModelProjects(newprojectcode) {
                         }
                     }
                     xzq.children = projects;
-                    modelprojectlist.push(xzq);
+                    modelprojectlistarea.push(xzq);
                 }
 
                 //升序排序
@@ -409,7 +412,7 @@ function GetUserAllModelProjects(newprojectcode) {
                             var prj = new Object;
                             prj.id = modelprojectdata[i].ModelProjects.Id;
                             prj.nodeOperate = true;
-                            prj.title = modelprojectdata[i].ModelProjects.XMSJ.split("-").join("") + modelprojectdata[i].ModelProjects.XMMC;
+                            prj.title = modelprojectdata[i].ModelProjects.XMSJ.split("-").join("") + " " + modelprojectdata[i].ModelProjects.XMMC;
                             prj.b = modelprojectdata[i].ModelProjects.ZXWD;
                             prj.l = modelprojectdata[i].ModelProjects.ZXJD;
                             prj.type = "project";
@@ -460,7 +463,7 @@ function GetUserAllModelProjects(newprojectcode) {
 
                 //重载项目树：将项目列表数据ModelProjectlist给data
                 tree.reload('areaprojectlistid', {
-                    data: modelprojectlist
+                    data: modelprojectlistarea
                 });
                 tree.reload('yearprojectlistid', {
                     data: modelprojectlistyear
@@ -556,32 +559,29 @@ function ModelProjectNodeClick(obj) {
                             }
                         });
                     });
-
                 }
 
-
-                for (var i in modelprojectlist) {
-                    modelprojectlist[i].spread = false;
-                    for (var j in modelprojectlist[i].children) {
-                        if (modelprojectlist[i].children[j].id != obj.data.id) {
-                            for (var k in modelprojectlist[i].children[j].children) {
-                                modelprojectlist[i].children[j].spread = false;
-                                modelprojectlist[i].children[j].children[k].spread = false;
-                                modelprojectlist[i].children[j].children[k].checked = false;
+                for (var i in modelprojectlistarea) {
+                    modelprojectlistarea[i].spread = false;
+                    for (var j in modelprojectlistarea[i].children) {
+                        if (modelprojectlistarea[i].children[j].id != obj.data.id) {
+                            for (var k in modelprojectlistarea[i].children[j].children) {
+                                modelprojectlistarea[i].children[j].spread = false;
+                                modelprojectlistarea[i].children[j].children[k].spread = false;
+                                modelprojectlistarea[i].children[j].children[k].checked = false;
 
                             }
                         }
                         else {
-                            modelprojectlist[i].spread = true;
-                            modelprojectlist[i].children[j].spread = true;
+                            modelprojectlistarea[i].spread = true;
+                            modelprojectlistarea[i].children[j].spread = true;
                         }
 
                     }
                 }
                 tree.reload('areaprojectlistid', {
-                    data: modelprojectlist
+                    data: modelprojectlistarea
                 });
-
 
                 for (var i in modelprojectlistyear) {
                     modelprojectlistyear[i].spread = false;
@@ -613,10 +613,8 @@ function ModelProjectNodeClick(obj) {
                 viewer.scene.primitives.remove(curtileset);//关闭模型
                 AddEntitiesInViewer(projectentities);
             });
-
         }
         else {
-            //
             FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
         }
     }
@@ -625,7 +623,6 @@ function ModelProjectNodeClick(obj) {
 
 //项目Mark点击操作
 function ModelMarkClick() {
-
     //在地图div中增加html代码
     $("#map").append('<!--查看项目信息--> <div id="info" style=" display: none;position: absolute;width: 400px; height: 400px; z-index: 1000; background: rgba(30, 144, 255, 0.6); border: 2px solid #4169E1; border-radius: 25px;"> <form class="layui-form" style="margin-top:30px;margin-right:20px; color:white;" lay-filter="infoModelprojectinfoform"> <div class="layui-form-item"> <label class="layui-form-label">项目名称：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_xmmc_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目编码：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_xmbm_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">行政区划：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_xzqh_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目位置：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_xmwz_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">中心经度：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_zxjd_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">中心纬度：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_zxwd_info" readonly="readonly" class="layui-input" /> </div> </div> <div class="layui-form-item"> <label class="layui-form-label">项目时间：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_xmsj_info" readonly="readonly" class="layui-input" /> </div> </div><div class="layui-form-item"> <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</label> <div class="layui-input-block"> <input type="text" style="background-color:transparent;border-color:transparent;color:white;" name="model_bz_info" readonly="readonly" class="layui-input"> </div> </div> </form> </div>');
 
@@ -725,21 +722,21 @@ function ModelMarkClick() {
     //项目列表联动
     function tree_reload(id) {
         elem.tabChange('modelprojectListTab', 'list_area');
-        for (var i in modelprojectlist) {
-            modelprojectlist[i].spread = false;
-            for (var j in modelprojectlist[i].children) {
-                if (modelprojectlist[i].children[j].id != id) {
-                    modelprojectlist[i].children[j].spread = false;
+        for (var i in modelprojectlistarea) {
+            modelprojectlistarea[i].spread = false;
+            for (var j in modelprojectlistarea[i].children) {
+                if (modelprojectlistarea[i].children[j].id != id) {
+                    modelprojectlistarea[i].children[j].spread = false;
                 }
                 else {
-                    modelprojectlist[i].spread = true;
-                    modelprojectlist[i].children[j].spread = true;
+                    modelprojectlistarea[i].spread = true;
+                    modelprojectlistarea[i].children[j].spread = true;
                 }
 
             }
         }
         tree.reload('areaprojectlistid', {
-            data: modelprojectlist
+            data: modelprojectlistarea
         });
     }
 

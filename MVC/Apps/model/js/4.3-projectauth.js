@@ -1,6 +1,5 @@
-﻿var usermodelprojects = [];//用户全部
-var userid = null;//用户
-
+﻿var usermodelprojects = [];//用户全部模型项目
+var userid = null;//授权用户
 
 //模型项目授权
 function ModelProjectAuth() {
@@ -49,48 +48,61 @@ function ModelProjectAuth() {
                     }
                 });
 
-
-                GetAllUserInfo();
-                GetUserModelProject();
+                GetAllUserExceptSelf();
+                GetUserModelProjects();
 
                 form.render();
                 form.render('select');
 
                 //更新授权
                 form.on('submit(authusermodelprojectsubmit)', function (data) {
-                    if (userid == null) {
-                        layer.msg("请先选择用户！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    }
-                    else {
-                        data.field.userid = userid;
-                        var modelprojectids = "";
-                        for (var i = 0; i < usermodelprojects.length; i++) {
-                            if (usermodelprojects[i].checked == true) {
-                                modelprojectids += usermodelprojects[i].id + ",";
-                            }
+                    if (usermodelprojects.length < 1) {
+                        layer.msg("当前用户无项目，无法进行授权！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    } else {
+                        if (userid == null) {
+                            layer.msg("请先选择授权用户！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }
-                        if (modelprojectids != "") {
-                            if ((modelprojectids.indexOf(",") != -1)) {
-                                data.field.modelprojectids = modelprojectids.substring(0, modelprojectids.length - 1);
-                            }
-                            else {
-                                data.field.modelprojectids = modelprojectids;
-                            }
-                        }
+                        else {
+                            data.field.userid = userid;
+                            var allmodelprojectids = "";
+                            var modelprojectids = "";
 
-                        $.ajax({
-                            url: servicesurl + "/api/ModelProject/UpdateMapUserModelProject", type: "put", data: data.field,
-                            success: function (result) {
-                                if (result != "") {
-                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            for (var i = 0; i < usermodelprojects.length; i++) {
+                                allmodelprojectids += usermodelprojects[i].id + ",";
+
+                                if (usermodelprojects[i].checked == true) {
+                                    modelprojectids += usermodelprojects[i].id + ",";
                                 }
-                            }, datatype: "json"
-                        });
+                            }
+
+                            if (allmodelprojectids != "") {
+                                if ((allmodelprojectids.indexOf(",") != -1)) {
+                                    data.field.allmodelprojectids = allmodelprojectids.substring(0, allmodelprojectids.length - 1);
+                                }
+                                else {
+                                    data.field.allmodelprojectids = allmodelprojectids;
+                                }
+                            }
+                            if (modelprojectids != "") {
+                                if ((modelprojectids.indexOf(",") != -1)) {
+                                    data.field.modelprojectids = modelprojectids.substring(0, modelprojectids.length - 1);
+                                }
+                                else {
+                                    data.field.modelprojectids = modelprojectids;
+                                }
+                            }
+
+                            $.ajax({
+                                url: servicesurl + "/api/ModelProject/UpdateMapUserModelProject", type: "put", data: data.field,
+                                success: function (result) {
+                                    layer.msg("授权成功！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                }, datatype: "json"
+                            });
+                        }
                     }
 
                     return false;
                 });
-
             }
             , end: function () {
                 modelprojectauthlayerindex = null;
@@ -100,9 +112,9 @@ function ModelProjectAuth() {
 };
 
 //获取全部用户信息（除自己）
-function GetAllUserInfo() {
+function GetAllUserExceptSelf() {
     $.ajax({
-        url: servicesurl + "/api/User/GetUserInfoExceptSelf", type: "post", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/User/GetUserExceptSelf", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             if (data == "") {
                 layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -168,10 +180,10 @@ function GetAllUserInfo() {
     });
 };
 
-//获取全部模型项目
-function GetUserModelProject() {
+//获取用户全部模型项目
+function GetUserModelProjects() {
     $.ajax({
-        url: servicesurl + "/api/ModelProject/GetUserModelProjects", type: "post", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/ModelProject/GetUserModelProjects", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             usermodelprojects = [];
 

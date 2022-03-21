@@ -1,8 +1,7 @@
 ﻿/*
  * 引用CesiumJS
+ * 变量viewer、isMobile
  */
-
-
 
 //地图
 var baseMaps = new Array(

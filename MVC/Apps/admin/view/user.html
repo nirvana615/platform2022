@@ -161,7 +161,7 @@
         function GetUserInfo() {
             //请求用户数据
             $.ajax({
-                url: window.parent.servicesurl + "/api/User/GetUserInfo", type: "get",
+                url: window.parent.servicesurl + "/api/User/GeAlltUser", type: "get",
                 success: function (data) {
                     if (data == "") {
                         layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });

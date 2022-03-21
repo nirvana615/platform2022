@@ -93,7 +93,7 @@
         //获取用户信息
         function GetAllUser() {
             $.ajax({
-                url: window.parent.servicesurl + "/api/User/GetUserInfo", type: "get",
+                url: window.parent.servicesurl + "/api/User/GeAlltUser", type: "get",
                 success: function (data) {
                     if (data == "") {
                         layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -175,7 +175,7 @@
                             modelproject.title = modelprojectdatas[i].XMSJ + " " + modelprojectdatas[i].XMMC;
                             modelproject.checked = false;
                             modelprojects.push(modelproject);
-                        }  
+                        }
                     }
                     else {
                         layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -195,10 +195,22 @@
             }
             else {
                 data.field.userid = curuserid;
+                var allmodelprojectids = "";
                 var modelprojectids = "";
                 for (var i = 0; i < modelprojects.length; i++) {
+                    allmodelprojectids += modelprojects[i].id + ",";
+
                     if (modelprojects[i].checked == true) {
                         modelprojectids += modelprojects[i].id + ",";
+                    }
+                }
+
+                if (allmodelprojectids != "") {
+                    if ((allmodelprojectids.indexOf(",") != -1)) {
+                        data.field.allmodelprojectids = allmodelprojectids.substring(0, allmodelprojectids.length - 1);
+                    }
+                    else {
+                        data.field.allmodelprojectids = allmodelprojectids;
                     }
                 }
                 if (modelprojectids != "") {
@@ -213,9 +225,7 @@
                 $.ajax({
                     url: window.parent.servicesurl + "/api/ModelProject/UpdateMapUserModelProject", type: "put", data: data.field,
                     success: function (result) {
-                        if (result != "") {
-                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                        }
+                        layer.msg("授权成功！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     }, datatype: "json"
                 });
             }

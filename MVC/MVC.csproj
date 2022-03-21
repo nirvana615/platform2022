@@ -535,8 +535,6 @@
     <Content Include="Apps\model\js\4.5-taskstatus-modelp.js" />
     <Content Include="Apps\model\js\4.5-taskstatus.js" />
     <Content Include="Apps\model\js\5.0-header.js" />
-    <Content Include="Apps\model\js\5.1-message.js" />
-    <Content Include="Apps\model\js\5.2-setting.js" />
     <Content Include="Apps\model\js\6.0-util-modelp.js" />
     <Content Include="Apps\model\js\6.0-util-modelv.js" />
     <Content Include="Apps\model\js\6.0-util-modelc.js" />

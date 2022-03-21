@@ -23,13 +23,13 @@ var modeltaskinfoviewlayerindex = null;                           //任务模块
 var modeltaskinfoaddlayerindex = null;                            //任务模块（新建）
 var modeltaskinfoeditlayerindex = null;                           //任务模块（编辑）
 
-var modelprojectauthlayerindex = null;                            //模型项目授权
+var modelprojectauthlayerindex = null;                            //模型项目授权模块
 
 var newmodeltaskinfolayerindex = null;                            //处理任务信息
 
-var headeruserlayerindex = null;                                //用户信息
-var headernoticelayerindex = null;                              //通知消息
-var headerselayerindex = null;                                  //设置
+var modelheaderuserlayerindex = null;                             //用户模块
+var modelheadernoticelayerindex = null;                           //通知模块
+var modelheadersetlayerindex = null;                              //设置模块
 
 
 var projectentities = [];//项目位置及标注
@@ -39,7 +39,6 @@ var currentprojecttitle = null;//当前项目标题（用于高亮显示）
 
 var curtileset = null;//当前模型
 
-var projectlayerlistlayerindex = null  //标注窗口
 
 
 /*
@@ -146,12 +145,18 @@ function CloseAllLayer() {
         newmodeltaskinfolayerindex = null;
     }
 
-
-
-
-
-
-
+    if (modelheaderuserlayerindex != null) {
+        layer.close(modelheaderuserlayerindex);
+        modelheaderuserlayerindex = null;
+    }
+    if (modelheadernoticelayerindex != null) {
+        layer.close(modelheadernoticelayerindex);
+        modelheadernoticelayerindex = null;
+    }
+    if (modelheadersetlayerindex != null) {
+        layer.close(modelheadersetlayerindex);
+        modelheadersetlayerindex = null;
+    }
 
 
     //TODO更多关闭图层
