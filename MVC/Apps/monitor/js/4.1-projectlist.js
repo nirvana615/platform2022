@@ -4,7 +4,7 @@ layer.open({
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
     , area: ['350px', '700px']
     , shade: 0
-    , offset: ['60px', '10px']
+    , offset: ['60px', '5px']
     , closeBtn: 0
     , maxmin: true
     , moveOut: true

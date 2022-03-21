@@ -637,10 +637,12 @@
     <Content Include="Apps\uav\js\2.0-projectlist.js" />
     <Content Include="Apps\uav\js\4.0-route.js" />
     <Content Include="Apps\uav\js\3.0-project.js" />
+    <Content Include="Apps\uav\js\3.1-projectauth.js" />
     <Content Include="Apps\uav\js\6.0-header.js" />
     <Content Include="Apps\uav\js\5.0-util.js" />
     <Content Include="Apps\uav\widget\1.2-uavproject-view.html" />
     <Content Include="Apps\uav\widget\1.1-uavproject-edit.html" />
+    <Content Include="Apps\uav\widget\1.3 uavproject-auth.html" />
     <Content Include="Apps\uav\widget\3.01-uavroute-action.html" />
     <Content Include="Apps\uav\widget\3.02-uavroute-waypoint.html" />
     <Content Include="Apps\uav\widget\3.2-uavroute-xpsycl.html" />

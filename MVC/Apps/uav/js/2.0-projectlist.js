@@ -2,9 +2,9 @@
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-    , area: ['400px', '90%']
+    , area: ['400px', '60%']
     , shade: 0
-    , offset: ['83px', '10px']
+    , offset: ['83px', '5px']
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
