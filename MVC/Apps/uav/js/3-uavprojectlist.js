@@ -4,11 +4,11 @@ layer.open({
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
     , area: ['400px', '60%']
     , shade: 0
-    , offset: ['83px', '5px']
+    , offset: ['68px', '5px']
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
-    , content: '<div id="uav-project-list-tree" style="padding:5px"></div>'
+    , content: '<div id="uav-project-list-tree" style="padding:0px"></div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
@@ -171,7 +171,7 @@ layer.open({
         document.getElementById('uav-project-list-tree').parentNode.style.maxHeight = (parseInt(document.getElementById('uav-project-list-tree').parentNode.style.height.replace("px", "")) - 30).toString() + "px";
 
         //获取用户无人机项目信息
-        GetUserUavProject(-1, -1);   
+        GetUserUavProject(-1, -1);
     }
 });
 

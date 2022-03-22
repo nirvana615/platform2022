@@ -183,17 +183,17 @@ function GetUavUserExceptSelf() {
 //获取用户全部模型项目
 function GetUserUavProjects() {
     $.ajax({
-        url: servicesurl + "/api/UavProject/GetUserUavProjects", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/UavProject/GetUserUavProject", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             useruavprojects = [];
 
             var result = JSON.parse(data);
             if (result.code == 1) {
                 var uavprojectdatas = JSON.parse(result.data);
-                for (var i in yavprojectdatas) {
-                    var modelproject = new Object;
+                for (var i in uavprojectdatas) {
+                    var uavproject = new Object;
                     uavproject.id = uavprojectdatas[i].Id;
-                    uavproject.title = uavprojectdatas[i].XMSJ + " " + uavprojectdatas[i].XMMC;
+                    uavproject.title = uavprojectdatas[i].CJSJ + " " + uavprojectdatas[i].XMMC;
                     uavproject.checked = false;
                     useruavprojects.push(uavproject);
                 }

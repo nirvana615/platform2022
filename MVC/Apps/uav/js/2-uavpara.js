@@ -3,9 +3,7 @@ var gclxs = [];            //高程类型
 var hdlxs = [];            //航点类型
 var dzlxs = [];            //动作类型
 var gzlxs = [];            //挂载类型
-
 var drones = null;         //无人机
-
 
 $.ajax({
     url: servicesurl + "/api/Parameter/GetLJLX", type: "get",
@@ -67,7 +65,6 @@ $.ajax({
         }
     }, datatype: "json"
 });
-
 
 $.ajax({
     url: servicesurl + "/api/UavDrone/GetDroneList", type: "get",
