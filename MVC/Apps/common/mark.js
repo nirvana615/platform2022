@@ -948,6 +948,7 @@ function polygonMark() {
 
 };
 
+//防止浏览器右键弹出页面
 $(document).bind("contextmenu", function (e) {
     e.preventDefault();
     return false;
@@ -980,9 +981,13 @@ function saveMark() {
     $.ajax({
         url: servicesurl + "/api/Mark/AddMark", type: "post", data: markdata,
         success: function (result) {
+            var loadingmarkindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
             var data = JSON.parse(result);
-            layer.msg(data.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-            if (data.code == "1") {
+            if (data.code == "0") {
+                layer.msg(data.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            }
+            else if (data.code == "1") {
                 //更新已保存的标注树
                 for (var i in markAddLayer) {
                     var re_num = [];
@@ -1003,6 +1008,7 @@ function saveMark() {
                 loadMarkProjectLayersTree();
                 var divtemp = document.getElementById("addmarkinfo");
                 divtemp.innerHTML = '';
+                layer.close(loadingmarkindex);
             }
         }, datatype: "json"
     });
@@ -1016,7 +1022,7 @@ function exportMark(btn_id) {
     var polygonList = [];//面
     var name;
 
-    var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    var loadingmarkindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     //导出项目标注
     if (btn_id == "project_mark_export_id") {
         name = markProjectLayer[0].title;
@@ -1122,7 +1128,7 @@ function exportMark(btn_id) {
     var kml = '<?xml version="1.0" encoding="UTF-8"?><kml xmlns = "http://www.opengis.net/kml/2.2" xmlns:gx = "http://www.google.com/kml/ext/2.2" xmlns:kml = "http://www.opengis.net/kml/2.2" xmlns:atom = "http://www.w3.org/2005/Atom" ><Document><name>' + name + '</name><Style id="s_ylw-pushpin"><IconStyle><scale>1.1</scale><Icon>	<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels" /></IconStyle></Style><StyleMap id="m_ylw-pushpin"><Pair><key>normal</key><styleUrl>#s_ylw-pushpin0</styleUrl></Pair><Pair><key>highlight</key><styleUrl>#s_ylw-pushpin_hl</styleUrl></Pair></StyleMap><Style id="s_ylw-pushpin_hl"><IconStyle><scale>1.3</scale><Icon>	<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels" /></IconStyle><LineStyle><color>ffffaa55</color><width>2</width></LineStyle></Style><Style id="s_ylw-pushpin_hl0"><IconStyle><scale>1.3</scale><Icon>	<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels" /></IconStyle></Style><Style id="s_ylw-pushpin0"><IconStyle><scale>1.1</scale><Icon>	<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels" /></IconStyle><LineStyle><color>ffffaa55</color><width>2</width></LineStyle></Style><StyleMap id="m_ylw-pushpin0"><Pair><key>normal</key><styleUrl>#s_ylw-pushpin</styleUrl></Pair><Pair><key>highlight</key><styleUrl>#s_ylw-pushpin_hl0</styleUrl></Pair></StyleMap><Folder><name>点数据</name>' + pointKml + '</Folder><Folder><name>线数据</name>' + lineKml + '</Folder>+' + polygonKml + '  </Document></kml>';
     var blob = new Blob([kml], { type: "text/plain;charset=utf-8" });
     saveAs(blob, name + ".kml");
-    layer.close(loadingceindex);
+    layer.close(loadingmarkindex);
     
 };
 //新增标注信息面板更新
@@ -2094,139 +2100,6 @@ function unselectAddMarkTypeOperate() {
 
 
 
-//更新点位位置
-function updateMarkPosition1() {
-
-    if (handler != undefined) {
-        handler.destroy();
-    }
-    handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-    let moveFlag = false; // 是否移动 entity
-    let entitySelected = null; // 单击选中的 entity
-    let position = { x: 0, y: 0, z: 0 };
-    // 鼠标左键按下,拾取 entity
-    handler.setInputAction(function (e) {
-        document.body.style.cursor = 'move';
-        // 拾取坐标
-        var pick = viewer.scene.pick(e.position);
-        if (pick && pick.id) {
-            moveFlag = true;
-
-            // 禁止相机移动
-            viewer.scene.screenSpaceCameraController.enableInputs = false;
-            if (entitySelected && entitySelected == pick.id) {
-                return;
-            }
-            if (entitySelected && entitySelected != pick.id) {
-                setPosition(entitySelected, position);
-            }
-
-            // 获取实体 entity
-            entitySelected = pick.id;
-            // 获取实体坐标并赋值给 position
-            let p = worldToLng(viewer, entitySelected.position._value);
-            position.x = p.x;
-            position.y = p.y;
-            position.z = p.z;
-            // position 添加 callbackProperty
-            entitySelected.position = new Cesium.CallbackProperty(function () {
-                return Cesium.Cartesian3.fromDegrees(
-                    position.x,
-                    position.y,
-                    position.z
-                );
-            }, false);
-        }
-        else {
-            setPosition(entitySelected, position);
-            entitySelected = undefined;
-            moveFlag = false;
-            viewer.scene.screenSpaceCameraController.enableInputs = true;
-        }
-    }, Cesium.ScreenSpaceEventType.LEFT_DOWN);
-    // 左键抬起, 完成移动
-    handler.setInputAction(function (e) {
-        document.body.style.cursor = 'default';
-        if (entitySelected && moveFlag) {
-
-
-            var pickedOject;
-            if (viewer.scene.globe.depthTestAgainstTerrain) {
-                pickedOject = viewer.scene.pickPosition(e.endPosition);//地形标注
-            }
-            else {
-                pickedOject = viewer.scene.pick(e.endPosition);//模型标注
-
-            }
-            if (pickedOject != undefined) {
-                position = viewer.scene.pickPosition(e.endPosition);
-            }
-
-            if (viewer.scene.globe.depthTestAgainstTerrain) {
-                var blh = Cesium.Cartographic.fromCartesian(position);
-                position.x = Cesium.Math.toDegrees(blh.longitude);
-                position.y = Cesium.Math.toDegrees(blh.latitude);
-                position.z = blh.height;
-
-            }
-            else {
-                var blh = CGCS2000XYZ2BLH(position.x, position.y, position.z);
-                position.x = blh.y;
-                position.y = blh.x;
-                position.z = blh.z;
-
-            }
-            markEditObject.data.position = JSON.parse(position);
-        }
-        moveFlag = false;
-
-        viewer.scene.screenSpaceCameraController.enableInputs = true;
-    }, Cesium.ScreenSpaceEventType.LEFT_UP);
-    // 右击事件, 完成高度设置
-    handler.setInputAction(function (e) {
-
-        if (moveFlag) return;
-        entitySelected = undefined;
-
-    }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
-
-    handler.setInputAction(function (e) {
-        if (entitySelected && moveFlag) {
-
-
-            var pickedOject;
-            if (viewer.scene.globe.depthTestAgainstTerrain) {
-                pickedOject = viewer.scene.pickPosition(e.endPosition);//地形标注
-            }
-            else {
-                pickedOject = viewer.scene.pick(e.endPosition);//模型标注
-
-            }
-            if (pickedOject != undefined) {
-                position = viewer.scene.pickPosition(e.endPosition);
-            }
-
-            if (viewer.scene.globe.depthTestAgainstTerrain) {
-                var blh = Cesium.Cartographic.fromCartesian(position);
-                position.x = Cesium.Math.toDegrees(blh.longitude);
-                position.y = Cesium.Math.toDegrees(blh.latitude);
-                position.z = blh.height;
-
-            }
-            else {
-                var blh = CGCS2000XYZ2BLH(position.x, position.y, position.z);
-                position.x = blh.y;
-                position.y = blh.x;
-                position.z = blh.z;
-
-            }
-            entitySelected.id.position = new Cesium.CallbackProperty(function () {
-                return position;
-            }, false);//防止闪烁，在移动的过程
-        }
-    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);  
-
-}
 
 
 //更新点位位置
@@ -3028,25 +2901,4 @@ function changeMarkImageColor(imgid,imgUrl, color) {
     return imgData;
 }
 
-
-function setPosition(entitySelected,position) {
-    if (!entitySelected) return;
-    entitySelected.position = Cesium.Cartesian3.fromDegrees(
-        position.x,
-        position.y,
-        position.z
-    );
-}
-
-// 世界坐标转经纬度
-function worldToLng(viewer, position) {
-    var ellipsoid = viewer.scene.globe.ellipsoid;
-    var cartographic = ellipsoid.cartesianToCartographic(position);
-    if (cartographic == null) return null;
-    var lat = Cesium.Math.toDegrees(cartographic.latitude);
-    var lng = Cesium.Math.toDegrees(cartographic.longitude);
-    var height = cartographic.height;
-    var result = new Cesium.Cartesian3(lng, lat, height);
-    return result;
-}
 
