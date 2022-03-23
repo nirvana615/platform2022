@@ -79,3 +79,18 @@ function LoadModel(obj) {
     viewer.scene.globe.depthTestAgainstTerrain = false;
     elem.tabChange('measureway', 'modelMeasure');//模型测量
 };
+
+
+
+
+
+//加载3D Tiles
+function Load3DTiles(model) {
+
+
+
+
+};
+
+
+

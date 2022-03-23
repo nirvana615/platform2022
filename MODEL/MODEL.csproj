@@ -233,9 +233,6 @@
     <Compile Include="data\uav\CameraPhotoRatio.cs" />
     <Compile Include="data\uav\drone\DroneInfo.cs" />
     <Compile Include="data\uav\mission\UavMission.cs" />
-    <Compile Include="data\uav\prj\ModelPointClouds.cs" />
-    <Compile Include="data\uav\prj\UavProjectData.cs" />
-    <Compile Include="data\uav\prj\UavRouteInfos.cs" />
     <Compile Include="data\uav\drone\Lidar.cs" />
     <Compile Include="data\uav\drone\Payload.cs" />
     <Compile Include="data\uav\UavMBTXCJ.cs" />
@@ -274,9 +271,9 @@
     <Compile Include="data\uav\custom\CustomWayline.cs" />
     <Compile Include="data\uav\custom\Takeoff.cs" />
     <Compile Include="data\uav\custom\CustomWaypoint.cs" />
-    <Compile Include="data\uav\prj\UavProjectInfo.cs" />
-    <Compile Include="data\uav\UavRoute.cs" />
-    <Compile Include="data\uav\UavProject.cs" />
+    <Compile Include="data\uav\project\UavProjectInfo.cs" />
+    <Compile Include="data\uav\project\UavRoute.cs" />
+    <Compile Include="data\uav\project\UavProject.cs" />
     <Compile Include="enum\Enum.cs" />
     <Compile Include="data\monitor\device\Database.cs" />
     <Compile Include="data\monitor\device\Device.cs" />
@@ -311,9 +308,6 @@
     <Compile Include="word\Entity\TxtInfo.cs" />
     <Compile Include="word\ExtensionMethod.cs" />
     <Compile Include="word\WordMLHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="data\uav\prj\ModelPointCloud.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -25,7 +25,7 @@ namespace SERVICE.Controllers
         /// <summary>
         /// 获取全部用户信息
         /// </summary>
-        /// <returns>用户列表</returns>
+        /// <returns></returns>
         [HttpGet]
         public string GeAlltUser()
         {
@@ -83,6 +83,7 @@ namespace SERVICE.Controllers
         /// <summary>
         /// 获取全部用户信息（除自己）
         /// </summary>
+        /// <param name="cookie"></param>
         /// <returns></returns>
         [HttpGet]
         public string GetUserExceptSelf(string cookie)
@@ -122,7 +123,7 @@ namespace SERVICE.Controllers
         /// <summary>
         /// 获取全部监测用户信息
         /// </summary>
-        /// <returns>监测用户列表</returns>
+        /// <returns></returns>
         [HttpGet]
         public string GetMonitorUserInfo()
         {
@@ -164,11 +165,60 @@ namespace SERVICE.Controllers
 
             return string.Empty;
         }
+        /// <summary>
+        /// 获取全部监测用户信息（除自己）
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetMonitorUserExceptSelf(string cookie)
+        {
+            User self = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref self);
+
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE ztm={0} AND id<>{1}", (int)MODEL.Enum.State.InUse, self.Id));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<User> monitorusers = new List<User>();
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    User user = ParseManageHelper.ParseUser(rows[i]);
+                    if (user != null)
+                    {
+                        string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_sysrole WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                        if (!string.IsNullOrEmpty(maps))
+                        {
+                            string[] maprows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                            for (int j = 0; j < maprows.Length; j++)
+                            {
+                                MapUserRole mapUserRole = ParseManageHelper.ParseMapUserRole(maprows[j]);
+                                if (mapUserRole != null)
+                                {
+                                    Role role = ParseManageHelper.ParseRole(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_role WHERE id={0}", mapUserRole.RoleId)));
+                                    if (role.SysCode == (int)MODEL.Enum.System.Monitor)
+                                    {
+                                        monitorusers.Add(user);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (monitorusers.Count > 0)
+                {
+                    return JsonHelper.ToJson(monitorusers);
+                }
+            }
+
+            return string.Empty;
+        }
 
         /// <summary>
         /// 获取全部航线用户信息
         /// </summary>
-        /// <returns>监测用户列表</returns>
+        /// <returns></returns>
         [HttpGet]
         public string GetUavUserInfo()
         {
@@ -213,7 +263,8 @@ namespace SERVICE.Controllers
         /// <summary>
         /// 获取全部航线用户信息（除自己）
         /// </summary>
-        /// <returns>监测用户列表</returns>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
         [HttpGet]
         public string GetUavUserExceptSelf(string cookie)
         {
@@ -259,11 +310,10 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
 
-
         /// <summary>
         /// 获取全部Geology用户信息
         /// </summary>
-        /// <returns>监测用户列表</returns>
+        /// <returns></returns>
         [HttpGet]
         public string GetFlzUserInfo()
         {

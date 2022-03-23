@@ -563,6 +563,7 @@
     <Content Include="Apps\monitor\js\11-monitoranalysis.js" />
     <Content Include="Apps\monitor\js\10-monitorwarning.js" />
     <Content Include="Apps\monitor\js\06-monitoretl.js" />
+    <Content Include="Apps\monitor\widget\1.3 monitorproject-auth.html" />
     <Content Include="Apps\monitor\widget\5.0 headeruser.html" />
     <Content Include="Apps\monitor\widget\1.5 disasterpropertyedit.html" />
     <Content Include="Apps\monitor\widget\1.8 monitoradd.html" />

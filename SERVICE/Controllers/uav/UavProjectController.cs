@@ -26,7 +26,7 @@ namespace SERVICE.Controllers
         /// <param name="cookie"></param>
         /// <returns></returns>
         [HttpGet]
-        public string GetUavProjectList()
+        public string GetAllUavProjects()
         {
             List<UavProject> uavProjects = new List<UavProject>();
             string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_project WHERE ztm={0} ORDER BY id DESC", (int)MODEL.Enum.State.InUse));
@@ -59,6 +59,13 @@ namespace SERVICE.Controllers
                 return string.Empty;
             }
         }
+
+        [HttpGet]
+        public string GetUserUavProjects(string cookie)
+        {
+            return string.Empty;
+        }
+
 
         /// <summary>
         /// 获取用户-航线项目映射
@@ -188,12 +195,12 @@ namespace SERVICE.Controllers
 
 
         /// <summary>
-        /// 获取用户无人机项目
+        /// 获取用户航线任务项目数据（含项目信息、模型信息和路径信息）
         /// </summary>
         /// <param name="cookie"></param>
         /// <returns></returns>
         [HttpGet]
-        public string GetUserUavProject(string cookie)
+        public string GetUserUavProjectData(string cookie)
         {
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
@@ -218,88 +225,57 @@ namespace SERVICE.Controllers
                             UavProjectInfo uavProjectInfo = new UavProjectInfo();
                             uavProjectInfo.Project = uavProject;
 
-                            #region 项目数据图层
-                            UavProjectData uavProjectData = new UavProjectData();
+                            #region 模型数据
+                            List<ModelTask> models = new List<ModelTask>();
 
-                            #region 三维实景模型
-                            ModelPointClouds modelPointClouds = new ModelPointClouds();
-                            modelPointClouds.Title = "实景模型";
-
-                            string map = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_map_project_survey WHERE projectid={0} AND ztm={1} ORDER BY cjsj DESC", uavProject.Id, (int)MODEL.Enum.State.InUse));
-                            if (!string.IsNullOrEmpty(map))
+                            string modelmaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_use WHERE syscode={0} AND useproject={1} AND ztm={2} ORDER BY id DESC", (int)MODEL.Enum.System.Uav, uavProject.Id, (int)MODEL.Enum.State.InUse));
+                            if (!string.IsNullOrEmpty(modelmaps))
                             {
-                                List<ModelPointCloud> modelPointCloudList = new List<ModelPointCloud>();
-
-                                string[] maprows = map.Split(new char[] { COM.ConstHelper.rowSplit });
-                                for (int j = 0; j < maprows.Length; j++)
+                                string[] modelrows = modelmaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                                for (int j = 0; j < modelrows.Length; j++)
                                 {
-                                    MapUavProjectSurvey mapUavProjectSurvey = ParseUavHelper.ParseMapUavProjectSurvey(maprows[j]);
-                                    if (mapUavProjectSurvey != null)
+                                    MapModelProjectUse mapModelProjectUse = ParseModelHelper.ParseMapModelProjectUse(modelrows[j]);
+                                    if (mapModelProjectUse != null)
                                     {
-                                        ModelPointCloud modelPointCloud = new ModelPointCloud();
-                                        modelPointCloud.SurModel = ParseMonitorHelper.ParseSurModel(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM survey_model WHERE id={0} AND ztm={1}", mapUavProjectSurvey.ModelId, (int)MODEL.Enum.State.InUse)));
-                                        modelPointCloud.SurPointCloud = ParseMonitorHelper.ParseSurPointCloud(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM survey_pointcloud WHERE id={0} AND ztm={1}", mapUavProjectSurvey.PointCloudId, (int)MODEL.Enum.State.InUse)));
-                                        //if ((modelPointCloud.SurModel != null) && (modelPointCloud.SurPointCloud != null))
-                                        //{
-                                        //    modelPointCloudList.Add(modelPointCloud);
-                                        //}
-                                        if (modelPointCloud.SurModel != null)
+                                        ModelTask model = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjectUse.ModelTaskId, (int)MODEL.Enum.State.InUse)));
+                                        if (model != null)
                                         {
-                                            modelPointCloudList.Add(modelPointCloud);
+                                            models.Add(model);
                                         }
                                     }
                                 }
+                            }
 
-                                if (modelPointCloudList.Count > 0)
-                                {
-                                    modelPointClouds.ModelPointCloudList = modelPointCloudList;
-                                    uavProjectData.ModelPointClouds = modelPointClouds;
-                                }
+                            if (models.Count > 0)
+                            {
+                                uavProjectInfo.Models = models;
                             }
                             #endregion
 
-                            #region 其他数据
-                            #endregion
+                            #region 路径信息
+                            List<UavRoute> routes = new List<UavRoute>();
 
-                            if (uavProjectData.ModelPointClouds != null)
+                            string routemaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_map_project_route WHERE projectid={0} AND ztm={1} ORDER BY id DESC", uavProject.Id, (int)MODEL.Enum.State.InUse));
+                            if (!string.IsNullOrEmpty(routemaps))
                             {
-                                uavProjectInfo.ProjectData = uavProjectData;
-                            }
-                            #endregion
-
-                            #region 项目航线
-                            UavRouteInfos uavRouteInfos = new UavRouteInfos();
-                            uavRouteInfos.Title = "任务航线";
-
-                            string maproute = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_map_project_route WHERE projectid={0} AND ztm={1} ORDER BY id ASC", uavProject.Id, (int)MODEL.Enum.State.InUse));
-                            if (!string.IsNullOrEmpty(maproute))
-                            {
-                                List<UavRoute> uavRouteList = new List<UavRoute>();
-
-                                string[] maprows = maproute.Split(new char[] { COM.ConstHelper.rowSplit });
-                                for (int j = 0; j < maprows.Length; j++)
+                                string[] routerows = routemaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                                for (int j = 0; j < routerows.Length; j++)
                                 {
-                                    MapProjectRoute mapProjectRoute = ParseUavHelper.ParseMapProjectRoute(maprows[j]);
+                                    MapProjectRoute mapProjectRoute = ParseUavHelper.ParseMapProjectRoute(routerows[j]);
                                     if (mapProjectRoute != null)
                                     {
-                                        UavRoute uavRoute = ParseUavHelper.ParseUavRoute(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_route WHERE id={0} AND bsm{1} AND ztm={2}", mapProjectRoute.RouteId, userbsms, (int)MODEL.Enum.State.InUse)));
-                                        if (uavRoute != null)
+                                        UavRoute route = ParseUavHelper.ParseUavRoute(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_route WHERE id={0} AND ztm={1}", mapProjectRoute.RouteId, (int)MODEL.Enum.State.InUse)));
+                                        if (route != null)
                                         {
-                                            uavRouteList.Add(uavRoute);
+                                            routes.Add(route);
                                         }
                                     }
                                 }
-
-                                if (uavRouteList.Count > 0)
-                                {
-                                    uavRouteInfos.Routes = uavRouteList;
-                                }
                             }
 
-
-                            if (uavRouteInfos.Routes != null)
+                            if (routes.Count > 0)
                             {
-                                uavProjectInfo.RouteInfos = uavRouteInfos;
+                                uavProjectInfo.Routes = routes;
                             }
                             #endregion
 
@@ -322,6 +298,18 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// 获取无人机项目信息

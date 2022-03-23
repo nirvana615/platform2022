@@ -1,7 +1,7 @@
 ﻿var useruavprojects = [];//用户全部航线项目
 var uavuserid = null;//授权用户
 
-//模型项目授权
+//航线项目授权
 function UavProjectAuth() {
     if (uavprojectauthlayerindex != null) {
         layer.setTop(uavprojectauthlayerindex);
@@ -111,7 +111,7 @@ function UavProjectAuth() {
     }
 };
 
-//获取全部用户信息（除自己）
+//获取全部航线用户信息（除自己）
 function GetUavUserExceptSelf() {
     $.ajax({
         url: servicesurl + "/api/User/GetUavUserExceptSelf", type: "get", data: { "cookie": document.cookie },
@@ -180,10 +180,10 @@ function GetUavUserExceptSelf() {
     });
 };
 
-//获取用户全部模型项目
+//获取用户全部航线项目
 function GetUserUavProjects() {
     $.ajax({
-        url: servicesurl + "/api/UavProject/GetUserUavProject", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/UavProject/GetUserUavProjects", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             useruavprojects = [];
 

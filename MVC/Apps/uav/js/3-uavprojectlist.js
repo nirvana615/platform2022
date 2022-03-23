@@ -1,4 +1,10 @@
-﻿//无人机项目列表
+﻿var uav_projects = [];//用户全部航线项目
+var uav_models = [];//用户全部模型
+var uav_routes = [];//用户全部路径
+
+
+
+//航线任务规划项目列表
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
@@ -13,7 +19,7 @@ layer.open({
     , success: function (layero) {
         layer.setTop(layero);
 
-        //渲染无人机项目列表树
+        //渲染航线任务项目列表树
         tree.render({
             elem: '#uav-project-list-tree'
             , data: []
@@ -168,6 +174,7 @@ layer.open({
                 }
             }
         });
+
         document.getElementById('uav-project-list-tree').parentNode.style.maxHeight = (parseInt(document.getElementById('uav-project-list-tree').parentNode.style.height.replace("px", "")) - 30).toString() + "px";
 
         //获取用户无人机项目信息
@@ -176,14 +183,48 @@ layer.open({
 });
 
 
+function GetUserAllUavProjects() {
+
+
+};
+
+function GetUserAllUavModels() {
+
+
+};
+
+function GetUserAllUavRoutes() {
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //获取用户无人机项目列表
 function GetUserUavProject(uavprojectid, uavrouteid) {
     $.ajax({
-        url: servicesurl + "/api/UavProject/GetUserUavProject", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/UavProject/GetUserUavProjectData", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
+
             //获取选中路径和模型节点
             var checkroutes = [];
             var checkmodels = [];
+
             if (uav_project_list_all != null && uav_project_list_all.length > 0) {
                 for (var i in uav_project_list_all) {
                     for (var j in uav_project_list_all[i].children) {
@@ -213,6 +254,7 @@ function GetUserUavProject(uavprojectid, uavrouteid) {
                     project.id = uav_project_infos[i].Project.Id;
                     project.title = uav_project_infos[i].Project.XMMC;
                     project.type = "uavproject";
+                    project.data = uav_project_infos[i].Project;
                     project.nodeOperate = true;
                     project.spread = false;
 
@@ -229,69 +271,48 @@ function GetUserUavProject(uavprojectid, uavrouteid) {
                         projectinfos.push(updatetime);
                     }
 
-                    if (uav_project_infos[i].ProjectData != null) {
-                        if (uav_project_infos[i].ProjectData.ModelPointClouds != null) {
-                            var modelpointclouds = new Object;
-                            modelpointclouds.id = project.id;
-                            modelpointclouds.title = uav_project_infos[i].ProjectData.ModelPointClouds.Title;
-                            modelpointclouds.spread = true;
+                    if (uav_project_infos[i].Models != null) {
+                        var models = new Object;
+                        models.title = "实景模型";
+                        models.spread = true;
 
-                            var modelpointcloudschild = [];
-                            for (var j in uav_project_infos[i].ProjectData.ModelPointClouds.ModelPointCloudList) {
-                                var modelpointcloud = new Object;
-                                modelpointcloud.id = "UAVSURMODEL_" + uav_project_infos[i].ProjectData.ModelPointClouds.ModelPointCloudList[j].SurModel.Id;
-                                modelpointcloud.type = "uavsurmodel";
-                                modelpointcloud.title = uav_project_infos[i].ProjectData.ModelPointClouds.ModelPointCloudList[j].SurModel.MXMC;
-                                modelpointcloud.modelid = uav_project_infos[i].ProjectData.ModelPointClouds.ModelPointCloudList[j].SurModel.Id;
-                                modelpointcloud.mxlj = uav_project_infos[i].ProjectData.ModelPointClouds.ModelPointCloudList[j].SurModel.MXLJ;
-                                if (uav_project_infos[i].ProjectData.ModelPointClouds.ModelPointCloudList[j].SurPointCloud != null) {
-                                    modelpointcloud.pointcloudid = uav_project_infos[i].ProjectData.ModelPointClouds.ModelPointCloudList[j].SurPointCloud.Id;
-                                    modelpointcloud.dylj = uav_project_infos[i].ProjectData.ModelPointClouds.ModelPointCloudList[j].SurPointCloud.DYLJ;
-                                }
-                                else {
-                                    modelpointcloud.pointcloudid = '';
-                                    modelpointcloud.dylj = '';
-                                }
-                                modelpointcloud.showCheckbox = true;
-                                modelpointcloud.checked = false;
-                                modelpointcloudschild.push(modelpointcloud);
-                            }
-                            modelpointclouds.children = modelpointcloudschild;
-                            projectinfos.push(modelpointclouds);
+                        var modelchild = [];
+                        for (var j in uav_project_infos[i].Models) {
+                            var model = new Object;
+                            model.id = "UAVSURMODEL_" + uav_project_infos[i].Models[j].Id;
+                            model.type = "uavsurmodel";
+                            model.title = uav_project_infos[i].Models[j].RWMC;
+                            model.data = uav_project_infos[i].Models[j];
+                            model.showCheckbox = true;
+                            model.checked = false;
+                            modelchild.push(model);
                         }
-
-                        //TODO MORE DATA
+                        models.children = modelchild;
+                        projectinfos.push(models);
                     }
 
-                    if (uav_project_infos[i].RouteInfos != null) {
-                        var routeinfo = new Object;
-                        routeinfo.id = project.id;
-                        routeinfo.title = uav_project_infos[i].RouteInfos.Title;
-                        routeinfo.spread = true;
+                    if (uav_project_infos[i].Routes != null) {
+                        var routes = new Object;
+                        routes.title = "航线任务";
+                        routes.spread = true;
 
-                        var routes = [];
-                        if (uav_project_infos[i].RouteInfos.Routes != null) {
-                            for (var j in uav_project_infos[i].RouteInfos.Routes) {
-                                var route = new Object;
-                                route.id = uav_project_infos[i].RouteInfos.Routes[j].Id;
-                                route.type = "uavroute";
-                                route.class = uav_project_infos[i].RouteInfos.Routes[j].HXLX;
-                                route.nodeOperate = true;
-                                route.title = uav_project_infos[i].RouteInfos.Routes[j].HXMC;
-                                //TODO 根据航线类型添加图标
-                                route.line = uav_project_infos[i].RouteInfos.Routes[j].LINE;
-                                route.showCheckbox = true;
-                                route.checked = false;
-
-                                routes.push(route);
-                            }
+                        var routechild = [];
+                        for (var j in uav_project_infos[i].Routes) {
+                            var route = new Object;
+                            route.id = uav_project_infos[i].Routes[j].Id;
+                            route.type = "uavroute";
+                            route.class = uav_project_infos[i].Routes[j].HXLX;
+                            route.nodeOperate = true;
+                            route.title = uav_project_infos[i].Routes[j].HXMC;
+                            //TODO 根据航线类型添加图标
+                            route.line = uav_project_infos[i].Routes[j].LINE;
+                            route.data = uav_project_infos[i].Routes[j];
+                            route.showCheckbox = true;
+                            route.checked = false;
+                            routechild.push(route);
                         }
-
-                        if (routes.length > 0) {
-                            routeinfo.children = routes;
-                        }
-
-                        projectinfos.push(routeinfo);
+                        routes.children = routechild;
+                        projectinfos.push(routes);
                     }
 
                     project.children = projectinfos;
@@ -384,23 +405,6 @@ function GetUserUavProject(uavprojectid, uavrouteid) {
     });
 };
 
-//高亮并展开当前项目
-function MarkCurrentProject() {
-    for (var i in uav_project_list_all) {
-        if (uav_project_list_all[i].id == current_project_id) {
-            uav_project_list_all[i].spread = true;
-            current_project_title = uav_project_list_all[i].title;
-        }
-        else {
-            uav_project_list_all[i].spread = false;
-        }
-    }
-
-    tree.reload('uav-project-list-treeid', { data: uav_project_list_all });
-    MarkNode();//高亮当前节点
-};
-
-
 
 //节点点击
 function UavProjectNodeClick(obj) {
@@ -419,25 +423,22 @@ function UavProjectNodeOperate(obj) {
         //项目
         if (obj.type === 'add') {
             //查看项目
-            ViewUavProject(obj.data.id);
+            ViewUavProject(obj.data);
         } else if (obj.type === 'update') {
             //编辑项目
-            EditUavProject(obj.data.id);
+            EditUavProject(obj.data);
         } else if (obj.type === 'del') {
             //删除项目
             DeleteUavProject(obj.data.id);
         };
-    }
-    else if (obj.data.type == "uavroute") {
+    } else if (obj.data.type == "uavroute") {
         //航线
         if (obj.type === 'add') {
             //查看航线
             ViewUavRoute(obj.data.class, obj.data.id);
-
         } else if (obj.type === 'update') {
             //编辑航线
             EditUavRoute(obj.data.class, obj.data.id);
-
         } else if (obj.type === 'del') {
             //删除航线
             DeleteUavRoute(obj.data.id);

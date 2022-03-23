@@ -162,7 +162,7 @@
         //获取航线项目信息
         function GetUavProjectInfo() {
             $.ajax({
-                url: window.parent.servicesurl + "/api/UavProject/GetUavProjectList", type: "get",
+                url: window.parent.servicesurl + "/api/UavProject/GetAllUavProjects", type: "get",
                 success: function (data) {
                     uavprojects = [];
                     if (data == "") {
