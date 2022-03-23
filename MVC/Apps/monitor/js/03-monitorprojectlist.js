@@ -8,7 +8,7 @@ layer.open({
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
-    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px"><!--选项卡--><ul class="layui-tab-title"><li class="layui-this" style="width:40%;padding-top: 0px;">地区</li><li style="width:40%;padding-top: 0px;">时间</li></ul><!--tree--><div class="layui-tab-content"><div class="layui-tab-item layui-show" id="projectbyarea"></div><div class="layui-tab-item" id="projectbytime"></div></div></div>'
+    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px"><!--选项卡--><ul class="layui-tab-title"><li class="layui-this" style="width:40%;padding-top: 0px;">地区</li><li style="width:40%;padding-top: 0px;">时间</li></ul><!--tree--><div class="layui-tab-content" style="padding:0px;"><div class="layui-tab-item layui-show" id="monitorprojectbyarea"></div><div class="layui-tab-item" id="monitorprojectbytime"></div></div></div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
@@ -27,12 +27,12 @@ function GetUserProjects() {
         success: function (data) {
             if (data == "") {
                 layer.msg("无项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                document.getElementById("projectbytime").innerHTML = "无项目信息";
-                document.getElementById("projectbyarea").innerHTML = "无项目信息";
+                document.getElementById("monitorprojectbytime").innerHTML = "无项目信息";
+                document.getElementById("monitorprojectbyarea").innerHTML = "无项目信息";
             }
             else {
-                document.getElementById("projectbytime").innerHTML = "";
-                document.getElementById("projectbyarea").innerHTML = "";
+                document.getElementById("monitorprojectbytime").innerHTML = "";
+                document.getElementById("monitorprojectbyarea").innerHTML = "";
                 var projectlist = JSON.parse(data);
 
                 //构造项目列表数据
@@ -133,7 +133,7 @@ function GetUserProjects() {
 
                 //按时间渲染
                 tree.render({
-                    elem: '#projectbytime'
+                    elem: '#monitorprojectbytime'
                     , data: projectdatagrouptime
                     , edit: ['add', 'update', 'del']
                     , accordion: true
@@ -148,7 +148,7 @@ function GetUserProjects() {
 
                 //按地区渲染
                 tree.render({
-                    elem: '#projectbyarea'
+                    elem: '#monitorprojectbyarea'
                     , data: projectdatagrouparea
                     , edit: ['add', 'update', 'del']
                     , customOperate: true

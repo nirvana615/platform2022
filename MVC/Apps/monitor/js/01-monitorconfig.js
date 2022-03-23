@@ -10,12 +10,19 @@ var util = layui.util;
 var date = layui.laydate;
 var elem = layui.element;
 
+var tipslayer = -1;//全局提示层
+
+var monitorprojectauthlayerindex = null;    //监测项目授权模块
+
 var projectinfoviewlayerindex = null;                           //项目信息模块（查看）
 var projectinfoaddlayerindex = null;                            //项目信息模块（新建）
 var projectinfoeditlayerindex = null;                           //项目信息模块（编辑）
+
 var projectlayerlistlayerindex = null;                          //项目图层列表模块
+
 var automonitordatalayerindex = null;                           //自动化监测数据可视化模块
 var automonitordevicelayerindex = null;                         //自动化监测设备可视化模块
+
 var warninganalysislayerindex = null;                           //预警分析模块
 
 var automonitoreltlayerindex = null;                            //自动化监测ETL模块
@@ -23,11 +30,6 @@ var automonitoreltlayerindex = null;                            //自动化监�
 var headeruserlayerindex = null;                                //用户信息
 var headernoticelayerindex = null;                              //通知消息
 var headerselayerindex = null;                                  //设置
-
-
-
-var tipslayer = -1;//全局提示层
-
 
 
 var projectentities = [];//项目位置及标注
