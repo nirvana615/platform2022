@@ -21,7 +21,7 @@ namespace SERVICE.Controllers
     {
         private static Logger logger = Logger.CreateLogger(typeof(SurveyController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
-
+        private static string imgdir = ConfigurationManager.AppSettings["imgdir"] != null ? ConfigurationManager.AppSettings["imgdir"].ToString() : string.Empty;
 
         /// <summary>
         /// 获取未处理的数据,返回未处理的信息
@@ -390,9 +390,36 @@ namespace SERVICE.Controllers
         public string DeletePhoto()
         {
             string id = HttpContext.Current.Request.Form["id"];
+            string photoUrl = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("select photo_url from patrol_photo_info WHERE id ={0}", SQLHelper.UpdateString(id)));
 
-            
-                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE from patrol_photo_info  WHERE id={0}", id));
+            if (!string.IsNullOrEmpty(photoUrl))
+            {
+
+                try
+                {
+                    System.IO.FileInfo DeleFile = new System.IO.FileInfo(imgdir + photoUrl);
+                    if (DeleFile.Exists)
+                    {
+                        DeleFile.Delete();
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "路径传入错误！", string.Empty));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "路径传入错误！", string.Empty));
+            }
+
+            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE from patrol_photo_info  WHERE id={0}", id));
                 if (updatecount == 1)
                 {
                    return "删除成功！";

@@ -18,7 +18,7 @@ using MODEL.Entity;
 namespace SERVICE.Controllers
 {
     /// <summary>
-    /// 消落带项目
+    /// 监测项目
     /// </summary>
     public class FlzWordWxpertController : ApiController
     {
@@ -74,7 +74,7 @@ namespace SERVICE.Controllers
             double sumYuLiang = 0;
             int yuliangDay = 0;
             string xyzs = "";//雨量数据
-
+            string yuLiangUrl = "";
             for (int i=0;i< monitorInfo.Count;i++)
             {
                 MonitorString monitorString = monitorInfo[i].MonitorString;
@@ -145,8 +145,10 @@ namespace SERVICE.Controllers
                         List<GNSSDelta> zheXianTu = gnssMonitorBenXu.Datas;
 
                         gnssName.Add(monitorString.JCDBH);
+                        
                         for (int j = 0; j < zheXianTu.Count; j++)
                         {
+                            
 
                             GNSSZheXian gNSSZheXian = new GNSSZheXian();//水平位移
                             gNSSZheXian.name= monitorString.JCDBH;
@@ -177,7 +179,7 @@ namespace SERVICE.Controllers
                     if (xyzs != "")
                     {
                         List<RAINDelta> xywww = COM.JsonHelper.StringToObject<List<RAINDelta>>(xyzs);
-                        string xy = this.DrawBarChart(xywww);//生成雨量柱状图
+                        yuLiangUrl = this.DrawBarChart(xywww,"XUN");//生成雨量柱状图
                         for (int k=0;k< xywww.Count;k++)
                         {
                             sumYuLiang = sumYuLiang + xywww[k].Value;
@@ -272,15 +274,15 @@ namespace SERVICE.Controllers
             string sumShuiPingUrl = "";
             string sumChuiZhiUrl = "";
             if (gnssName.Count>0) {
-                sumShuiPingUrl = this.DrawLineChart(sumShuiPingList, gnssName);
-                sumChuiZhiUrl = this.DrawLineChart(sumChuiZhiList, gnssName);
+                sumShuiPingUrl = this.DrawLineChart(sumShuiPingList, gnssName,"XUN");
+                sumChuiZhiUrl = this.DrawLineChart(sumChuiZhiList, gnssName,"XUN");
             }
 
             string sunLieFengUrl = "";
            
             if (lieFengName.Count>0)//看有没有折线数据
             {
-                sunLieFengUrl = this.DrawLineChart(sumLieFengList, lieFengName);
+                sunLieFengUrl = this.DrawLineChart(sumLieFengList, lieFengName,"XUN");
             }
             
 
@@ -530,10 +532,10 @@ namespace SERVICE.Controllers
                         {
                             wordMLHelper.FillContentWithoutStyle(tagInfos[i], "裂缝监测点长度-时间变化曲线图");
                         }
-                        else
-                        {
-                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
-                        }
+                        //else
+                        //{
+                        //    wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
+                        //}
                         continue;
                     }
                     if (string.Equals(tagInfos[i].TagTips.Trim(), "[垂直编号]"))
@@ -592,7 +594,7 @@ namespace SERVICE.Controllers
                         }
                         else
                         {
-                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "无数据");
                         }
                        
                         continue;
@@ -602,7 +604,7 @@ namespace SERVICE.Controllers
                         if (xyzs!="")
                         {
                             ImgInfo imgInfo = new ImgInfo();
-                            imgInfo.ImgPath = imgdir + "/SurImage/Download/lingShi.jpg";
+                            imgInfo.ImgPath = imgdir + "/SurImage/Download/"+yuLiangUrl;
 
                             imgInfo.Width = 512;
                             imgInfo.Height = 302;
@@ -851,6 +853,29 @@ namespace SERVICE.Controllers
             int year = Convert.ToInt32(DateTime.Now.ToString("yyyy"));
             int month = Convert.ToInt32(DateTime.Now.ToString("MM"));
             int day = Convert.ToInt32(DateTime.Now.ToString("dd"));
+            int lastDay = 30;
+            if (month == 1|| month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+            {
+                lastDay=31;
+            }
+            else if (month == 4 || month == 6 || month == 9 || month == 11 )
+            {
+                lastDay = 30;
+            }
+            else{
+                if (year % 4 == 0)
+                {
+                    lastDay = 29;
+                }
+                else
+                {
+                    lastDay = 28;
+                }
+              
+            }
+
+            string lastYearMothDay = year + "年"+ month + "月" + lastDay;
+
             //获取当前项目信息   
             MonitorProjectString projectString = ParseMonitorHelper.ParseMonitorProjectString(
                 PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_project WHERE id={0} AND ztm={1} AND bsm{2}", id, (int)MODEL.Enum.State.InUse, userbsms)));
@@ -876,6 +901,8 @@ namespace SERVICE.Controllers
             List<string> lieFengName = new List<string>();
             List<List<GNSSZheXian>> sumLieFengList = new List<List<GNSSZheXian>>();//装裂缝的数据
 
+            //剖面
+            List<SectionString> sectionStringList = new List<SectionString>();//装剖面的数据。
 
 
             //雨量最大值，雨量最大值日期,总雨量，总天数
@@ -884,22 +911,71 @@ namespace SERVICE.Controllers
             double sumYuLiang = 0;
             int yuliangDay = 0;
             string xyzs = "";//雨量数据
-
+            string yuLiangUrl = "";
             for (int i = 0; i < monitorInfo.Count; i++)
             {
                 MonitorString monitorString = monitorInfo[i].MonitorString;
+                SectionString sectionString = monitorInfo[i].SectionString;
+                if (sectionString!=null)
+                {
+                    Boolean flags = true;
+                    for (int m=0; m<sectionStringList.Count;m++)
+                    {
+                        
+                        if (sectionStringList[m].Id== sectionString.Id)
+                        {
+                            flags = false;
+                        }
+                    }
+                    if (flags)
+                    {
+                       
+                        if (sectionString.PMMC.IndexOf('_') > 0)
+                        {
+                            sectionString.PMMC = sectionString.PMMC.Split('_')[1];
+                        };
+                        sectionStringList.Add(sectionString);
+                    }
+                    
+
+                }
                 if (monitorString.JCFF == "GNSS" && monitorString.JCZLX == "GNSS监测站")//这是去查询GB的数据
                 {
-                    string perPenLastDay = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "GNSS", "14", cookie);//上一旬的最后一天
+                    string perMonthLastDay = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "GNSS", "15", cookie);//上一旬的最后一天
                     string toady = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "GNSS", "1", cookie);//今天
-                    string benXu = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "GNSS", "2", cookie);//本旬
+                    string benXu = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "GNSS", "3", cookie);//本月
                     DataStatistics tempDataStatistics = new DataStatistics();
                     tempDataStatistics.Name = monitorString.JCDBH;
 
-
-                    if (perPenLastDay != null && perPenLastDay != "")//上一旬的
+                    if (toady != null && toady != "")
                     {
-                        GNSSMonitor gnssMonitorPerDay = COM.JsonHelper.StringToObject<GNSSMonitor>(perPenLastDay);
+                        GNSSMonitor gnssMonitortoady = COM.JsonHelper.StringToObject<GNSSMonitor>(toady);
+                        List<DataStatistics> dslist = gnssMonitortoady.Statistics;
+                        for (int j = 0; j < dslist.Count; j++)
+                        {
+                            if (dslist[j].Name == "水平位移")
+                            {
+                                tempDataStatistics.Avg = dslist[j].Avg;//用Avg来装今天的水平位移
+                                xys.Add(dslist[j].Avg);
+                                tempDataStatistics.Min = dslist[j].Avg;//用min来装上一旬的水平位移   上一旬最后一天没值
+                            }
+                            if (dslist[j].Name == "垂直位移")
+                            {
+                                tempDataStatistics.Sd = dslist[j].Avg;//用Sd来装今天的垂直位移
+                                hs.Add(dslist[j].Avg);
+                                tempDataStatistics.Max = dslist[j].Avg;//用max来装上一旬的垂直位移  上一旬最后一天没值
+                            }
+                        }
+                    }
+                    else
+                    {
+                        tempDataStatistics.Avg = 0;//用Avg来装今天的水平位移
+                        tempDataStatistics.Sd = 0;//用Sd来装今天的垂直位移
+                    }
+
+                    if (perMonthLastDay != null && perMonthLastDay != "")//上一旬的
+                    {
+                        GNSSMonitor gnssMonitorPerDay = COM.JsonHelper.StringToObject<GNSSMonitor>(perMonthLastDay);
                         List<DataStatistics> dslist = gnssMonitorPerDay.Statistics;
                         for (int j = 0; j < dslist.Count; j++)
                         {
@@ -914,61 +990,84 @@ namespace SERVICE.Controllers
                             }
                         }
                     }
-                    else
-                    {
-                        tempDataStatistics.Min = 0;//用min来装上一旬的水平位移
-                        tempDataStatistics.Max = 0;//用max来装上一旬的垂直位移
-                    }
-                    if (toady != null && toady != "")
-                    {
-                        GNSSMonitor gnssMonitortoady = COM.JsonHelper.StringToObject<GNSSMonitor>(toady);
-                        List<DataStatistics> dslist = gnssMonitortoady.Statistics;
-                        for (int j = 0; j < dslist.Count; j++)
-                        {
-                            if (dslist[j].Name == "水平位移")
-                            {
-                                tempDataStatistics.Avg = dslist[j].Avg;//用Avg来装今天的水平位移
-                                xys.Add(dslist[j].Avg);
-                            }
-                            if (dslist[j].Name == "垂直位移")
-                            {
-                                tempDataStatistics.Sd = dslist[j].Avg;//用Sd来装今天的垂直位移
-                                hs.Add(dslist[j].Avg);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        tempDataStatistics.Avg = 0;//用Avg来装今天的水平位移
-                        tempDataStatistics.Sd = 0;//用Sd来装今天的垂直位移
-                    }
+                    //else
+                    //{
+                    //    tempDataStatistics.Min = 0;//用min来装上一旬的水平位移
+                    //    tempDataStatistics.Max = 0;//用max来装上一旬的垂直位移
+                    //}
+                    
                     dataStatisticsList.Add(tempDataStatistics);//装GNSS数据。
-                    //本旬的数据，用来画折线图
+                    //本月的数据，用来画折线图
                     List<GNSSZheXian> zhexiangtuShuiPingList = new List<GNSSZheXian>();
                     List<GNSSZheXian> zhexiangtuChuiZhiList = new List<GNSSZheXian>();
-                    if (benXu != null && benXu != "")//上一旬的
+                    if (benXu != null && benXu != "")//本月的数据
                     {
 
-                        GNSSMonitor gnssMonitorBenXu = COM.JsonHelper.StringToObject<GNSSMonitor>(benXu);
+                        GNSSMonitor gnssMonitorBenMonth = COM.JsonHelper.StringToObject<GNSSMonitor>(benXu);
 
 
-                        List<GNSSDelta> zheXianTu = gnssMonitorBenXu.Datas;
+                        List<GNSSDelta> zheXianTu = gnssMonitorBenMonth.Datas;
 
                         gnssName.Add(monitorString.JCDBH);
+                        string timeString = DateTime.Now.ToString("yyyy-MM") + "-01";
+                        
+                        double timexy = 0;
+                        double timeDh = 0;
+                        int cishu = 0;
                         for (int j = 0; j < zheXianTu.Count; j++)
                         {
+                            if (timeString == zheXianTu[j].Time.Substring(0, 10))
+                            {
+                                timexy= timexy+ zheXianTu[j].Dxy;
+                                timeDh= timeDh+ zheXianTu[j].Dh;
+                                cishu++;
+                            }
+                            else
+                            {
+                                if (cishu>0)
+                                {
+                                    //一天只要一个折现数据
+                                    GNSSZheXian gNSSZheXian = new GNSSZheXian();//水平位移
+                                    gNSSZheXian.name = monitorString.JCDBH;
+                                    gNSSZheXian.time = timeString;
+                                    gNSSZheXian.value = timexy/ cishu;
+                                    zhexiangtuShuiPingList.Add(gNSSZheXian);
 
-                            GNSSZheXian gNSSZheXian = new GNSSZheXian();//水平位移
-                            gNSSZheXian.name = monitorString.JCDBH;
-                            gNSSZheXian.time = zheXianTu[j].Time;
-                            gNSSZheXian.value = zheXianTu[j].Dxy;
-                            zhexiangtuShuiPingList.Add(gNSSZheXian);
+                                    GNSSZheXian gNSSZheXian1 = new GNSSZheXian();//垂直位移
+                                    gNSSZheXian1.name = monitorString.JCDBH;
+                                    gNSSZheXian1.time = timeString;
+                                    gNSSZheXian1.value = timeDh/ cishu;
+                                    zhexiangtuChuiZhiList.Add(gNSSZheXian1);
 
-                            GNSSZheXian gNSSZheXian1 = new GNSSZheXian();//垂直位移
-                            gNSSZheXian1.name = monitorString.JCDBH;
-                            gNSSZheXian1.time = zheXianTu[j].Time;
-                            gNSSZheXian1.value = zheXianTu[j].Dh;
-                            zhexiangtuChuiZhiList.Add(gNSSZheXian1);
+
+                                }
+
+                                timeString = zheXianTu[j].Time.Substring(0, 10);
+                                timexy =zheXianTu[j].Dxy;
+                                timeDh =zheXianTu[j].Dh;
+                                cishu=1;
+                            }
+                            if (j==zheXianTu.Count-1)//最后一个数据
+                            {
+                                if (cishu > 0)
+                                {
+                                    //一天只要一个折现数据
+                                    GNSSZheXian gNSSZheXian = new GNSSZheXian();//水平位移
+                                    gNSSZheXian.name = monitorString.JCDBH;
+                                    gNSSZheXian.time = timeString;
+                                    gNSSZheXian.value = timexy / cishu;
+                                    zhexiangtuShuiPingList.Add(gNSSZheXian);
+
+                                    GNSSZheXian gNSSZheXian1 = new GNSSZheXian();//垂直位移
+                                    gNSSZheXian1.name = monitorString.JCDBH;
+                                    gNSSZheXian1.time = timeString;
+                                    gNSSZheXian1.value = timeDh / cishu;
+                                    zhexiangtuChuiZhiList.Add(gNSSZheXian1);
+
+
+                                }
+                            }
+                            
                         }
                         sumShuiPingList.Add(zhexiangtuShuiPingList);
                         sumChuiZhiList.Add(zhexiangtuChuiZhiList);
@@ -982,12 +1081,12 @@ namespace SERVICE.Controllers
                 };
                 if (monitorString.JCFF == "雨量")
                 {
-                    xyzs = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "雨量", "2", cookie);
+                    xyzs = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "雨量", "3", cookie);
 
                     if (xyzs != "")
                     {
                         List<RAINDelta> xywww = COM.JsonHelper.StringToObject<List<RAINDelta>>(xyzs);
-                        string xy = this.DrawBarChart(xywww);//生成雨量柱状图
+                        yuLiangUrl = this.DrawBarChart(xywww,"YUE");//生成雨量柱状图
                         for (int k = 0; k < xywww.Count; k++)
                         {
                             sumYuLiang = sumYuLiang + xywww[k].Value;
@@ -1012,25 +1111,13 @@ namespace SERVICE.Controllers
                 }
                 if (monitorString.JCFF == "裂缝")
                 {
-                    string perPenLastDay = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "裂缝", "14", cookie);//上一旬的最后一天
+                    string perMonthLastDay = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "裂缝", "15", cookie);//上一月的最后一天
                     string toady = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "裂缝", "1", cookie);//今天
-                    string benXu = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "裂缝", "2", cookie);//本旬
+                    string benMonth = dataController.GetAutoDatabyPreDateTime(monitorString.Id, "裂缝", "3", cookie);//本月
                     DataStatistics tempDataStatistics = new DataStatistics();
                     tempDataStatistics.Name = monitorString.JCDBH;
 
-                    if (perPenLastDay != null && perPenLastDay != "")//上一旬的，本旬
-                    {
-                        LFMonitor lfMonitorPerDay = COM.JsonHelper.StringToObject<LFMonitor>(perPenLastDay);
-                        List<DataStatistics> dslist = lfMonitorPerDay.Statistics;
-                        for (int j = 0; j < dslist.Count; j++)
-                        {
-                            tempDataStatistics.Min = dslist[j].Avg;//用min来装上一旬的水平位移
-                        }
-                    }
-                    else
-                    {
-                        tempDataStatistics.Min = 0;//用min来装上一旬的水平位移
-                    }
+
                     if (toady != null && toady != "")
                     {
                         LFMonitor lfMonitortoady = COM.JsonHelper.StringToObject<LFMonitor>(toady);
@@ -1038,35 +1125,87 @@ namespace SERVICE.Controllers
                         for (int j = 0; j < dslist.Count; j++)
                         {
                             tempDataStatistics.Avg = dslist[j].Avg;//用Avg来装今天的水平位移
+                            tempDataStatistics.Min = dslist[j].Avg;//用min来装上一旬的水平位移  没有值的情况
                         }
                     }
                     else
                     {
                         tempDataStatistics.Avg = 0;//用Avg来装今天的水平位移
                     }
+                    if (perMonthLastDay != null && perMonthLastDay != "")//上一旬的，本旬
+                    {
+                        LFMonitor lfMonitorPerDay = COM.JsonHelper.StringToObject<LFMonitor>(perMonthLastDay);
+                        List<DataStatistics> dslist = lfMonitorPerDay.Statistics;
+                        for (int j = 0; j < dslist.Count; j++)
+                        {
+                            tempDataStatistics.Min = dslist[j].Avg;//用min来装上一旬的水平位移
+                        }
+                    }
+                    //else
+                    //{
+                    //    tempDataStatistics.Min = 0;//用min来装上一旬的水平位移
+                    //}
+                    
                     dataLieFengStatisticsList.Add(tempDataStatistics);//装裂缝数据。
                     //本旬的数据，用来画折线图
                     List<GNSSZheXian> lieFengList = new List<GNSSZheXian>();
-                    if (benXu != null && benXu != "")//上一旬的
+                    if (benMonth != null && benMonth != "")//本月的
                     {
 
-                        LFMonitor lfMonitorBenXu = COM.JsonHelper.StringToObject<LFMonitor>(benXu);
-                        List<LFDelta> zheXianTu = lfMonitorBenXu.Datas;
+                        LFMonitor lfMonitorBenMonth = COM.JsonHelper.StringToObject<LFMonitor>(benMonth);
+                        List<LFDelta> zheXianTu = lfMonitorBenMonth.Datas;
 
                         lieFengName.Add(monitorString.JCDBH);
+                        string timeString = DateTime.Now.ToString("yyyy-MM") + "-01";
+
+                        double timeDv = 0;
+                        int cishu = 0;
                         for (int j = 0; j < zheXianTu.Count; j++)
                         {
 
-                            GNSSZheXian gNSSZheXian = new GNSSZheXian();//水平位移
-                            gNSSZheXian.name = monitorString.JCDBH;
-                            gNSSZheXian.time = zheXianTu[j].Time;
-                            gNSSZheXian.value = zheXianTu[j].Dv;
-                            lieFengList.Add(gNSSZheXian);
+                            if (timeString == zheXianTu[j].Time.Substring(0, 10))
+                            {
+                                timeDv = timeDv + zheXianTu[j].Dv;
+                                cishu++;
+                            }
+                            else
+                            {
+                                if (cishu > 0)
+                                {
+                                    //一天只要一个折现数据
+                                  
 
 
+                                    GNSSZheXian LiefengZheXian = new GNSSZheXian();//水平位移
+                                    LiefengZheXian.name = monitorString.JCDBH;
+                                    LiefengZheXian.time = timeString;
+                                    LiefengZheXian.value = timeDv/ cishu;
+                                    lieFengList.Add(LiefengZheXian);
+
+
+                                }
+
+                                timeString = zheXianTu[j].Time.Substring(0, 10);
+                                timeDv = zheXianTu[j].Dv;
+                                cishu = 1;
+                            }
+                            if (j == zheXianTu.Count - 1)//最后一个数据
+                            {
+                                if (cishu > 0)
+                                {
+
+                                    GNSSZheXian LiefengZheXian = new GNSSZheXian();//水平位移
+                                    LiefengZheXian.name = monitorString.JCDBH;
+                                    LiefengZheXian.time = timeString;
+                                    LiefengZheXian.value = timeDv / cishu;
+                                    lieFengList.Add(LiefengZheXian);
+
+
+                                }
+                            }
+                            
                         }
                         sumLieFengList.Add(lieFengList);
-
                     }
                     else
                     {
@@ -1079,19 +1218,20 @@ namespace SERVICE.Controllers
 
             }
 
+           
             string sumShuiPingUrl = "";
             string sumChuiZhiUrl = "";
-            if (gnssName.Count > 0)
-            {
-                sumShuiPingUrl = this.DrawLineChart(sumShuiPingList, gnssName);
-                sumChuiZhiUrl = this.DrawLineChart(sumChuiZhiList, gnssName);
-            }
+            //if (gnssName.Count > 0)
+            //{
+            //    sumShuiPingUrl = this.DrawLineChart(sumShuiPingList, gnssName, "YUE");
+            //    sumChuiZhiUrl = this.DrawLineChart(sumChuiZhiList, gnssName, "YUE");
+            //}
 
             string sunLieFengUrl = "";
 
             if (lieFengName.Count > 0)//看有没有折线数据
             {
-                sunLieFengUrl = this.DrawLineChart(sumLieFengList, lieFengName);
+                sunLieFengUrl = this.DrawLineChart(sumLieFengList, lieFengName,"YUE");
             }
 
 
@@ -1100,6 +1240,9 @@ namespace SERVICE.Controllers
             string jieSuTime = projectString.BZ;
             //TxtInfo txtInfo = new TxtInfo();
             string patrolNum = "";
+            string patrolNumZhong = "";
+            string patrolNumXia= "";
+
             if (jieSuTime != "" && jieSuTime.Length > 0)
             {
                 string[] timexy = jieSuTime.Split('-');
@@ -1115,28 +1258,92 @@ namespace SERVICE.Controllers
                     }
                     else if (day >= 11 && day <= 20)
                     {
-                        patrolNum = (year - startYear - 1) * 36 + dattime + ((month - 1) * 3 + 2) + "";
+                        patrolNum = (year - startYear - 1) * 36 + dattime + ((month - 1) * 3 + 2)-1 + "";//上旬的照片
+                        patrolNumZhong = (year - startYear - 1) * 36 + dattime + ((month - 1) * 3 + 2) + "";//中旬的照片
+
                     }
                     else
                     {
-                        patrolNum = (year - startYear - 1) * 36 + dattime + ((month - 1) * 3 + 3) + "";
+                        patrolNum= (year - startYear - 1) * 36 + dattime + ((month - 1) * 3 + 3)-2 + "";//上旬
+                        patrolNumZhong  = (year - startYear - 1) * 36 + dattime + ((month - 1) * 3 + 3)-1 + "";//中旬
+                        patrolNumXia  = (year - startYear - 1) * 36 + dattime + ((month - 1) * 3 + 3) + "";//下旬
                     }
                 }
             }
             PatrolEquipmentController patrolEquipmentController = new PatrolEquipmentController();
             List<PatrolPhotoInfo> patrolPhotoInfoList = new List<PatrolPhotoInfo>();
-            if (patrolNum.Length > 0)
+            List<PatrolPhotoInfo> patrolPhotoInfoListZhong = new List<PatrolPhotoInfo>();
+            List<PatrolPhotoInfo> patrolPhotoInfoListXia = new List<PatrolPhotoInfo>();
+            if (patrolNum.Length > 0)//上旬
             {
                 string photoList = patrolEquipmentController.getPatrolPhotoInfo(projectString.Id + "", patrolNum);
 
                 patrolPhotoInfoList = COM.JsonHelper.StringToObject<List<PatrolPhotoInfo>>(photoList);
             }
+            if (patrolNumZhong.Length > 0)//中旬
+            {
+                string photoList = patrolEquipmentController.getPatrolPhotoInfo(projectString.Id + "", patrolNumZhong);
 
-            //
+                patrolPhotoInfoListZhong = COM.JsonHelper.StringToObject<List<PatrolPhotoInfo>>(photoList);
+            }
+            if (patrolNumXia.Length > 0)//下旬
+            {
+                string photoList = patrolEquipmentController.getPatrolPhotoInfo(projectString.Id + "", patrolNumXia);
+
+                patrolPhotoInfoListXia = COM.JsonHelper.StringToObject<List<PatrolPhotoInfo>>(photoList);
+            }
+            ////剖面数据组装？
+            for (int m=0;m< sectionStringList.Count;m++)
+            {
+                char qiege = '_';
+                if (sectionStringList[m].PMBH.IndexOf('-') > 0)
+                {
+                    qiege = '-';
+                   
+                };
+                String[] sectionName = sectionStringList[m].PMBH.Split(qiege);
+                //剖面名称是根据编号来的。
+                List<List<GNSSZheXian>> shuiPingListsection = new List<List<GNSSZheXian>>();//装水平的数据
+                List<List<GNSSZheXian>> chuiZhiListsection = new List<List<GNSSZheXian>>();//装水平的数据
+                List<string> gnssSecName = new List<string>();
+
+
+                List<List<GNSSZheXian>>lieFengListsection = new List<List<GNSSZheXian>>();//装裂缝的数据
+                List<string> lieFengSecName = new List<string>();
+                for (int n=0;n< sectionName.Length;n++)
+                {
+                    for (int i = 0; i < gnssName.Count; i++)//水平？
+                    {
+                        if (sectionName[n]== gnssName[i])//
+                        {
+                            shuiPingListsection.Add(sumShuiPingList[i]);
+                            chuiZhiListsection.Add(sumChuiZhiList[i]);
+                            gnssSecName.Add(gnssName[i]);
+                        }
+                    }
+                   
+                    for (int i = 0; i < lieFengName.Count; i++)//裂缝
+                    {
+                        if (sectionName[n] == lieFengName[i])
+                        {
+                            lieFengListsection.Add(sumLieFengList[i]);
+                        }
+                    }
+                }
+                if (gnssSecName.Count>0)
+                {
+                    sectionStringList[m].BSM = this.DrawLineChart(shuiPingListsection, gnssSecName,"YUE");//标识码装水平的
+                    sectionStringList[m].BZ = this.DrawLineChart(chuiZhiListsection, gnssSecName,"YUE");//备注装线性的
+                }
+
+                
+
+            }
 
 
 
-            string templatePath = imgdir + "/SurImage/MoBan/" + projectString.ZHDMC + ".docx";
+
+            string templatePath = imgdir + "/SurImage/MoBan/" + projectString.ZHDMC + "月报.docx";
 
 
             WordMLHelper wordMLHelper = new WordMLHelper();
@@ -1215,20 +1422,59 @@ namespace SERVICE.Controllers
                         {
                             daxie = daxie + "十二";
                         }
-                          wordMLHelper.FillContentWithoutStyle(tagInfos[i],daxie);
-                       
+                        TxtInfo txtInfo = new TxtInfo();
+                        txtInfo.Content = daxie;
+                        if (i==2)//第一也那个
+                        {
+                            txtInfo.Size = 32;
+                            txtInfo.Bold = "true";
+                        }
+                        else if (i==5)
+                        {
+                            txtInfo.Size = 30;
+                        }
+                        tagInfos[i].AddContent(txtInfo);
                         continue;
                     }
                     if (string.Equals(tagInfos[i].TagTips.Trim(), "[起始时间]"))
                     {
-
-                        wordMLHelper.FillContentWithoutStyle(tagInfos[i], year+"年"+month+"月1日");
+                        TxtInfo txtInfo = new TxtInfo();
+                        txtInfo.Content = year + "年" + month + "月1日";
+                        txtInfo.Size = 28;
+                        if (i==0)//第一个
+                        {
+                            txtInfo.Bold = "true";
+                        }
+                        tagInfos[i].AddContent(txtInfo);
+                       
                         continue;
                     }
                     if (string.Equals(tagInfos[i].TagTips.Trim(), "[时间]"))
                     {
                         TxtInfo txtInfo = new TxtInfo();
-                        txtInfo.Content = DateTime.Now.ToString("yyyy年MM月dd日");
+                        txtInfo.Content = lastYearMothDay;
+                        txtInfo.Size = 28;
+                        if (i == 1)//第一个
+                        {
+                            txtInfo.Bold = "true";
+                        }
+                        tagInfos[i].AddContent(txtInfo);
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[年月粗]"))
+                    {
+                        TxtInfo txtInfo = new TxtInfo();
+                        txtInfo.Content = year + "年" + month;
+                        txtInfo.Size = 28;
+                        txtInfo.Bold = "true";
+                        tagInfos[i].AddContent(txtInfo);
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[年月]"))
+                    {
+                        TxtInfo txtInfo = new TxtInfo();
+                        txtInfo.Content = year + "年" + month;
+                        txtInfo.Size = 28;
                         tagInfos[i].AddContent(txtInfo);
                         continue;
                     }
@@ -1238,12 +1484,13 @@ namespace SERVICE.Controllers
                         TxtInfo txtInfo = new TxtInfo();
                         if (Math.Abs(xys.Min()) > Math.Abs(xys.Max()))//绝对值大的那个，变化两大
                         {
-                            txtInfo.Content = Math.Round(xys.Min(), 1) + "";
+                            txtInfo.Content = Math.Round(xys.Min(), 1) + "mm";
                         }
                         else
                         {
-                            txtInfo.Content = Math.Round(xys.Max(), 1) + "";
+                            txtInfo.Content = Math.Round(xys.Max(), 1) + "mm";
                         }
+                        txtInfo.Size = 28;
                         tagInfos[i].AddContent(txtInfo);
                         continue;
 
@@ -1267,6 +1514,7 @@ namespace SERVICE.Controllers
                                 txtInfo.Content = dataStatisticsList[m].Name;
                             }
                         }
+                        txtInfo.Size = 28;
                         tagInfos[i].AddContent(txtInfo);
                         continue;
 
@@ -1282,7 +1530,8 @@ namespace SERVICE.Controllers
                                 bianXing = dataStatisticsList[m].Avg - dataStatisticsList[m].Min;
                             }
                         }
-                        txtInfo.Content = Math.Round(bianXing, 1) + "";
+                        txtInfo.Size = 28;
+                        txtInfo.Content = Math.Round(bianXing, 1) + "mm";
                         tagInfos[i].AddContent(txtInfo);
                         continue;
 
@@ -1301,6 +1550,7 @@ namespace SERVICE.Controllers
                             }
                         }
                         txtInfo.Content = name;
+                        txtInfo.Size = 28;
                         tagInfos[i].AddContent(txtInfo);
                         continue;
 
@@ -1316,7 +1566,8 @@ namespace SERVICE.Controllers
                                 bianXing = dataStatisticsList[m].Sd - dataStatisticsList[m].Max;
                             }
                         }
-                        txtInfo.Content = Math.Round(bianXing, 1) + "";
+                        txtInfo.Content = Math.Round(bianXing, 1) + "mm";
+                        txtInfo.Size = 28;
                         tagInfos[i].AddContent(txtInfo);
                         continue;
 
@@ -1335,6 +1586,7 @@ namespace SERVICE.Controllers
                             }
                         }
                         txtInfo.Content = name;
+                        txtInfo.Size = 28;
                         tagInfos[i].AddContent(txtInfo);
                         continue;
 
@@ -1344,12 +1596,13 @@ namespace SERVICE.Controllers
                         TxtInfo txtInfo = new TxtInfo();
                         if (Math.Abs(hs.Min()) > Math.Abs(hs.Max()))//绝对值大的那个，变化两大
                         {
-                            txtInfo.Content = Math.Round(hs.Min(), 1) + "";
+                            txtInfo.Content = Math.Round(hs.Min(), 1) + "mm";
                         }
                         else
                         {
-                            txtInfo.Content = Math.Round(hs.Max(), 1) + "";
+                            txtInfo.Content = Math.Round(hs.Max(), 1) + "mm";
                         }
+                        txtInfo.Size = 28;
                         tagInfos[i].AddContent(txtInfo);
                         continue;
 
@@ -1369,6 +1622,7 @@ namespace SERVICE.Controllers
                                 tempLf = dataLieFengStatisticsList[n].Avg;
                             }
                         }
+                        txtInfo.Size = 28;
                         tagInfos[i].AddContent(txtInfo);
                         continue;
                     }
@@ -1387,6 +1641,7 @@ namespace SERVICE.Controllers
                                 tempLf = dataLieFengStatisticsList[n].Avg - dataLieFengStatisticsList[n].Min;
                             }
                         }
+                        txtInfo.Size = 28;
                         tagInfos[i].AddContent(txtInfo);
                         continue;
                     }
@@ -1421,6 +1676,7 @@ namespace SERVICE.Controllers
                                 txtInfo.Content = dataStatisticsList[m].Name;
                             }
                         }
+                        txtInfo.Size = 28;
                         tagInfos[i].AddContent(txtInfo);
                         continue;
 
@@ -1453,7 +1709,7 @@ namespace SERVICE.Controllers
                             imgInfo.ImgPath = imgdir + "/SurImage/Download/" + sunLieFengUrl;
 
                             imgInfo.Width = 512;
-                            imgInfo.Height = 302;
+                            imgInfo.Height = 402;
                             tagInfos[i].AddContent(imgInfo);
                         }
                         else
@@ -1468,10 +1724,10 @@ namespace SERVICE.Controllers
                         if (xyzs != "")
                         {
                             ImgInfo imgInfo = new ImgInfo();
-                            imgInfo.ImgPath = imgdir + "/SurImage/Download/lingShi.jpg";
+                            imgInfo.ImgPath = imgdir + "/SurImage/Download/"+ yuLiangUrl;
 
                             imgInfo.Width = 512;
-                            imgInfo.Height = 302;
+                            imgInfo.Height = 402;
                             tagInfos[i].AddContent(imgInfo);
                         }
                         else
@@ -1483,13 +1739,20 @@ namespace SERVICE.Controllers
                     }
                     if (string.Equals(tagInfos[i].TagTips.Trim(), "[sumDay]"))
                     {
-                        wordMLHelper.FillContentWithoutStyle(tagInfos[i], yuliangDay + "");
+                        TxtInfo txtInfo = new TxtInfo();
+                        txtInfo.Content = yuliangDay + "";
+                        txtInfo.Size = 28;
+                        tagInfos[i].AddContent(txtInfo);
                         continue;
 
                     }
                     if (string.Equals(tagInfos[i].TagTips.Trim(), "[yuLiangMax]"))
                     {
-                        wordMLHelper.FillContentWithoutStyle(tagInfos[i], yuLiangMax + "");
+                        
+                        TxtInfo txtInfo = new TxtInfo();
+                        txtInfo.Content = yuLiangMax + "";
+                        txtInfo.Size = 28;
+                        tagInfos[i].AddContent(txtInfo);
                         continue;
 
                     }
@@ -1498,7 +1761,11 @@ namespace SERVICE.Controllers
                         if (yuLiangTime != "")
                         {
                             String[] x = yuLiangTime.Split('-');
-                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], x[1] + "月" + x[2] + "日");
+
+                            TxtInfo txtInfo = new TxtInfo();
+                            txtInfo.Content = x[1] + "月" + x[2] + "日";
+                            txtInfo.Size = 28;
+                            tagInfos[i].AddContent(txtInfo);
                         }
                         else
                         {
@@ -1510,7 +1777,11 @@ namespace SERVICE.Controllers
                     }
                     if (string.Equals(tagInfos[i].TagTips.Trim(), "[maxYuLiang]"))
                     {
-                        wordMLHelper.FillContentWithoutStyle(tagInfos[i], sumYuLiang + "");
+                        
+                        TxtInfo txtInfo = new TxtInfo();
+                        txtInfo.Content = sumYuLiang + "";
+                        txtInfo.Size = 28;
+                        tagInfos[i].AddContent(txtInfo);
                         continue;
 
                     }
@@ -1531,7 +1802,40 @@ namespace SERVICE.Controllers
                         continue;
 
                     }
-                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[巡视图1]"))
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[照片]"))
+                    {
+                        if ((patrolPhotoInfoList != null && patrolPhotoInfoList.Count > 0)
+                            || (patrolPhotoInfoListZhong != null && patrolPhotoInfoListZhong.Count > 0)
+                            || (patrolPhotoInfoListXia != null && patrolPhotoInfoListXia.Count > 0))
+                        {
+                            TxtInfo txtInfo = new TxtInfo();
+                            txtInfo.Size = 24;
+                            txtInfo.Content ="宏观巡视照片如下:";
+                            tagInfos[i].AddContent(txtInfo);
+
+                        }
+                        else
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
+                        }
+
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[上旬]"))
+                    {
+                        if (patrolPhotoInfoList != null && patrolPhotoInfoList.Count > 0)
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "本月上旬对大岚垭滑坡进行了1次专业宏观地质巡查，未发现异常迹象，宏观巡查照片见下图：");
+
+                        }
+                        else
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
+                        }
+
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[上旬图1]"))
                     {
                         if (patrolPhotoInfoList != null && patrolPhotoInfoList.Count > 0)
                         {
@@ -1550,7 +1854,8 @@ namespace SERVICE.Controllers
 
                         continue;
                     }
-                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[巡视图2]"))
+                    
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[上旬图2]"))
                     {
                         if (patrolPhotoInfoList != null && patrolPhotoInfoList.Count > 1)
                         {
@@ -1569,7 +1874,206 @@ namespace SERVICE.Controllers
 
                         continue;
                     }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[中旬]"))
+                    {
+                        if (patrolPhotoInfoListZhong != null && patrolPhotoInfoListZhong.Count > 0)
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "本月中旬旬对大岚垭滑坡进行了1次专业宏观地质巡查，未发现异常迹象，宏观巡查照片见下图：");
 
+                        }
+                        else
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
+                        }
+
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[中旬图1]"))
+                    {
+                        if (patrolPhotoInfoListZhong != null && patrolPhotoInfoListZhong.Count > 0)
+                        {
+                            PatrolPhotoInfo patrolPhotoInfo1 = patrolPhotoInfoListZhong[0];
+                            ImgInfo imgInfo = new ImgInfo();
+                            imgInfo.ImgPath = imgdir + patrolPhotoInfo1.photoUrl;
+
+                            imgInfo.Width = 264;
+                            imgInfo.Height = 198;
+                            tagInfos[i].AddContent(imgInfo);
+                        }
+                        else
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
+                        }
+
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[中旬图2]"))
+                    {
+                        if (patrolPhotoInfoListZhong != null && patrolPhotoInfoListZhong.Count > 1)
+                        {
+                            PatrolPhotoInfo patrolPhotoInfo1 = patrolPhotoInfoListZhong[1];
+                            ImgInfo imgInfo = new ImgInfo();
+                            imgInfo.ImgPath = imgdir + patrolPhotoInfo1.photoUrl;
+
+                            imgInfo.Width = 264;
+                            imgInfo.Height = 198;
+                            tagInfos[i].AddContent(imgInfo);
+                        }
+                        else
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
+                        }
+
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[下旬]"))
+                    {
+                        if (patrolPhotoInfoListXia != null && patrolPhotoInfoListXia.Count > 0)
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "本月下旬对大岚垭滑坡进行了1次专业宏观地质巡查，未发现异常迹象，宏观巡查照片见下图：");
+
+                        }
+                        else
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
+                        }
+
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[下旬图1]"))
+                    {
+                        if (patrolPhotoInfoListXia != null && patrolPhotoInfoListXia.Count > 0)
+                        {
+                            PatrolPhotoInfo patrolPhotoInfo1 = patrolPhotoInfoListXia[0];
+                            ImgInfo imgInfo = new ImgInfo();
+                            imgInfo.ImgPath = imgdir + patrolPhotoInfo1.photoUrl;
+
+                            imgInfo.Width = 264;
+                            imgInfo.Height = 198;
+                            tagInfos[i].AddContent(imgInfo);
+                        }
+                        else
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
+                        }
+
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[下旬图2]"))
+                    {
+                        if (patrolPhotoInfoListXia != null && patrolPhotoInfoListXia.Count > 1)
+                        {
+                            PatrolPhotoInfo patrolPhotoInfo1 = patrolPhotoInfoListXia[1];
+                            ImgInfo imgInfo = new ImgInfo();
+                            imgInfo.ImgPath = imgdir + patrolPhotoInfo1.photoUrl;
+
+                            imgInfo.Width = 264;
+                            imgInfo.Height = 198;
+                            tagInfos[i].AddContent(imgInfo);
+                        }
+                        else
+                        {
+                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], "");
+                        }
+
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[剖面1水]"))//李家湾剖面1
+                    {
+                        for (int x=0;x<sectionStringList.Count;x++)
+                        {
+                            if (sectionStringList[x].PMMC == "1-1'")
+                            {
+                                ImgInfo imgInfo = new ImgInfo();
+                                imgInfo.ImgPath = imgdir + "/SurImage/Download/" + sectionStringList[x].BSM;
+
+                                imgInfo.Width = 512;
+                                imgInfo.Height = 402;
+                                tagInfos[i].AddContent(imgInfo);
+                            }
+                        }
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[剖面1垂]"))//李家湾剖面1
+                    {
+                        for (int x = 0; x < sectionStringList.Count; x++)
+                        {
+                            if (sectionStringList[x].PMMC == "1-1'")
+                            {
+                                ImgInfo imgInfo = new ImgInfo();
+                                imgInfo.ImgPath = imgdir + "/SurImage/Download/" + sectionStringList[x].BZ;
+
+                                imgInfo.Width = 512;
+                                imgInfo.Height = 402;
+                                tagInfos[i].AddContent(imgInfo);
+                            }
+                        }
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[剖面2水]"))//李家湾剖面1
+                    {
+                        for (int x = 0; x < sectionStringList.Count; x++)
+                        {
+                            if (sectionStringList[x].PMMC == "2-2'")
+                            {
+                                ImgInfo imgInfo = new ImgInfo();
+                                imgInfo.ImgPath = imgdir + "/SurImage/Download/" + sectionStringList[x].BSM;
+
+                                imgInfo.Width = 512;
+                                imgInfo.Height = 402;
+                                tagInfos[i].AddContent(imgInfo);
+                            }
+                        }
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[剖面2垂]"))//李家湾剖面1
+                    {
+                        for (int x = 0; x < sectionStringList.Count; x++)
+                        {
+                            if (sectionStringList[x].PMMC == "2-2'")
+                            {
+                                ImgInfo imgInfo = new ImgInfo();
+                                imgInfo.ImgPath = imgdir + "/SurImage/Download/" + sectionStringList[x].BZ;
+
+                                imgInfo.Width = 512;
+                                imgInfo.Height = 402;
+                                tagInfos[i].AddContent(imgInfo);
+                            }
+                        }
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[剖面3水]"))//李家湾剖面1
+                    {
+                        for (int x = 0; x < sectionStringList.Count; x++)
+                        {
+                            if (sectionStringList[x].PMMC == "3-3'")
+                            {
+                                ImgInfo imgInfo = new ImgInfo();
+                                imgInfo.ImgPath = imgdir + "/SurImage/Download/" + sectionStringList[x].BSM;
+
+                                imgInfo.Width = 512;
+                                imgInfo.Height = 402;
+                                tagInfos[i].AddContent(imgInfo);
+                            }
+                        }
+                        continue;
+                    }
+                    if (string.Equals(tagInfos[i].TagTips.Trim(), "[剖面3垂]"))//李家湾剖面1
+                    {
+                        for (int x = 0; x < sectionStringList.Count; x++)
+                        {
+                            if (sectionStringList[x].PMMC == "3-3'")
+                            {
+                                ImgInfo imgInfo = new ImgInfo();
+                                imgInfo.ImgPath = imgdir + "/SurImage/Download/" + sectionStringList[x].BZ;
+
+                                imgInfo.Width = 512;
+                                imgInfo.Height = 402;
+                                tagInfos[i].AddContent(imgInfo);
+                            }
+                        }
+                        continue;
+                    }
                 }
                 else
                 {
@@ -1577,30 +2081,34 @@ namespace SERVICE.Controllers
                     logger.Info("【" + tagInfos[i].Tbl.TblType + "】pgsqlConnection");
                     // HORIZONTAL_HEADER
                     //HORIZONTAL_VERTICAL_HEADER
-                    if (tagInfos[i].Seq == 5)
+                    TableStructureInfo tblInfo1 = tagInfos[i].Tbl;
+                    List<RowStructureInfo> xyz1 = tblInfo1.Rows;
+                    RowStructureInfo row1 = xyz1[0];
+                    List<CellStructureInfo> mhn1 = row1.Cells;
+                    CellStructureInfo zzz = mhn1[0];
+                    
+
+                    if (zzz.Tips == "监测方法"|| zzz.Tips == "序号" || zzz.Tips == "项目")//监测方法即经度
                     {
                         tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
-
+                        continue;
                     }
-                    if (tagInfos[i].Seq == 6)//
+                    if (zzz.Tips == "日期")//
                     {
-                        tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
-                        
-                        if (string.Equals(tagInfos[i].TagTips.Trim(), "[起始时间]"))
-                        {
-
-                            wordMLHelper.FillContentWithoutStyle(tagInfos[i], year + "年" + month + "月1日");
+                            RowStructureInfo row = xyz1[1];
+                            List<CellStructureInfo> mhn = row.Cells;
+                            TxtInfo txtInfo = new TxtInfo();
+                            txtInfo.Size = 20;
+                            txtInfo.Content = year + "年" + month + "月1日"+ "～"+ lastYearMothDay;
+                            mhn[0].AddContent(txtInfo);
                             continue;
-                        }
-                        
-
                     }
 
 
-
-                    if (tagInfos[i].Seq == 4)//
+                    if (zzz.Tips == "监测点编号")//李家湾滑坡
                     {
-                        tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
+                        tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_HEADER;
+
                         TableStructureInfo tblInfo = tagInfos[i].Tbl;
                         for (int m = 0; m < dataStatisticsList.Count; m++)
                         {
@@ -1645,9 +2153,11 @@ namespace SERVICE.Controllers
                             }
                             tblInfo.AddRow(row);
                         }
+                        continue;
 
                     }
-                    if (tagInfos[i].Seq == 13)//裂缝，大蓝牙，周家原子
+
+                    if (zzz.Tips == "监测点")//裂缝
                     {
                         tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_HEADER;
                         TableStructureInfo tblInfo = tagInfos[i].Tbl;
@@ -1674,7 +2184,7 @@ namespace SERVICE.Controllers
                                 }
                                 else if (k == 3)//垂直
                                 {
-                                    txtInfo.Content = Math.Abs(Math.Round((datatemp.Avg - datatemp.Min), 2)) + "mm/10d";
+                                    txtInfo.Content = Math.Abs(Math.Round((datatemp.Avg - datatemp.Min)/30, 3)) + "mm/d";
                                 }
                                 txtInfo.Size = 20;
                                 cell.AddContent(txtInfo);
@@ -1686,21 +2196,8 @@ namespace SERVICE.Controllers
 
                 }
             }
-            //2021年11月下旬旬报
-            string xunbaoName = "";
-            if (day >= 1 && day <= 10)
-            {
-                xunbaoName = "上旬旬报";
-            }
-            else if (day >= 11 && day <= 20)
-            {
-                xunbaoName = "中旬旬报";
-            }
-            else
-            {
-                xunbaoName = "下旬旬报";
-            }
-            string outputPath = projectString.XMMC + "-" + DateTime.Now.ToString("yyyy年MM月") + xunbaoName + ".docx";
+            
+            string outputPath = projectString.XMMC + "-" + DateTime.Now.ToString("yyyy年MM月") + "月报.docx";
             if (!string.IsNullOrEmpty(outputPath))
             {
 
@@ -1720,7 +2217,7 @@ namespace SERVICE.Controllers
 
         }
         //折线图
-        public string DrawLineChart(List<List<GNSSZheXian>> data,List<string> zheLianName)
+        public string DrawLineChart(List<List<GNSSZheXian>> data,List<string> zheLianName,string flag)
         {
             // 预置颜色
             List<Color> colors = new List<Color>()
@@ -1777,18 +2274,25 @@ namespace SERVICE.Controllers
             int day = Convert.ToInt32(DateTime.Now.ToString("dd"));
             int hh = Convert.ToInt32(DateTime.Now.ToString("HH"));
             int sumToal = 0;
-            if (day >= 1 && day <= 10)
+            if (flag=="XUN")
             {
-                sumToal=(day - 1) * 24 + hh+1;
-            }
-            else if (day >= 11 && day <= 20)
+                if (day >= 1 && day <= 10)
+                {
+                    sumToal = (day - 1) * 24 + hh + 1;
+                }
+                else if (day >= 11 && day <= 20)
+                {
+                    sumToal = (day - 11) * 24 + hh + 1;
+                }
+                else
+                {
+                    sumToal = (day - 21) * 24 + hh + 1;
+                }
+            }else if (flag == "YUE")
             {
-                sumToal = (day - 11) * 24 + hh+1;
+                sumToal = day;
             }
-            else
-            {
-                sumToal = (day - 21) * 24 + hh+1;
-            }
+            
             int[] bottomData = Enumerable.Range(1, sumToal).ToArray();
             List<double> xyList = new List<double>();
             List<double> dhList = new List<double>();
@@ -1811,6 +2315,15 @@ namespace SERVICE.Controllers
                         minCount = listgnss[j].value;
                     }
                 }
+            }
+            if (maxCount- minCount<50)
+
+            {
+
+                double temp =(50-maxCount+ minCount)/2;
+                maxCount = maxCount + temp;
+                minCount = minCount - temp;
+
             }
 
             //折线名称
@@ -1900,22 +2413,38 @@ namespace SERVICE.Controllers
                     g.DrawLine(blackPen, margin_left + i * singleWidth, (height + margin_top), margin_left + i * singleWidth, (height + margin_top + 5));
                     //文字
                     RectangleF rec = new RectangleF((i * singleWidth)+30 , (height + margin_top + 15), 100, (margin_bottom - 20));
-                    g.DrawString(year+"-"+month+"-"+(day- (sumToal-i) / 24), font, blackBrush, rec, format);
+                    if (flag=="XUN")
+                    {
+                        g.DrawString(year + "-" + month + "-" + (day - (sumToal - i) / 24), font, blackBrush, rec, format);
+                    }
+                    else if (flag=="YUE")
+                    {
+                        if (i==0)
+                        {
+                            g.DrawString(year + "-" + month + "-1" , font, blackBrush, rec, format);
+                        }
+                        else
+                        {
+                            g.DrawString(year + "-" + month + "-" + (day - (sumToal - i)), font, blackBrush, rec, format);
+                        }
+                        
+                    }
+                    
                 }
-                if (i == sumToal)
-                {
+                //if (i == sumToal)
+                //{
                     
 
-                    StringFormat format = new StringFormat();
-                    format.Alignment = StringAlignment.Center; //居中
+                //    StringFormat format = new StringFormat();
+                //    format.Alignment = StringAlignment.Center; //居中
 
-                    //x轴下的文字
-                    //指向线
-                    g.DrawLine(blackPen, margin_left + i * singleWidth, (height + margin_top), margin_left + i * singleWidth, (height + margin_top + 5));
-                    //文字
-                    RectangleF rec = new RectangleF((i * singleWidth)+30, (height + margin_top + 15), 100, (margin_bottom - 20));
-                    g.DrawString((year + "-" + month + "-" + day), font, blackBrush, rec, format);
-                }
+                //    //x轴下的文字
+                //    //指向线
+                //    g.DrawLine(blackPen, margin_left + i * singleWidth, (height + margin_top), margin_left + i * singleWidth, (height + margin_top + 5));
+                //    //文字
+                //    RectangleF rec = new RectangleF((i * singleWidth)+30, (height + margin_top + 15), 100, (margin_bottom - 20));
+                //    g.DrawString((year + "-" + month + "-" + day), font, blackBrush, rec, format);
+                //}
 
             }
 
@@ -1960,22 +2489,30 @@ namespace SERVICE.Controllers
 
 
                     int day2 = Convert.ToInt32(Convert.ToDateTime(time).ToString("dd"));
-                    int hh2 = Convert.ToInt32(Convert.ToDateTime(time).ToString("HH"));
+                    
 
 
                     int sumToal2 = 0;
-                    if (day2 >= 1 && day2 <= 10)
+                    if (flag=="XUN")
                     {
-                        sumToal2 = (day2 - 1) * 24 + hh2+1 ;
-                    }
-                    else if (day2 >= 11 && day2 <= 20)
+                        int hh2 = Convert.ToInt32(Convert.ToDateTime(time).ToString("HH"));
+                        if (day2 >= 1 && day2 <= 10)
+                        {
+                            sumToal2 = (day2 - 1) * 24 + hh2 + 1;
+                        }
+                        else if (day2 >= 11 && day2 <= 20)
+                        {
+                            sumToal2 = (day2 - 11) * 24 + hh2 + 1;
+                        }
+                        else
+                        {
+                            sumToal2 = (day2 - 21) * 24 + hh2 + 1;
+                        }
+                    }else if (flag=="YUE")
                     {
-                        sumToal2 = (day2 - 11) * 24 + hh2+1;
+                        sumToal2 = day2-1;
                     }
-                    else
-                    {
-                        sumToal2 = (day2 - 21) * 24 + hh2+1;
-                    }
+                    
                     // sumToal = (day - 1) * 24 + hh + 1;
                     //int x = width - ((day - day2) * 24 + hh - hh2+1) * singleWidth + margin_left;
                     int x = sumToal2 * singleWidth+ margin_left;
@@ -2003,7 +2540,7 @@ namespace SERVICE.Controllers
            // return Json(relativePath);
         }
         //柱状图
-        public string DrawBarChart(List<RAINDelta> xywww)
+        public string DrawBarChart(List<RAINDelta> xywww,string flag)
         {
             #region 允许配置项
 
@@ -2135,33 +2672,56 @@ namespace SERVICE.Controllers
                 g.FillRectangle(blueBrush, rectangle);
 
                 //柱子上的文字
-                RectangleF recText = new RectangleF(margin_left + (i * singleWidth), (height + margin_top - pillarHeight - 20), singleWidth, 20);
-                g.DrawString(barData[i].ToString(), font, blackBrush, recText, format);
+                RectangleF recText = new RectangleF(margin_left + (i * singleWidth)-5, (height + margin_top - pillarHeight - 20), (singleWidth+10), 20);
+                if (barData[i]>0)
+                {
+                    g.DrawString(barData[i].ToString(), font, blackBrush, recText, format);
+                }
+                
 
                 //x轴下的文字
                 //指向线
                 //文字
-               //singleWidth = width / 5;
-               //int pingJun = Convert.ToInt32(Math.Ceiling(bottomData.Length / 5.0));
-                if (i % 2 == 0|| i == bottomData.Length - 1)
+                //singleWidth = width / 5;
+                //int pingJun = Convert.ToInt32(Math.Ceiling(bottomData.Length / 5.0));
+                if (flag=="XUN")
                 {
-                    g.DrawLine(blackPen, margin_left + (i * singleWidth + singleWidth / 2), (height + margin_top), margin_left + (i * singleWidth + singleWidth / 2), (height + margin_top + 5));
+                    if (i % 2 == 0 || i == bottomData.Length - 1)
+                    {
+                        g.DrawLine(blackPen, margin_left + (i * singleWidth + singleWidth / 2), (height + margin_top), margin_left + (i * singleWidth + singleWidth / 2), (height + margin_top + 5));
 
-                    RectangleF rec = new RectangleF((margin_left + (i * singleWidth) - 20), (height + margin_top + 15), (singleWidth + 40), (margin_bottom - 20));
+                        RectangleF rec = new RectangleF((margin_left + (i * singleWidth) - 20), (height + margin_top + 15), (singleWidth + 40), (margin_bottom - 20));
 
-                    g.DrawString(bottomData[i].ToString(), font, blackBrush, rec, format);
+                        g.DrawString(bottomData[i].ToString(), font, blackBrush, rec, format);
+                    }
                 }
+                else if (flag == "YUE")
+                {
+                    int pingJun = Convert.ToInt32(Math.Ceiling(bottomData.Length / 5.0));
+                    if (i % pingJun == 0)//|| i == bottomData.Length - 1
+                    {
+                        g.DrawLine(blackPen, margin_left + (i * singleWidth + singleWidth / 2), (height + margin_top), margin_left + (i * singleWidth + singleWidth / 2), (height + margin_top + 5));
+
+                        RectangleF rec = new RectangleF((margin_left + (i * singleWidth) - 30), (height + margin_top + 15), (singleWidth + 60), (margin_bottom - 20));
+
+                        g.DrawString(bottomData[i].ToString(), font, blackBrush, rec, format);
+                    }
+                }
+                
                
                 
             }
+            string relativePath = "yuLiang"+DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+            // string relativePath = "zheXianTu" + ".jpg";
 
+            string path = imgdir + "/SurImage/Download/" + relativePath;
             //将图片保存到指定的流中,适用于直接以流的方式输出图片
-            string path = imgdir + "/SurImage/Download/lingShi.jpg";
+            
 
 
             image.Save(path, System.Drawing.Imaging.ImageFormat.Jpeg);
 
-            return "lingShi.jpg";
+            return relativePath;//"lingShi.jpg";
         }
 
         /// <summary>

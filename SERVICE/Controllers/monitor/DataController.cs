@@ -709,6 +709,33 @@ namespace SERVICE.Controllers
                         return string.Format("(gcsj>='{0}' AND gcsj<='{1}')", DateTime.Now.ToString("yyyy-MM") + "-20 00:00:00", DateTime.Now.ToString("yyyy-MM") + "-20 23:59:59");
                     }
                 }
+            }//上一月的最后一天。
+            else if (pre == (int)MODEL.EnumMonitor.AutoDataDateTime.PreMonthLastDay)
+            {
+                int year = Convert.ToInt32(DateTime.Now.AddMonths(-1).ToString("yyyy"));
+                int month = Convert.ToInt32(DateTime.Now.AddMonths(-1).ToString("MM"));
+                if ( (month == 4) || (month == 6) || (month == 9) || (month == 11))//其实是小月
+                {
+
+                    return string.Format("(gcsj>='{0}' AND gcsj<'{1}')", DateTime.Now.AddMonths(-1).ToString("yyyy-MM") + "-30 00:00:00", DateTime.Now.ToString("yyyy-MM") + "-01 00:00:00");
+                }
+                else if ((month == 1) || (month == 3) || (month == 8) || (month == 5) || (month == 7) || (month == 10) || (month == 12))//大月
+                {
+                    return string.Format("(gcsj>='{0}' AND gcsj<'{1}')", DateTime.Now.AddMonths(-1).ToString("yyyy-MM") + "-31 00:00:00", DateTime.Now.ToString("yyyy-MM") + "-01 00:00:00");
+                }
+                else//当前是2月
+                {
+                    if (year % 4 == 0)
+                    {
+                        return string.Format("(gcsj>='{0}' AND gcsj<'{1}')", DateTime.Now.AddMonths(-1).ToString("yyyy-MM") + "-29 00:00:00", DateTime.Now.ToString("yyyy-MM") + "-01 00:00:00");
+                    }
+                    else
+                    {
+                        return string.Format("(gcsj>='{0}' AND gcsj<'{1}')", DateTime.Now.AddMonths(-1).ToString("yyyy-MM") + "-28 00:00:00", DateTime.Now.ToString("yyyy-MM") + "-01 00:00:00");
+                    }
+                }
+
+               
             }
 
 

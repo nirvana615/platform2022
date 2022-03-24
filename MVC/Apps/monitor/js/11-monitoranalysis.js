@@ -1442,7 +1442,7 @@ function LoadwuRenJiXuShiLayer(projectid) {
             table.on('tool(renXuntable-view)', function (obj) {
                 console.log(obj);
                 if (obj.event === 'del') {
-
+                    
                     layer.confirm('是否删除?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
                         var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                         $.ajax({
@@ -1450,7 +1450,43 @@ function LoadwuRenJiXuShiLayer(projectid) {
                             success: function (result) {
                                 layer.close(loadingminindex);
                                 layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                               
+                                //删除过后，重新加载一下？
+                                if (result=="删除成功！") {
+                                    var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                                    $.ajax({
+                                        url: servicesurl + "/api/PatrolEquipment/getPatrolPhotoInfo", type: "get", data: { "id": projectid, "patrolNum": "" },
+                                        success: function (result) {
+                                            renXuntabledata = [];
+                                            var windowInfos = JSON.parse(result);
+                                            if (windowInfos.data == "") {
+                                                layer.msg(windowInfos.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                                renXuntableview.reload({ id: 'renXuntableviewid', data: [] });
+                                            }
+                                            else {
+                                                var renXunData = windowInfos;
+                                                console.log(renXunData);
+                                                for (var i in renXunData) {
+
+                                                    var renXun = new Object;
+                                                    renXun.photoUrl = renXunData[i].photoUrl;
+                                                    renXun.patrolTime = renXunData[i].patrolTime;
+                                                    renXun.patrolNum = renXunData[i].patrolNum;
+                                                    renXun.id = renXunData[i].id;
+                                                    renXun.projectId = renXunData[i].projectId;
+                                                    renXuntabledata.push(renXun);
+                                                }
+                                                console.log(renXuntabledata);
+                                                renXuntableview.reload({ id: 'renXuntableviewid', data: renXuntabledata });
+                                                
+                                            }
+                                            layer.close(loadingminindex);
+                                        }, datatype: "json"
+                                    });
+
+                                }
+                              
+
                             }, datatype: "json"
                         });
                     });
@@ -1561,8 +1597,49 @@ function LoadImageDataPreDateTimess(targetid, datetime) {
             //DisplayDATA(target, data);
         }, datatype: "json"
     });
+    
 };
+//月报
+function getYueBao() {
+    //console.log(currentprojectid);
 
+    // data.field.patrolStatus = "1";//这里已处理的
+
+    //var xyz = [22, 23, 24, 32, 33, 38, 39, 40, 41, 42, 43, 44];
+    //console.log(xyz);
+    //for (var i = 0; i < xyz.length; i++) {
+
+    //    var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    //    $.ajax({
+    //        url: servicesurl + "/api/FlzWordWxpert/GetYueBaoWordMLHelper", type: "get", data: { "id": xyz[i], "cookie": document.cookie },
+    //        success: function (result) {
+    //            layer.close(loadingminindex);
+    //            console.log(result);
+    //            // window.location.href = 'http://www.cq107chy.com:4022/SurImage/Download/' + result;
+    //        },
+    //        error: function (res) {
+    //            layer.close(loadingminindex);
+    //            console.log(res);
+    //            layer.msg(res.responseJSON.ExceptionMessage, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+    //        }, datatype: "json"
+    //    });
+    //}
+    //return;
+    var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    $.ajax({
+        url: servicesurl + "/api/FlzWordWxpert/GetYueBaoWordMLHelper", type: "get", data: { "id": currentprojectid, "cookie": document.cookie },
+        success: function (result) {
+            layer.close(loadingminindex);
+            console.log(result);
+            // window.location.href = 'http://www.cq107chy.com:4022/SurImage/Download/' + result;
+        },
+        error: function (res) {
+            layer.close(loadingminindex);
+            console.log(res);
+            layer.msg(res.responseJSON.ExceptionMessage, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        }, datatype: "json"
+    });
+};
 
 var partolHtm =  "    <div class='layui-tab layui-tab-brief' lay-filter='docDemoTabBriefitem' style='margin:0px;'>                                                             "
     + "        <ul class='layui-tab-title' style='float: left;width:120px;border-color:white;'>                                                                     "
@@ -1750,6 +1827,7 @@ var partolHtm =  "    <div class='layui-tab layui-tab-brief' lay-filter='docDemo
     + "						                <div class='grid-demo grid-demo-bg1'>	"
     + "						                     <div style='position:absolute;right:25px;'>	"
     + "						                        <button type='submit' class='layui-btn' lay-submit='' lay-filter='downWord' style='width:100px'>旬报下载</button>	"
+    + "	                                            <button type='Button' onclick='getYueBao()' class='layui-btn layui-btn-primary' style='width:100px'>月报下载</button>	"
     + "						                     </div>	"
     + "						                </div>	"
     + "						            </div>	"
