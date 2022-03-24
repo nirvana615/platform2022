@@ -83,14 +83,18 @@ function LoadModel(obj) {
 
 
 
-
+var recordDepthTestAgainstTerrain;
 //加载3D Tiles
 function Load3DTiles(model) {
-
+    recordDepthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;//记录加载3D Tiles前深度监测值
+    viewer.scene.globe.depthTestAgainstTerrain = false;
 
 
 
 };
 
+//卸载3D Tiles
+function UnLoad3DTiles() {
 
-
+    viewer.scene.globe.depthTestAgainstTerrain = recordDepthTestAgainstTerrain;//还原加载3D Tiles前深度监测值
+}

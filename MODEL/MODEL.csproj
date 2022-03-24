@@ -53,11 +53,11 @@
     <Compile Include="data\common\mark\Mark.cs" />
     <Compile Include="data\common\mark\MarkData.cs" />
     <Compile Include="data\common\survey\BlockExtent.cs" />
-    <Compile Include="data\flzone\flzproject\FlzData.cs" />
-    <Compile Include="data\flzone\flzproject\FlzDataLayer.cs" />
-    <Compile Include="data\flzone\flzproject\FlzProject.cs" />
-    <Compile Include="data\flzone\flzproject\FlzSteepHillInfo.cs" />
-    <Compile Include="data\flzone\flzproject\FlzWindowInfo.cs" />
+    <Compile Include="data\flzone\FlzData.cs" />
+    <Compile Include="data\flzone\FlzDataLayer.cs" />
+    <Compile Include="data\flzone\FlzProject.cs" />
+    <Compile Include="data\flzone\FlzSteepHillInfo.cs" />
+    <Compile Include="data\flzone\FlzWindowInfo.cs" />
     <Compile Include="data\imagemap\MapImageProjecModel.cs" />
     <Compile Include="data\imagemap\MapImageProjecTarget.cs" />
     <Compile Include="data\imagemap\MapTargetImageInfo.cs" />
@@ -161,9 +161,6 @@
     <Compile Include="data\monitor\disaster\RockfallProperty.cs" />
     <Compile Include="data\monitor\design\Section.cs" />
     <Compile Include="data\monitor\design\SectionString.cs" />
-    <Compile Include="data\common\survey\SurDOM.cs" />
-    <Compile Include="data\common\survey\SurDSM.cs" />
-    <Compile Include="data\common\survey\SurMap.cs" />
     <Compile Include="data\common\survey\SurModel.cs" />
     <Compile Include="data\common\survey\SurPointCloud.cs" />
     <Compile Include="data\monitor\layer\LayerList.cs" />
@@ -286,7 +283,6 @@
     <Compile Include="enum\EnumEW.cs" />
     <Compile Include="utility\DCR.cs" />
     <Compile Include="utility\ETL.cs" />
-    <Compile Include="data\common\survey\SurveyData.cs" />
     <Compile Include="enum\EnumUAV.cs" />
     <Compile Include="utility\IMP.cs" />
     <Compile Include="utility\ResponseResult.cs" />

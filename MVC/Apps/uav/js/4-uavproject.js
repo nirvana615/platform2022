@@ -69,10 +69,10 @@ function EditUavProject(uavprojectdata) {
 
             //项目信息
             form.val("uav-project-edit", {
-                "uav-project-edit-xmmc": uavprojectdata.data.XMMC
-                , "uav-project-edit-xmbm": uavprojectdata.data.XMBM
-                , "uav-project-edit-cjsj": uavprojectdata.data.CJSJ
-                , "uav-project-edit-bz": uavprojectdata.data.BZ
+                "uav-project-edit-xmmc": uavprojectdata.XMMC
+                , "uav-project-edit-xmbm": uavprojectdata.XMBM
+                , "uav-project-edit-cjsj": uavprojectdata.CJSJ
+                , "uav-project-edit-bz": uavprojectdata.BZ
             });
 
             //更新项目

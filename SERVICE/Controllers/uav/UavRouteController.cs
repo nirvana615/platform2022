@@ -20,11 +20,56 @@ namespace SERVICE.Controllers
     {
         private static Logger logger = Logger.CreateLogger(typeof(UavRouteController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
-        private static string ptsdir = ConfigurationManager.AppSettings["ptsdir"] != null ? ConfigurationManager.AppSettings["ptsdir"].ToString() : string.Empty;
 
 
         /// <summary>
-        /// 计算任务
+        /// 获取用户全部航线任务路径
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetUserUavRoutes(string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                List<UavRoute> uavRoutes = new List<UavRoute>();
+
+                string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_route WHERE bsm{0} AND ztm={1} ORDER BY id DESC", userbsms, (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(datas))
+                {
+                    string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        UavRoute uavRoute = ParseUavHelper.ParseUavRoute(rows[i]);
+                        if (uavRoute != null)
+                        {
+                            uavRoute.PILOT = string.Empty;
+                            uavRoute.TERRA = string.Empty;
+                            uavRoutes.Add(uavRoute);
+                        }
+                    }
+                }
+
+                if (uavRoutes.Count > 0)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(uavRoutes)));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "当前用户无航线任务路径！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// 计算航线任务
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -98,13 +143,13 @@ namespace SERVICE.Controllers
                     {
                         isHavePointCloud = false;
                     }
-                    if (string.IsNullOrEmpty(ptsdir))
-                    {
-                        isHavePointCloud = false;
-                    }
+                    //if (string.IsNullOrEmpty(ptsdir))
+                    //{
+                    //    isHavePointCloud = false;
+                    //}
 
                     blockExtents = JsonHelper.ToObject<List<BlockExtent>>(surPointCloud.QKFW);
-                    pointcloudpath = ptsdir + surPointCloud.DYLJ;
+                    //pointcloudpath = ptsdir + surPointCloud.DYLJ;
                     //isHavePointCloud = true;
                 }
                 #endregion
@@ -3478,7 +3523,7 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
-        /// 保存路径
+        /// 保存航线路径
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -3695,16 +3740,8 @@ namespace SERVICE.Controllers
             }
         }
 
-
-        [HttpGet]
-        public string GetUavRoute()
-        {
-            return string.Empty;
-        }
-
-
         /// <summary>
-        /// 删除路径
+        /// 删除航线路径
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
@@ -3740,11 +3777,6 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
             }
         }
-
-
-
-
-
 
         /// <summary>
         /// 航点类型反翻译
@@ -3788,7 +3820,7 @@ namespace SERVICE.Controllers
         /// <summary>
         /// 动作类型反翻译
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="action"></param>
         /// <returns></returns>
         private int GetDZLX(string action)
         {
@@ -3828,16 +3860,6 @@ namespace SERVICE.Controllers
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
 
     }
 }

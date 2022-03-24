@@ -19,12 +19,62 @@ using MODEL;
 namespace SERVICE.Controllers
 {
     /// <summary>
-    /// 目标
+    /// 航测任务
     /// </summary>
     public class ModelTaskController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(ModelTaskController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+
+
+        /// <summary>
+        /// 获取用户业务项目使用模型
+        /// </summary>
+        /// <param name="syscode">系统编码</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        public string GetUserUseModels(string syscode, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                List<ModelTask> models = new List<ModelTask>();
+
+                string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_use WHERE syscode={0} AND bsm{1} AND ztm={2} ORDER BY id DESC", syscode, userbsms, (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(maps))
+                {
+                    string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        MapModelProjectUse mapModelProjectUse = ParseModelHelper.ParseMapModelProjectUse(rows[i]);
+                        if (mapModelProjectUse != null)
+                        {
+                            ModelTask model = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjectUse.ModelTaskId, (int)MODEL.Enum.State.InUse)));
+                            if (model != null)
+                            {
+                                models.Add(model);
+                            }
+                        }
+                    }
+                }
+
+                if (models.Count > 0)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(models)));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "当前用户无项目！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
+
 
         /// <summary>
         /// 新建任务
@@ -475,9 +525,9 @@ namespace SERVICE.Controllers
 
 
         }
-        #region 方法1
+
         /// <summary>
-        /// 创建项目编码
+        /// 创建任务编码
         /// </summary>
         /// <param name="xmbm"></param>
         /// <param name="bsm"></param>
@@ -518,6 +568,5 @@ namespace SERVICE.Controllers
                 return string.Empty;
             }
         }
-        #endregion
     }
 }

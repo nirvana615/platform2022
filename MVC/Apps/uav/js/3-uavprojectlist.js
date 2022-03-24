@@ -1,10 +1,4 @@
-﻿var uav_projects = [];//用户全部航线项目
-var uav_models = [];//用户全部模型
-var uav_routes = [];//用户全部路径
-
-
-
-//航线任务规划项目列表
+﻿//航线任务规划项目列表
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
@@ -33,145 +27,13 @@ layer.open({
             , showLine: true
             , cancelNodeFileIcon: true
             , click: function (obj) {
-                if (obj.data.type == "uavproject") {
-                    if (current_project_id == null) {
-                        UavProjectNodeClick(obj);
-                    }
-                    else {
-                        if (obj.data.id != current_project_id) {
-                            //切换当前项目
-                            layer.confirm('是否切换当前项目?', {
-                                icon: 3, title: '提示',
-                                zIndex: layer.zIndex,
-                                cancel: function () {
-                                },
-                                success: function (layero) {
-                                    layer.setTop(layero);
-                                },
-                                btn: ['是', '否']
-                            }, function (index, layero) {
-                                //是
-                                //切换当前项目
-
-
-
-
-
-                                //关闭所有图层
-                                CloseAllLayer();
-
-                                //清除模型和图形
-                                ClearAllModelAndGeometry()
-
-                                //选择当前项目
-                                UavProjectNodeClick(obj);
-
-                                layer.close(index);
-                            }, function (index) {
-                                //否
-                            });
-
-                        }
-
-
-
-
-
-                    }
-                }
-                else {
-                    if (obj.data.children != null && obj.data.children != undefined) {
-                        for (var i in uav_project_list_all) {
-                            for (var j in uav_project_list_all[i].children) {
-                                if (uav_project_list_all[i].children[j].id == obj.data.id && uav_project_list_all[i].children[j].title == obj.data.title) {
-                                    uav_project_list_all[i].children[j].spread = !uav_project_list_all[i].children[j].spread;
-                                }
-                            }
-                        }
-
-                        tree.reload('uav-project-list-treeid', { data: uav_project_list_all });
-                        MarkNode();//高亮当前节点
-                    }
-                }
+                UavProjectNodeClick(obj);//节点点击
             }
             , operate: function (obj) {
                 UavProjectNodeOperate(obj);//节点操作
             }
             , oncheck: function (obj) {
-                if (obj.checked) {
-                    //选中
-                    if (obj.data.type == "uavsurmodel") {
-                        LoadModel(obj.data);//加载实景模型
-                    }
-                    else if (obj.data.type == "uavroute") {
-
-                        var entity_route = new Cesium.Entity({
-                            id: "UAVROUTE_" + obj.data.id,
-                            polyline: {
-                                positions: JSON.parse(obj.data.line),
-                                width: 3,
-                                arcType: Cesium.ArcType.RHUMB,
-                                material: Cesium.Color.GREENYELLOW,
-                                show: true,
-                                clampToGround: false,
-                            },
-                        });
-                        current_entities_route.push(entity_route);
-                        AddEntityInViewer(entity_route);
-                        ZoomToEntity(entity_route);
-                    }
-
-                    for (var i in uav_project_list_all) {
-                        for (var j in uav_project_list_all[i].children) {
-                            if (uav_project_list_all[i].children[j].children != undefined) {
-                                for (var k in uav_project_list_all[i].children[j].children) {
-                                    if (uav_project_list_all[i].children[j].children[k].type == obj.data.type && uav_project_list_all[i].children[j].children[k].id == obj.data.id) {
-                                        uav_project_list_all[i].children[j].children[k].checked = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    obj.data.checked = true;
-                }
-                else {
-                    //取消选中
-                    if (obj.data.type == "uavsurmodel") {
-                        viewer.scene.primitives.remove(current_project_tile);
-                        current_project_tile = null;
-                    }
-                    else if (obj.data.type == "uavroute") {
-                        for (var i in current_entities_route) {
-                            if (current_entities_route[i].id == ("UAVROUTE_" + obj.data.id)) {
-                                RemoveEntityInViewer(current_entities_route[i]);
-                            }
-                        }
-
-                        var result = [];
-                        for (var i in current_entities_route) {
-                            if (current_entities_route[i].id != ("UAVROUTE_" + obj.data.id)) {
-                                result.push(current_entities_route[i]);
-                            }
-                        }
-
-                        current_entities_route = result;
-                    }
-
-                    for (var i in uav_project_list_all) {
-                        for (var j in uav_project_list_all[i].children) {
-                            if (uav_project_list_all[i].children[j].children != undefined) {
-                                for (var k in uav_project_list_all[i].children[j].children) {
-                                    if (uav_project_list_all[i].children[j].children[k].type == obj.data.type && uav_project_list_all[i].children[j].children[k].id == obj.data.id) {
-                                        uav_project_list_all[i].children[j].children[k].checked = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    obj.data.checked = false;
-                }
+                UavProjectNodeCheck(obj);//节点选中/取消选中
             }
         });
 
@@ -183,42 +45,10 @@ layer.open({
 });
 
 
-function GetUserAllUavProjects() {
-
-
-};
-
-function GetUserAllUavModels() {
-
-
-};
-
-function GetUserAllUavRoutes() {
-
-
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //获取用户无人机项目列表
 function GetUserUavProject(uavprojectid, uavrouteid) {
     $.ajax({
-        url: servicesurl + "/api/UavProject/GetUserUavProjectData", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/UavProject/GetUserUavProjectInfos", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
 
             //获取选中路径和模型节点
@@ -409,13 +239,130 @@ function GetUserUavProject(uavprojectid, uavrouteid) {
 //节点点击
 function UavProjectNodeClick(obj) {
     if (obj.data.type == "uavproject") {
-        //点击项目节点
-        current_project_id = obj.data.id;//赋值当前项目id
-        current_project_title = obj.data.title;//赋值当前项目标题
-        MarkCurrentProject();
-    }
-};
+        if (current_project_id == null) {
+            current_project_id = obj.data.id;//赋值当前项目id
+            current_project_title = obj.data.title;//赋值当前项目标题
 
+            for (var i in uav_project_list_all) {
+                if (uav_project_list_all[i].id == obj.data.id) {
+
+                    if (uav_models.length > 0) {
+                        var models = new Object;
+                        models.title = "实景模型";
+                        models.spread = true;
+
+                        var modelchild = [];
+                        for (var j in uav_models) {
+                            if (uav_models[j].BSM == uav_project_list_all[i].bsm) {
+                                var model = new Object;
+                                model.id = "UAVSURMODEL_" + uav_models[j].Id;
+                                model.type = "uavsurmodel";
+                                model.title = uav_models[j].RWMC;
+                                //model.data = uav_models[j];
+                                model.showCheckbox = true;
+                                model.checked = false;
+                                modelchild.push(model);
+                            }
+                        }
+
+                        if (modelchild.length > 0) {
+                            models.children = modelchild;
+                            uav_project_list_all[i].children.push(models);
+                        }
+                    }
+
+                    if (uav_routes.length > 0) {
+                        var routes = new Object;
+                        routes.title = "航线任务";
+                        routes.spread = true;
+
+                        var routechild = [];
+                        for (var j in uav_routes) {
+                            if (uav_routes[j].BSM == uav_project_list_all[i].bsm) {
+                                var route = new Object;
+                                route.id = uav_routes[j].Id;
+                                route.type = "uavroute";
+                                route.class = uav_routes[j].HXLX;
+                                route.nodeOperate = true;
+                                route.title = uav_routes[j].HXMC;
+                                //TODO 根据航线类型添加图标
+                                route.line = uav_routes[j].LINE;
+                                //route.data = uav_routes[j];
+                                route.showCheckbox = true;
+                                route.checked = false;
+                                routechild.push(route);
+                            }
+                        }
+
+                        if (routechild.length > 0) {
+                            routes.children = routechild;
+                            uav_project_list_all[i].children.push(routes);
+                        }
+                    }
+                }
+            }
+
+            MarkCurrentProject();
+        }
+        else {
+            if (obj.data.id != current_project_id) {
+                //切换当前项目
+                layer.confirm('是否切换当前项目?', {
+                    icon: 3, title: '提示',
+                    zIndex: layer.zIndex,
+                    cancel: function () {
+                    },
+                    success: function (layero) {
+                        layer.setTop(layero);
+                    },
+                    btn: ['是', '否']
+                }, function (index, layero) {
+                    //是
+                    //切换当前项目
+
+
+
+
+
+                    //关闭所有图层
+                    CloseAllLayer();
+
+                    //清除模型和图形
+                    ClearAllModelAndGeometry()
+
+                    //选择当前项目
+                    UavProjectNodeClick(obj);
+
+                    layer.close(index);
+                }, function (index) {
+                    //否
+                });
+
+            }
+
+
+
+
+
+        }
+    }
+    else {
+        if (obj.data.children != null && obj.data.children != undefined) {
+            for (var i in uav_project_list_all) {
+                for (var j in uav_project_list_all[i].children) {
+                    if (uav_project_list_all[i].children[j].id == obj.data.id && uav_project_list_all[i].children[j].title == obj.data.title) {
+                        uav_project_list_all[i].children[j].spread = !uav_project_list_all[i].children[j].spread;
+                    }
+                }
+            }
+
+            tree.reload('uav-project-list-treeid', { data: uav_project_list_all });
+            MarkNode();//高亮当前节点
+        }
+    }
+
+
+};
 
 //节点操作
 function UavProjectNodeOperate(obj) {
@@ -423,10 +370,18 @@ function UavProjectNodeOperate(obj) {
         //项目
         if (obj.type === 'add') {
             //查看项目
-            ViewUavProject(obj.data);
+            for (var i in uav_projects) {
+                if (obj.data.id == uav_projects[i].Id) {
+                    ViewUavProject(uav_projects[i]);
+                }
+            }
         } else if (obj.type === 'update') {
             //编辑项目
-            EditUavProject(obj.data);
+            for (var i in uav_projects) {
+                if (obj.data.id == uav_projects[i].Id) {
+                    EditUavProject(uav_projects[i]);
+                }
+            }
         } else if (obj.type === 'del') {
             //删除项目
             DeleteUavProject(obj.data.id);
@@ -444,4 +399,85 @@ function UavProjectNodeOperate(obj) {
             DeleteUavRoute(obj.data.id);
         };
     }
-}
+};
+
+//节点选中/取消选中
+function UavProjectNodeCheck(obj) {
+    if (obj.checked) {
+        //选中
+        if (obj.data.type == "uavsurmodel") {
+            LoadModel(obj.data);//加载实景模型
+        }
+        else if (obj.data.type == "uavroute") {
+
+            var entity_route = new Cesium.Entity({
+                id: "UAVROUTE_" + obj.data.id,
+                polyline: {
+                    positions: JSON.parse(obj.data.line),
+                    width: 3,
+                    arcType: Cesium.ArcType.RHUMB,
+                    material: Cesium.Color.GREENYELLOW,
+                    show: true,
+                    clampToGround: false,
+                },
+            });
+            current_entities_route.push(entity_route);
+            AddEntityInViewer(entity_route);
+            ZoomToEntity(entity_route);
+        }
+
+        for (var i in uav_project_list_all) {
+            for (var j in uav_project_list_all[i].children) {
+                if (uav_project_list_all[i].children[j].children != undefined) {
+                    for (var k in uav_project_list_all[i].children[j].children) {
+                        if (uav_project_list_all[i].children[j].children[k].type == obj.data.type && uav_project_list_all[i].children[j].children[k].id == obj.data.id) {
+                            uav_project_list_all[i].children[j].children[k].checked = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        obj.data.checked = true;
+    }
+    else {
+        //取消选中
+        if (obj.data.type == "uavsurmodel") {
+            viewer.scene.primitives.remove(current_project_tile);
+            current_project_tile = null;
+        }
+        else if (obj.data.type == "uavroute") {
+            for (var i in current_entities_route) {
+                if (current_entities_route[i].id == ("UAVROUTE_" + obj.data.id)) {
+                    RemoveEntityInViewer(current_entities_route[i]);
+                }
+            }
+
+            var result = [];
+            for (var i in current_entities_route) {
+                if (current_entities_route[i].id != ("UAVROUTE_" + obj.data.id)) {
+                    result.push(current_entities_route[i]);
+                }
+            }
+
+            current_entities_route = result;
+        }
+
+        for (var i in uav_project_list_all) {
+            for (var j in uav_project_list_all[i].children) {
+                if (uav_project_list_all[i].children[j].children != undefined) {
+                    for (var k in uav_project_list_all[i].children[j].children) {
+                        if (uav_project_list_all[i].children[j].children[k].type == obj.data.type && uav_project_list_all[i].children[j].children[k].id == obj.data.id) {
+                            uav_project_list_all[i].children[j].children[k].checked = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        obj.data.checked = false;
+    }
+
+
+
+};

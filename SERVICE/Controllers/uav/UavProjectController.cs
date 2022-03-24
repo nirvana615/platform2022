@@ -20,10 +20,10 @@ namespace SERVICE.Controllers
         private static Logger logger = Logger.CreateLogger(typeof(UavProjectController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
+
         /// <summary>
-        /// 后台获取全部航线项目
+        /// 后台获取全部航线任务项目
         /// </summary>
-        /// <param name="cookie"></param>
         /// <returns></returns>
         [HttpGet]
         public string GetAllUavProjects()
@@ -60,11 +60,161 @@ namespace SERVICE.Controllers
             }
         }
 
+        /// <summary>
+        /// 获取用户全部航线任务项目
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
         [HttpGet]
         public string GetUserUavProjects(string cookie)
         {
-            return string.Empty;
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                List<UavProject> uavProjects = new List<UavProject>();
+
+                string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_project WHERE bsm{0} AND ztm={1} ORDER BY id DESC", userbsms, (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(datas))
+                {
+                    string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        UavProject uavProject = ParseUavHelper.ParseUavProject(rows[i]);
+                        if (uavProject != null)
+                        {
+                            uavProjects.Add(uavProject);
+                        }
+                    }
+                }
+
+                if (uavProjects.Count > 0)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(uavProjects)));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "当前用户无航线项目！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
         }
+
+        /// <summary>
+        /// 获取用户航线任务项目数据（含项目信息、模型信息和路径信息）
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetUserUavProjectInfos(string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_project WHERE bsm{0} AND ztm={1} ORDER BY id DESC", userbsms, (int)MODEL.Enum.State.InUse));
+                if (string.IsNullOrEmpty(data))
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "当前用户无航线项目！", string.Empty));
+                }
+                else
+                {
+                    List<UavProjectInfo> uavProjectInfos = new List<UavProjectInfo>();
+
+                    string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        UavProject uavProject = ParseUavHelper.ParseUavProject(rows[i]);
+                        if (uavProject != null)
+                        {
+                            UavProjectInfo uavProjectInfo = new UavProjectInfo();
+                            uavProjectInfo.Project = uavProject;
+
+                            #region 模型数据
+                            List<ModelTask> models = new List<ModelTask>();
+
+                            string modelmaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_use WHERE syscode={0} AND useproject={1} AND ztm={2} ORDER BY id DESC", (int)MODEL.Enum.System.Uav, uavProject.Id, (int)MODEL.Enum.State.InUse));
+                            if (!string.IsNullOrEmpty(modelmaps))
+                            {
+                                string[] modelrows = modelmaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                                for (int j = 0; j < modelrows.Length; j++)
+                                {
+                                    MapModelProjectUse mapModelProjectUse = ParseModelHelper.ParseMapModelProjectUse(modelrows[j]);
+                                    if (mapModelProjectUse != null)
+                                    {
+                                        ModelTask model = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjectUse.ModelTaskId, (int)MODEL.Enum.State.InUse)));
+                                        if (model != null)
+                                        {
+                                            models.Add(model);
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (models.Count > 0)
+                            {
+                                uavProjectInfo.Models = models;
+                            }
+                            #endregion
+
+                            #region 路径信息
+                            List<UavRoute> routes = new List<UavRoute>();
+
+                            string routemaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_map_project_route WHERE projectid={0} AND ztm={1} ORDER BY id DESC", uavProject.Id, (int)MODEL.Enum.State.InUse));
+                            if (!string.IsNullOrEmpty(routemaps))
+                            {
+                                string[] routerows = routemaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                                for (int j = 0; j < routerows.Length; j++)
+                                {
+                                    MapProjectRoute mapProjectRoute = ParseUavHelper.ParseMapProjectRoute(routerows[j]);
+                                    if (mapProjectRoute != null)
+                                    {
+                                        UavRoute route = ParseUavHelper.ParseUavRoute(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_route WHERE id={0} AND ztm={1}", mapProjectRoute.RouteId, (int)MODEL.Enum.State.InUse)));
+                                        if (route != null)
+                                        {
+                                            routes.Add(route);
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (routes.Count > 0)
+                            {
+                                uavProjectInfo.Routes = routes;
+                            }
+                            #endregion
+
+                            uavProjectInfos.Add(uavProjectInfo);
+                        }
+                    }
+
+                    if (uavProjectInfos.Count > 0)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(uavProjectInfos)));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "当前用户无航线项目！", string.Empty));
+                    }
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
+
+
+
+
+
+
+
 
 
         /// <summary>
@@ -192,112 +342,6 @@ namespace SERVICE.Controllers
 
 
 
-
-
-        /// <summary>
-        /// 获取用户航线任务项目数据（含项目信息、模型信息和路径信息）
-        /// </summary>
-        /// <param name="cookie"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public string GetUserUavProjectData(string cookie)
-        {
-            string userbsms = string.Empty;
-            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
-            {
-                string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_project WHERE bsm{0} AND ztm={1} ORDER BY id ASC", userbsms, (int)MODEL.Enum.State.InUse));
-                if (string.IsNullOrEmpty(data))
-                {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "当前用户无项目！", string.Empty));
-                }
-                else
-                {
-                    List<UavProjectInfo> uavProjectInfos = new List<UavProjectInfo>();
-
-                    string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
-                    for (int i = 0; i < rows.Length; i++)
-                    {
-                        UavProject uavProject = ParseUavHelper.ParseUavProject(rows[i]);
-                        if (uavProject != null)
-                        {
-                            UavProjectInfo uavProjectInfo = new UavProjectInfo();
-                            uavProjectInfo.Project = uavProject;
-
-                            #region 模型数据
-                            List<ModelTask> models = new List<ModelTask>();
-
-                            string modelmaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_use WHERE syscode={0} AND useproject={1} AND ztm={2} ORDER BY id DESC", (int)MODEL.Enum.System.Uav, uavProject.Id, (int)MODEL.Enum.State.InUse));
-                            if (!string.IsNullOrEmpty(modelmaps))
-                            {
-                                string[] modelrows = modelmaps.Split(new char[] { COM.ConstHelper.rowSplit });
-                                for (int j = 0; j < modelrows.Length; j++)
-                                {
-                                    MapModelProjectUse mapModelProjectUse = ParseModelHelper.ParseMapModelProjectUse(modelrows[j]);
-                                    if (mapModelProjectUse != null)
-                                    {
-                                        ModelTask model = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjectUse.ModelTaskId, (int)MODEL.Enum.State.InUse)));
-                                        if (model != null)
-                                        {
-                                            models.Add(model);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (models.Count > 0)
-                            {
-                                uavProjectInfo.Models = models;
-                            }
-                            #endregion
-
-                            #region 路径信息
-                            List<UavRoute> routes = new List<UavRoute>();
-
-                            string routemaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_map_project_route WHERE projectid={0} AND ztm={1} ORDER BY id DESC", uavProject.Id, (int)MODEL.Enum.State.InUse));
-                            if (!string.IsNullOrEmpty(routemaps))
-                            {
-                                string[] routerows = routemaps.Split(new char[] { COM.ConstHelper.rowSplit });
-                                for (int j = 0; j < routerows.Length; j++)
-                                {
-                                    MapProjectRoute mapProjectRoute = ParseUavHelper.ParseMapProjectRoute(routerows[j]);
-                                    if (mapProjectRoute != null)
-                                    {
-                                        UavRoute route = ParseUavHelper.ParseUavRoute(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_route WHERE id={0} AND ztm={1}", mapProjectRoute.RouteId, (int)MODEL.Enum.State.InUse)));
-                                        if (route != null)
-                                        {
-                                            routes.Add(route);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (routes.Count > 0)
-                            {
-                                uavProjectInfo.Routes = routes;
-                            }
-                            #endregion
-
-                            uavProjectInfos.Add(uavProjectInfo);
-                        }
-                    }
-
-                    if (uavProjectInfos.Count > 0)
-                    {
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(uavProjectInfos)));
-                    }
-                    else
-                    {
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "当前用户无项目！", string.Empty));
-                    }
-                }
-            }
-            else
-            {
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
-            }
-        }
 
 
 

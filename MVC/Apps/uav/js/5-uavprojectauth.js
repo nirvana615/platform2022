@@ -1,12 +1,12 @@
-﻿var useruavprojects = [];//用户全部航线项目
-var uavuserid = null;//授权用户
-
-//航线项目授权
+﻿//航线项目授权
 function UavProjectAuth() {
     if (uavprojectauthlayerindex != null) {
         layer.setTop(uavprojectauthlayerindex);
     }
     else {
+        var useruavprojects = [];//用户全部航线项目
+        var authuavuserid = null;//授权用户
+
         uavprojectauthlayerindex = layer.open({
             type: 1
             , title: ['授权管理', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
@@ -57,13 +57,13 @@ function UavProjectAuth() {
                 //更新授权
                 form.on('submit(authuseruavprojectsubmit)', function (data) {
                     if (useruavprojects.length < 1) {
-                        layer.msg("当前用户无项目，无法进行授权！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        layer.msg("当前用户无航线项目，无法进行授权！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     } else {
-                        if (uavuserid == null) {
+                        if (authuavuserid == null) {
                             layer.msg("请先选择授权用户！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }
                         else {
-                            data.field.userid = uavuserid;
+                            data.field.userid = authuavuserid;
                             var alluavprojectids = "";
                             var uavprojectids = "";
 
@@ -108,103 +108,104 @@ function UavProjectAuth() {
                 uavprojectauthlayerindex = null;
             }
         });
-    }
-};
 
-//获取全部航线用户信息（除自己）
-function GetUavUserExceptSelf() {
-    $.ajax({
-        url: servicesurl + "/api/User/GetUavUserExceptSelf", type: "get", data: { "cookie": document.cookie },
-        success: function (data) {
-            if (data == "") {
-                layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                uavuserid = null;
-            }
-            else {
-                var userinfodatas = JSON.parse(data);
-                for (var i in userinfodatas) {
-                    document.getElementById('uavusersid').innerHTML += '<option value="' + userinfodatas[i].Id + '">' + userinfodatas[i].AliasName + ' - ' + userinfodatas[i].UserName + '</option>';
-                }
-
-                form.render();
-                form.render('select');
-
-                //切换用户
-                form.on('select(selectuavuser)', function (data) {
-                    if (data.value == "") {
-                        uavuserid = null;
-                        for (var i in useruavprojects) {
-                            useruavprojects[i].checked = false;
-                        }
-
-                        tree.reload('uavprojecttreeid', {
-                            data: useruavprojects
-                        });
+        //获取全部航线用户信息（除自己）
+        function GetUavUserExceptSelf() {
+            $.ajax({
+                url: servicesurl + "/api/User/GetUavUserExceptSelf", type: "get", data: { "cookie": document.cookie },
+                success: function (data) {
+                    if (data == "") {
+                        layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        authuavuserid = null;
                     }
                     else {
-                        uavuserid = data.value;
-                        $.ajax({
-                            url: servicesurl + "/api/UavProject/GetMapUserUavProject", type: "get", data: { "id": data.value },
-                            success: function (data) {
-                                if (data == "") {
-                                    for (var i in useruavprojects) {
-                                        useruavprojects[i].checked = false;
-                                    }
-                                }
-                                else {
-                                    var mapuseruavprojectdata = JSON.parse(data);
-                                    var useruavprojectids = [];
-                                    for (var i in mapuseruavprojectdata) {
-                                        useruavprojectids.push(mapuseruavprojectdata[i].UavProjectId);
-                                    }
+                        var userinfodatas = JSON.parse(data);
+                        for (var i in userinfodatas) {
+                            document.getElementById('uavusersid').innerHTML += '<option value="' + userinfodatas[i].Id + '">' + userinfodatas[i].AliasName + ' - ' + userinfodatas[i].UserName + '</option>';
+                        }
 
-                                    for (var i in useruavprojects) {
-                                        if (useruavprojectids.indexOf(useruavprojects[i].id) != -1) {
-                                            useruavprojects[i].checked = true;
-                                        }
-                                        else {
-                                            useruavprojects[i].checked = false;
-                                        }
-                                    }
+                        form.render();
+                        form.render('select');
+
+                        //切换用户
+                        form.on('select(selectuavuser)', function (data) {
+                            if (data.value == "") {
+                                authuavuserid = null;
+                                for (var i in useruavprojects) {
+                                    useruavprojects[i].checked = false;
                                 }
 
                                 tree.reload('uavprojecttreeid', {
                                     data: useruavprojects
                                 });
-                            }, datatype: "json"
+                            }
+                            else {
+                                authuavuserid = data.value;
+                                $.ajax({
+                                    url: servicesurl + "/api/UavProject/GetMapUserUavProject", type: "get", data: { "id": data.value },
+                                    success: function (data) {
+                                        if (data == "") {
+                                            for (var i in useruavprojects) {
+                                                useruavprojects[i].checked = false;
+                                            }
+                                        }
+                                        else {
+                                            var mapuseruavprojectdata = JSON.parse(data);
+                                            var useruavprojectids = [];
+                                            for (var i in mapuseruavprojectdata) {
+                                                useruavprojectids.push(mapuseruavprojectdata[i].UavProjectId);
+                                            }
+
+                                            for (var i in useruavprojects) {
+                                                if (useruavprojectids.indexOf(useruavprojects[i].id) != -1) {
+                                                    useruavprojects[i].checked = true;
+                                                }
+                                                else {
+                                                    useruavprojects[i].checked = false;
+                                                }
+                                            }
+                                        }
+
+                                        tree.reload('uavprojecttreeid', {
+                                            data: useruavprojects
+                                        });
+                                    }, datatype: "json"
+                                });
+                            }
                         });
                     }
-                });
-            }
-        }, datatype: "json"
-    });
-};
-
-//获取用户全部航线项目
-function GetUserUavProjects() {
-    $.ajax({
-        url: servicesurl + "/api/UavProject/GetUserUavProjects", type: "get", data: { "cookie": document.cookie },
-        success: function (data) {
-            useruavprojects = [];
-
-            var result = JSON.parse(data);
-            if (result.code == 1) {
-                var uavprojectdatas = JSON.parse(result.data);
-                for (var i in uavprojectdatas) {
-                    var uavproject = new Object;
-                    uavproject.id = uavprojectdatas[i].Id;
-                    uavproject.title = uavprojectdatas[i].CJSJ + " " + uavprojectdatas[i].XMMC;
-                    uavproject.checked = false;
-                    useruavprojects.push(uavproject);
-                }
-            }
-            else {
-                layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-            }
-
-            tree.reload('uavprojecttreeid', {
-                data: useruavprojects
+                }, datatype: "json"
             });
-        }, datatype: "json"
-    });
+        };
+
+
+        //获取用户全部航线任务项目
+        function GetUserUavProjects() {
+            $.ajax({
+                url: servicesurl + "/api/UavProject/GetUserUavProjects", type: "get", data: { "cookie": document.cookie },
+                success: function (data) {
+                    useruavprojects = []
+
+                    var result = JSON.parse(data);
+                    if (result.code == 1) {
+                        var uavprojectdatas = JSON.parse(result.data);
+                        for (var i in uavprojectdatas) {
+                            var uavproject = new Object;
+                            uavproject.id = uavprojectdatas[i].Id;
+                            uavproject.title = uavprojectdatas[i].CJSJ.toString().substring(0, 10) + " " + uavprojectdatas[i].XMMC;
+                            uavproject.checked = false;
+                            useruavprojects.push(uavproject);
+                        }
+                    }
+                    else {
+                        layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    }
+
+                    tree.reload('uavprojecttreeid', {
+                        data: useruavprojects
+                    });
+                }, datatype: "json"
+            });
+        };
+    }
 };
