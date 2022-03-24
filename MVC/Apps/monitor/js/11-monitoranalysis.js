@@ -1631,7 +1631,7 @@ function getYueBao() {
         success: function (result) {
             layer.close(loadingminindex);
             console.log(result);
-            // window.location.href = 'http://www.cq107chy.com:4022/SurImage/Download/' + result;
+            window.location.href = 'http://www.cq107chy.com:4022/SurImage/Download/' + result;
         },
         error: function (res) {
             layer.close(loadingminindex);
