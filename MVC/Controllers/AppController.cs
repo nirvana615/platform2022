@@ -125,7 +125,8 @@ namespace MVC.Controllers
         public ActionResult Rock()
         {
             List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
-            ViewBag.User = userinfo[1];
+            ViewBag.User = userinfo[0];
+            ViewBag.UserName = userinfo[1];
             logger.Info("【" + ViewBag.User + "】登录地质要素采集系统（危岩）");
             return View();
         }
