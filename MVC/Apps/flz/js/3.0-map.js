@@ -121,9 +121,9 @@ viewer = new Cesium.Viewer("map", {
     fullscreenButton: false,
     vrButton: false,
     geocoder: false,
-    infoBox: true,
+    infoBox: false,
     sceneModePicker: false,
-    selectionIndicator: true,
+    selectionIndicator: false,
     timeline: false,
     navigationHelpButton: false,
     navigationInstructionsInitiallyVisible: false,
@@ -138,9 +138,10 @@ viewer = new Cesium.Viewer("map", {
         pitch: Cesium.Math.toRadians(-90),
         roll: 0.0
     }
+    //selectionIndicator: false
 });
-
-
+//修改双击回初始位置
+viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 /*
  * 修改
  */

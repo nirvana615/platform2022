@@ -257,9 +257,9 @@ viewer = new Cesium.Viewer("map", {
     fullscreenButton: false,
     vrButton: false,
     geocoder: false,
-    infoBox: true,
+    infoBox: false,//右上角实体的信息
     sceneModePicker: false,
-    selectionIndicator: true,
+    selectionIndicator: false,
     timeline: false,
     navigationHelpButton: false,
     navigationInstructionsInitiallyVisible: false,
@@ -276,7 +276,8 @@ viewer = new Cesium.Viewer("map", {
     }
 });
 
-
+//修改双击回初始位置
+viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 /*
  * 修改
  */
