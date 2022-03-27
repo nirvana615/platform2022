@@ -4108,7 +4108,7 @@ function SaveMission(type) {
                         }
 
                         //刷新项目树
-                        GetUserUavProject(current_project_id, parseInt(result.data));
+                        GetUserUavProjectInfos(current_project_id, parseInt(result.data));
                     }
                     else {
 
@@ -4131,7 +4131,7 @@ function DeleteUavRoute(uavrouteid) {
         success: function (data) {
             var result = JSON.parse(data);
             if (result.code == 1) {
-                GetUserUavProject(current_project_id, -1);
+                GetUserUavProjectInfos(current_project_id, -1);
             }
             else {
                 tree.reload('uav-project-list-treeid', { data: uav_project_list_all });

@@ -709,6 +709,7 @@
     <Content Include="Resources\img\survey\xiePuoTong.png" />
     <Content Include="Resources\img\survey\zdyWindon.png" />
     <Content Include="Resources\img\survey\zouXiang.png" />
+    <Content Include="Resources\img\uav\wayline.png" />
     <Content Include="Resources\pic\bg\bg1.jpg" />
     <Content Include="Resources\pic\bg\bg2.jpg" />
     <Content Include="Resources\pic\bg\bg3.jpg" />

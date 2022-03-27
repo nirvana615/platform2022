@@ -1,4 +1,6 @@
-﻿/*
+﻿viewer.scene.globe.depthTestAgainstTerrain = true;//默认地形
+
+/*
  * 全局对象
  */
 var handler = null;
@@ -12,14 +14,14 @@ var elem = layui.element;
 
 var tipslayer = -1;//全局提示层
 
-var uavprojectauthlayerindex = null;    //项目授权模块
-var uavprojectaddlayerindex = null;     //项目（新建）模块
-var uavprojectviewlayerindex = null;    //项目（查看）模块
-var uavprojecteditlayerindex = null;    //项目（编辑）模块
-var selectroutetypelayerindex = null;   //航线（选择）模块
-var uavrouteaddlayerindex = null;       //航线（新建）模块
-var uavrouteviewlayerindex = null;      //航线（查看）模块
-var uavrouteeditlayerindex = null;      //航线（编辑）模块
+var uavprojectauthlayerindex = null;     //项目授权模块
+var uavprojectaddlayerindex = null;      //项目（新建）模块
+var uavprojectviewlayerindex = null;     //项目（查看）模块
+var uavprojecteditlayerindex = null;     //项目（编辑）模块
+var selectroutetypelayerindex = null;    //航线（选择）模块
+var uavrouteaddlayerindex = null;        //航线（新建）模块
+var uavrouteviewlayerindex = null;       //航线（查看）模块
+var uavrouteeditlayerindex = null;       //航线（编辑）模块
 
 var headeruserlayerindex = null;        //用户模块
 var headerselayerindex = null;          //设置模块
@@ -28,18 +30,17 @@ var headerselayerindex = null;          //设置模块
 var uav_project_list_all = [];//用户全部项目列表
 
 
-var current_project_id = null;//当前项目
-var current_project_title = null;//当前项目标题（用于高亮显示）
-var current_waypoint_title = null;//当前航点标题（用于高亮显示）
-var current_project_tile = null;//当前模型
-var current_project_pointcloudid = null;//当前点云
+var current_project_id = null;                  //当前项目
+var current_project_title = null;               //当前项目标题（用于高亮显示）
+var current_waypoint_title = null;              //当前航点标题（用于高亮显示）
+var current_project_tile = null;                //当前模型
+var current_project_pointcloudid = null;        //当前点云
 
 var current_entities_route = [];//当前路径
 
 //TODO var current_primitives = [];//当前模型
 
 
-viewer.scene.globe.depthTestAgainstTerrain = true;                     //影响无模型pickPosition(默认false，当需要从地形pickPosition获取位置时设置true)
 
 /*
  * 图标常量
@@ -49,7 +50,8 @@ var LANDINGICON = '<span style="margin-right:2px;"><img src="../../../Resources/
 var TARGETICON = '<span style="margin-right:2px;"><img src="../../../Resources/img/uav/target.png" style="width:14px;height:14px;"/></span>';
 var AVOIDICON = '<span style="margin-right:2px;"><img src="../../../Resources/img/uav/avoid.png" style="width:14px;height:14px;"/></span>';
 var TARGETAREAICON = '<span style="margin-right:2px;"><img src="../../../Resources/img/uav/targetarea.png" style="width:14px;height:14px;"/></span>';
-
+var MODELICON = '<span style="margin-left:0px;margin-right:2px;"><img src="../../../Resources/img/map/model.png" style="width:14px;height:14px;"/></span>';
+var WAYLINECON = '<span style="margin-left:0px;margin-right:2px;"><img src="../../../Resources/img/uav/wayline.png" style="width:14px;height:14px;"/></span>';
 
 /*
  * 默认参数

@@ -193,10 +193,22 @@
             }
             else {
                 data.field.userid = curuserid;
+                var alluavprojectids = "";
                 var uavprojectids = "";
                 for (var i = 0; i < uavprojects.length; i++) {
+                    alluavprojectids += uavprojects[i].id + ",";
+
                     if (uavprojects[i].checked == true) {
                         uavprojectids += uavprojects[i].id + ",";
+                    }
+                }
+
+                if (alluavprojectids != "") {
+                    if ((alluavprojectids.indexOf(",") != -1)) {
+                        data.field.alluavprojectids = alluavprojectids.substring(0, alluavprojectids.length - 1);
+                    }
+                    else {
+                        data.field.alluavprojectids = alluavprojectids;
                     }
                 }
                 if (uavprojectids != "") {

@@ -277,12 +277,8 @@ function ZoomToEntity(entity) {
 
 //清除全部模型和几何对象
 function ClearAllModelAndGeometry() {
-    //清除模型
-    viewer.scene.primitives.removeAll();
-    current_project_tile = null;
-
-    //清除几何
-    viewer.entities.removeAll();
+    viewer.scene.primitives.removeAll();//清除模型
+    viewer.entities.removeAll();//清除几何
 
     if (handler != undefined) {
         handler.destroy();

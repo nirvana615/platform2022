@@ -13,11 +13,32 @@ util.fixbar({
     , bgcolor: '#303336'
     , click: function (type) {
         if (type === 'bar1') {
-            //项目授权
+            //授权管理
             UavProjectAuth();
         } else if (type === 'bar2') {
             //新建项目
-            AddUavProject();
+            if (uavprojectaddlayerindex != null) {
+                layer.setTop(uavprojectaddlayerindex);
+            } else {
+                if (uavprojectauthlayerindex == null
+                    && uavprojecteditlayerindex == null
+                    && uavprojectviewlayerindex == null
+                    && selectroutetypelayerindex == null
+                    && uavrouteaddlayerindex == null
+                    && uavrouteviewlayerindex == null
+                    && uavrouteeditlayerindex == null
+                    && headeruserlayerindex == null
+                    && headerselayerindex == null) {
+                    AddUavProject();
+                } else {
+                    layer.confirm('是否打开新的模块?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                        CloseAllLayer();//关闭所有图层
+                        ClearAllModelAndGeometry();//清除全部模型和几何对象
+                        AddUavProject();
+                        layer.close(index);
+                    });
+                }
+            }
         } else if (type === 'bar3') {
             //新建航线
             SelectRouteType();

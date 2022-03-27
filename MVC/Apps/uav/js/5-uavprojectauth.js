@@ -49,7 +49,20 @@ function UavProjectAuth() {
                 });
 
                 GetUavUserExceptSelf();
-                GetUserUavProjects();
+                //GetUserUavProjects();
+                if (uav_project_list_all.length > 0) {
+                    for (var i in uav_project_list_all) {
+                        var uavproject = new Object;
+                        uavproject.id = uav_project_list_all[i].data.Id;
+                        uavproject.title = uav_project_list_all[i].data.CJSJ.toString().substring(0, 10) + " " + uav_project_list_all[i].data.XMMC;
+                        uavproject.checked = false;
+                        useruavprojects.push(uavproject);
+                    }
+
+                    tree.reload('uavprojecttreeid', {
+                        data: useruavprojects
+                    });
+                }
 
                 form.render();
                 form.render('select');
@@ -115,7 +128,7 @@ function UavProjectAuth() {
                 url: servicesurl + "/api/User/GetUavUserExceptSelf", type: "get", data: { "cookie": document.cookie },
                 success: function (data) {
                     if (data == "") {
-                        layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        layer.msg("无航线用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         authuavuserid = null;
                     }
                     else {

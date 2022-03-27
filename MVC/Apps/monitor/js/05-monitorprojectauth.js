@@ -183,7 +183,7 @@ function GetMonitorUserExceptSelf() {
 //获取用户全部监测项目
 function GetUserMonitorProjects() {
     $.ajax({
-        url: servicesurl + "/api/UavProject/GetUserUavProject", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/UavProject/GetUserMonitorProject", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             useruavprojects = [];
 

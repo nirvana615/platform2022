@@ -209,14 +209,6 @@ namespace SERVICE.Controllers
             }
         }
 
-
-
-
-
-
-
-
-
         /// <summary>
         /// 获取用户-航线项目映射
         /// </summary>
@@ -263,85 +255,113 @@ namespace SERVICE.Controllers
         public string UpdateMapUserUavProject()
         {
             string userid = HttpContext.Current.Request.Form["userid"];
+            string alluavprojectids = HttpContext.Current.Request.Form["alluavprojectids"];
             string uavprojectids = HttpContext.Current.Request.Form["uavprojectids"];
 
-            if (string.IsNullOrEmpty(uavprojectids))
+            List<string> useruavprojectlist = new List<string>();
+            List<string> authuavprojectlist = new List<string>();
+            List<string> existuavprojectlist = new List<string>();
+
+            if (!string.IsNullOrEmpty(alluavprojectids))
             {
-                int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM uav_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
-                if (count > 0)
+                useruavprojectlist = alluavprojectids.Split(new char[] { ',' }).ToList();//授权用户全部航线项目
+            }
+            if (!string.IsNullOrEmpty(uavprojectids))
+            {
+                authuavprojectlist = uavprojectids.Split(new char[] { ',' }).ToList();//授权项目模型
+            }
+
+            //查询用户已有模型项目
+            string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
+            if (!string.IsNullOrEmpty(maps))
+            {
+                string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
                 {
-                    int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_map_user_project SET ztm={0} WHERE userid={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, userid, (int)MODEL.Enum.State.InUse));
-                    if (updatecount > 0)
+                    MapUserUavProject mapUserUavProject = ParseUavHelper.ParseMapUserUavProject(rows[i]);
+                    if (mapUserUavProject != null)
                     {
-                        return "更新用户授权成功！";
-                    }
-                    else
-                    {
-                        return "更新用户授权失败！";
+                        UavProject uavProject = ParseUavHelper.ParseUavProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_project WHERE id={0} AND ztm={1}", mapUserUavProject.UavProjectId, (int)MODEL.Enum.State.InUse)));
+                        if (uavProject != null)
+                        {
+                            existuavprojectlist.Add(uavProject.Id.ToString());
+                        }
                     }
                 }
             }
-            else
+
+            //增加
+            for (int i = 0; i < authuavprojectlist.Count; i++)
             {
-                List<string> newuavprojectidlist = uavprojectids.Split(new char[] { ',' }).ToList();
-
-                List<string> deluavprojectidlist = new List<string>();//需要删除的
-                List<string> uavprojectidlist = new List<string>();//保留的，不做更改
-
-                string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
-                if (!string.IsNullOrEmpty(maps))
+                if (!existuavprojectlist.Contains(authuavprojectlist[i]))
                 {
-                    string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
-                    for (int i = 0; i < rows.Length; i++)
-                    {
-                        MapUserUavProject mapUserUavProject = ParseUavHelper.ParseMapUserUavProject(rows[i]);
-                        if (mapUserUavProject != null)
-                        {
-                            if (newuavprojectidlist.Contains(mapUserUavProject.UavProjectId.ToString()))
-                            {
-                                uavprojectidlist.Add(mapUserUavProject.UavProjectId.ToString());
-                            }
-                            else
-                            {
-                                deluavprojectidlist.Add(mapUserUavProject.UavProjectId.ToString());
-                            }
-                        }
-                    }
+                    PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO uav_map_user_project (userid,projectid,cjsj,ztm) VALUES({0},{1},{2},{3})", userid, authuavprojectlist[i], SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
                 }
+            }
 
-                if (deluavprojectidlist.Count > 0)
+
+            //减少
+            for (int i = 0; i < existuavprojectlist.Count; i++)
+            {
+                if (useruavprojectlist.Contains(existuavprojectlist[i]) && !authuavprojectlist.Contains(existuavprojectlist[i]))
                 {
-                    for (int i = 0; i < deluavprojectidlist.Count; i++)
-                    {
-                        int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_map_user_project SET ztm={0} WHERE userid={1} AND projectid={2} AND ztm={3}", (int)MODEL.Enum.State.NoUse, userid, deluavprojectidlist[i], (int)MODEL.Enum.State.InUse));
-                        if (updatecount != 1)
-                        {
-                            return "更新用户授权（删除原有授权）失败！";
-                        }
-                    }
+                    PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_map_user_project SET ztm={0} WHERE userid={1} AND ztm={2} AND projectid={3}", (int)MODEL.Enum.State.NoUse, userid, (int)MODEL.Enum.State.InUse, existuavprojectlist[i]));
                 }
-
-                for (int i = 0; i < newuavprojectidlist.Count; i++)
-                {
-                    if (uavprojectidlist.Count > 0)
-                    {
-                        if (uavprojectidlist.Contains(newuavprojectidlist[i]))
-                        {
-                            continue;
-                        }
-                    }
-
-                    PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO uav_map_user_project (userid,projectid,cjsj,ztm) VALUES({0},{1},{2},{3})", userid, newuavprojectidlist[i], SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
-                }
-
-                return "更新用户授权成功！";
             }
 
             return string.Empty;
         }
 
 
+        /// <summary>
+        /// 新建航线项目
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string AddUavProject()
+        {
+            string xmmc = HttpContext.Current.Request.Form["uav-project-add-xmmc"];
+            string bz = HttpContext.Current.Request.Form["uav-project-add-bz"];
 
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                if (user == null)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "未找到该用户！", string.Empty));
+                }
+                if (string.IsNullOrEmpty(xmmc))
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "参数不能为空！", string.Empty));
+                }
+
+                int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO uav_project (xmmc,xmbm,cjsj,bsm,ztm,bz) VALUES({0},{1},{2},{3},{4},{5})", SQLHelper.UpdateString(xmmc), SQLHelper.UpdateString(DateTime.Now.ToString("yyyyMMddHHmmssfff")), SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), SQLHelper.UpdateString(Guid.NewGuid().ToString("D")), (int)MODEL.Enum.State.InUse, SQLHelper.UpdateString(bz)));
+                if (id == -1)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "创建航线项目失败！", string.Empty));
+                }
+                else
+                {
+                    int mapid = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO uav_map_user_project (userid,projectid,cjsj,ztm) VALUES({0},{1},{2},{3})", user.Id, id, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
+                    if (mapid == -1)
+                    {
+                        //TODO增加删除已创建项目
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "创建用户-项目映射失败！", string.Empty));
+                    }
+                    else
+                    {
+                        UavProject uavProject = ParseUavHelper.ParseUavProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_project WHERE id={0}", id)));
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "创建成功！", JsonHelper.ToJson(uavProject)));
+                    }
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
 
 
 
@@ -377,60 +397,7 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
 
-        /// <summary>
-        /// 新建无人机项目
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public string AddUavProject()
-        {
-            #region 参数
-            string xmmc = HttpContext.Current.Request.Form["uav-project-add-xmmc"];
-            string bz = HttpContext.Current.Request.Form["uav-project-add-bz"];
-            #endregion
 
-            #region 解析验证用户
-            User user = null;
-            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
-            #endregion
-
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
-            {
-                if (user == null)
-                {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "未找到该用户！", string.Empty));
-                }
-
-                #region 参数检查
-                if (string.IsNullOrEmpty(xmmc))
-                {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "参数为空！", string.Empty));
-                }
-                #endregion
-
-                int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO uav_project (xmmc,xmbm,cjsj,bsm,ztm,bz) VALUES({0},{1},{2},{3},{4},{5})", SQLHelper.UpdateString(xmmc), SQLHelper.UpdateString(DateTime.Now.ToString("yyyyMMddHHmmssfff")), SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), SQLHelper.UpdateString(Guid.NewGuid().ToString("D")), (int)MODEL.Enum.State.InUse, SQLHelper.UpdateString(bz)));
-                if (id == -1)
-                {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "创建项目失败！", string.Empty));
-                }
-                else
-                {
-                    int mapid = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO uav_map_user_project (userid,projectid,cjsj,ztm) VALUES({0},{1},{2},{3})", user.Id, id, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
-                    if (mapid == -1)
-                    {
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "创建用户-项目映射失败！", string.Empty));
-                    }
-                    else
-                    {
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "创建成功！", id.ToString()));
-                    }
-                }
-            }
-            else
-            {
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
-            }
-        }
 
 
         /// <summary>

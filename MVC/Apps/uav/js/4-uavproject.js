@@ -26,13 +26,37 @@ function AddUavProject() {
                         success: function (data) {
                             var result = JSON.parse(data);
                             if (result.code == 1) {
-                                GetUserUavProject(parseInt(result.data), -1);
+                                var uavprojectdata = JSON.parse(result.data);
+                                if (uavprojectdata != null && uavprojectdata != undefined) {
+                                    current_project_id = uavprojectdata.Id;
+                                    current_project_title = uavprojectdata.XMMC;
+
+                                    var newproject = new Object;
+                                    newproject.id = uavprojectdata.Id;
+                                    newproject.title = uavprojectdata.XMMC;
+                                    newproject.type = "uavproject";
+                                    newproject.data = uavprojectdata;
+                                    newproject.nodeOperate = true;
+                                    newproject.spread = false;
+
+                                    var newprojectinfos = [];
+
+                                    var createtime = new Object;
+                                    createtime.title = "创建时间：" + uavprojectdata.CJSJ;
+                                    newprojectinfos.push(createtime);
+                                    newproject.children = newprojectinfos
+
+                                    uav_project_list_all.push(newproject);
+                                }
+
+                                MarkCurrentProject();
+                                layer.close(uavprojectaddlayerindex);
                             }
+
                             layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }, datatype: "json"
                     });
 
-                    layer.close(uavprojectaddlayerindex);
                     return false;
                 });
             }
@@ -165,7 +189,6 @@ function EditUavProject(uavprojectdata) {
     });
 };
 
-
 //删除项目
 function DeleteUavProject(uavprojectid) {
     $.ajax({
@@ -173,28 +196,22 @@ function DeleteUavProject(uavprojectid) {
         success: function (data) {
             var result = JSON.parse(data);
             if (result.code == 1) {
-                if (current_project_id == null) {
-                    GetUserUavProject(-1, -1);
+                if (uavprojectid == current_project_id) {
+                    current_project_id = null;
+                    current_project_title = null;
                 }
-                else {
-                    if (uavprojectid == current_project_id) {
-                        current_project_id = null;
-                        GetUserUavProject(-1, -1);
 
-                        if (current_entities_route.length > 0) {
-                            RemoveEntitiesInViewer(current_entities_route);
-                            current_entities_route = [];
-                        }
-                    }
-                    else {
-                        GetUserUavProject(current_project_id, -1);
+                var new_uav_project_list_all = [];
+                for (var i in uav_project_list_all) {
+                    if (uav_project_list_all[i].id != uavprojectid) {
+                        new_uav_project_list_all.push(uav_project_list_all[i]);
                     }
                 }
-            }
-            else {
-                tree.reload('uav-project-list-treeid', { data: uav_project_list_all });
+
+                uav_project_list_all = new_uav_project_list_all;
             }
 
+            MarkCurrentProject();
             layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         }, datatype: "json"
     });
