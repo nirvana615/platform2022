@@ -367,41 +367,62 @@ function FuConstPhotoData(projectid) {
             adddevicelayerindex = layer.open({
                 type: 1
                 , title: [obj.data.JCDMC + '施工照片', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['700px', '500px']
+                , area: ['800px', '500px']
                 , shade: [0.5, '#393D49']
                 , offset: 'auto'
                 , closeBtn: 1
                 , maxmin: false
-                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="constPhotoform">    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">        <!--标签-->        <ul class="layui-tab-title">            <li class="layui-this" style="width:50px">放样</li>            <li style="width:50px">挖坑</li>            <li style="width:50px">浇筑</li>            <li style="width:50px">立杆</li>            <li style="width:50px">调试</li>            <li style="width:50px">完成</li>            <li style="width:50px">其他</li>        </ul>        <!--内容-->        <div class="layui-tab-content">            <div class="layui-tab-item layui-show">                <div class="layim-chat-main">                    <ul id="yiFangYang"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWaKeng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiJiaoZhu"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiligan"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yitiaoshi"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWanCheng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="qita"></ul>                </div>            </div>        </div>    </div></form>'
+                , content: '<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">        <!--标签-->        <ul class="layui-tab-title">            <li class="layui-this" style="width:35px">放样</li>            <li style="width:35px">挖坑</li>            <li style="width:35px">浇筑</li>            <li style="width:35px">安装</li>            <li style="width:35px">调试</li>            <li style="width:35px">完成</li>            <li style="width:35px">合格证</li><li style="width:35px">处理</li>         </ul>        <!--内容-->        <div class="layui-tab-content">            <div class="layui-tab-item layui-show">                <div class="layim-chat-main">                    <ul id="yiFangYang"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWaKeng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiJiaoZhu"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiligan"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yitiaoshi"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWanCheng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="qita"></ul>                </div>            </div><div class="layui-tab-item">                <div class="layim-chat-main">                    <form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="projectCheckedinfoform"> <div class="layui-form-item"><div class=" layui-form" id="checkUserId">     </div></div>  <div class="layui-form-item" style="margin:25px 0px 25px 0px;"><div style="position:absolute;right:160px;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="projectCheckedSubmit" style="width:80px">提交</button></div></div></form>                </div>            </div>        </div>    </div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
+                    console.log(obj.data.photoList);
+                    var photoList = obj.data.photoList;
+                    for (var i in photoList) {
+                        var photoname = "";
+                        if (photoList[i].type == '1') {
+                            document.getElementById("yiFangYang").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="放样' + (i) + '" ></img></li>';
+                            photoname = "放样";
+                        } else if (photoList[i].type == '2') {
+                            document.getElementById("yiWaKeng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="挖坑' + (i) + '"></img></li>';
 
-                    for (var i in obj.data.photoList) {
-                        if (obj.data.photoList[i].type == '1') {
-                            document.getElementById("yiFangYang").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="放样' + (i) + '" ></img></li>';
+                            photoname = "挖坑";
+                        } else if (photoList[i].type == '3') {
+                            document.getElementById("yiJiaoZhu").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="浇筑' + (i) + '"></img></li>';
+                            photoname = "浇筑";
+                        } else if (photoList[i].type == '4') {
+                            document.getElementById("yiligan").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="安装' + (i) + '"></img></li>';
+                            photoname = "安装";
+                        } else if (photoList[i].type == '5') {
 
-                        } else if (obj.data.photoList[i].type == '2') {
-                            document.getElementById("yiWaKeng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="挖坑' + (i) + '"></img></li>';
-
-                        } else if (obj.data.photoList[i].type == '3') {
-                            document.getElementById("yiJiaoZhu").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="浇筑' + (i) + '"></img></li>';
-
-                        } else if (obj.data.photoList[i].type == '4') {
-                            document.getElementById("yiligan").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="立杆' + (i) + '"></img></li>';
-
-                        } else if (obj.data.photoList[i].type == '5') {
-                            document.getElementById("yitiaoshi").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="调试' + (i) + '"></img></li>';
-
-                        }  else if (obj.data.photoList[i].type == '6') {
-                            document.getElementById("yiWanCheng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="完成' + (i) + '"></img></li>';
-
-                        } else if (obj.data.photoList[i].type == '7') {
-                            document.getElementById("qita").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + obj.data.photoList[i].photoUrl + '" alt="其他' + (i) + '"></img></li>';
+                            document.getElementById("yitiaoshi").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="调试' + (i) + '"></img></li>';
+                            photoname = "调试";
+                        } else if (photoList[i].type == '6') {
+                            document.getElementById("yiWanCheng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="完成' + (i) + '"></img></li>';
+                            photoname = "立杆";
+                        } else if (photoList[i].type == '7') {
+                            document.getElementById("qita").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="合格证' + (i) + '"></img></li>';
+                            photoname = "合格证";
+                        }
+                       
+                        if ((parseInt(i) + 1) % 4 == 0) {
+                            if (photoList[i].flagReport == "1") {
+                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px; " src="' + datasurl + photoList[i].photoUrl + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" checked=""><hr>'
+                            } else {
+                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px; " src="' + datasurl + photoList[i].photoUrl + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" ><hr>'
+                            }
+                        
+                        } else {
+                            if (photoList[i].flagReport=="1") {
+                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px;  " src="' + datasurl + photoList[i].photoUrl + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" checked="" >'
+                            } else {
+                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px;  " src="' + datasurl + photoList[i].photoUrl + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" >'
+                            }
+                            
 
                         }
-
-                    }
+                        
+                    } 
                     if (viewerPhoto != null) {
                         viewerPhoto.destroy();
                     }
@@ -482,7 +503,59 @@ function FuConstPhotoData(projectid) {
                             viewerPhoto.update();
                         },
                     });
+                    form.render('checkbox');
 
+                    //提交
+                    form.on('submit(projectCheckedSubmit)', function (data) {
+
+
+                        console.log(data);
+                        
+                        if (JSON.stringify(data.field) == "{}") {
+                            layer.msg('请选择操作人员');
+                            return false;
+                        }
+                       
+                        var dataas = {};
+                        dataas.cookie = document.cookie;
+                        var chenkList = getObjectKeys(data.field);
+                        var temps = '';
+                        for (var j in chenkList) {
+                            if (j != (chenkList.length - 1)) {
+                                temps = temps + chenkList[j] + '∮';
+                            } else {
+                                temps = temps + chenkList[j];
+                            }
+                        }
+                        dataas.monitorId = obj.data.Id;
+                        dataas.constPhotoIdList = temps;
+                        console.log(dataas);
+                        var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                        $.ajax({
+                            url: servicesurl + "/api/PatrolEquipment/UpdateConstPhotoInfo", type: "post", data: dataas,
+                            success: function (result) {
+                                layer.close(loadinglayerindex);
+                                if (result == "选择成功") {
+
+                                    layer.msg("修改成功。", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                    
+                                }
+                                else {
+                                    //创建失败
+                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+
+                                    //关闭
+                                    // layer.close(projectuserlayerindex);
+
+                                    //刷新项目列表
+                                    // GetUserProjects();
+                                }
+                            }, datatype: "json"
+                        });
+
+                        return false;
+                    });
                 }
                 , end: function () {
                     viewerPhoto = null;
@@ -490,16 +563,16 @@ function FuConstPhotoData(projectid) {
             });
 
         } else if (layEvent === 'photoDown') {
-            if (obj.data.mointorStatus != 6) {
-                layer.msg("该监测点未安装完成", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                return;
-            }
+            //if (obj.data.mointorStatus != 6) {
+            //    layer.msg("该监测点未安装完成", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            //    return;
+            //}
            
             // data.field.patrolStatus = "1";//这里已处理的
             var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
 
             $.ajax({
-                url: servicesurl + "/api/FlzWordWxpert/GetShiGongJiLuBiao", type: "get", data: { "id": obj.data.Id, "cookie": document.cookie },
+                url: servicesurl + "/api/FlzWordWxpert/GetShiGongJiLuBiao", type: "get", data: { "id": projectid, "cookie": document.cookie },
                 success: function (result) {
                     layer.close(loadingminindex);
                     console.log(result);
@@ -1050,4 +1123,10 @@ function FujianchaPhotoData(projectid) {
     });
 
 
+}
+function getObjectKeys(object) {
+    var keys = [];
+    for (var key in object)
+        keys.push(key);
+    return keys;
 }

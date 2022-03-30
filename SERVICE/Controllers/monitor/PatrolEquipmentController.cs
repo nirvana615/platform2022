@@ -604,6 +604,69 @@ namespace SERVICE.Controllers
             {
                 return string.Empty;
             }
+
         }
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string UpdateConstPhotoInfo()
+        {
+            #region 参数
+            string constPhotoIdList = HttpContext.Current.Request.Form["constPhotoIdList"];
+            string monitorId = HttpContext.Current.Request.Form["monitorId"];
+
+
+            #endregion
+
+            #region 解析验证用户
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+            #endregion
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                if (user == null)
+                {
+                    return "用户为空！";
+                }
+
+                if (!string.IsNullOrEmpty(constPhotoIdList)
+                    && !string.IsNullOrEmpty(monitorId)
+                   )
+                {
+                    int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE   const_photo_info SET flag_report='0'  WHERE monitor_id={0}", SQLHelper.UpdateString(monitorId)));
+                    logger.Info("【" + updatecount + "】updatecount");
+
+                    string[] rows = constPhotoIdList.Split(new char[] { COM.ConstHelper.rowSplit });
+                    int id = -1;
+                    for (int j = 0; j < rows.Length; j++)
+                    {         
+                        id = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE   const_photo_info SET flag_report='1'  WHERE id={0}", SQLHelper.UpdateString(rows[j])));
+                    }
+                    if (id != -1)
+                    {
+                        return "选择成功";
+                    }
+                    else
+                    {
+                        return "选择操作人员失败！";
+                    }
+
+
+                }
+                else
+                {
+                    return "参数不全！";
+                }
+            }
+            else
+            {
+                return "验证用户失败！";
+            }
+        }
+
+
     }
 }

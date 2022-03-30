@@ -4668,8 +4668,9 @@ namespace MODEL
                     deviceId = row[8].ToString(),
                     InitialAngle = row[9].ToString(),
                     snNo = row[10].ToString(),
-                    
-               };
+                    flagReport = row[11].ToString(),
+
+                };
                 return constPhotoInfo;
             }
             catch (Exception ex)

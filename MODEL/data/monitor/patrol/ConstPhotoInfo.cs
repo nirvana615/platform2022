@@ -61,6 +61,9 @@ namespace MODEL
         ///网卡编码
         /// </summary>
         public string snNo { get; set; }
-
+        /// <summary>
+        ///是否用于报告
+        /// </summary>
+        public string flagReport { get; set; }
     }
 }

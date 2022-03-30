@@ -2741,119 +2741,281 @@ namespace SERVICE.Controllers
             int month = Convert.ToInt32(DateTime.Now.ToString("MM"));
             int day = Convert.ToInt32(DateTime.Now.ToString("dd"));
             //获取当前项目信息   
-            //
-            
-            string templatePath = imgdir + "/SurImage/baoGao/anzhuang.docx";
-            string sql = "SELECT * FROM const_photo_info WHERE monitor_id ={0} ORDER BY type ";
-            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(id)));
-            List<ConstPhotoInfo> constPhotoInfoList = new List<ConstPhotoInfo>();//相片集合
-            if (!string.IsNullOrEmpty(datas))
+            //获取当前项目信息   
+            MonitorProjectString projectString = ParseMonitorHelper.ParseMonitorProjectString(
+                PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_project WHERE id={0} AND ztm={1} AND bsm{2}", id, (int)MODEL.Enum.State.InUse, userbsms)));
+
+            //项目id
+            MonitorController monitorController = new MonitorController();
+            string devs = monitorController.GetMonitor(Convert.ToInt32(id), cookie);
+
+            List<MonitorInfo> monitorInfo = COM.JsonHelper.StringToObject<List<MonitorInfo>>(devs);//"GNSS监测站
+
+            for (int j = 0; j < monitorInfo.Count; j++)
             {
-                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
-                for (int i = 0; i < rows.Length; i++)
+                MonitorString monitorString = monitorInfo[j].MonitorString;
+                string templatePath = imgdir + "/SurImage/baoGao/anzhuang.docx";
+                string sql = "SELECT * FROM const_photo_info WHERE monitor_id ={0} and flag_report='1' ORDER BY type ";
+                string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(monitorString.Id+"")));
+                List<ConstPhotoInfo> constPhotoInfoList = new List<ConstPhotoInfo>();//相片集合
+                if (!string.IsNullOrEmpty(datas))
                 {
-                    ConstPhotoInfo constPhotoInfo = ParseMonitorHelper.ParseConstPhotoInfo(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
-                    if (constPhotoInfo != null)
+                    string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
                     {
-                        constPhotoInfoList.Add(constPhotoInfo);
-
-                    }
-                }
-            }; 
-            WordMLHelper wordMLHelper = new WordMLHelper();
-            List<TagInfo> tagInfos = wordMLHelper.GetAllTagInfo(File.OpenRead(templatePath));//打开模板文件,获取所有填充域
-
-            for (int i = 0; i < tagInfos.Count; i++)
-            {
-                //填充域有两种类型,1:段落或图片,2:表格
-                //对填充域填充时需先判断填充域类型
-                if (tagInfos[i].Tbl == null)
-                {
-
-                }
-                else
-                {
-
-                    logger.Info("【" + tagInfos[i].Tbl.TblType + "】pgsqlConnection");
-                    // HORIZONTAL_HEADER
-                    //HORIZONTAL_VERTICAL_HEADER
-                    if (tagInfos[i].Seq == 1)
-                    {
-                        tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
-                        TableStructureInfo tblInfo = tagInfos[i].Tbl;
-                        List<RowStructureInfo>  xyz=tblInfo.Rows;
-                        logger.Info("【" + xyz.Count + "】xyz.Count");
-                        int xy = 0;
-                        for (int m=0;m< xyz.Count;m++)
+                        ConstPhotoInfo constPhotoInfo = ParseMonitorHelper.ParseConstPhotoInfo(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+                        if (constPhotoInfo != null)
                         {
-                            RowStructureInfo row = xyz[m];
-                            List<CellStructureInfo> mhn = row.Cells;
-                            for (int n=0;n< mhn.Count;n++)
+                            constPhotoInfoList.Add(constPhotoInfo);
+
+                        }
+                    }
+                };
+                WordMLHelper wordMLHelper = new WordMLHelper();
+                List<TagInfo> tagInfos = wordMLHelper.GetAllTagInfo(File.OpenRead(templatePath));//打开模板文件,获取所有填充域
+
+                for (int i = 0; i < tagInfos.Count; i++)
+                {
+                    //填充域有两种类型,1:段落或图片,2:表格
+                    //对填充域填充时需先判断填充域类型
+                    if (tagInfos[i].Tbl == null)
+                    {
+                        if (string.Equals(tagInfos[i].TagTips.Trim(), "[编号粗]"))
+                        {
+                            TxtInfo txtInfo = new TxtInfo();
+                            txtInfo.Content = monitorString.JCDBH;
+                            txtInfo.Size = 32;
+                            txtInfo.Bold = "true";
+                            txtInfo.FontFamily = "仿宋";
+                            tagInfos[i].AddContent(txtInfo);
+                            continue;
+                        }
+                        if (string.Equals(tagInfos[i].TagTips.Trim(), "[项目名称]"))
+                        {
+                            TxtInfo txtInfo = new TxtInfo();
+                            txtInfo.Content = projectString.XMMC;
+                            txtInfo.Size = 23;
+                            txtInfo.FontFamily = "仿宋";
+                            tagInfos[i].AddContent(txtInfo);
+                            continue;
+                        }
+                    }
+                    else
+                    {
+
+                        logger.Info("【" + tagInfos[i].Tbl.TblType + "】pgsqlConnection");
+                        // HORIZONTAL_HEADER
+                        //HORIZONTAL_VERTICAL_HEADER
+                        TableStructureInfo tblInfo1 = tagInfos[i].Tbl;
+                        List<RowStructureInfo> xyz1 = tblInfo1.Rows;
+                        for (int x = 0; x < xyz1.Count; x++)
+                        {
+                            RowStructureInfo row1 = xyz1[x];
+                            List<CellStructureInfo> mhn1 = row1.Cells;
+                            for (int y = 0; y < mhn1.Count; y++)
                             {
-                                if (m==0&&n==0) {
-                                    continue;
-                                }
-                                
-                                if (xy< constPhotoInfoList.Count)
+                                CellStructureInfo zzz = mhn1[y];
+                                logger.Info("【" + zzz.Tips + "】heiheieiehehiei");
+
+                                if (zzz.Tips == "编号")
                                 {
-                                    ImgInfo imgInfo = new ImgInfo();
-                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[xy].photoUrl;
-                                    imgInfo.Width = 186;
-                                    imgInfo.Height = 120;
-                                    mhn[n].AddContent(imgInfo);
-                                    xy++;
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    txtInfo.Content = monitorString.JCDBH;
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
                                 }
-                                
-                                
-                                
-                                
+                                if (zzz.Tips == "x")
+                                {
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    txtInfo.Content = monitorString.PMWZX;
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                }
+                                if (zzz.Tips == "y")
+                                {
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    txtInfo.Content = monitorString.PMWZY;
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                }
+                                if (zzz.Tips == "h")
+                                {
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    txtInfo.Content = monitorString.GC;
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                }
+                                if (zzz.Tips == "1"&& constPhotoInfoList.Count>1)
+                                {
+
+                                    ImgInfo imgInfo = new ImgInfo();
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[0].photoUrl;
+                                    imgInfo.Width = 250;
+                                    imgInfo.Height = 120;
+                                    zzz.AddContent(imgInfo);
+                                }
+                                if (zzz.Tips == "2" && constPhotoInfoList.Count > 2)
+                                {
+
+                                    ImgInfo imgInfo = new ImgInfo();
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[1].photoUrl;
+                                    imgInfo.Width = 250;
+                                    imgInfo.Height = 120;
+                                    zzz.AddContent(imgInfo);
+                                }
+                                if (zzz.Tips == "3" && constPhotoInfoList.Count > 3)
+                                {
+
+                                    ImgInfo imgInfo = new ImgInfo();
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[2].photoUrl;
+                                    imgInfo.Width = 250;
+                                    imgInfo.Height = 120;
+                                    zzz.AddContent(imgInfo);
+                                }
+                                if (zzz.Tips == "4" && constPhotoInfoList.Count > 4)
+                                {
+
+                                    ImgInfo imgInfo = new ImgInfo();
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[3].photoUrl;
+                                    imgInfo.Width = 250;
+                                    imgInfo.Height = 120;
+                                    zzz.AddContent(imgInfo);
+                                }
+                                if (zzz.Tips == "5" && constPhotoInfoList.Count > 5)
+                                {
+
+                                    ImgInfo imgInfo = new ImgInfo();
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[4].photoUrl;
+                                    imgInfo.Width = 250;
+                                    imgInfo.Height = 120;
+                                    zzz.AddContent(imgInfo);
+                                }
+                                if (zzz.Tips == "6" && constPhotoInfoList.Count > 6)
+                                {
+
+                                    ImgInfo imgInfo = new ImgInfo();
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[5].photoUrl;
+                                    imgInfo.Width = 250;
+                                    imgInfo.Height = 120;
+                                    zzz.AddContent(imgInfo);
+                                }
+                                if (zzz.Tips == "7" && constPhotoInfoList.Count > 7)
+                                {
+
+                                    ImgInfo imgInfo = new ImgInfo();
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[6].photoUrl;
+                                    imgInfo.Width = 250;
+                                    imgInfo.Height = 120;
+                                    zzz.AddContent(imgInfo);
+                                }
+                                if (zzz.Tips == "8" && constPhotoInfoList.Count > 8)
+                                {
+
+                                    ImgInfo imgInfo = new ImgInfo();
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[7].photoUrl;
+                                    imgInfo.Width = 250;
+                                    imgInfo.Height = 120;
+                                    zzz.AddContent(imgInfo);
+
+                                }
                             }
 
                         }
-                        //TableStructureInfo tblInfo = tagInfos[i].Tbl;
-                        //for (int m = 0; m < 4; m++)
-                        //{
-
-                        //     RowStructureInfo row = new RowStructureInfo();
-                        //    for (int k = 1; k < 3; k++)
-                        //    {
-
-                        //        CellStructureInfo cell = new CellStructureInfo();
-                        //        TxtInfo txtInfo = new TxtInfo();
-                        //        txtInfo.Content = "1111111111";
-                        //        txtInfo.Size = 20;
-                        //        cell.AddContent(txtInfo);
-                        //        row.AddCell(cell);
-                        //    }
-                        //    tblInfo.AddRow(row);
-                        //}
+                        //RowStructureInfo row1 = xyz1[0];
+                        //List<CellStructureInfo> mhn1 = row1.Cells;
+                        //CellStructureInfo zzz = mhn1[0];
 
 
-                    }
-                    if (tagInfos[i].Seq == 3)
-                    {
-                        tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
+                        if (tagInfos[i].Seq == 1)
+                        {
+                            tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
+                            TableStructureInfo tblInfo = tagInfos[i].Tbl;
+                            List<RowStructureInfo> xyz = tblInfo.Rows;
+                            logger.Info("【" + xyz.Count + "】xyz.Count");
+                            int xy = 0;
+                            for (int m = 0; m < xyz.Count; m++)
+                            {
+                                RowStructureInfo row = xyz[m];
+                                List<CellStructureInfo> mhn = row.Cells;
+                                for (int n = 0; n < mhn.Count; n++)
+                                {
+                                    if (m == 0 && n == 0)
+                                    {
+                                        continue;
+                                    }
+
+                                    if (xy < constPhotoInfoList.Count)
+                                    {
+                                        //ImgInfo imgInfo = new ImgInfo();
+                                        //imgInfo.ImgPath = imgdir + constPhotoInfoList[xy].photoUrl;
+                                        //imgInfo.Width = 220;
+                                        //imgInfo.Height = 120;
+                                        //mhn[n].AddContent(imgInfo);
+                                        TxtInfo txtInfo = new TxtInfo();
+                                        txtInfo.Size = 20;
+                                        txtInfo.Content = constPhotoInfoList[xy].photoUrl;
+                                        mhn[n].AddContent(txtInfo);
+                                        xy++;
+                                    }
 
 
+
+
+                                }
+
+                            }
+                            //TableStructureInfo tblInfo = tagInfos[i].Tbl;
+                            //for (int m = 0; m < 4; m++)
+                            //{
+
+                            //     RowStructureInfo row = new RowStructureInfo();
+                            //    for (int k = 1; k < 3; k++)
+                            //    {
+
+                            //        CellStructureInfo cell = new CellStructureInfo();
+                            //        TxtInfo txtInfo = new TxtInfo();
+                            //        txtInfo.Content = "1111111111";
+                            //        txtInfo.Size = 20;
+                            //        cell.AddContent(txtInfo);
+                            //        row.AddCell(cell);
+                            //    }
+                            //    tblInfo.AddRow(row);
+                            //}
+
+
+                        }
+                        if (tagInfos[i].Seq == 3)
+                        {
+                            tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
+
+
+                        }
                     }
                 }
+                //2021年11月下旬旬报
+
+                string outputPath = monitorString.JCDMC+"111111111111.docx";
+                if (!string.IsNullOrEmpty(outputPath))
+                {
+
+                    string templateOutPath = imgdir + "/SurImage/Download/" + outputPath;
+
+                    wordMLHelper.GenerateWordDocument(File.OpenRead(templatePath)
+                        , templateOutPath
+                        , tagInfos);
+
+                    Assistance.RemoveAllTmpFile();// 删除所有临时文件
+                }
             }
-            //2021年11月下旬旬报
-            
-            string outputPath = "111111111111.docx";
-            if (!string.IsNullOrEmpty(outputPath))
-            {
 
-                string templateOutPath = imgdir + "/SurImage/Download/" + outputPath;
 
-                wordMLHelper.GenerateWordDocument(File.OpenRead(templatePath)
-                    , templateOutPath
-                    , tagInfos);
+           
 
-                Assistance.RemoveAllTmpFile();// 删除所有临时文件
-            }
-
-            return outputPath;
+            return "222";
             //无效cookie
             //  return HttpContext.Current.Request.MapPath(outputPath).Replace("\\api\\FlzWordWxpert", string.Empty).ToString();
 
