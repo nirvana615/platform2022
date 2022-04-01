@@ -27,10 +27,13 @@ function ModelTaskInfo(id, style) {
                 }
             });
         }
+        //Loading
+        var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
         //异步获取任务基本信息
         $.ajax({
             url: servicesurl + "/api/ModelTask/GetTaskInfo", type: "get", data: { "id": id, "cookie": document.cookie },
             success: function (data) {
+                layer.close(loadinglayerindex);
                 var result = JSON.parse(data);
                 if (result.code == 1) {
                     var taskinfo = JSON.parse(result.data);
@@ -123,10 +126,13 @@ function ModelTaskInfo(id, style) {
                 , success: function (layero) {
                     //置顶
                     layer.setTop(layero);
+                    //Loading
+                    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                     //异步获取任务基本信息
                     $.ajax({
                         url: servicesurl + "/api/ModelTask/GetTaskInfo", type: "get", data: { "id": id, "cookie": document.cookie },
                         success: function (data) {
+                            layer.close(loadinglayerindex);
                             var result = JSON.parse(data);
                             if (result.code == 1) {
                                 var taskinfo = JSON.parse(result.data);
@@ -204,10 +210,12 @@ function ModelTaskInfo(id, style) {
                         data.field.cookie = document.cookie;
                         data.field.id = id;
                         data.field.model_sxcg_edit = arr_box.toString();
-                        
+                        //Loading
+                        var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                         $.ajax({
                             url: servicesurl + "/api/ModelTask/UpdateTaskInfo", type: "put", data: data.field,
                             success: function (result) {
+                                layer.close(loadinglayerindex);
                                 var info = JSON.parse(result);
                                 //刷新项目列表
                                 GetUserAllModelProjects(info.data);
@@ -232,13 +240,12 @@ function ModelTaskInfo(id, style) {
         
     }
     else if (style == "add") {
-        //新建任务----必须选择当前项目
-        //①--先选择当前项目
+        //选择当前项目
         if (id == null) {
             layer.msg("请先选择当前项目！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         }
         else {
-            //②--再新建任务
+            //新建任务
             if (modeltaskinfoaddlayerindex == null){
                 modeltaskinfoaddlayerindex = layer.open({
                     type: 1
@@ -308,12 +315,12 @@ function ModelTaskInfo(id, style) {
                             data.field.cookie = document.cookie;
                             data.field.projectid = currentprojectid;
                             data.field.model_sxcg_add = arr_box.toString();
-                            
-                            document.getElementById('task_sub_add').disabled = "disabled";//限制只能提交一次
-
+                            //Loading
+                            var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                             $.ajax({
                                 url: servicesurl + "/api/ModelTask/AddTask", type: "post", data: data.field,
                                 success: function (result) {
+                                    layer.close(loadinglayerindex);
                                     var info = JSON.parse(result);
                                     if (info.code == 1) {
                                         layer.close(modeltaskinfoaddlayerindex);

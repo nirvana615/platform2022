@@ -534,7 +534,6 @@
     <Content Include="Apps\model\js\4.4-taskinfo-modelv.js" />
     <Content Include="Apps\model\js\4.4-taskinfo-modelc.js" />
     <Content Include="Apps\model\js\4.5-taskstatus-modelp.js" />
-    <Content Include="Apps\model\js\4.5-taskstatus.js" />
     <Content Include="Apps\model\js\5.0-header.js" />
     <Content Include="Apps\model\js\6.0-util-modelp.js" />
     <Content Include="Apps\model\js\6.0-util-modelv.js" />

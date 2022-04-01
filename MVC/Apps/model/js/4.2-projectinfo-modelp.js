@@ -25,11 +25,13 @@ function ModelProjectInfo(id, style) {
                 }
             });
         }
-
+        //Loading
+        var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
         //异步获取项目信息
         $.ajax({
             url: servicesurl + "/api/ModelProject/GetModelProjectInfo", type: "get", data: { "id": id, "cookie": document.cookie },
             success: function (data) {
+                layer.close(loadinglayerindex);
                 var result = JSON.parse(data);
                 if (result.code == 1) {
                     var modelprojectinfo = JSON.parse(result.data);

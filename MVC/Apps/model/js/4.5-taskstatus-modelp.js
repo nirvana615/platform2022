@@ -12,9 +12,12 @@ function getNewModelTask() {
     newmodeltasktablePending = [];
     newmodeltasktableProcess = [];
     newmodeltasktableFinished = [];
+    //Loading
+    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
         url: servicesurl + "/api/ModelTask/GetModelTaskStatus", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
+            layer.close(loadinglayerindex);
             var result = JSON.parse(data);
             if (result.code == 1) {
                 newmodeltasktablePending = JSON.parse(result.data).newModelTaskPending;

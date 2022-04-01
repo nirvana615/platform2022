@@ -103,11 +103,14 @@ function ModelProjectInfo(id, style) {
                 }
             });
         }
-
+        //Loading
+        var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
         //异步获取项目信息
         $.ajax({
             url: servicesurl + "/api/ModelProject/GetModelProjectInfo", type: "get", data: { "id": id, "cookie": document.cookie },
             success: function (data) {
+                layer.close(loadinglayerindex);
+
                 var result = JSON.parse(data);
                 if (result.code == 1) {
                     var modelprojectinfo = JSON.parse(result.data);
@@ -181,10 +184,13 @@ function ModelProjectInfo(id, style) {
                 }
             })
         }
+        //Loading
+        var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
         //项目信息
         $.ajax({
             url: servicesurl + "/api/ModelProject/GetModelProjectInfo", type: "get", data: { "id": id, "cookie": document.cookie },
             success: function (data) {
+                layer.close(loadinglayerindex);
                 var result = JSON.parse(data);
                 if (result.code == 1) {
                     var modelprojectinfo = JSON.parse(result.data);
@@ -235,10 +241,12 @@ function ModelProjectInfo(id, style) {
         form.on('submit(editModelprojectinfosubmit)', function (data) {
             data.field.id = id;
             data.field.cookie = document.cookie;
-
+            //Loading
+            var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
             $.ajax({
                 url: servicesurl + "/api/ModelProject/UpdateModelProject", type: "put", data: data.field,
                 success: function (data) {
+                    layer.close(loadinglayerindex);
                     var result = JSON.parse(data);
                     layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     layer.close(modelprojectinfoeditlayerindex);  //关闭模块
@@ -298,10 +306,12 @@ function ModelProjectInfo(id, style) {
 
                     form.on('submit(addModelprojectinfosubmit)', function (data) {
                         data.field.cookie = document.cookie;
-
+                        //Loading
+                        var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                         $.ajax({
                             url: servicesurl + "/api/ModelProject/AddModelProject", type: "post", data: data.field,
                             success: function (result) {
+                                layer.close(loadinglayerindex);
                                 var info = JSON.parse(result);
                                 if (info.code == 1) {
                                     layer.close(modelprojectinfoaddlayerindex);

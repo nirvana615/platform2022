@@ -1,18 +1,18 @@
 ﻿//三维模型项目列表widget
-var modelprojectlist = [];//按地区组织
+var modelprojectlistarea = [];//按地区组织
 var modelprojectlistyear = [];//按时间组织
 
 var toIndex = layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-    , area: ['340px', '90%']
+    , area: ['350px', '90%']
     , shade: 0
-    , offset: ['60px', '10px']
+    , offset: ['60px', '5px']
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
     , resize: false
-    , content: '<!--项目列表--> <div class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab"> <!--选项卡--> <ul class="layui-tab-title"> <li lay-id="list_area" class="layui-this" style="width:40%;padding-top: 10px;">地区</li> <li lay-id="list_year" style="width:40%;padding-top: 10px;">时间</li> </ul> <!--tree--> <div class="layui-tab-content"> <div class="layui-tab-item layui-show"> <div id="projectbyarea"></div> </div> <div class="layui-tab-item"> <div id="projectbyyear"></div> </div> </div> </div> <!--搜索--> <div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "> <div class="layui-input-inline"> <input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"> </div> <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"> <i class="layui-icon layui-icon-search"></i> </button> </div>'
+    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;"><!--选项卡--><ul class="layui-tab-title"><li lay-id="list_area" class="layui-this" style="width:40%;">地区</li><li lay-id="list_year" style="width:40%;">时间</li></ul><!--tree--><div class="layui-tab-content" style="padding:0px;"><div class="layui-tab-item layui-show"><div id="projectbyarea"></div></div><div class="layui-tab-item"><div id="projectbyyear"></div></div></div></div><!--搜索--><div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "><div class="layui-input-inline"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"><i class="layui-icon layui-icon-search"></i></button></div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
@@ -238,7 +238,7 @@ var toIndex = layer.open({
                 var node_year = $("#projectbyyear");
                 node_year.find('.layui-tree-txt').css('color', '');
             }
-        }) 
+        })
     }
 });
 
@@ -257,11 +257,14 @@ function GetUserAllModelProjects(newprojectcode) {
     RemoveEntitiesInViewer(projectentities);//移除项目标注图标
     projectentities = [];
 
-    modelprojectlist = [];
+    modelprojectlistarea = [];
     modelprojectlistyear = [];
+    //Loading
+    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
         url: servicesurl + "/api/ModelProject/GetAllModelProjectList", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
+            layer.close(loadinglayerindex);
             var result = JSON.parse(data);
             if (result.code == 1) {
 
@@ -349,7 +352,7 @@ function GetUserAllModelProjects(newprojectcode) {
 
                     }
                     xzq.children = projects;
-                    modelprojectlist.push(xzq);
+                    modelprojectlistarea.push(xzq);
                 }
 
                 //升序排序
@@ -417,7 +420,7 @@ function GetUserAllModelProjects(newprojectcode) {
 
                 //重载项目树：将项目列表数据ModelProjectlist给data
                 tree.reload('areaprojectlistid', {
-                    data: modelprojectlist
+                    data: modelprojectlistarea
                 });
                 tree.reload('yearprojectlistid', {
                     data: modelprojectlistyear
@@ -516,26 +519,26 @@ function ModelProjectNodeClick(obj) {
                 }
 
 
-                for (var i in modelprojectlist) {
-                    modelprojectlist[i].spread = false;
-                    for (var j in modelprojectlist[i].children) {
-                        if (modelprojectlist[i].children[j].id != obj.data.id) {
-                            for (var k in modelprojectlist[i].children[j].children) {
-                                modelprojectlist[i].children[j].spread = false;
-                                modelprojectlist[i].children[j].children[k].spread = false;
-                                modelprojectlist[i].children[j].children[k].checked = false;
+                for (var i in modelprojectlistarea) {
+                    modelprojectlistarea[i].spread = false;
+                    for (var j in modelprojectlistarea[i].children) {
+                        if (modelprojectlistarea[i].children[j].id != obj.data.id) {
+                            for (var k in modelprojectlistarea[i].children[j].children) {
+                                modelprojectlistarea[i].children[j].spread = false;
+                                modelprojectlistarea[i].children[j].children[k].spread = false;
+                                modelprojectlistarea[i].children[j].children[k].checked = false;
 
                             }
                         }
                         else {
-                            modelprojectlist[i].spread = true;
-                            modelprojectlist[i].children[j].spread = true;
+                            modelprojectlistarea[i].spread = true;
+                            modelprojectlistarea[i].children[j].spread = true;
                         }
 
                     }
                 }
                 tree.reload('areaprojectlistid', {
-                    data: modelprojectlist
+                    data: modelprojectlistarea
                 });
 
 
@@ -576,6 +579,20 @@ function ModelProjectNodeClick(obj) {
             FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
         }
     }
+    else if (obj.data.type == "task") {
+        var data = obj.data;
+        //目前暂缺判断data.checked是否为true
+        if (curtileset != null) {
+            //缩放至模型
+            //判断是否有最佳视角
+            if (data.modelView != null && data.modelView.length > 0) {
+                var home = JSON.parse(data.modelView);
+                viewer.scene.camera.setView(home);
+            } else {
+                viewer.zoomTo(curtileset);
+            }
+        }
+    }
 
 };
 
@@ -600,72 +617,79 @@ function ModelMarkClick() {
         var htmlinfo = document.getElementById("info");
 
         if (Cesium.defined(pick) && Cesium.defined(pick.id)) {
-            var project_id = pick.id.id.split("_")[1];
-            tree_reload(project_id);
+            if (pick.id.id.split("_")[0] == "PROJECTCENTER") {
 
+                var project_id = pick.id.id.split("_")[1];
+                tree_reload(project_id);
 
-            //异步获取项目信息
-            $.ajax({
-                url: servicesurl + "/api/ModelProject/GetModelProjectInfo", type: "get", data: { "id": project_id, "cookie": document.cookie },
-                success: function (data) {
-                    var result = JSON.parse(data);
-                    if (result.code == 1) {
-                        var modelprojectinfo = JSON.parse(result.data);
+                //Loading
+                var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+                //异步获取项目信息
+                $.ajax({
+                    url: servicesurl + "/api/ModelProject/GetModelProjectInfo", type: "get", data: { "id": project_id, "cookie": document.cookie },
+                    success: function (data) {
+                        layer.close(loadinglayerindex);
+                        var result = JSON.parse(data);
+                        if (result.code == 1) {
+                            var modelprojectinfo = JSON.parse(result.data);
 
-                        form.val("infoModelprojectinfoform", {
-                            "model_xmmc_info": modelprojectinfo.XMMC
-                            , "model_xmbm_info": modelprojectinfo.XMBM
-                            , "model_zxjd_info": modelprojectinfo.ZXJD
-                            , "model_zxwd_info": modelprojectinfo.ZXWD
-                            , "model_xmsj_info": modelprojectinfo.XMSJ
-                            , "model_xmwz_info": modelprojectinfo.XMWZ
-                            , "model_bz_info": modelprojectinfo.BZ
-                        });
-                        //翻译项目位置
-                        if (xjxzqs.length > 0) {
-                            for (var i in xjxzqs) {
-                                if (xjxzqs[i].value == modelprojectinfo.XZQBM) {
-                                    var xzqh = "重庆市" + xjxzqs[i].name;
-                                    form.val("infoModelprojectinfoform", {
-                                        "model_xzqh_info": xzqh
-                                    });
+                            form.val("infoModelprojectinfoform", {
+                                "model_xmmc_info": modelprojectinfo.XMMC
+                                , "model_xmbm_info": modelprojectinfo.XMBM
+                                , "model_zxjd_info": modelprojectinfo.ZXJD
+                                , "model_zxwd_info": modelprojectinfo.ZXWD
+                                , "model_xmsj_info": modelprojectinfo.XMSJ
+                                , "model_xmwz_info": modelprojectinfo.XMWZ
+                                , "model_bz_info": modelprojectinfo.BZ
+                            });
+                            //翻译项目位置
+                            if (xjxzqs.length > 0) {
+                                for (var i in xjxzqs) {
+                                    if (xjxzqs[i].value == modelprojectinfo.XZQBM) {
+                                        var xzqh = "重庆市" + xjxzqs[i].name;
+                                        form.val("infoModelprojectinfoform", {
+                                            "model_xzqh_info": xzqh
+                                        });
+                                    }
                                 }
                             }
                         }
+                        else {
+                            form.val("infoModelprojectinfoform", {
+                                "model_xmmc_info": ""
+                                , "model_xmbm_info": ""
+                                , "model_xmwz_info": ""
+                                , "model_zxjd_info": ""
+                                , "model_zxwd_info": ""
+                                , "model_xmsj_info": ""
+                                , "model_xzqh_info": ""
+                                , "model_bz_info": ""
+                            });
+                        }
+
+                    }, datatype: "json"
+                });
+
+                const domHeight = htmlinfo.style.height.split('px').join(); // 
+                const domWidth = htmlinfo.style.width.split('px').join(); // 
+                const heightOffset = 10; // Y轴偏移量
+                const widthOffset = 10; // X轴偏移量
+
+                const scratch = new Cesium.Cartesian2();
+                viewer.scene.preRender.addEventListener(function () {
+                    let position = Cesium.Cartesian3.fromDegrees(lng, lat, 2);
+                    let canvasPosition = viewer.scene.cartesianToCanvasCoordinates(position, scratch);
+                    if (Cesium.defined(canvasPosition)) {
+
+                        htmlinfo.style.top = canvasPosition.y - parseInt(domHeight) + heightOffset + 'px';
+                        htmlinfo.style.left = canvasPosition.x - parseInt(domWidth) / 2 + widthOffset + 'px';
                     }
-                    else {
-                        form.val("infoModelprojectinfoform", {
-                            "model_xmmc_info": ""
-                            , "model_xmbm_info": ""
-                            , "model_xmwz_info": ""
-                            , "model_zxjd_info": ""
-                            , "model_zxwd_info": ""
-                            , "model_xmsj_info": ""
-                            , "model_xzqh_info": ""
-                            , "model_bz_info": ""
-                        });
-                    }
 
-                }, datatype: "json"
-            });
+                });
+                htmlinfo.style.display = "block";
+            }
 
-            const domHeight = htmlinfo.style.height.split('px').join(); // 
-            const domWidth = htmlinfo.style.width.split('px').join(); // 
-            const heightOffset = 10; // Y轴偏移量
-            const widthOffset = 10; // X轴偏移量
 
-            const scratch = new Cesium.Cartesian2();
-            viewer.scene.preRender.addEventListener(function () {
-                let position = Cesium.Cartesian3.fromDegrees(lng, lat, 2);
-                let canvasPosition = viewer.scene.cartesianToCanvasCoordinates(position, scratch);
-                if (Cesium.defined(canvasPosition)) {
-
-                    htmlinfo.style.top = canvasPosition.y - parseInt(domHeight) + heightOffset + 'px';
-                    htmlinfo.style.left = canvasPosition.x - parseInt(domWidth) / 2 + widthOffset + 'px';
-                }
-
-            });
-            htmlinfo.style.display = "block";
         }
         else {
             htmlinfo.style.display = "none";
@@ -676,21 +700,21 @@ function ModelMarkClick() {
     //项目列表联动
     function tree_reload(id) {
         elem.tabChange('modelprojectListTab', 'list_area');
-        for (var i in modelprojectlist) {
-            modelprojectlist[i].spread = false;
-            for (var j in modelprojectlist[i].children) {
-                if (modelprojectlist[i].children[j].id != id) {
-                    modelprojectlist[i].children[j].spread = false;
+        for (var i in modelprojectlistarea) {
+            modelprojectlistarea[i].spread = false;
+            for (var j in modelprojectlistarea[i].children) {
+                if (modelprojectlistarea[i].children[j].id != id) {
+                    modelprojectlistarea[i].children[j].spread = false;
                 }
                 else {
-                    modelprojectlist[i].spread = true;
-                    modelprojectlist[i].children[j].spread = true;
+                    modelprojectlistarea[i].spread = true;
+                    modelprojectlistarea[i].children[j].spread = true;
                 }
 
             }
         }
         tree.reload('areaprojectlistid', {
-            data: modelprojectlist
+            data: modelprojectlistarea
         });
     }
 

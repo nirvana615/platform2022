@@ -175,11 +175,6 @@ function CloseModelProjectInfoLayer() {
         layer.close(modelprojectinfoeditlayerindex);
         modelprojectinfoeditlayerindex = null;
     }
-    if (modelprojectrightuserlayerindex != null) {
-        layer.close(modelprojectrightuserlayerindex);
-        modelprojectrightuserlayerindex = null;
-    }
-
 };
 //关闭任务信息相关图层
 function CloseModelTaskInfoLayer() {

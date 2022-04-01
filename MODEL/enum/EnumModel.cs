@@ -45,7 +45,7 @@ namespace MODEL
             [RemarkAttribute("PNTS")]
             PNTS = 3,
 
-            [RemarkAttribute("LAS)")]
+            [RemarkAttribute("LAS")]
             LAS = 4
         }
         /// <summary>

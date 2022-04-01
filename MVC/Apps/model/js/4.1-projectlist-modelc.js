@@ -48,19 +48,18 @@ layer.open({
             }
             , oncheck: function (obj) {
                 if (obj.checked) {
-
                     if (obj.data.type == "task") {
 
-                        //for (var i in modelprojectlist) {
-                        //    for (var j in modelprojectlist[i].children) {
-                        //        for (var k in modelprojectlist[i].children[j].children) {
-                        //            if (obj.data.id!=modelprojectlist[i].children[j].children[k].id) {
-                        //                modelprojectlist[i].children[j].children[k].checked = false;
+                        //for (var i in modelprojectlistarea) {
+                        //    for (var j in modelprojectlistarea[i].children) {
+                        //        for (var k in modelprojectlistarea[i].children[j].children) {
+                        //            if (obj.data.id != modelprojectlistarea[i].children[j].children[k].id) {
+                        //                modelprojectlistarea[i].children[j].children[k].checked = false;
                         //            }
                         //            else {
-                        //                modelprojectlist[i].children[j].children[k].checked = true;
-                        //                modelprojectlist[i].children[j].spread = true;
-                        //                modelprojectlist[i].spread = true;
+                        //                modelprojectlistarea[i].children[j].children[k].checked = true;
+                        //                modelprojectlistarea[i].children[j].spread = true;
+                        //                modelprojectlistarea[i].spread = true;
                         //            }
                         //        }
                         //    }
@@ -69,7 +68,7 @@ layer.open({
                         RemoveEntitiesInViewer(projectentities);//移除项目标注图标 
 
                     }
-                    //tree.reload('areaprojectlistid', { data: modelprojectlist });
+                    //tree.reload('areaprojectlistid', { data: modelprojectlistarea });
                     //tree.setChecked('areaprojectlistid', obj.data.id); //单个勾选 id 为 1 的节点
 
                 }
@@ -307,9 +306,12 @@ function GetUserAllModelProjects(newprojectcode) {
 
     modelprojectlistarea = [];
     modelprojectlistyear = [];
+    //Loading
+    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
         url: servicesurl + "/api/ModelProject/GetUserModelProjectList", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
+            layer.close(loadinglayerindex);
             var result = JSON.parse(data);
             if (result.code == 1) {
 
@@ -618,6 +620,20 @@ function ModelProjectNodeClick(obj) {
             FlytoCurrentProjectExtent(obj.data.l, obj.data.b, 8000.0);
         }
     }
+    else if (obj.data.type == "task") {
+        var data = obj.data;
+        //目前暂缺判断data.checked是否为true
+        if (curtileset!=null) {
+            //缩放至模型
+            //判断是否有最佳视角
+            if (data.modelView != null && data.modelView.length > 0) {
+                var home = JSON.parse(data.modelView);
+                viewer.scene.camera.setView(home);
+            } else {
+                viewer.zoomTo(curtileset);
+            }
+        }
+    }
 
 };
 
@@ -646,11 +662,13 @@ function ModelMarkClick() {
                 var project_id = pick.id.id.split("_")[1];
                 tree_reload(project_id);
 
-
+                //Loading
+                var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                 //异步获取项目信息
                 $.ajax({
                     url: servicesurl + "/api/ModelProject/GetModelProjectInfo", type: "get", data: { "id": project_id, "cookie": document.cookie },
                     success: function (data) {
+                        layer.close(loadinglayerindex);
                         var result = JSON.parse(data);
                         if (result.code == 1) {
                             var modelprojectinfo = JSON.parse(result.data);
@@ -816,9 +834,12 @@ function ModelProjectNodeOperate(obj) {
             //项目删除操作del   
             if (obj.data.children.length >= 1) {
                 layer.confirm('当前项目存在子任务，是否确定删除?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                    //Loading
+                    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                     $.ajax({
                         url: servicesurl + "/api/ModelProject/DeleteModelProject", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
                         success: function (data) {
+                            layer.close(loadinglayerindex);
                             var result = JSON.parse(data);
                             //layer.msg(result.data, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                             layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -841,9 +862,12 @@ function ModelProjectNodeOperate(obj) {
 
             }
             else {
+                //Loading
+                var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                 $.ajax({
                     url: servicesurl + "/api/ModelProject/DeleteModelProject", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
                     success: function (data) {
+                        layer.close(loadinglayerindex);
                         var result = JSON.parse(data);
                         //layer.msg(result.data, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -866,10 +890,13 @@ function ModelProjectNodeOperate(obj) {
 
         }
         else if (obj.data.type == 'task') {
+            //Loading
+            var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
             //任务删除操作
             $.ajax({
                 url: servicesurl + "/api/ModelTask/DeleteTask", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
                 success: function (data) {
+                    layer.close(loadinglayerindex);
                     var result = JSON.parse(data);
                     //刷新项目列表
                     GetUserAllModelProjects();

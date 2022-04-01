@@ -91,10 +91,12 @@ function ModelProjectAuth() {
                                     data.field.modelprojectids = modelprojectids;
                                 }
                             }
-
+                            //Loading
+                            var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                             $.ajax({
                                 url: servicesurl + "/api/ModelProject/UpdateMapUserModelProject", type: "put", data: data.field,
                                 success: function (result) {
+                                    layer.close(loadinglayerindex);
                                     layer.msg("授权成功！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                                 }, datatype: "json"
                             });
@@ -113,9 +115,12 @@ function ModelProjectAuth() {
 
 //获取全部用户信息（除自己）
 function GetAllUserExceptSelf() {
+    //Loading
+    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
         url: servicesurl + "/api/User/GetUserExceptSelf", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
+            layer.close(loadinglayerindex);
             if (data == "") {
                 layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 userid = null;
@@ -143,9 +148,12 @@ function GetAllUserExceptSelf() {
                     }
                     else {
                         userid = data.value;
+                        //Loading
+                        var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                         $.ajax({
                             url: servicesurl + "/api/ModelProject/GetMapUserModelProject", type: "get", data: { "id": data.value },
                             success: function (data) {
+                                layer.close(loadinglayerindex);
                                 if (data == "") {
                                     for (var i in usermodelprojects) {
                                         usermodelprojects[i].checked = false;
@@ -182,9 +190,12 @@ function GetAllUserExceptSelf() {
 
 //获取用户全部模型项目
 function GetUserModelProjects() {
+    //Loading
+    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
         url: servicesurl + "/api/ModelProject/GetUserModelProjects", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
+            layer.close(loadinglayerindex);
             usermodelprojects = [];
 
             var result = JSON.parse(data);
