@@ -51,7 +51,7 @@ namespace SERVICE.Controllers
             #endregion
 
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 if (user == null)
                 {

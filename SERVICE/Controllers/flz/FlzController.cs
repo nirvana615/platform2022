@@ -38,7 +38,7 @@ namespace SERVICE.Controllers
 
             logger.Info("【" + cookieResult + "】cookieResult");
             
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 //有效cookie  ViewBag.User
                 List<FlzProject> projectList = new List<FlzProject>();
@@ -144,7 +144,7 @@ namespace SERVICE.Controllers
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
             #endregion
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 if (user == null)
                 {
@@ -384,7 +384,7 @@ namespace SERVICE.Controllers
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
 
                 string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM flz_window_info WHERE project_id={0}", id));
@@ -421,7 +421,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 FlzProject project = ParseFlzoneHelper.ParseProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM flz_project WHERE id={0}", id)));
                 if (project != null)
@@ -493,7 +493,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM flz_project WHERE id={0} ", id));
                 if (count == 1)

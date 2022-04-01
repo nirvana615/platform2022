@@ -89,8 +89,30 @@ function Load3DTiles(model) {
     recordDepthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;//记录加载3D Tiles前深度监测值
     viewer.scene.globe.depthTestAgainstTerrain = false;
 
+    var modelurl = datasurl + "/AllModel/" + model.MXLJ;
+    //删除上一个模型（保证只有一个模型）
 
+    //if (curtileset != null) {
+    //    viewer.scene.primitives.remove(curtileset);
+    //}
 
+    //添加模型
+    var curtileset = viewer.scene.primitives.add(new Cesium.Cesium3DTileset({
+        url: modelurl,
+        maximumScreenSpaceError: isMobile.any() ? 1 : 1,
+        maximumNumberOfLoadedTiles: isMobile.any() ? 1000 : 1000
+    }));
+
+    //缩放至模型
+    //判断是否有最佳视角
+    if (model.MXSJ != null) {
+        var home = JSON.parse(model.MXSJ);
+        viewer.scene.camera.setView(home);
+    } else {
+        viewer.zoomTo(curtileset);
+    }
+
+    return curtileset;
 };
 
 //卸载3D Tiles

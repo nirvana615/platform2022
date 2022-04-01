@@ -49,7 +49,7 @@ namespace SERVICE.Controllers
             #endregion
 
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 PCloudProject project = ParsePointCloudHelper.ParsePCloudProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM pointcloud_project WHERE id={0} AND ztm={1}", currentprojectid, (int)MODEL.Enum.State.InUse)));
 
@@ -151,7 +151,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
 
                     string tasklist = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM pointcloud_data_task WHERE projectid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));

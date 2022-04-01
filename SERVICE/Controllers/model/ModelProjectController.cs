@@ -69,7 +69,7 @@ namespace SERVICE.Controllers
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_user_project WHERE userid={0} AND ztm={1} ORDER BY id DESC", user.Id, (int)MODEL.Enum.State.InUse));
                 if (string.IsNullOrEmpty(maps))
@@ -235,7 +235,7 @@ namespace SERVICE.Controllers
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 if (user == null)
                 {
@@ -324,7 +324,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE id={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
                 if (count == 1)
@@ -389,7 +389,7 @@ namespace SERVICE.Controllers
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 //0del-project
                 int updateprojectcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_project SET ztm={0} WHERE id={1}", (int)MODEL.Enum.State.NoUse, id));
@@ -447,7 +447,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 List<ModelProjectInfo> modelProjectInfos = new List<ModelProjectInfo>();
 
@@ -541,7 +541,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 List<ModelProjectInfo> modelProjectInfos = new List<ModelProjectInfo>();
 
@@ -630,7 +630,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 ModelProject modelproject = ParseModelHelper.ParseModelProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM model_project WHERE id={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
                 if (modelproject != null)

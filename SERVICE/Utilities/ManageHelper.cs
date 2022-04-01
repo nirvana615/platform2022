@@ -24,7 +24,7 @@ namespace SERVICE
             #region 参数检查
             if (string.IsNullOrEmpty(connect))
             {
-                return CookieHelper.CookieResult.FailureCookkie;//无连接信息
+                return CookieHelper.CookieResult.FailureCookie;//无连接信息
             }
 
             if (string.IsNullOrEmpty(cookie))
@@ -74,7 +74,7 @@ namespace SERVICE
                 User user = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM manage_user WHERE username={0} AND password={1} AND ztm={2}", SQLHelper.UpdateString(userinfo[0]), SQLHelper.UpdateString(userinfo[2]), (int)MODEL.Enum.State.InUse)));
                 if (user == null)
                 {
-                    return CookieHelper.CookieResult.FailureCookkie;//验证用户失败
+                    return CookieHelper.CookieResult.FailureCookie;//验证用户失败
                 }
                 else
                 {
@@ -228,12 +228,12 @@ namespace SERVICE
                     }
                     #endregion
 
-                    return CookieHelper.CookieResult.SuccessCookkie;
+                    return CookieHelper.CookieResult.SuccessCookie;
                 }
             }
             catch
             {
-                return CookieHelper.CookieResult.FailureCookkie;//验证cookie出错
+                return CookieHelper.CookieResult.FailureCookie;//验证cookie出错
             }
         }
 
@@ -249,7 +249,7 @@ namespace SERVICE
             #region 参数检查
             if (string.IsNullOrEmpty(connect))
             {
-                return CookieHelper.CookieResult.FailureCookkie;//无连接信息
+                return CookieHelper.CookieResult.FailureCookie;//无连接信息
             }
 
             if (string.IsNullOrEmpty(cookie))
@@ -299,16 +299,16 @@ namespace SERVICE
                 user = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM manage_user WHERE username={0} AND password={1} AND ztm={2}", SQLHelper.UpdateString(userinfo[0]), SQLHelper.UpdateString(userinfo[2]), (int)MODEL.Enum.State.InUse)));
                 if (user == null)
                 {
-                    return CookieHelper.CookieResult.FailureCookkie;//验证用户失败
+                    return CookieHelper.CookieResult.FailureCookie;//验证用户失败
                 }
                 else
                 {
-                    return CookieHelper.CookieResult.SuccessCookkie;
+                    return CookieHelper.CookieResult.SuccessCookie;
                 }
             }
             catch
             {
-                return CookieHelper.CookieResult.FailureCookkie;//验证cookie出错
+                return CookieHelper.CookieResult.FailureCookie;//验证cookie出错
             }
         }
 
@@ -325,7 +325,7 @@ namespace SERVICE
             #region 参数检查
             if (string.IsNullOrEmpty(connect))
             {
-                return CookieHelper.CookieResult.FailureCookkie;//无连接信息
+                return CookieHelper.CookieResult.FailureCookie;//无连接信息
             }
 
             if (string.IsNullOrEmpty(cookie))
@@ -374,24 +374,24 @@ namespace SERVICE
                 user = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM manage_user WHERE username={0} AND password={1} AND ztm={2}", SQLHelper.UpdateString(userinfo[0]), SQLHelper.UpdateString(userinfo[2]), (int)MODEL.Enum.State.InUse)));
                 if (user == null)
                 {
-                    return CookieHelper.CookieResult.FailureCookkie;//验证用户失败
+                    return CookieHelper.CookieResult.FailureCookie;//验证用户失败
                 }
                 else
                 {
                     Systems sys = ParseManageHelper.ParseSystems(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM manage_system WHERE syscode=(SELECT syscode FROM manage_role WHERE rolealias={0})", SQLHelper.UpdateString(roleinfo))));
                     if (sys == null)
                     {
-                        return CookieHelper.CookieResult.FailureCookkie;
+                        return CookieHelper.CookieResult.FailureCookie;
                     }
 
                     syscode = sys.SysCode;
 
-                    return CookieHelper.CookieResult.SuccessCookkie;
+                    return CookieHelper.CookieResult.SuccessCookie;
                 }
             }
             catch
             {
-                return CookieHelper.CookieResult.FailureCookkie;//验证cookie出错
+                return CookieHelper.CookieResult.FailureCookie;//验证cookie出错
             }
         }
     }

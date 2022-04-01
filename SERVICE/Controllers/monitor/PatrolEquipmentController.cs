@@ -35,7 +35,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 string sql= "SELECT * FROM patrol_equipment_info WHERE project_id ={0}";
               
@@ -112,7 +112,7 @@ namespace SERVICE.Controllers
 
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE patrol_equipment_info " +
                     "SET bzwh={0},cgqgr={1},equipment_desc={2},flzz={3},jclz={4},patrol_desc={5},patrol_result={6},patrol_status={7},txxlph={8},tynzd={9},photo_name={10} WHERE id={11} "
@@ -144,7 +144,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 string sql = " select b.regionalboundary, b.regionname,d.id as projectId,d.xmmc,LEFT(c.cjsj,10) as xssj,c.id as pointDataId,c.regionid,c.xszt,c.xsjg,f.mxlj,h.level,h.vertical	from pointcloud_project_monitor_project a ,pointcloud_data_region b,pointcloud_data c,pointcloud_project d ,monitor_map_project_survey e ,survey_model f,pointcloud_data_polygoninfo h where a.mprojectid={0} and a.pcprojectid = b.projectid and b.id=c.regionid and a.pcprojectid=d.id and e.projectid=d.id and e.role='6' and e.surveyid=f.id and h.relateid=b.id ";
                 if (!string.IsNullOrEmpty(xmmc))
@@ -209,7 +209,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 string sql = "  SELECT a.changes,a.cjsj,LEFT(b.cjsj,10) as targetXssj,LEFT(c.cjsj,10) as sourceXssj from  pointcloud_data_task_changes a ,pointcloud_data b,pointcloud_data c   WHERE targetid={0} and a.targetid=b.id and a.sourceid=c.id ";
 
@@ -262,7 +262,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 string sql = " SELECT a.dymc,a.dylj from survey_pointcloud a ,pointcloud_project_survey b where b.surveyid=a.id and b.regionid={0}  ";
 
@@ -317,7 +317,7 @@ namespace SERVICE.Controllers
 
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE pointcloud_data SET xszt={0},xsjg={1} WHERE id={2} ", SQLHelper.UpdateString(xszt), SQLHelper.UpdateString(xsjg), SQLHelper.UpdateString(id)));
                 if (updatecount == 1)
@@ -625,7 +625,7 @@ namespace SERVICE.Controllers
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
             #endregion
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 if (user == null)
                 {

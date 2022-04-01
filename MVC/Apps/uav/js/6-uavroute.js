@@ -2335,6 +2335,13 @@ function updateroutetree() {
 //添加起飞点（模型）
 function AddTakeOffModel(type) {
     $("#uav-route-add-takeoff").on("click", function () {
+
+
+
+
+
+
+
         if (current_project_tile == null) {
             layer.msg("请加载项目三维实景模型！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         }

@@ -350,7 +350,8 @@ function UavProjectNodeCheck(obj) {
     if (obj.checked) {
         //选中
         if (obj.data.type == "uavsurmodel") {
-            LoadModel(obj.data);//加载实景模型
+            //LoadModel(obj.data);//加载实景模型
+            current_project_tile=Load3DTiles(obj.data.data);
         }
         else if (obj.data.type == "uavroute") {
 

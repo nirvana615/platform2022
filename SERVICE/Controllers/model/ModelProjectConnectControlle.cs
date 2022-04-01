@@ -31,7 +31,7 @@ namespace SERVICE.Controllers
 
             //string username = user.UserName;
             //int userid = user.Id;
-            //if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            //if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             //{
             //    List<ModelProject> modelProjectLists = new List<ModelProject>();
 
@@ -98,7 +98,7 @@ namespace SERVICE.Controllers
             int syscode = 0;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user, ref syscode);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 if (string.IsNullOrEmpty(modelprojectids))  //选项为空
                 {
@@ -191,7 +191,7 @@ namespace SERVICE.Controllers
             User user = null;
             int syscode = 0;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user, ref syscode);
-            if (cookieResult == CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == CookieHelper.CookieResult.SuccessCookie)
             {
                 string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT modelprojectid FROM model_map_project_modelproject WHERE projectid={0} AND syscode={1} AND ztm={2}", currentprojectid, syscode, (int)MODEL.Enum.State.InUse));
                 if (!string.IsNullOrEmpty(maps))

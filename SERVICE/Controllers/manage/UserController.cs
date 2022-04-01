@@ -63,7 +63,7 @@ namespace SERVICE.Controllers
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user);
 
-            if (cookieResult == CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == CookieHelper.CookieResult.SuccessCookie)
             {
                 if (user == null)
                 {
@@ -91,7 +91,7 @@ namespace SERVICE.Controllers
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 if (user != null)
                 {
@@ -458,7 +458,7 @@ namespace SERVICE.Controllers
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
-            if (cookieResult == CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == CookieHelper.CookieResult.SuccessCookie)
             {
                 if (newpassword1 == newpassword2)
                 {

@@ -131,53 +131,53 @@ function EditUavProject(uavprojectdata) {
                 , initSort: { field: 'id', type: 'asc' }
                 , cols: [[
                     { field: 'id', title: 'ID', hide: true }
-                    , { field: 'zhtmc', title: '灾害体名称', align: "center" }
-                    , { field: 'zhtbh', title: '灾害体编号', align: "center" }
-                    , { field: 'zhtlx', title: '灾害体类型', align: "center" }
-                    , { field: 'zxjd', title: '中心经度', align: "center" }
-                    , { field: 'zxwd', title: '中心纬度', align: "center" }
+                    , { field: 'zhtmc', title: '任务名称', align: "center" }
+                    , { field: 'zhtbh', title: '任务编码', align: "center" }
+                    , { field: 'zhtlx', title: '采集时间', align: "center" }
                     , { field: 'bz', title: '备注', align: "center" }
                     , { fixed: 'right', width: 80, align: 'center', toolbar: '#table-toolbar-model' }
                 ]]
                 , data: modeltabledata
             });
-            //$.ajax({
-            //    url: servicesurl + "/api/Disaster/GetDisaster", type: "get", data: { "id": id, "cookie": document.cookie },
-            //    success: function (data) {
-            //        disastertabledata = [];
-            //        if (data == "") {
-            //            //无灾害体信息
-            //            disasterviewtable.reload({ id: 'disasterviewtableid', data: disastertabledata });
-            //        }
-            //        else {
-            //            var disasterInfos = JSON.parse(data);
 
-            //            //构造灾害体表格数据
-            //            for (var i in disasterInfos) {
-            //                var disaster = new Object;
-            //                disaster.id = disasterInfos[i].Id;
-            //                disaster.zhtmc = disasterInfos[i].ZHTMC;
-            //                disaster.zhtbh = disasterInfos[i].ZHTBH;
-            //                disaster.zhtlx = disasterInfos[i].ZHTLX;
-            //                disaster.zxjd = disasterInfos[i].ZXJD;
-            //                disaster.zxwd = disasterInfos[i].ZXWD;
-            //                disaster.bz = disasterInfos[i].BZ;
-            //                disastertabledata.push(disaster);
-            //            }
-            //            disasterviewtable.reload({ id: 'disasterviewtableid', data: disastertabledata });
+            $.ajax({
+                url: servicesurl + "/api/ModelTask/GetUserUseModels", type: "get", data: { "syscode": 3, "cookie": document.cookie },
+                success: function (data) {
+                    modeltabledata = [];
 
-            //            table.on('tool(disaster-view)', function (obj) {
-            //                var data = obj.data;
-            //                var layEvent = obj.event;
+                    if (data == "") {
+                        //无灾害体信息
+                        modeledittable.reload({ id: 'uavprojectmodeltableid', data: modeltabledata });
+                    }
+                    else {
+                        var disasterInfos = JSON.parse(data);
 
-            //                if (layEvent === 'disasterview') {
-            //                    //灾害体信息
-            //                    DisasterInfoView(obj.data);
-            //                }
-            //            });
-            //        }
-            //    }, datatype: "json"
-            //});
+                        //构造灾害体表格数据
+                        for (var i in disasterInfos) {
+                            var disaster = new Object;
+                            disaster.id = disasterInfos[i].Id;
+                            disaster.zhtmc = disasterInfos[i].ZHTMC;
+                            disaster.zhtbh = disasterInfos[i].ZHTBH;
+                            disaster.zhtlx = disasterInfos[i].ZHTLX;
+                            disaster.zxjd = disasterInfos[i].ZXJD;
+                            disaster.zxwd = disasterInfos[i].ZXWD;
+                            disaster.bz = disasterInfos[i].BZ;
+                            disastertabledata.push(disaster);
+                        }
+                        modeledittable.reload({ id: 'uavprojectmodeltableid', data: modeltabledata });
+
+                        table.on('tool(disaster-view)', function (obj) {
+                            var data = obj.data;
+                            var layEvent = obj.event;
+
+                            if (layEvent === 'disasterview') {
+                                //灾害体信息
+                                DisasterInfoView(obj.data);
+                            }
+                        });
+                    }
+                }, datatype: "json"
+            });
 
 
 

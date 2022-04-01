@@ -51,7 +51,7 @@ namespace SERVICE.Controllers
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref userbsms);
             #endregion
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 ImageProject imageProject = ParseImageHelper.ParseImageProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM image_project WHERE id={0} AND bsm{1} AND ztm={2}", projectid, userbsms, (int)MODEL.Enum.State.InUse)));
                 if (imageProject == null)
@@ -120,7 +120,7 @@ namespace SERVICE.Controllers
         {
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 Target imagetarget = ParseImageHelper.ParseTarget(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM image_target WHERE id={0} AND ztm={1} AND bsm{2}", id, (int)MODEL.Enum.State.InUse, userbsms)));
                 if (imagetarget != null)
@@ -164,7 +164,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM image_target WHERE id={0} AND ztm={1} AND bsm{2}", id, (int)MODEL.Enum.State.InUse, userbsms));
 
@@ -235,7 +235,7 @@ namespace SERVICE.Controllers
             string id = HttpContext.Current.Request.Form["id"];
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int updatetargetcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE image_target SET ztm={0} WHERE id={1}", (int)MODEL.Enum.State.NoUse, id));
                 if (updatetargetcount == 1)
@@ -275,7 +275,7 @@ namespace SERVICE.Controllers
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref userbsms);
             #endregion
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 Target target = ParseImageHelper.ParseTarget(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM image_target WHERE id={0} AND bsm{1} AND ztm={2}", targetid, userbsms, (int)MODEL.Enum.State.InUse)));
                 if (target == null)
@@ -332,7 +332,7 @@ namespace SERVICE.Controllers
         {
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == CookieHelper.CookieResult.SuccessCookie)
             {
                 int roicount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM image_map_target_roi WHERE targetid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
                 if (roicount != 0)
@@ -404,7 +404,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int roicount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM image_roi WHERE id={0} AND ztm={1} AND bsm{2}", id, (int)MODEL.Enum.State.InUse, userbsms));
 
@@ -465,7 +465,7 @@ namespace SERVICE.Controllers
             string cookie = HttpContext.Current.Request.Form["cookie"];
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int updateroicount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE image_roi SET ztm={0} WHERE id={1} AND bsm{2}", (int)MODEL.Enum.State.NoUse, id, userbsms));
                 if (updateroicount == 1)
@@ -535,7 +535,7 @@ namespace SERVICE.Controllers
         {
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == CookieHelper.CookieResult.SuccessCookie)
             {
                 List<Target> targets = new List<Target>();
                 

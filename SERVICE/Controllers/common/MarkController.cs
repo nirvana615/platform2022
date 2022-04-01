@@ -34,7 +34,7 @@ namespace SERVICE.Controllers
 
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie,ref user,ref syscode);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 if (user == null)
                 {
@@ -125,7 +125,7 @@ namespace SERVICE.Controllers
             int syscode = 0;
 
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user, ref syscode);
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 string sql = "select b.id,b.text,a.projectid,b.type,b.style, b.color,b.pos,b.info from common_map_project_mark a,common_mark b where a.markid=b.id AND ";
                 if (markprojectid!=null)
@@ -176,7 +176,7 @@ namespace SERVICE.Controllers
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  common_mark  WHERE id={0}AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
                 if (updatecount == 1)
@@ -213,7 +213,7 @@ namespace SERVICE.Controllers
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(" UPDATE common_mark set text={0} ,color={1},style={2},pos={3} where id={4}", SQLHelper.UpdateString(title),SQLHelper.UpdateString(color), SQLHelper.UpdateString(style), SQLHelper.UpdateString(position),id));
                 if (updatecount == 1)

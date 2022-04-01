@@ -666,7 +666,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 string starttime = string.Empty;//开始时间（含）
                 string endtime = string.Empty;//结束时间（含）
@@ -697,7 +697,7 @@ namespace SERVICE.Controllers
             else
             {
                 //验权失败
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, COM.CookieHelper.CookieResult.SuccessCookkie.GetRemark(), string.Empty));
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, COM.CookieHelper.CookieResult.SuccessCookie.GetRemark(), string.Empty));
             }
         }
 
@@ -715,7 +715,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 try
                 {
@@ -742,7 +742,7 @@ namespace SERVICE.Controllers
             else
             {
                 //验权失败
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, COM.CookieHelper.CookieResult.SuccessCookkie.GetRemark(), string.Empty));
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, COM.CookieHelper.CookieResult.SuccessCookie.GetRemark(), string.Empty));
             }
         }
 

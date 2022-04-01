@@ -65,7 +65,7 @@ namespace SERVICE.Controllers
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref userbsms);
             #endregion
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 Target target = ParseImageHelper.ParseTarget(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM image_target WHERE id={0} AND bsm{1} AND ztm={2}", targetid, userbsms, (int)MODEL.Enum.State.InUse)));
                 if (target != null)
@@ -268,7 +268,7 @@ namespace SERVICE.Controllers
         {
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == CookieHelper.CookieResult.SuccessCookie)
             {
                 int imagecount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM image_map_target_imageinfo WHERE targetid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
                 if (imagecount != 0)
@@ -327,7 +327,7 @@ namespace SERVICE.Controllers
         {
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == CookieHelper.CookieResult.SuccessCookie)
             {
                 string imgpath = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT yxlj FROM image_imageinfo WHERE id={0} AND ztm={1} AND bsm{2}", id, (int)MODEL.Enum.State.InUse, userbsms));
 
@@ -376,7 +376,7 @@ namespace SERVICE.Controllers
             string cookie = HttpContext.Current.Request.Form["cookie"];
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int updatetimeimagecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE image_imageinfo SET ztm={0} WHERE id={1} AND bsm{2}", (int)MODEL.Enum.State.NoUse, id, userbsms));
                 if (updatetimeimagecount == 1)
@@ -414,7 +414,7 @@ namespace SERVICE.Controllers
         {
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == CookieHelper.CookieResult.SuccessCookie)
             {
                 //查询项目影像id
                 string imgProjectId = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT img_projectid FROM image_map_project_monitor_project WHERE mon_projectid={0} ", id));
@@ -503,7 +503,7 @@ namespace SERVICE.Controllers
 
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE image_imageinfo SET xszt={0},xsjg={1} WHERE id={2} " ,  SQLHelper.UpdateString(xszt), SQLHelper.UpdateString(xsjg), SQLHelper.UpdateString(id)));
                if (updatecount == 1)
@@ -606,7 +606,7 @@ namespace SERVICE.Controllers
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref userbsms);
             #endregion
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
 
                 #region 参数检查

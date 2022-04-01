@@ -71,7 +71,7 @@ namespace SERVICE.Controllers
 
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 MonitorProjectString projectString = ParseMonitorHelper.ParseMonitorProjectString(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_project WHERE id={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
                 if (projectString != null)

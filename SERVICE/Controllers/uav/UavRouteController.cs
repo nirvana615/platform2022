@@ -33,7 +33,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 List<UavRoute> uavRoutes = new List<UavRoute>();
 
@@ -96,7 +96,7 @@ namespace SERVICE.Controllers
             string info = string.Empty;//消息
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 #region 无人机
                 UavDrone uavDrone = ParseUavHelper.ParseUavDrone(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_drone WHERE id={0} AND ztm={1}", drone, (int)MODEL.Enum.State.InUse)));
@@ -3557,7 +3557,7 @@ namespace SERVICE.Controllers
 
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 #region 路径
                 UavProject uavProject = ParseUavHelper.ParseUavProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_project WHERE id={0} AND bsm{1} AND ztm={2}", uavprojectid, userbsms, (int)MODEL.Enum.State.InUse)));
@@ -3577,8 +3577,8 @@ namespace SERVICE.Controllers
                     pzsl,
                     SQLHelper.UpdateString(line),
                     SQLHelper.UpdateString(mis),
-                    SQLHelper.UpdateString(pilot),
-                    SQLHelper.UpdateString(terra),
+                    SQLHelper.UpdateString(""),//SQLHelper.UpdateString(pilot),
+                    SQLHelper.UpdateString(""),//SQLHelper.UpdateString(terra),
                     SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
                     SQLHelper.UpdateString(uavProject.BSM),
                     (int)MODEL.Enum.State.InUse,
@@ -3752,7 +3752,7 @@ namespace SERVICE.Controllers
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_route SET ztm={0} WHERE id={1}", (int)MODEL.Enum.State.NoUse, id));
                 if (updatecount == 1)
