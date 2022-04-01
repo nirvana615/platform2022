@@ -900,8 +900,10 @@ namespace MODEL
                     JXSID = null,
                     CJSJ = row[9].ToString(),
                     BSM = row[10].ToString(),
-                    BZ = row[12].ToString()
-                };
+                    BZ = row[12].ToString(),
+                    sn = row[14].ToString(),
+                    sim = row[15].ToString()
+            };
 
                 if (!string.IsNullOrEmpty(row[6].ToString()))
                 {
@@ -919,6 +921,7 @@ namespace MODEL
                 {
                     device.Mark = Convert.ToInt16(row[13].ToString());
                 }
+               
 
                 return device;
             }
@@ -4669,6 +4672,10 @@ namespace MODEL
                     InitialAngle = row[9].ToString(),
                     snNo = row[10].ToString(),
                     flagReport = row[11].ToString(),
+                    Installer = row[12].ToString(),
+                    preparer = row[13].ToString(),
+                    InstallTime = row[14].ToString(),
+                    preparlTime = row[15].ToString(),
 
                 };
                 return constPhotoInfo;

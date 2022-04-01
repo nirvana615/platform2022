@@ -15,6 +15,8 @@ using DAL;
 using MODEL;
 using MODEL.Entity;
 
+using Spire.Doc;
+
 namespace SERVICE.Controllers
 {
     /// <summary>
@@ -2750,7 +2752,7 @@ namespace SERVICE.Controllers
             string devs = monitorController.GetMonitor(Convert.ToInt32(id), cookie);
 
             List<MonitorInfo> monitorInfo = COM.JsonHelper.StringToObject<List<MonitorInfo>>(devs);//"GNSS监测站
-
+            List<string> docName = new List<string>();
             for (int j = 0; j < monitorInfo.Count; j++)
             {
                 MonitorString monitorString = monitorInfo[j].MonitorString;
@@ -2758,6 +2760,7 @@ namespace SERVICE.Controllers
                 string sql = "SELECT * FROM const_photo_info WHERE monitor_id ={0} and flag_report='1' ORDER BY type ";
                 string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(monitorString.Id+"")));
                 List<ConstPhotoInfo> constPhotoInfoList = new List<ConstPhotoInfo>();//相片集合
+                ConstPhotoInfo constPhotoIn = new ConstPhotoInfo();//发送报告的信息
                 if (!string.IsNullOrEmpty(datas))
                 {
                     string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
@@ -2767,10 +2770,29 @@ namespace SERVICE.Controllers
                         if (constPhotoInfo != null)
                         {
                             constPhotoInfoList.Add(constPhotoInfo);
-
+                            if (constPhotoInfo.type=="1")
+                            {
+                                constPhotoIn = constPhotoInfo;
+                            }
                         }
                     }
                 };
+                //查询设备信息
+                string sqldevice = "select a.* from monitor_device a,monitor_map_monitor_device b where a.id=b.deviceid and b.monitorid={0}";
+                string deviceDatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sqldevice, SQLHelper.UpdateString(monitorString.Id + "")));
+                //ParseMonitorHelper.ParseDevice
+                Device device = ParseMonitorHelper.ParseDevice(deviceDatas);
+                //场家名称
+                string factoryName = "";
+                if (device!=null)
+                {
+                    if (device.CJID!=null)
+                    {
+                        factoryName = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("select cjmc from monitor_devicefactory where id={0}", SQLHelper.UpdateString(device.CJID + "")));
+                    }
+                }
+                //NB-IoT/
+
                 WordMLHelper wordMLHelper = new WordMLHelper();
                 List<TagInfo> tagInfos = wordMLHelper.GetAllTagInfo(File.OpenRead(templatePath));//打开模板文件,获取所有填充域
 
@@ -2790,6 +2812,16 @@ namespace SERVICE.Controllers
                             tagInfos[i].AddContent(txtInfo);
                             continue;
                         }
+                        if (string.Equals(tagInfos[i].TagTips.Trim(), "[监测方法]"))
+                        {
+                            TxtInfo txtInfo = new TxtInfo();
+                            txtInfo.Content = monitorString.JCFF;
+                            txtInfo.Size = 32;
+                            txtInfo.Bold = "true";
+                            txtInfo.FontFamily = "仿宋";
+                            tagInfos[i].AddContent(txtInfo);
+                            continue;
+                        }
                         if (string.Equals(tagInfos[i].TagTips.Trim(), "[项目名称]"))
                         {
                             TxtInfo txtInfo = new TxtInfo();
@@ -2799,6 +2831,7 @@ namespace SERVICE.Controllers
                             tagInfos[i].AddContent(txtInfo);
                             continue;
                         }
+
                     }
                     else
                     {
@@ -2824,6 +2857,7 @@ namespace SERVICE.Controllers
                                     txtInfo.Content = monitorString.JCDBH;
                                     txtInfo.FontFamily = "仿宋";
                                     zzz.AddContent(txtInfo);
+                                    continue;
                                 }
                                 if (zzz.Tips == "x")
                                 {
@@ -2832,6 +2866,7 @@ namespace SERVICE.Controllers
                                     txtInfo.Content = monitorString.PMWZX;
                                     txtInfo.FontFamily = "仿宋";
                                     zzz.AddContent(txtInfo);
+                                    continue;
                                 }
                                 if (zzz.Tips == "y")
                                 {
@@ -2840,6 +2875,7 @@ namespace SERVICE.Controllers
                                     txtInfo.Content = monitorString.PMWZY;
                                     txtInfo.FontFamily = "仿宋";
                                     zzz.AddContent(txtInfo);
+                                    continue;
                                 }
                                 if (zzz.Tips == "h")
                                 {
@@ -2848,13 +2884,173 @@ namespace SERVICE.Controllers
                                     txtInfo.Content = monitorString.GC;
                                     txtInfo.FontFamily = "仿宋";
                                     zzz.AddContent(txtInfo);
+                                    continue;
                                 }
-                                if (zzz.Tips == "1"&& constPhotoInfoList.Count>1)
+                                if (zzz.Tips == "YQXH")//仪器型号
+                                {
+                                    
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    if (device.SBXH != "")
+                                    {
+                                        txtInfo.Content = device.SBXH;
+                                    }
+                                    else
+                                    {
+                                        txtInfo.Content = "";
+                                    }
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                    continue;
+                                }
+                                if (zzz.Tips == "YQBH")//仪器编号
+                                {
+
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    if (device.sn != "")
+                                    {
+                                        txtInfo.Content = device.SBXH;
+                                    }
+                                    else
+                                    {
+                                        txtInfo.Content = "";
+                                    }
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                    continue;
+                                }
+                                if (zzz.Tips == "SIM")//电话号码
+                                {
+
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    if (device.sim != "")
+                                    {
+                                        txtInfo.Content = "NB-IoT/"+device.sim;
+                                    }
+                                    else
+                                    {
+                                        txtInfo.Content = "NB-IoT/";
+                                    }
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                    continue;
+                                }
+                                if (zzz.Tips == "SCCJ")//生产厂家
+                                {
+
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    if (factoryName != "")
+                                    {
+                                        txtInfo.Content = factoryName;
+                                    }
+                                    else
+                                    {
+                                        txtInfo.Content = "";
+                                    }
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                    continue;
+                                }
+                                //
+
+                                if (zzz.Tips == "AZRY")//安装人员
+                                {
+
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    if (constPhotoIn!=null&& constPhotoIn.Installer != "")
+                                    {
+                                        txtInfo.Content = constPhotoIn.Installer;
+                                    }
+                                    else
+                                    {
+                                        txtInfo.Content = "";
+                                    }
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                    continue;
+                                }
+
+                                if (zzz.Tips == "AZRY")//安装人员
+                                {
+
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    if (constPhotoIn != null && constPhotoIn.Installer != "")
+                                    {
+                                        txtInfo.Content = constPhotoIn.Installer;
+                                    }
+                                    else
+                                    {
+                                        txtInfo.Content = "";
+                                    }
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                    continue;
+                                }
+
+                                if (zzz.Tips == "AZRQ")//安装时间
+                                {
+
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    if (constPhotoIn != null && constPhotoIn.InstallTime != "")
+                                    {
+                                        txtInfo.Content = constPhotoIn.InstallTime;
+                                    }
+                                    else
+                                    {
+                                        txtInfo.Content = "";
+                                    }
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                    continue;
+                                }
+
+                                if (zzz.Tips == "TBR")//调表人
+                                {
+
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    if (constPhotoIn != null && constPhotoIn.preparer != "")
+                                    {
+                                        txtInfo.Content = constPhotoIn.preparer;
+                                    }
+                                    else
+                                    {
+                                        txtInfo.Content = "";
+                                    }
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                    continue;
+                                }
+
+                                if (zzz.Tips == "TBRQ")//调表riqi
+                                {
+
+                                    TxtInfo txtInfo = new TxtInfo();
+                                    txtInfo.Size = 23;
+                                    if (constPhotoIn != null && constPhotoIn.preparlTime != "")
+                                    {
+                                        txtInfo.Content = constPhotoIn.preparlTime;
+                                    }
+                                    else
+                                    {
+                                        txtInfo.Content = "";
+                                    }
+                                    txtInfo.FontFamily = "仿宋";
+                                    zzz.AddContent(txtInfo);
+                                    continue;
+                                }
+                                if (zzz.Tips == "1" && constPhotoInfoList.Count > 1)
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[0].photoUrl;
-                                    imgInfo.Width = 250;
+                                    imgInfo.Width = 120;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
@@ -2863,7 +3059,7 @@ namespace SERVICE.Controllers
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[1].photoUrl;
-                                    imgInfo.Width = 250;
+                                    imgInfo.Width = 120;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
@@ -2872,7 +3068,7 @@ namespace SERVICE.Controllers
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[2].photoUrl;
-                                    imgInfo.Width = 250;
+                                    imgInfo.Width = 120;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
@@ -2881,7 +3077,7 @@ namespace SERVICE.Controllers
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[3].photoUrl;
-                                    imgInfo.Width = 250;
+                                    imgInfo.Width = 120;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
@@ -2890,7 +3086,7 @@ namespace SERVICE.Controllers
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[4].photoUrl;
-                                    imgInfo.Width = 250;
+                                    imgInfo.Width = 120;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
@@ -2899,7 +3095,7 @@ namespace SERVICE.Controllers
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[5].photoUrl;
-                                    imgInfo.Width = 250;
+                                    imgInfo.Width = 120;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
@@ -2908,7 +3104,7 @@ namespace SERVICE.Controllers
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[6].photoUrl;
-                                    imgInfo.Width = 250;
+                                    imgInfo.Width = 120;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
@@ -2917,7 +3113,7 @@ namespace SERVICE.Controllers
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[7].photoUrl;
-                                    imgInfo.Width = 250;
+                                    imgInfo.Width = 120;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
 
@@ -2925,85 +3121,17 @@ namespace SERVICE.Controllers
                             }
 
                         }
-                        //RowStructureInfo row1 = xyz1[0];
-                        //List<CellStructureInfo> mhn1 = row1.Cells;
-                        //CellStructureInfo zzz = mhn1[0];
-
-
-                        if (tagInfos[i].Seq == 1)
-                        {
-                            tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
-                            TableStructureInfo tblInfo = tagInfos[i].Tbl;
-                            List<RowStructureInfo> xyz = tblInfo.Rows;
-                            logger.Info("【" + xyz.Count + "】xyz.Count");
-                            int xy = 0;
-                            for (int m = 0; m < xyz.Count; m++)
-                            {
-                                RowStructureInfo row = xyz[m];
-                                List<CellStructureInfo> mhn = row.Cells;
-                                for (int n = 0; n < mhn.Count; n++)
-                                {
-                                    if (m == 0 && n == 0)
-                                    {
-                                        continue;
-                                    }
-
-                                    if (xy < constPhotoInfoList.Count)
-                                    {
-                                        //ImgInfo imgInfo = new ImgInfo();
-                                        //imgInfo.ImgPath = imgdir + constPhotoInfoList[xy].photoUrl;
-                                        //imgInfo.Width = 220;
-                                        //imgInfo.Height = 120;
-                                        //mhn[n].AddContent(imgInfo);
-                                        TxtInfo txtInfo = new TxtInfo();
-                                        txtInfo.Size = 20;
-                                        txtInfo.Content = constPhotoInfoList[xy].photoUrl;
-                                        mhn[n].AddContent(txtInfo);
-                                        xy++;
-                                    }
-
-
-
-
-                                }
-
-                            }
-                            //TableStructureInfo tblInfo = tagInfos[i].Tbl;
-                            //for (int m = 0; m < 4; m++)
-                            //{
-
-                            //     RowStructureInfo row = new RowStructureInfo();
-                            //    for (int k = 1; k < 3; k++)
-                            //    {
-
-                            //        CellStructureInfo cell = new CellStructureInfo();
-                            //        TxtInfo txtInfo = new TxtInfo();
-                            //        txtInfo.Content = "1111111111";
-                            //        txtInfo.Size = 20;
-                            //        cell.AddContent(txtInfo);
-                            //        row.AddCell(cell);
-                            //    }
-                            //    tblInfo.AddRow(row);
-                            //}
-
-
-                        }
-                        if (tagInfos[i].Seq == 3)
-                        {
-                            tagInfos[i].Tbl.TblType = TblType.HORIZONTAL_VERTICAL_HEADER;
-
-
-                        }
+                     
                     }
                 }
-                //2021年11月下旬旬报
+                
 
-                string outputPath = monitorString.JCDMC+"111111111111.docx";
+                string outputPath = monitorString.JCDMC+".docx";
                 if (!string.IsNullOrEmpty(outputPath))
                 {
 
                     string templateOutPath = imgdir + "/SurImage/Download/" + outputPath;
-
+                    docName.Add(templateOutPath);
                     wordMLHelper.GenerateWordDocument(File.OpenRead(templatePath)
                         , templateOutPath
                         , tagInfos);
@@ -3011,13 +3139,18 @@ namespace SERVICE.Controllers
                     Assistance.RemoveAllTmpFile();// 删除所有临时文件
                 }
             }
+            Document doc = new Document(docName[0]);
+            for (int i=1;i< docName.Count;i++)
+            {
+                doc.InsertTextFromFile(docName[i], FileFormat.Docx2013);
+            }
+            
+            //保存文档
+            doc.SaveToFile(imgdir + "/SurImage/Download/"  + projectString.XMMC+"施工安装记录表.docx", FileFormat.Docx2013);
 
 
-           
-
-            return "222";
-            //无效cookie
-            //  return HttpContext.Current.Request.MapPath(outputPath).Replace("\\api\\FlzWordWxpert", string.Empty).ToString();
+            return projectString.XMMC + "施工安装记录表.docx";
+          
 
         }
     }

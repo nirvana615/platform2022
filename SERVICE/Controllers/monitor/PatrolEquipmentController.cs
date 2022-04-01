@@ -616,6 +616,10 @@ namespace SERVICE.Controllers
             #region 参数
             string constPhotoIdList = HttpContext.Current.Request.Form["constPhotoIdList"];
             string monitorId = HttpContext.Current.Request.Form["monitorId"];
+            string InstallTime = HttpContext.Current.Request.Form["InstallTime"];
+            string Installer = HttpContext.Current.Request.Form["Installer"];
+            string preparTime = HttpContext.Current.Request.Form["preparTime"];
+            string preparer = HttpContext.Current.Request.Form["preparer"];
 
 
             #endregion
@@ -645,6 +649,7 @@ namespace SERVICE.Controllers
                     {         
                         id = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE   const_photo_info SET flag_report='1'  WHERE id={0}", SQLHelper.UpdateString(rows[j])));
                     }
+                    id = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE   const_photo_info SET stall_time={0},staller={1},preparl_time={2},preparer={3}  WHERE monitor_id={4} and type='1' ", SQLHelper.UpdateString(InstallTime), SQLHelper.UpdateString(Installer), SQLHelper.UpdateString(preparTime), SQLHelper.UpdateString(preparer), SQLHelper.UpdateString(monitorId)));
                     if (id != -1)
                     {
                         return "选择成功";

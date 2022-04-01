@@ -65,5 +65,21 @@ namespace MODEL
         ///是否用于报告
         /// </summary>
         public string flagReport { get; set; }
+        /// <summary>
+        ///安装人员
+        /// </summary>
+        public string Installer { get; set; }
+        /// <summary>
+        ///跳表人
+        /// </summary>
+        public string preparer { get; set; }
+        /// <summary>
+        ///安装时间
+        /// </summary>
+        public string InstallTime { get; set; }
+        /// <summary>
+        ///填表时间
+        /// </summary>
+        public string preparlTime { get; set; }
     }
 }

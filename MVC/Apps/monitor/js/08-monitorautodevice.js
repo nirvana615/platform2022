@@ -6,6 +6,7 @@ var monitordevicechart = null;
 var currentdevicemonitor = null;//当前设备
 var laytpl = layui.laytpl;
 var viewerPhoto = null;
+var constPhotolayerindex = null;
 //自动化监测设备widget
 function LoadAutoDeviceLayer(projectid) {
     if (projectid == null) {
@@ -296,7 +297,7 @@ function FuConstPhotoData(projectid) {
         , totalRow: false
         , cols: [[
             { type: 'numbers', title: '序号', width: 123, fixed: 'left', align: "center" }
-            , { field: 'JCDMC', title: '监测点名称', width: 280, align: "center" }
+            , { field: 'JCDMC', title: '监测点名称', width: 180, align: "center" }
             , { field: 'JCDBH', title: '监测点编号', width: 180, align: "center" }
             , {
                 field: 'mointorStatus', title: '施工进度', width: 220, align: "center", templet: function (row) {
@@ -318,8 +319,9 @@ function FuConstPhotoData(projectid) {
 
                     //得到当前行数据，并拼接成自定义模板
 
-                } }
-         
+                }
+            }
+            , { field: 'yiXuan', title: '已选照片', width: 100, align: "center" }
             , { width: 120, align: 'center', toolbar: '#table-toolbar-const' }
             , { width: 120, align: 'center', toolbar: '#table-toolbar-const' }
         ]]
@@ -364,24 +366,30 @@ function FuConstPhotoData(projectid) {
                 layer.msg("该监测点还未开始放样", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 return;
             }
-            adddevicelayerindex = layer.open({
+            if (constPhotolayerindex!=null) {
+                layer.msg("已打开照片片查看窗口", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return;
+            }
+            constPhotolayerindex = layer.open({
                 type: 1
                 , title: [obj.data.JCDMC + '施工照片', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['800px', '500px']
-                , shade: [0.5, '#393D49']
+                , area: ['800px', '600px']
+                ,shade: false
                 , offset: 'auto'
                 , closeBtn: 1
                 , maxmin: false
-                , content: '<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">        <!--标签-->        <ul class="layui-tab-title">            <li class="layui-this" style="width:35px">放样</li>            <li style="width:35px">挖坑</li>            <li style="width:35px">浇筑</li>            <li style="width:35px">安装</li>            <li style="width:35px">调试</li>            <li style="width:35px">完成</li>            <li style="width:35px">合格证</li><li style="width:35px">处理</li>         </ul>        <!--内容-->        <div class="layui-tab-content">            <div class="layui-tab-item layui-show">                <div class="layim-chat-main">                    <ul id="yiFangYang"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWaKeng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiJiaoZhu"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiligan"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yitiaoshi"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWanCheng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="qita"></ul>                </div>            </div><div class="layui-tab-item">                <div class="layim-chat-main">                    <form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="projectCheckedinfoform"> <div class="layui-form-item"><div class=" layui-form" id="checkUserId">     </div></div>  <div class="layui-form-item" style="margin:25px 0px 25px 0px;"><div style="position:absolute;right:160px;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="projectCheckedSubmit" style="width:80px">提交</button></div></div></form>                </div>            </div>        </div>    </div>'
+                , content: '<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">        <!--标签-->        <ul class="layui-tab-title">            <li class="layui-this" style="width:35px">放样</li>            <li style="width:35px">挖坑</li>            <li style="width:35px">浇筑</li>            <li style="width:35px">安装</li>            <li style="width:35px">调试</li>            <li style="width:35px">完成</li>            <li style="width:35px">合格证</li><li style="width:35px">处理</li>         </ul>        <!--内容-->        <div class="layui-tab-content">            <div class="layui-tab-item layui-show">                <div class="layim-chat-main">                    <ul id="yiFangYang"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWaKeng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiJiaoZhu"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiligan"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yitiaoshi"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWanCheng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="qita"></ul>                </div>            </div><div class="layui-tab-item">                <div class="layim-chat-main">                    <form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="projectCheckedinfoform"> <div class="layui-form-item"><div class=" layui-form" id="checkUserId">     </div></div> <div class="layui-form-item">	<div class="layui-row">	<div class="layui-col-md6">	<div class="grid-demo">	<div class="layui-inline">	<label class="layui-form-label">安装人员</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text" name="Installer" placeholder="请输入" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div><div class="layui-col-md6">	<div class="grid-demo grid-demo-bg1">	<div class="layui-inline">	<label class="layui-form-label">安装时间</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text" id="InstallTimeId"  name="InstallTime"  placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div>					</div>	</div><div class="layui-form-item">	<div class="layui-row">	<div class="layui-col-md6">	<div class="grid-demo">	<div class="layui-inline">	<label class="layui-form-label">填表人</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text" name="preparer" placeholder="请输入" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div><div class="layui-col-md6">	<div class="grid-demo grid-demo-bg1">	<div class="layui-inline">	<label class="layui-form-label">填表时间</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text"  id="preparTimeId" name="preparTime"  placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div>					</div>	</div>		 <div class="layui-form-item" style="margin:25px 0px 25px 0px;"><div style="position:absolute;right:160px;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="projectCheckedSubmit" style="width:80px">提交</button></div></div></form>                </div>            </div>        </div>    </div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
                     console.log(obj.data.photoList);
+                    var photoinfots = {};
                     var photoList = obj.data.photoList;
                     for (var i in photoList) {
                         var photoname = "";
                         if (photoList[i].type == '1') {
                             document.getElementById("yiFangYang").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="放样' + (i) + '" ></img></li>';
+                            photoinfots = photoList[i];//把安装这些记录放在放样里面。
                             photoname = "放样";
                         } else if (photoList[i].type == '2') {
                             document.getElementById("yiWaKeng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="挖坑' + (i) + '"></img></li>';
@@ -397,6 +405,7 @@ function FuConstPhotoData(projectid) {
 
                             document.getElementById("yitiaoshi").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="调试' + (i) + '"></img></li>';
                             photoname = "调试";
+                            
                         } else if (photoList[i].type == '6') {
                             document.getElementById("yiWanCheng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="完成' + (i) + '"></img></li>';
                             photoname = "立杆";
@@ -423,6 +432,8 @@ function FuConstPhotoData(projectid) {
                         }
                         
                     } 
+                    document.getElementById("checkUserId").innerHTML += '<hr>'
+
                     if (viewerPhoto != null) {
                         viewerPhoto.destroy();
                     }
@@ -504,21 +515,58 @@ function FuConstPhotoData(projectid) {
                         },
                     });
                     form.render('checkbox');
+                    form.val("projectCheckedinfoform", {
+                        "Installer": photoinfots.Installer
+                        , "preparer": photoinfots.preparer
+                        , "InstallTime": photoinfots.InstallTime
+                        , "preparTime": photoinfots.preparlTime
+                       
+                    });
 
+
+
+                    //渲染开始时间
+                    date.render({
+                        elem: '#InstallTimeId',
+                    });
+                    //渲染开始时间
+                    date.render({
+                        elem: '#preparTimeId',
+                    });
+
+                    form.render();
+                    form.render('select');
                     //提交
                     form.on('submit(projectCheckedSubmit)', function (data) {
-
-
-                        console.log(data);
                         
-                        if (JSON.stringify(data.field) == "{}") {
-                            layer.msg('请选择操作人员');
-                            return false;
-                        }
-                       
+                        console.log(data);
                         var dataas = {};
                         dataas.cookie = document.cookie;
                         var chenkList = getObjectKeys(data.field);
+                        if (chenkList.length==0) {
+                            layer.msg('请选照片',{ zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            return false;
+                        }
+                        if (chenkList.length >8) {
+                            layer.msg('成图照片超过8张', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            return false;
+                        }
+                        //key == "InstallTime" || key == "Installer" || key == "preparTime" || key == "preparer"
+                        if (data.field.InstallTime=="") {
+                            layer.msg('请选择安装时间', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            return false;
+                        }
+                        if (data.field.Installer == "") {
+                            layer.msg('请输入安装人员', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            return false;                        }
+                        if (data.field.preparTime == "") {
+                            layer.msg('请输入填表时间', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            return false;
+                        }
+                        if (data.field.preparer == "") {
+                            layer.msg('请输入填表人员', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            return false;
+                        }
                         var temps = '';
                         for (var j in chenkList) {
                             if (j != (chenkList.length - 1)) {
@@ -527,8 +575,13 @@ function FuConstPhotoData(projectid) {
                                 temps = temps + chenkList[j];
                             }
                         }
+                        dataas.InstallTime = data.field.InstallTime;
+                        dataas.Installer = data.field.Installer;
+                        dataas.preparTime = data.field.preparTime;
+                        dataas.preparer = data.field.preparer;
                         dataas.monitorId = obj.data.Id;
                         dataas.constPhotoIdList = temps;
+
                         console.log(dataas);
                         var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
 
@@ -539,12 +592,12 @@ function FuConstPhotoData(projectid) {
                                 if (result == "选择成功") {
 
                                     layer.msg("修改成功。", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                                    
+                                    FuConstPhotoData(projectid);
                                 }
                                 else {
                                     //创建失败
                                     layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-
+                                    
                                     //关闭
                                     // layer.close(projectuserlayerindex);
 
@@ -559,6 +612,7 @@ function FuConstPhotoData(projectid) {
                 }
                 , end: function () {
                     viewerPhoto = null;
+                    constPhotolayerindex = null;
                 }
             });
 
@@ -576,7 +630,7 @@ function FuConstPhotoData(projectid) {
                 success: function (result) {
                     layer.close(loadingminindex);
                     console.log(result);
-                    //window.location.href = 'http://www.cq107chy.com:4022/SurImage/Download/' + result;
+                    window.location.href = 'http://www.cq107chy.com:4022/SurImage/Download/' + result;
                 },
                 error: function (res) {
                     layer.close(loadingminindex);
@@ -587,7 +641,7 @@ function FuConstPhotoData(projectid) {
         } 
     });
     var MonitorStringList = [];
-    var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    var loadingceindex12 = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     var yifangyang = 0;
     var yiWakeng = 0;
     var yiJiaozhu = 0;
@@ -601,17 +655,21 @@ function FuConstPhotoData(projectid) {
             $.ajax({
                 url: window.parent.servicesurl + "/api/PatrolEquipment/getConstPhotoInfo", type: "get", data: { 'projectId': projectid, 'monitorId': "" },
                 success: function (data) {
-                    layer.close(loadingceindex);
+                    layer.close(loadingceindex12);
                     var constPhotodata = JSON.parse(data);
                     console.log(constPhotodata);
                     for (var i in monitorinfos) {
                         var MonitorString = monitorinfos[i].MonitorString;
                         var photoList = [];
+                        var yiXuan = 0;
                         var mointorStatus = 0;
                         for (var j in constPhotodata) {
                             if (MonitorString.Id == constPhotodata[j].monitorId) {
 
                                 photoList.push(constPhotodata[j]);
+                                if (constPhotodata[j].flagReport=="1") {
+                                    yiXuan++;
+                                }
                                 if (constPhotodata[j].type == '1' && mointorStatus < 1) {
                                     mointorStatus = 1;
                                 }
@@ -633,6 +691,7 @@ function FuConstPhotoData(projectid) {
                             }
                         }
                         MonitorString.photoList = photoList;
+                        MonitorString.yiXuan = yiXuan;
                         MonitorString.mointorStatus = mointorStatus;
                         if (mointorStatus >0) {
                             yifangyang++;
@@ -656,7 +715,7 @@ function FuConstPhotoData(projectid) {
                         MonitorStringList.push(MonitorString);
                     }
                     
-      
+                    MonitorStringList.sort(function (a, b) { return b.mointorStatus - a.mointorStatus; } );
                     constPhotoTable.reload({ id: 'constPhotoTableId', data: MonitorStringList });
                     var tempList = [];
                     //tempList.push({ "name": '放样', "num": yifangyang, "bili": toPercent(yifangyang / MonitorStringList.length)});
@@ -1126,7 +1185,11 @@ function FujianchaPhotoData(projectid) {
 }
 function getObjectKeys(object) {
     var keys = [];
-    for (var key in object)
+    for (var key in object) {
+        if (key == "InstallTime" || key == "Installer" || key == "preparTime" || key == "preparer") {
+            continue;
+        }
         keys.push(key);
+    }
     return keys;
 }

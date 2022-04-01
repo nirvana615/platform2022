@@ -62,5 +62,14 @@ namespace MODEL
         /// 备注
         /// </summary>
         public string BZ { get; set; }
+
+        /// <summary>
+        /// 仪器编号
+        /// </summary>
+        public string sn { get; set; }
+        /// <summary>
+        /// 物联卡号
+        /// </summary>
+        public string sim { get; set; }
     }
 }
