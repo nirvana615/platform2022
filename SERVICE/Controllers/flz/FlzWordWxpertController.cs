@@ -2835,8 +2835,7 @@ namespace SERVICE.Controllers
                     }
                     else
                     {
-
-                        logger.Info("【" + tagInfos[i].Tbl.TblType + "】pgsqlConnection");
+                        
                         // HORIZONTAL_HEADER
                         //HORIZONTAL_VERTICAL_HEADER
                         TableStructureInfo tblInfo1 = tagInfos[i].Tbl;
@@ -2848,7 +2847,6 @@ namespace SERVICE.Controllers
                             for (int y = 0; y < mhn1.Count; y++)
                             {
                                 CellStructureInfo zzz = mhn1[y];
-                                logger.Info("【" + zzz.Tips + "】heiheieiehehiei");
 
                                 if (zzz.Tips == "编号")
                                 {
