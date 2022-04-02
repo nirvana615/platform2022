@@ -836,10 +836,6 @@ namespace SERVICE.Controllers
                     {
                         DeleFile.Delete();
                     }
-                    else
-                    {
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "路径传入错误！", string.Empty));
-                    }
                 }
                 catch (Exception ex)
                 {

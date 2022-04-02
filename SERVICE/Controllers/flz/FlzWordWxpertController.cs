@@ -2761,6 +2761,7 @@ namespace SERVICE.Controllers
                 string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(monitorString.Id+"")));
                 List<ConstPhotoInfo> constPhotoInfoList = new List<ConstPhotoInfo>();//相片集合
                 ConstPhotoInfo constPhotoIn = new ConstPhotoInfo();//发送报告的信息
+                Boolean flagType = true;
                 if (!string.IsNullOrEmpty(datas))
                 {
                     string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
@@ -2773,10 +2774,16 @@ namespace SERVICE.Controllers
                             if (constPhotoInfo.type=="1")
                             {
                                 constPhotoIn = constPhotoInfo;
+                                flagType = false;
                             }
                         }
                     }
                 };
+                if (flagType)
+                {
+                    string datacons = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM const_photo_info WHERE monitor_id ={0} and type='1' ORDER BY type ", SQLHelper.UpdateString(monitorString.Id + "")));
+                    constPhotoIn = ParseMonitorHelper.ParseConstPhotoInfo(datacons);
+                }
                 //查询设备信息
                 string sqldevice = "select a.* from monitor_device a,monitor_map_monitor_device b where a.id=b.deviceid and b.monitorid={0}";
                 string deviceDatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sqldevice, SQLHelper.UpdateString(monitorString.Id + "")));
@@ -3043,75 +3050,75 @@ namespace SERVICE.Controllers
                                     zzz.AddContent(txtInfo);
                                     continue;
                                 }
-                                if (zzz.Tips == "1" && constPhotoInfoList.Count > 1)
+                                if (zzz.Tips == "1" && constPhotoInfoList.Count > 0)
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[0].photoUrl;
-                                    imgInfo.Width = 120;
+                                    imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
-                                if (zzz.Tips == "2" && constPhotoInfoList.Count > 2)
+                                if (zzz.Tips == "2" && constPhotoInfoList.Count > 1)
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[1].photoUrl;
-                                    imgInfo.Width = 120;
+                                    imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
-                                if (zzz.Tips == "3" && constPhotoInfoList.Count > 3)
+                                if (zzz.Tips == "3" && constPhotoInfoList.Count > 2)
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[2].photoUrl;
-                                    imgInfo.Width = 120;
+                                    imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
-                                if (zzz.Tips == "4" && constPhotoInfoList.Count > 4)
+                                if (zzz.Tips == "4" && constPhotoInfoList.Count > 3)
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[3].photoUrl;
-                                    imgInfo.Width = 120;
+                                    imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
-                                if (zzz.Tips == "5" && constPhotoInfoList.Count > 5)
+                                if (zzz.Tips == "5" && constPhotoInfoList.Count > 4)
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[4].photoUrl;
-                                    imgInfo.Width = 120;
+                                    imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
-                                if (zzz.Tips == "6" && constPhotoInfoList.Count > 6)
+                                if (zzz.Tips == "6" && constPhotoInfoList.Count > 5)
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[5].photoUrl;
-                                    imgInfo.Width = 120;
+                                    imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
-                                if (zzz.Tips == "7" && constPhotoInfoList.Count > 7)
+                                if (zzz.Tips == "7" && constPhotoInfoList.Count > 6)
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[6].photoUrl;
-                                    imgInfo.Width = 120;
+                                    imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
                                 }
-                                if (zzz.Tips == "8" && constPhotoInfoList.Count > 8)
+                                if (zzz.Tips == "8" && constPhotoInfoList.Count > 7)
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
                                     imgInfo.ImgPath = imgdir + constPhotoInfoList[7].photoUrl;
-                                    imgInfo.Width = 120;
+                                    imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
 
