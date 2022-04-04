@@ -539,6 +539,7 @@
     <Content Include="Apps\model\js\6.0-util-modelv.js" />
     <Content Include="Apps\model\js\6.0-util-modelc.js" />
     <Content Include="Apps\model\js\7.0-modelprojectconnect.js" />
+    <Content Include="Apps\model\widget\addmodel.html" />
     <Content Include="Apps\model\widget\0-projectlist.html" />
     <Content Include="Apps\model\widget\1.1 projectadd.html" />
     <Content Include="Apps\model\widget\1.2 projectview.html" />
@@ -726,11 +727,7 @@
     <Content Include="Apps\monitor\widget\analysis.html" />
     <Content Include="Apps\monitor\widget\autodata.html" />
     <Content Include="Apps\monitor\widget\2.0-autodevice.html" />
-    <Content Include="Apps\monitor\widget\draw.html" />
     <Content Include="Apps\monitor\widget\layerlist.html" />
-    <Content Include="Apps\monitor\widget\localtool.html" />
-    <Content Include="Apps\monitor\widget\measure.html" />
-    <Content Include="Apps\monitor\widget\notice.html" />
     <Content Include="Apps\monitor\widget\1.3 projectinfoadd.html" />
     <Content Include="Apps\monitor\widget\1.1 projectinfoview.html" />
     <Content Include="Apps\monitor\widget\1.2 projectinfoedit.html" />
@@ -763,8 +760,6 @@
     <Content Include="Resources\img\mark\p7.png" />
     <Content Include="Resources\img\mark\p8.png" />
     <Content Include="Resources\img\mark\p9.png" />
-    <Content Include="Apps\monitor\widget\report.html" />
-    <Content Include="Apps\monitor\widget\set.html" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -859,7 +854,6 @@
     <Content Include="Scripts\Cesium\Assets\IAU2006_XYS\IAU2006_XYS_9.json" />
     <Content Include="Scripts\Cesium\ThirdParty\draco_decoder.wasm" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
-    <Content Include="Resources\img\map\CesiumMilkTruck.glb" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Cesium\Assets\Images\bing_maps_credit.png" />
     <Content Include="Scripts\Cesium\Assets\Images\cesium_credit.png" />

@@ -26,7 +26,7 @@ function Measurewidget() {
         , title: ['测量工具', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
         , area: ['350px', '330px']
         , shade: 0
-        , offset: ['85px', '1530px']
+        , offset: ['77px', '80%']
         , closeBtn: 1
         , maxmin: true
         , moveOut: true

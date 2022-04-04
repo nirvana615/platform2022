@@ -364,7 +364,38 @@ namespace SERVICE.Controllers
         }
 
 
+        /// <summary>
+        /// 更新航线项目
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public string UpdateUavProject()
+        {
+            string id = HttpContext.Current.Request.Form["id"];
+            string xmmc = HttpContext.Current.Request.Form["uav-project-edit-xmmc"];
+            string bz = HttpContext.Current.Request.Form["uav-project-edit-bz"];
 
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                string updatetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                int updatecout = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_project SET xmmc={0},gxsj={1},bz={2} WHERE id={3} AND ztm={4} AND bsm{5}", SQLHelper.UpdateString(xmmc), SQLHelper.UpdateString(updatetime), SQLHelper.UpdateString(bz), id, (int)MODEL.Enum.State.InUse, userbsms));
+                if (updatecout == 1)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "更新成功！", updatetime));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "更新失败！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
 
 
 
@@ -387,15 +418,7 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
 
-        /// <summary>
-        /// 更新无人机项目
-        /// </summary>
-        /// <returns></returns>
-        [HttpPut]
-        public string UpdateUavProject()
-        {
-            return string.Empty;
-        }
+
 
 
 

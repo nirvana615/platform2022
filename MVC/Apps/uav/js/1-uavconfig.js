@@ -23,8 +23,8 @@ var uavrouteaddlayerindex = null;        //航线（新建）模块
 var uavrouteviewlayerindex = null;       //航线（查看）模块
 var uavrouteeditlayerindex = null;       //航线（编辑）模块
 
-var headeruserlayerindex = null;        //用户模块
-var headerselayerindex = null;          //设置模块
+var headeruserlayerindex = null;//用户模块
+var headerselayerindex = null;//设置模块
 
 
 var uav_project_list_all = [];//用户全部项目列表
@@ -85,29 +85,14 @@ var level = true;              //是否水平
 
 
 
-//重写HomeButton功能
-viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) {
-    e.cancel = true;
-    if (projectentities.length > 0) {
-        viewer.flyTo(projectentities, { duration: 5, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 3000) });
-    }
-    else {
-        //缩放至中国
-        FlyToChina();
-    }
-});
-
 
 /*
  * 修改样式
  */
-//document.getElementsByClassName("cesium-viewer-fullscreenContainer")[0].style = "right:5px;top:7px;width:32px;height:32px;border-radius:14%;";    //修改全屏按钮样式
-//document.getElementsByClassName("cesium-viewer-toolbar")[0].style = "right:25px;top:245px;width:50px;height:50px";                                  //修改工具栏样式
 document.getElementsByClassName("cesium-viewer-toolbar")[0].style = "right:25px;top:105px;width:50px;height:50px";                                  //修改工具栏样式
 document.getElementsByClassName("cesium-button cesium-toolbar-button")[0].style = "width:50px;height:50px";                                         //修改工具栏样式
 document.getElementsByClassName("cesium-button cesium-toolbar-button")[1].style = "width:50px;height:50px";                                         //修改工具栏样式
 document.getElementsByClassName("cesium-baseLayerPicker-selected")[0].style = "width:50px;height:50px";                                             //修改工具栏样式
-
 
 //初始定位
 setTimeout(FlyToChina(), 3000);
@@ -116,14 +101,104 @@ function FlyToChina() {
         destination: new Cesium.Rectangle.fromDegrees(73.66, 3.86, 135.05, 53.55)               //定位中国
     }, { duration: 3 });
 };
-//home按钮功能
-viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (commandInfo) {
-    FlyToChina();
-    commandInfo.cancel = true;
+//HomeButton功能
+viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) {
+    e.cancel = true;
+    FlyToChina();//缩放至中国
 });
 
+//高亮节点
+function MarkNode() {
+    //选中节点高亮
+    var nodes = document.getElementsByClassName("layui-tree-txt");
+    for (var i = 0; i < nodes.length; i++) {
+        if ((nodes[i].innerHTML === current_project_title) || (nodes[i].innerHTML === current_waypoint_title)) {
+            nodes[i].style.color = "#009688";
+            nodes[i].style.fontSize = "15px";
+            nodes[i].style.fontWeight = "bold";
+        }
+        else {
+            nodes[i].style.color = "#555555";
+            nodes[i].style.fontSize = "14px";
+            nodes[i].style.fontWeight = "normal";
+        }
+    }
+};
+//高亮并展开当前项目
+function MarkCurrentProject() {
+    for (var i in uav_project_list_all) {
+        if (uav_project_list_all[i].id == current_project_id) {
+            uav_project_list_all[i].spread = true;
+            current_project_title = uav_project_list_all[i].title;
+        }
+        else {
+            uav_project_list_all[i].spread = false;
+        }
+    }
+
+    tree.reload('uav-project-list-treeid', { data: uav_project_list_all });
+    MarkNode();//高亮当前节点
+};
 
 
+
+//关闭指定图层
+function CloseLayer(layerindex) {
+    if (layerindex != null) {
+        layer.close(layerindex);
+        layerindex = null;
+    }
+};
+//关闭所有图层
+function CloseAllLayer() {
+    if (uavprojectauthlayerindex != null) {
+        layer.close(uavprojectauthlayerindex);
+        uavprojectauthlayerindex = null;
+    }
+
+    if (uavprojectaddlayerindex != null) {
+        layer.close(uavprojectaddlayerindex);
+        uavprojectaddlayerindex = null;
+    }
+    if (uavprojectviewlayerindex != null) {
+        layer.close(uavprojectviewlayerindex);
+        uavprojectviewlayerindex = null;
+    }
+    if (uavprojecteditlayerindex != null) {
+        layer.close(uavprojecteditlayerindex);
+        uavprojecteditlayerindex = null;
+    }
+
+    if (selectroutetypelayerindex != null) {
+        layer.close(selectroutetypelayerindex);
+        selectroutetypelayerindex = null;
+    }
+
+    if (uavrouteaddlayerindex != null) {
+        layer.close(uavrouteaddlayerindex);
+        uavrouteaddlayerindex = null;
+    }
+    if (uavrouteviewlayerindex != null) {
+        layer.close(uavrouteviewlayerindex);
+        uavrouteviewlayerindex = null;
+    }
+    if (uavrouteeditlayerindex != null) {
+        layer.close(uavrouteeditlayerindex);
+        uavrouteeditlayerindex = null;
+    }
+
+    if (headeruserlayerindex != null) {
+        layer.close(headeruserlayerindex);
+        headeruserlayerindex = null;
+    }
+
+    if (headerselayerindex != null) {
+        layer.close(headerselayerindex);
+        headerselayerindex = null;
+    }
+
+    //TODO
+};
 
 
 ////加载3d tiles模型
@@ -709,96 +784,5 @@ viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (com
 
 
 
-//高亮节点
-function MarkNode() {
-    //选中节点高亮
-    var nodes = document.getElementsByClassName("layui-tree-txt");
-    for (var i = 0; i < nodes.length; i++) {
-        if ((nodes[i].innerHTML === current_project_title) || (nodes[i].innerHTML === current_waypoint_title)) {
-            nodes[i].style.color = "#009688";
-            nodes[i].style.fontSize = "15px";
-            nodes[i].style.fontWeight = "bold";
-        }
-        else {
-            nodes[i].style.color = "#555555";
-            nodes[i].style.fontSize = "14px";
-            nodes[i].style.fontWeight = "normal";
-        }
-    }
-};
-//高亮并展开当前项目
-function MarkCurrentProject() {
-    for (var i in uav_project_list_all) {
-        if (uav_project_list_all[i].id == current_project_id) {
-            uav_project_list_all[i].spread = true;
-            current_project_title = uav_project_list_all[i].title;
-        }
-        else {
-            uav_project_list_all[i].spread = false;
-        }
-    }
 
-    tree.reload('uav-project-list-treeid', { data: uav_project_list_all });
-    MarkNode();//高亮当前节点
-};
-
-
-
-//关闭指定图层
-function CloseLayer(layerindex) {
-    if (layerindex != null) {
-        layer.close(layerindex);
-        layerindex = null;
-    }
-};
-//关闭所有图层
-function CloseAllLayer() {
-    if (uavprojectauthlayerindex != null) {
-        layer.close(uavprojectauthlayerindex);
-        uavprojectauthlayerindex = null;
-    }
-
-    if (uavprojectaddlayerindex != null) {
-        layer.close(uavprojectaddlayerindex);
-        uavprojectaddlayerindex = null;
-    }
-    if (uavprojectviewlayerindex != null) {
-        layer.close(uavprojectviewlayerindex);
-        uavprojectviewlayerindex = null;
-    }
-    if (uavprojecteditlayerindex != null) {
-        layer.close(uavprojecteditlayerindex);
-        uavprojecteditlayerindex = null;
-    }
-
-    if (selectroutetypelayerindex != null) {
-        layer.close(selectroutetypelayerindex);
-        selectroutetypelayerindex = null;
-    }
-
-    if (uavrouteaddlayerindex != null) {
-        layer.close(uavrouteaddlayerindex);
-        uavrouteaddlayerindex = null;
-    }
-    if (uavrouteviewlayerindex != null) {
-        layer.close(uavrouteviewlayerindex);
-        uavrouteviewlayerindex = null;
-    }
-    if (uavrouteeditlayerindex != null) {
-        layer.close(uavrouteeditlayerindex);
-        uavrouteeditlayerindex = null;
-    }
-
-    if (headeruserlayerindex != null) {
-        layer.close(headeruserlayerindex);
-        headeruserlayerindex = null;
-    }
-
-    if (headerselayerindex != null) {
-        layer.close(headerselayerindex);
-        headerselayerindex = null;
-    }
-
-    //TODO
-};
 

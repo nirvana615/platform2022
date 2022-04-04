@@ -46,7 +46,12 @@ function AddUavProject() {
                                     newprojectinfos.push(createtime);
                                     newproject.children = newprojectinfos
 
-                                    uav_project_list_all.push(newproject);
+                                    var uav_project_list_all_copy = [];
+                                    uav_project_list_all_copy.push(newproject);
+                                    for (var i in uav_project_list_all) {
+                                        uav_project_list_all_copy.push(uav_project_list_all[i]);
+                                    }
+                                    uav_project_list_all = uav_project_list_all_copy;
                                 }
 
                                 MarkCurrentProject();
@@ -86,7 +91,7 @@ function EditUavProject(uavprojectdata) {
         , closeBtn: 1
         , maxmin: true
         , moveOut: true
-        , content: '<!--编辑项目--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px"><ul class="layui-tab-title"><li class="layui-this" style="width:44%;">基本信息</li><li style="width:44%;">实景模型</li></ul><div class="layui-tab-content" style="margin:5px 0px"><!--项目信息--><div class="layui-tab-item layui-show"><form class="layui-form" style="margin-top:0px" lay-filter="uav-project-edit"><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">项目名称</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-xmmc" autocomplete="off" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">项目编码</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-xmbm" autocomplete="off" lay-verify="required" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">创建时间</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-cjsj" autocomplete="off" lay-verify="required" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;padding-top:45px;">备&emsp;&emsp;注</label><div class="layui-input-block" style="margin-left:90px;"><textarea name="uav-project-edit-bz" class="layui-textarea" style="height:120px;"></textarea></div></div><div class="layui-form-item" style="margin-top:10px"><div style="position:absolute;right:5px;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="uav-project-edit-submit" style="width:100px">保存</button></div></div></form></div><!--实景模型--><div class="layui-tab-item"><div class="layui-card-body" style="padding:0px 0px;"><table id="uav-project-model" lay-filter="uav-project-model"></table><script type="text/html" id="uav-project-model-add"><div class="layui-btn-container"><button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="uav-project-model-add">添加三维实景模型</button></div></script><script type="text/html" id="table-toolbar-model"><a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div>'
+        , content: '<!--编辑项目--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px"><ul class="layui-tab-title"><li class="layui-this" style="width:44%;">项目信息</li><li style="width:44%;">实景模型</li></ul><div class="layui-tab-content" style="margin:0px;padding-left:0px;"><!--项目信息--><div class="layui-tab-item layui-show"><form class="layui-form" style="margin-top:0px" lay-filter="uav-project-edit"><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">项目名称</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-xmmc" autocomplete="off" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">项目编码</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-xmbm" autocomplete="off" lay-verify="required" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">创建时间</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-cjsj" autocomplete="off" lay-verify="required" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">备&emsp;&emsp;注</label><div class="layui-input-block" style="margin-left:90px;"><textarea name="uav-project-edit-bz" class="layui-textarea" style="height:120px;"></textarea></div></div><div class="layui-form-item" style="margin-top:10px"><div style="position:absolute;right:5px;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="uav-project-edit-submit" style="width:100px">保存</button></div></div></form></div><!--实景模型--><div class="layui-tab-item"><div class="layui-card-body" style="padding:0px 0px;"><table id="uav-project-model" lay-filter="uav-project-model"></table><script type="text/html" id="uav-project-model-add"><div class="layui-btn-container"><button class="layui-btn layui-btn-sm" style="font-size:14px" lay-event="uav-project-model-add">添加实景模型</button></div></script><script type="text/html" id="table-toolbar-model"><a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div>'
         , zIndex: layer.zIndex
         , success: function (layero) {
             layer.setTop(layero);
@@ -101,25 +106,70 @@ function EditUavProject(uavprojectdata) {
 
             //更新项目
             form.on('submit(uav-project-edit-submit)', function (data) {
-                data.field.id = id;
+                data.field.id = uavprojectdata.Id;
                 data.field.cookie = document.cookie;
 
                 $.ajax({
-                    url: servicesurl + "/api/UavProject/UpdateProject", type: "put", data: data.field,
-                    success: function (result) {
-                        layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    url: servicesurl + "/api/UavProject/UpdateUavProject", type: "put", data: data.field,
+                    success: function (resultdata) {
+                        var result = JSON.parse(resultdata);
+                        if (result.code == 1) {
+                            //更新成功
+                            for (var i in uav_project_list_all) {
+                                if (uav_project_list_all[i].id == data.field.id) {
+                                    uav_project_list_all[i].title = data.field["uav-project-edit-xmmc"];
+                                    uav_project_list_all[i].data.XMMC = data.field["uav-project-edit-xmmc"];
+                                    uav_project_list_all[i].data.GXSJ = result.data;
+                                    uav_project_list_all[i].data.BZ = data.field["uav-project-edit-bz"];
+
+                                    var iscontain = false;
+                                    for (var j in uav_project_list_all[i].children) {
+                                        if (uav_project_list_all[i].children[j].title.indexOf("更新时间") != -1) {
+                                            uav_project_list_all[i].children[j].title = "更新时间：" + result.data;
+                                            iscontain = true;
+                                        }
+                                    }
+
+                                    if (!iscontain) {
+                                        var projectchild = [];
+                                        projectchild.push(uav_project_list_all[i].children[0]);
+                                        var updatetime = new Object;
+                                        updatetime.title = "更新时间：" + result.data;
+                                        projectchild.push(updatetime);
+
+                                        for (var j in uav_project_list_all[i].children) {
+                                            if (j > 0) {
+                                                projectchild.push(uav_project_list_all[i].children[j]);
+                                            }
+                                        }
+
+                                        uav_project_list_all[i].children = projectchild;
+                                    }
+
+                                    MarkCurrentProject();
+                                }
+                            }
+                        }
+                        else {
+                            //更新失败
+                            form.val("uav-project-edit", {
+                                "uav-project-edit-xmmc": uavprojectdata.XMMC
+                                , "uav-project-edit-bz": uavprojectdata.BZ
+                            });
+                        }
+
+                        layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     }, datatype: "json"
                 });
                 return false;
             });
-
 
             //模型信息
             var modeltabledata = [];
             var modeledittable = table.render({
                 elem: '#uav-project-model'
                 , id: 'uavprojectmodeltableid'
-                , title: '模型信息'
+                , title: '实景模型'
                 , skin: 'line'
                 , even: false
                 , page: {
@@ -131,53 +181,144 @@ function EditUavProject(uavprojectdata) {
                 , initSort: { field: 'id', type: 'asc' }
                 , cols: [[
                     { field: 'id', title: 'ID', hide: true }
-                    , { field: 'zhtmc', title: '任务名称', align: "center" }
-                    , { field: 'zhtbh', title: '任务编码', align: "center" }
-                    , { field: 'zhtlx', title: '采集时间', align: "center" }
+                    , { field: 'mxmc', title: '模型名称', align: "center" }
+                    , { field: 'mxbm', title: '模型编码', align: "center" }
+                    , { field: 'mxsj', title: '生产时间', align: "center" }
                     , { field: 'bz', title: '备注', align: "center" }
                     , { fixed: 'right', width: 80, align: 'center', toolbar: '#table-toolbar-model' }
                 ]]
                 , data: modeltabledata
             });
 
-            $.ajax({
-                url: servicesurl + "/api/ModelTask/GetUserUseModels", type: "get", data: { "syscode": 3, "cookie": document.cookie },
-                success: function (data) {
-                    modeltabledata = [];
-
-                    if (data == "") {
-                        //无灾害体信息
-                        modeledittable.reload({ id: 'uavprojectmodeltableid', data: modeltabledata });
-                    }
-                    else {
-                        var disasterInfos = JSON.parse(data);
-
-                        //构造灾害体表格数据
-                        for (var i in disasterInfos) {
-                            var disaster = new Object;
-                            disaster.id = disasterInfos[i].Id;
-                            disaster.zhtmc = disasterInfos[i].ZHTMC;
-                            disaster.zhtbh = disasterInfos[i].ZHTBH;
-                            disaster.zhtlx = disasterInfos[i].ZHTLX;
-                            disaster.zxjd = disasterInfos[i].ZXJD;
-                            disaster.zxwd = disasterInfos[i].ZXWD;
-                            disaster.bz = disasterInfos[i].BZ;
-                            disastertabledata.push(disaster);
-                        }
-                        modeledittable.reload({ id: 'uavprojectmodeltableid', data: modeltabledata });
-
-                        table.on('tool(disaster-view)', function (obj) {
-                            var data = obj.data;
-                            var layEvent = obj.event;
-
-                            if (layEvent === 'disasterview') {
-                                //灾害体信息
-                                DisasterInfoView(obj.data);
+            //项目模型
+            for (var i in uav_project_list_all) {
+                if (uav_project_list_all[i].id == uavprojectdata.Id) {
+                    for (var j in uav_project_list_all[i].children) {
+                        if (uav_project_list_all[i].children[j].title == "实景模型") {
+                            if (uav_project_list_all[i].children[j].children.length > 0) {
+                                for (var k in uav_project_list_all[i].children[j].children) {
+                                    var model = new Object;
+                                    model.mxmc = uav_project_list_all[i].children[j].children[k].data.RWMC;
+                                    model.mxbm = uav_project_list_all[i].children[j].children[k].data.RWBM;
+                                    model.mxsj = uav_project_list_all[i].children[j].children[k].data.YXCJSJ;
+                                    model.bz = uav_project_list_all[i].children[j].children[k].data.BZ;
+                                    modeltabledata.push(model);
+                                }
                             }
-                        });
+                        }
                     }
-                }, datatype: "json"
+                }
+            }
+            modeledittable.reload({ id: 'uavprojectmodeltableid', data: modeltabledata });
+
+            //添加实景模型
+            table.on('toolbar(uav-project-model)', function (obj) {
+                switch (obj.event) {
+                    case 'uav-project-model-add':
+                        var addmodellayerindex = layer.open({
+                            type: 1
+                            , title: ['添加实景模型', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                            , area: ['400px', '400px']
+                            , shade: 0
+                            , offset: 'auto'
+                            , closeBtn: 1
+                            , maxmin: false
+                            , moveOut: true
+                            , content: '<form class="layui-form" style="margin-top:10px" lay-filter="addmodeluseform"><div class="layui-form-item"><div id="usemodeltree"></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="addmodelusesubmit" style="width:80px">添加</button></div></div></form>'
+                            , zIndex: layer.zIndex
+                            , success: function (layero) {
+                                layer.setTop(layero);
+
+                                //渲染模型数据
+                                tree.render({
+                                    elem: '#usemodeltree'
+                                    , data: []
+                                    , id: 'usemodeltreeid'
+                                    , showCheckbox: true
+                                    , accordion: false
+                                    , showLine: true
+                                    , cancelNodeFileIcon: true
+                                    , text: { none: '无' }
+                                    , click: function (obj) {
+
+                                    }
+                                    , operate: function (obj) {
+
+                                    }
+                                    , oncheck: function (obj) {
+
+                                    }
+                                });
+
+                                //
+                                $.ajax({
+                                    url: servicesurl + "/api/ModelProject/GetUserModelProjectList", type: "get", data: { "cookie": document.cookie },
+                                    success: function (result) {
+
+                                        var modeltreedata = [];
+
+
+
+
+                                        
+
+
+
+
+                                    }, datatype: "json"
+                                });
+
+
+
+                                form.render();
+                                form.render('select');
+
+                                form.on('submit(addmodelusesubmit)', function (data) {
+                                    data.field.id = id;
+                                    data.field.cookie = document.cookie;
+
+                                    $.ajax({
+                                        url: servicesurl + "/api/Disaster/AddDisaster", type: "post", data: data.field,
+                                        success: function (result) {
+                                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                            //刷新灾害体表格
+                                            GetDisaster();
+                                        }, datatype: "json"
+                                    });
+
+                                    layer.close(addmodellayerindex);
+                                    return false;
+                                });
+                            }
+                            , end: function () { }
+                        });
+                        break;
+                };
             });
+
+            //操作实景模型
+            table.on('tool(uav-project-model)', function (obj) {
+                var data = obj.data;
+
+                if (obj.event === 'modeldel') {
+                    layer.confirm('是否删除?', { icon: 3, title: '消息', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                        $.ajax({
+                            url: servicesurl + "/api/Disaster/DeleteDisaster", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
+                            success: function (result) {
+                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            }, datatype: "json"
+                        });
+
+                        obj.del();
+                        GetDisaster();
+                        layer.close(index);
+                    });
+                }
+            });
+
+
+
+
 
 
 

@@ -1,10 +1,8 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -150,13 +148,13 @@
                                             </div>
                                             <div class="layui-col-xs6">
                                                 <div class="grid-demo">
-                                                    <!--实景模型管理系统-->
+                                                    <!--航线任务规划系统-->
                                                     <div class="sysDiv">
-                                                        <img id="sys-model-img" src="~/Resources/pic/sys/model.png" class="sysIcon" />
+                                                        <img id="sys-uav-img" src="~/Resources/pic/sys/uav.png" class="sysIcon" />
                                                         <br />
-                                                        <p class="sysTitle">实景模型管理系统</p>
+                                                        <p class="sysTitle">航线任务规划系统</p>
                                                         <br />
-                                                        <button type="button" id="sys-model-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
+                                                        <button type="button" id="sys-uav-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -168,6 +166,18 @@
                                         <div class="layui-row">
                                             <div class="layui-col-xs6">
                                                 <div class="grid-demo grid-demo-bg1">
+                                                    <!--实景模型管理系统-->
+                                                    <div class="sysDiv">
+                                                        <img id="sys-model-img" src="~/Resources/pic/sys/model.png" class="sysIcon" />
+                                                        <br />
+                                                        <p class="sysTitle">实景模型管理系统</p>
+                                                        <br />
+                                                        <button type="button" id="sys-model-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6">
+                                                <div class="grid-demo">
                                                     <!--地质灾害监测系统-->
                                                     <div class="sysDiv">
                                                         <img id="sys-monitor-img" src="~/Resources/pic/sys/monitor.png" class="sysIcon" />
@@ -175,18 +185,6 @@
                                                         <p class="sysTitle">地质灾害监测系统</p>
                                                         <br />
                                                         <button type="button" id="sys-monitor-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="layui-col-xs6">
-                                                <div class="grid-demo">
-                                                    <!--航线任务规划系统-->
-                                                    <div class="sysDiv">
-                                                        <img id="sys-uav-img" src="~/Resources/pic/sys/uav.png" class="sysIcon" />
-                                                        <br />
-                                                        <p class="sysTitle">航线任务规划系统</p>
-                                                        <br />
-                                                        <button type="button" id="sys-uav-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -250,7 +248,7 @@
                                                     <div class="sysDiv">
                                                         <img src="~/Resources/pic/sys/more.png" class="sysIcon" />
                                                         <br />
-                                                        <p class="sysTitle">MORE</p>
+                                                        <p class="sysTitle">更多</p>
                                                         <br />
                                                     </div>
                                                 </div>
@@ -287,6 +285,13 @@
         $("#sys-admin-btn").on("click", function () {
             window.location.href = "LoginAdmin";
         });
+        //航线任务规划系统
+        $("#sys-uav-img").on("click", function () {
+            window.location.href = "LoginUav";
+        });
+        $("#sys-uav-btn").on("click", function () {
+            window.location.href = "LoginUav";
+        });
         //实景模型管理系统
         $("#sys-model-img").on("click", function () {
             window.location.href = "LoginModel";
@@ -300,13 +305,6 @@
         });
         $("#sys-monitor-btn").on("click", function () {
             window.location.href = "LoginMonitor";
-        });
-        //航线任务规划系统
-        $("#sys-uav-img").on("click", function () {
-            window.location.href = "LoginUav";
-        });
-        $("#sys-uav-btn").on("click", function () {
-            window.location.href = "LoginUav";
         });
         //地质要素采集系统
         $("#sys-geology-img").on("click", function () {

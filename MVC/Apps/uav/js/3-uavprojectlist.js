@@ -34,9 +34,7 @@ layer.open({
             , accordion: false
             , showLine: true
             , cancelNodeFileIcon: true
-            , text: {
-                none: ''
-            }
+            , text: { none: '空' }
             , click: function (obj) {
                 UavProjectNodeClick(obj);//节点点击
             }
@@ -50,18 +48,60 @@ layer.open({
 
         document.getElementById('uav-project-list-tree').parentNode.style.maxHeight = (parseInt(document.getElementById('uav-project-list-tree').parentNode.style.height.replace("px", "")) - 30).toString() + "px";
 
-        //获取用户无人机项目信息
-        GetUserUavProjectInfos();
+        //获取用户全部航线任务项目
+        GetUserUavProjects();//快速显示
+        GetUserUavProjectInfos();//加载全部信息
     }
 });
 
+//获取用户全部航线任务项目
+function GetUserUavProjects() {
+    $.ajax({
+        url: servicesurl + "/api/UavProject/GetUserUavProjects", type: "get", data: { "cookie": document.cookie },
+        success: function (data) {
+            CloseLayer(loadlayerindex);//关闭正在加载
 
-//获取用户无人机项目列表
+            uav_project_list_all = [];//初始化
+
+            var result = JSON.parse(data);
+            if (result.code == 1) {
+                var uav_projects = JSON.parse(result.data);
+                for (var i in uav_projects) {
+                    var project = new Object;
+                    project.id = uav_projects[i].Id;
+                    project.title = uav_projects[i].XMMC;
+                    project.type = "uavproject";
+                    project.data = uav_projects[i];
+                    project.nodeOperate = true;
+                    project.spread = false;
+
+                    var projectchild = [];
+
+                    if (uav_projects[i] != null && uav_projects[i] != "") {
+                        var createtime = new Object;
+                        createtime.title = "创建时间：" + uav_projects[i].CJSJ;
+                        projectchild.push(createtime);
+                    }
+                    if (uav_projects[i] != null && uav_projects[i].GXSJ != "") {
+                        var updatetime = new Object;
+                        updatetime.title = "更新时间：" + uav_projects[i].GXSJ;
+                        projectchild.push(updatetime);
+                    }
+                    project.children = projectchild;
+                    uav_project_list_all.push(project);
+                }
+                MarkCurrentProject();
+            }
+        }, datatype: "json"
+    });
+};
+
+//获取用户全部航线任务项目（包括模型、路径）
 function GetUserUavProjectInfos() {
     $.ajax({
         url: servicesurl + "/api/UavProject/GetUserUavProjectInfos", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
-            CloseLayer(loadlayerindex);//关闭正在加载
+            //CloseLayer(loadlayerindex);//关闭正在加载
 
             ////获取选中路径和模型节点
             //var checkroutes = [];
@@ -321,14 +361,11 @@ function UavProjectNodeOperate(obj) {
     if (obj.data.type == "uavproject") {
         //项目
         if (obj.type === 'add') {
-            //查看项目
-            ViewUavProject(obj.data.data);
+            ViewUavProject(obj.data.data);//查看项目
         } else if (obj.type === 'update') {
-            //编辑项目
-            EditUavProject(obj.data.data);
+            EditUavProject(obj.data.data);//编辑项目
         } else if (obj.type === 'del') {
-            //删除项目
-            DeleteUavProject(obj.data.id);
+            DeleteUavProject(obj.data.id);//删除项目
         };
     } else if (obj.data.type == "uavroute") {
         //航线
@@ -351,7 +388,7 @@ function UavProjectNodeCheck(obj) {
         //选中
         if (obj.data.type == "uavsurmodel") {
             //LoadModel(obj.data);//加载实景模型
-            current_project_tile=Load3DTiles(obj.data.data);
+            current_project_tile = Load3DTiles(obj.data.data);
         }
         else if (obj.data.type == "uavroute") {
 
