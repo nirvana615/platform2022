@@ -2,11 +2,11 @@
 var newmodeltasktablePending = [];//待处理任务
 var newmodeltasktableProcess = [];//正在处理任务
 var newmodeltasktableFinished = [];//已完成任务
-getNewModelTask();
+//getNewModelTask();
 
-setTimeout(() => {
-    LoadNewModelTask();
-}, 5000);
+//setTimeout(() => {
+//    LoadNewModelTask();
+//}, 5000);
 
 function getNewModelTask() {
     newmodeltasktablePending = [];

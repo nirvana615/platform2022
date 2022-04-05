@@ -12,12 +12,11 @@ var elem = layui.element;
 var colorpicker = layui.colorpicker;
 
 var tipslayer = -1;//全局提示层
+var depthTestAgainstTerrain;//深度检测值
 
 var modelprojectinfoviewlayerindex = null;                        //项目模块（查看）
 var modelprojectinfoaddlayerindex = null;                         //项目模块（新建）
 var modelprojectinfoeditlayerindex = null;                        //项目模块（编辑）
-
-var depthTestAgainstTerrain;//深度检测值
 
 var modeltaskinfoviewlayerindex = null;                           //任务模块（查看）
 var modeltaskinfoaddlayerindex = null;                            //任务模块（新建）
@@ -67,8 +66,6 @@ viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) 
 /*
  * 修改样式
  */
-//document.getElementsByClassName("cesium-viewer-fullscreenContainer")[0].style = "right:5px;top:7px;width:32px;height:32px;border-radius:14%;";    //修改全屏按钮样式
-//document.getElementsByClassName("cesium-viewer-toolbar")[0].style = "right:25px;top:245px;width:50px;height:50px";                                  //修改工具栏样式
 document.getElementsByClassName("cesium-viewer-toolbar")[0].style = "right:25px;top:105px;width:50px;height:50px";                                  //修改工具栏样式
 document.getElementsByClassName("cesium-button cesium-toolbar-button")[0].style = "width:50px;height:50px";                                         //修改工具栏样式
 document.getElementsByClassName("cesium-button cesium-toolbar-button")[1].style = "width:50px;height:50px";                                         //修改工具栏样式
