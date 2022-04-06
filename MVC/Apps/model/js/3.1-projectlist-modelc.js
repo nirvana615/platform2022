@@ -9,17 +9,20 @@ var newprojecttype = false;
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-    , area: ['350px', '60%']
+    , area: ['380px', '60%']
     , shade: 0
     , offset: ['60px', '5px']
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
     , resize: false
-    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;"><!--选项卡--><ul class="layui-tab-title"><li lay-id="list_area" class="layui-this" style="width:40%;">地区</li><li lay-id="list_year" style="width:40%;">时间</li></ul><!--tree--><div class="layui-tab-content" style="padding:0px;"><div class="layui-tab-item layui-show"><div id="projectbyarea"></div></div><div class="layui-tab-item"><div id="projectbyyear"></div></div></div></div><!--搜索--><div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; "><div class="layui-input-inline"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px"><i class="layui-icon layui-icon-search"></i></button></div>'
+    , content: '<!--项目列表--><div id="modelprojectlisttab" class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;"><!--选项卡--><ul class="layui-tab-title"><li lay-id="list_area" class="layui-this" style="width:40%;">地区</li><li lay-id="list_year" style="width:40%;">时间</li></ul><!--tree--><div class="layui-tab-content" style="padding:0px;"><div class="layui-tab-item layui-show"><div id="projectbyarea"></div></div><div class="layui-tab-item"><div id="projectbyyear"></div></div></div></div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
+
+        document.getElementById('modelprojectlisttab').parentNode.style.maxHeight = (parseInt(document.getElementById('modelprojectlisttab').parentNode.style.height.replace("px", "")) - 78).toString() + "px";
+        document.getElementById("modelprojectlisttab").parentNode.parentNode.innerHTML += '<!--搜索--><div class="layui-row" style="margin-left:5px;position:absolute;bottom:10px; "><div class="layui-input-inline"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:90px;border-radius:5px;margin-left:5px"><i class="layui-icon layui-icon-search"></i></button></div>';
 
         //获取用户全部项目信息
         GetUserAllModelProjects();

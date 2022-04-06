@@ -1,5 +1,5 @@
 ﻿<!--项目列表-->
-<div class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;">
+<div id="modelprojectlisttab" class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;">
     <!--选项卡-->
     <ul class="layui-tab-title">
         <li lay-id="list_area" class="layui-this" style="width:40%;">地区</li>
@@ -15,12 +15,20 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
 <!--搜索-->
-<div class="layui-row" style="margin-left:5px;position:absolute;bottom:30px; ">
+<div class="layui-row" style="margin-left:5px;position:absolute;bottom:10px; ">
     <div class="layui-input-inline">
         <input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px">
     </div>
-    <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:60px;border-radius:5px;margin-left:5px">
+    <button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:90px;border-radius:5px;margin-left:5px">
         <i class="layui-icon layui-icon-search"></i>
     </button>
 </div>
