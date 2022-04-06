@@ -460,9 +460,5 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
             }
         }
-
-
-
-
     }
 }

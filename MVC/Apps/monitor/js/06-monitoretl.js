@@ -15,7 +15,6 @@ function LoadETLLayer() {
             , success: function (layero) {
                 layer.setTop(layero);
 
-
                 GetDeviceData();//监测设备
                 GetDataBase();//监测数据库
                 GetSqlData();//SQL

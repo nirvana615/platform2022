@@ -287,7 +287,7 @@ function ModelTaskInfo(id, style) {
                         //所需成果
                         if (sxcgs.length > 0) {
                             for (var i in sxcgs) {
-                                if (sxcgs[i].name == "系统模型") {
+                                if (sxcgs[i].name == "3D Tiles") {
                                     document.getElementById("sxcgid").innerHTML += '<input name="model_sxcg_add" value="' + sxcgs[i].value + '"' + 'type="checkbox" title="' + sxcgs[i].name + '" checked="">'; //设置默认选择"系统模型"
                                 }
                                 else {
@@ -347,4 +347,3 @@ function ModelTaskInfo(id, style) {
         }
     }
 };
-

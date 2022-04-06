@@ -351,7 +351,7 @@ function DeleteUavProject(uavprojectid) {
 
                 uav_project_list_all = new_uav_project_list_all;
             }
-
+            
             MarkCurrentProject();
             layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         }, datatype: "json"
