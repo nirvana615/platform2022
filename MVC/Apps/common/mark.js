@@ -2098,10 +2098,6 @@ function unselectAddMarkTypeOperate() {
     document.getElementById("svg_mark_polygon_id").setAttribute("style", "fill:#FF4500");
 };
 
-
-
-
-
 //更新点位位置
 function updateMarkPosition() {
     viewer._container.style.cursor = "crosshair";
@@ -2193,12 +2189,6 @@ function updateMarkPosition() {
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
 }
-
-
-
-
-
-
 
 //清除标注临时图形
 function ClearMarkTemp() {
@@ -2430,6 +2420,7 @@ function uploadProjectLineMarkEntity(id, title,position,style, color) {
     var entity = viewer.entities.getById("project_mark_line_" + id);
     if (entity == undefined) {
         var lineposition = JSON.parse(position);
+        var middlepoint = parseInt((lineposition.length)/2);
         var tempentity_line=viewer.entities.add({
             id: "project_mark_line_" +id,
             name: "project_mark_line_" + id,
@@ -2461,7 +2452,7 @@ function uploadProjectLineMarkEntity(id, title,position,style, color) {
         viewer.entities.add({
             id: "project_mark_line_label_" + id,
             name: "project_mark_line_label_" + id,
-            position: JSON.parse(position)[0],
+            position: JSON.parse(position)[middlepoint],
             label: {
                 text: title,
                 font: '16px Times New Roman',
