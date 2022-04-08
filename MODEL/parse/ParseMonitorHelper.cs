@@ -4676,7 +4676,7 @@ namespace MODEL
                     preparer = row[13].ToString(),
                     InstallTime = row[14].ToString(),
                     preparlTime = row[15].ToString(),
-
+                    smallPhoto= row[16].ToString(),
                 };
                 return constPhotoInfo;
             }

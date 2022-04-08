@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -43,6 +45,7 @@ namespace SERVICE.Controllers
             int year = Convert.ToInt32(DateTime.Now.ToString("yyyy"));
             int month = Convert.ToInt32(DateTime.Now.ToString("MM"));
             int day = Convert.ToInt32(DateTime.Now.ToString("dd"));
+            
             //获取当前项目信息   
             MonitorProjectString projectString = ParseMonitorHelper.ParseMonitorProjectString(
                 PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_project WHERE id={0} AND ztm={1} AND bsm{2}", id, (int)MODEL.Enum.State.InUse, userbsms)));
@@ -671,9 +674,20 @@ namespace SERVICE.Controllers
                     {
                         if (patrolPhotoInfoList!=null&&patrolPhotoInfoList.Count > 0)
                         {
+                            /// 无损压缩图片  
+                            /// <param name="sFile">原图片</param>  
+                            /// <param name="dFile">压缩后保存位置</param>  
+                            /// <param name="dHeight">高度</param>  
+                            /// <param name="dWidth"></param>  
+                            /// <param name="flag">压缩质量(数字越小压缩率越高) 1-100</param>  
+                            /// <returns></returns>  
+                            /// 
+
                             PatrolPhotoInfo patrolPhotoInfo1 = patrolPhotoInfoList[0];
+                         GetPicThumbnail(imgdir + patrolPhotoInfo1.photoUrl, imgdir+ "/SurImage/Download/1234.jpg",198,264,70);
                             ImgInfo imgInfo = new ImgInfo();
-                            imgInfo.ImgPath = imgdir + patrolPhotoInfo1.photoUrl;
+
+                            imgInfo.ImgPath = imgdir + "/SurImage/Download/1234.jpg";
 
                             imgInfo.Width = 264;
                             imgInfo.Height = 198;
@@ -691,8 +705,9 @@ namespace SERVICE.Controllers
                         if (patrolPhotoInfoList != null && patrolPhotoInfoList.Count > 1)
                         {
                             PatrolPhotoInfo patrolPhotoInfo1 = patrolPhotoInfoList[1];
+                            GetPicThumbnail(imgdir + patrolPhotoInfo1.photoUrl, imgdir + "/SurImage/Download/4567.jpg", 198, 330, 70);
                             ImgInfo imgInfo = new ImgInfo();
-                            imgInfo.ImgPath = imgdir + patrolPhotoInfo1.photoUrl;
+                            imgInfo.ImgPath = imgdir + "/SurImage/Download/4567.jpg";
 
                             imgInfo.Width = 264;
                             imgInfo.Height = 198;
@@ -848,6 +863,7 @@ namespace SERVICE.Controllers
         [System.Web.Http.HttpGet]
         public string GetYueBaoWordMLHelper(string id, string cookie)
         {
+            
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
             logger.Info("【" + pgsqlConnection + "】pgsqlConnection");
@@ -2768,10 +2784,11 @@ namespace SERVICE.Controllers
                     for (int i = 0; i < rows.Length; i++)
                     {
                         ConstPhotoInfo constPhotoInfo = ParseMonitorHelper.ParseConstPhotoInfo(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+                        
                         if (constPhotoInfo != null)
                         {
                             constPhotoInfoList.Add(constPhotoInfo);
-                            if (constPhotoInfo.type=="1")
+                            if (constPhotoInfo.type == "1")
                             {
                                 constPhotoIn = constPhotoInfo;
                                 flagType = false;
@@ -2915,7 +2932,7 @@ namespace SERVICE.Controllers
                                     txtInfo.Size = 23;
                                     if (device.sn != "")
                                     {
-                                        txtInfo.Content = device.SBXH;
+                                        txtInfo.Content = device.sn;
                                     }
                                     else
                                     {
@@ -3054,7 +3071,7 @@ namespace SERVICE.Controllers
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
-                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[0].photoUrl;
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[0].smallPhoto ;
                                     imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
@@ -3063,7 +3080,7 @@ namespace SERVICE.Controllers
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
-                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[1].photoUrl;
+                                    imgInfo.ImgPath = imgdir  +constPhotoInfoList[1].smallPhoto;
                                     imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
@@ -3072,7 +3089,7 @@ namespace SERVICE.Controllers
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
-                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[2].photoUrl;
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[2].smallPhoto;
                                     imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
@@ -3081,7 +3098,7 @@ namespace SERVICE.Controllers
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
-                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[3].photoUrl;
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[3].smallPhoto;
                                     imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
@@ -3090,7 +3107,7 @@ namespace SERVICE.Controllers
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
-                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[4].photoUrl;
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[4].smallPhoto;
                                     imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
@@ -3099,7 +3116,7 @@ namespace SERVICE.Controllers
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
-                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[5].photoUrl;
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[5].smallPhoto;
                                     imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
@@ -3108,7 +3125,7 @@ namespace SERVICE.Controllers
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
-                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[6].photoUrl;
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[6].smallPhoto;
                                     imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
@@ -3117,7 +3134,7 @@ namespace SERVICE.Controllers
                                 {
 
                                     ImgInfo imgInfo = new ImgInfo();
-                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[7].photoUrl;
+                                    imgInfo.ImgPath = imgdir + constPhotoInfoList[7].smallPhoto;
                                     imgInfo.Width = 165;
                                     imgInfo.Height = 120;
                                     zzz.AddContent(imgInfo);
@@ -3157,6 +3174,149 @@ namespace SERVICE.Controllers
             return projectString.XMMC + "施工安装记录表.docx";
           
 
+        }
+        /// 无损压缩图片  
+        /// <param name="sFile">原图片</param>  
+        /// <param name="dFile">压缩后保存位置</param>  
+        /// <param name="dHeight">高度</param>  
+        /// <param name="dWidth"></param>  
+        /// <param name="flag">压缩质量(数字越小压缩率越高) 1-100</param>  
+        /// <returns></returns>  
+
+        public static Boolean GetPicThumbnail(string sFile, string dFile, int dHeight, int dWidth, int flag)
+        {
+            System.Drawing.Image iSource = System.Drawing.Image.FromFile(sFile);
+            ImageFormat tFormat = iSource.RawFormat;
+            int sW = 0, sH = 0;
+
+            //按比例缩放 
+            Size tem_size = new Size(iSource.Width, iSource.Height);
+            if (tem_size.Width< tem_size.Height)
+            {
+                int temp = dHeight;
+                dHeight = dWidth;
+                dWidth = temp;
+            }
+
+
+            if (tem_size.Width > dHeight || tem_size.Width > dWidth)
+            {
+                if ((tem_size.Width * dHeight) > (tem_size.Width * dWidth))
+                {
+                    sW = dWidth;
+                    sH = (dWidth * tem_size.Height) / tem_size.Width;
+                }
+                else
+                {
+                    sH = dHeight;
+                    sW = (tem_size.Width * dHeight) / tem_size.Height;
+                }
+            }
+            else
+            {
+                sW = tem_size.Width;
+            sH = tem_size.Height;
+        }
+        //sW = Convert.ToInt32(tem_size.Width*0.4);
+        //sH = Convert.ToInt32(tem_size.Height*0.4);
+        Bitmap ob = new Bitmap(dWidth, dHeight);
+            Graphics g = Graphics.FromImage(ob);
+
+            g.Clear(Color.WhiteSmoke);
+            g.CompositingQuality = CompositingQuality.HighQuality;
+            g.SmoothingMode = SmoothingMode.HighQuality;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            g.DrawImage(iSource, new Rectangle((dWidth - sW) / 2, (dHeight - sH) / 2, sW, sH), 0, 0, iSource.Width, iSource.Height, GraphicsUnit.Pixel);
+
+            g.Dispose();
+            //以下代码为保存图片时，设置压缩质量  
+            EncoderParameters ep = new EncoderParameters();
+            long[] qy = new long[1];
+            qy[0] = flag;//设置压缩的比例1-100  
+            EncoderParameter eParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, qy);
+            ep.Param[0] = eParam;
+            try
+            {
+                ImageCodecInfo[] arrayICI = ImageCodecInfo.GetImageEncoders();
+                ImageCodecInfo jpegICIinfo = null;
+                for (int x = 0; x < arrayICI.Length; x++)
+                {
+                    if (arrayICI[x].FormatDescription.Equals("JPEG"))
+                    {
+                        jpegICIinfo = arrayICI[x];
+                        break;
+                    }
+                }
+                if (jpegICIinfo != null)
+                {
+                    ob.Save(dFile, jpegICIinfo, ep);//dFile是压缩后的新路径  
+                }
+                else
+                {
+                    ob.Save(dFile, tFormat);
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                iSource.Dispose();
+                ob.Dispose();
+            }
+        }
+        /// <summary>
+        /// 更新小照片
+        /// </summary>
+        /// <returns></returns>
+        public string UpdateConstPhotoSmallPhoto()
+        {
+
+            // string sql = "SELECT * FROM const_photo_info ";
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM const_photo_info"));
+            List<ConstPhotoInfo> constPhotoInfoList = new List<ConstPhotoInfo>();//相片集合
+            int xyz = 0;
+            if (!string.IsNullOrEmpty(datas))
+            {
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    ConstPhotoInfo constPhotoInfo = ParseMonitorHelper.ParseConstPhotoInfo(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+
+                    if (constPhotoInfo != null)
+                    {
+                        if (constPhotoInfo.smallPhoto.Length==0)
+                        {
+                            System.IO.FileInfo DeleFile = new System.IO.FileInfo(imgdir + constPhotoInfo.photoUrl);
+                            if (DeleFile.Exists)
+                            {
+                                GetPicThumbnail(imgdir + constPhotoInfo.photoUrl, imgdir + "/SurImage/const/" + constPhotoInfo.monitorId + "-" + constPhotoInfo.id + ".jpg", 300, 400, 90);
+                                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE   const_photo_info SET small_photo={0}  WHERE id={1}", SQLHelper.UpdateString("/SurImage/const/" + constPhotoInfo.monitorId + "-" + constPhotoInfo.id + ".jpg"), SQLHelper.UpdateString(constPhotoInfo.id + "")));
+                                xyz++;
+                            }
+                           
+                        }
+                        else
+                        {
+                            System.IO.FileInfo DeleFile = new System.IO.FileInfo(imgdir + constPhotoInfo.smallPhoto);
+                            if (!DeleFile.Exists)
+                            {
+                                GetPicThumbnail(imgdir + constPhotoInfo.photoUrl, imgdir + constPhotoInfo.smallPhoto, 300, 400, 90);
+                                xyz++;
+                            }
+                        }
+
+
+
+                    }
+                }
+            };
+
+
+            return xyz+"";
         }
     }
 }

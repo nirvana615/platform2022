@@ -338,45 +338,46 @@ function LoadLayerListLayer(id) {
                             layers.push(flzDataLayer);
                             console.log(layers);
                         }
-                        var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+                        //var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
 
-                        $.ajax({
-                            url: servicesurl + "/api/FlzWindowInfo/GetSteepHillInfoList", type: "get", data: {
-                                "cookie": document.cookie, "id": id,
-                                "jieLun": '' },
-                            success: function (data) {
-                                layer.close(loadingceindex);
-                                if (data == "") {//没得斜坡单元数据
+                        //$.ajax({
+                        //    url: servicesurl + "/api/FlzWindowInfo/GetSteepHillInfoList", type: "get", data: {
+                        //        "cookie": document.cookie, "id": id,
+                        //        "jieLun": '' },
+                        //    success: function (data) {
+                        //        layer.close(loadingceindex);
+                        //        if (data == "") {//没得斜坡单元数据
 
-                                    //layer.msg("无陡崖用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                                    // curuserid = null;
-                                } else {
-                                    var xiePuoList = JSON.parse(data);
-                                    console.log(xiePuoList);
-                                    var flzDataLayer = new Object;
-                                    flzDataLayer.title = "斜坡";
-                                    flzDataLayer.type = "XIEPUOFAT";
-                                    var flzDataLayerchild = [];
-                                    for (var i in xiePuoList) {
-                                        var positList = JSON.parse(xiePuoList[i].points);
-                                        var flzline = new Object;
-                                        flzline.title = xiePuoList[i].name;
-                                        flzline.id = "XIEPUO_" + xiePuoList[i].id;
-                                        flzline.type = "XIEPUO";
-                                        flzline.remarks = xiePuoList[i].remarks;
-                                        flzline.datas = xiePuoList[i];
-                                        flzline.datas.pointList = positList;
-                                        flzline.pointList = positList;
-                                        flzline.checked = false;
-                                        flzline.spread = false;
-                                        flzline.showCheckbox = true;//显示复选框spread = true
-                                        flzDataLayerchild.push(flzline);
-                                    }
-                                    flzDataLayer.children = flzDataLayerchild;
-                                    flzDataLayer.spread = false;
-                                    layers.push(flzDataLayer);
-                                }
-
+                        //            //layer.msg("无陡崖用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        //            // curuserid = null;
+                        //        } else {
+                        //            var xiePuoList = JSON.parse(data);
+                        //            console.log(xiePuoList);
+                        //            var flzDataLayer = new Object;
+                        //            flzDataLayer.title = "斜坡";
+                        //            flzDataLayer.type = "XIEPUOFAT";
+                        //            var flzDataLayerchild = [];
+                        //            for (var i in xiePuoList) {
+                        //                var positList = JSON.parse(xiePuoList[i].points);
+                        //                var flzline = new Object;
+                        //                flzline.title = xiePuoList[i].name;
+                        //                flzline.id = "XIEPUO_" + xiePuoList[i].id;
+                        //                flzline.type = "XIEPUO";
+                        //                flzline.remarks = xiePuoList[i].remarks;
+                        //                flzline.datas = xiePuoList[i];
+                        //                flzline.datas.pointList = positList;
+                        //                flzline.pointList = positList;
+                        //                flzline.checked = false;
+                        //                flzline.spread = false;
+                        //                flzline.showCheckbox = true;//显示复选框spread = true
+                        //                flzDataLayerchild.push(flzline);
+                        //            }
+                        //            flzDataLayer.children = flzDataLayerchild;
+                        //            flzDataLayer.spread = false;
+                        //            layers.push(flzDataLayer);
+                        //        }
+                        //    }, datatype: "json"
+                        //});
                             //TODO MORE LAYER
                             console.log(layers);
                             if (projectindex != null) {
@@ -1359,8 +1360,7 @@ function LoadLayerListLayer(id) {
                                 });
 
                                 }
-                            }, datatype: "json"
-                        });
+                        
 
                     }
 

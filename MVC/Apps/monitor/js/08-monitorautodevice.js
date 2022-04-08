@@ -306,14 +306,16 @@ function FuConstPhotoData(projectid) {
                     } else if(row.mointorStatus == "1") {
                         return '放样'
                     } else if (row.mointorStatus == "2") {
-                        return '挖坑'
+                        return '开挖'
                     } else if (row.mointorStatus == "3") {
                         return '浇筑'
                     } else if (row.mointorStatus == "4") {
-                        return '立杆'
-                    } else if (row.mointorStatus == "5") {
-                        return '调试'
-                    } else if (row.mointorStatus == "6") {
+                        return '安装'
+                    }
+                    //else if (row.mointorStatus == "5") {
+                    //    return '调试'
+                    //}
+                    else if (row.mointorStatus == "5") {
                         return '<span style="color: green;">已完成</span>'
                     }
 
@@ -339,10 +341,10 @@ function FuConstPhotoData(projectid) {
         , totalRow: false
         , cols: [[
             { field: 'yifangyang', width: 120, title: '放样', align: "center" }
-            , { field: 'yiWakeng', width: 120, title: '挖坑', align: "center" }
+            , { field: 'yiWakeng', width: 120, title: '开挖', align: "center" }
             , { field: 'yiJiaozhu', width: 120, title: '浇筑', align: "center" }
-            , { field: 'yiligan', width: 120, title: '立杆', align: "center" }
-            , { field: 'yitiaoshi', width: 120, title: '调试', align: "center" }
+            , { field: 'yiligan', width: 120, title: '安装', align: "center" }
+            //, { field: 'yitiaoshi', width: 120, title: '调试', align: "center" }
             , { field: 'yiWancheng', width: 120, title: '完成', align: "center" }
             , { field: 'yiWancheng', width: 120, title: '', align: "center" }
         ]]
@@ -378,7 +380,7 @@ function FuConstPhotoData(projectid) {
                 , offset: 'auto'
                 , closeBtn: 1
                 , maxmin: false
-                , content: '<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">        <!--标签-->        <ul class="layui-tab-title">            <li class="layui-this" style="width:35px">放样</li>            <li style="width:35px">挖坑</li>            <li style="width:35px">浇筑</li>            <li style="width:35px">安装</li>            <li style="width:35px">调试</li>            <li style="width:35px">完成</li>            <li style="width:35px">合格证</li><li style="width:35px">处理</li>         </ul>        <!--内容-->        <div class="layui-tab-content">            <div class="layui-tab-item layui-show">                <div class="layim-chat-main">                    <ul id="yiFangYang"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWaKeng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiJiaoZhu"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiligan"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yitiaoshi"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWanCheng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="qita"></ul>                </div>            </div><div class="layui-tab-item">                <div class="layim-chat-main">                    <form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="projectCheckedinfoform"> <div class="layui-form-item"><div class=" layui-form" id="checkUserId">     </div></div> <div class="layui-form-item">	<div class="layui-row">	<div class="layui-col-md6">	<div class="grid-demo">	<div class="layui-inline">	<label class="layui-form-label">安装人员</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text" name="Installer" placeholder="请输入" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div><div class="layui-col-md6">	<div class="grid-demo grid-demo-bg1">	<div class="layui-inline">	<label class="layui-form-label">安装时间</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text" id="InstallTimeId"  name="InstallTime"  placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div>					</div>	</div><div class="layui-form-item">	<div class="layui-row">	<div class="layui-col-md6">	<div class="grid-demo">	<div class="layui-inline">	<label class="layui-form-label">填表人</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text" name="preparer" placeholder="请输入" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div><div class="layui-col-md6">	<div class="grid-demo grid-demo-bg1">	<div class="layui-inline">	<label class="layui-form-label">填表时间</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text"  id="preparTimeId" name="preparTime"  placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div>					</div>	</div>		 <div class="layui-form-item" style="margin:25px 0px 25px 0px;"><div style="position:absolute;right:160px;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="projectCheckedSubmit" style="width:80px">提交</button></div></div></form>                </div>            </div>        </div>    </div>'
+                , content: '<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">        <!--标签-->        <ul class="layui-tab-title">            <li class="layui-this" style="width:35px">放样</li>            <li style="width:35px">挖坑</li>            <li style="width:35px">浇筑</li>            <li style="width:35px">安装</li>          <li style="width:35px">完成</li>            <li style="width:35px">合格证</li><li style="width:35px">处理</li>         </ul>        <!--内容-->        <div class="layui-tab-content">            <div class="layui-tab-item layui-show">                <div class="layim-chat-main">                    <ul id="yiFangYang"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWaKeng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiJiaoZhu"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiligan"></ul>                </div>            </div>              <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="yiWanCheng"></ul>                </div>            </div>            <div class="layui-tab-item">                <div class="layim-chat-main">                    <ul id="qita"></ul>                </div>            </div><div class="layui-tab-item">                <div class="layim-chat-main">                    <form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="projectCheckedinfoform"> <div class="layui-form-item"><div class=" layui-form" id="checkUserId">     </div></div> <div class="layui-form-item">	<div class="layui-row">	<div class="layui-col-md6">	<div class="grid-demo">	<div class="layui-inline">	<label class="layui-form-label">安装人员</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text" name="Installer" placeholder="请输入" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div><div class="layui-col-md6">	<div class="grid-demo grid-demo-bg1">	<div class="layui-inline">	<label class="layui-form-label">安装时间</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text" id="InstallTimeId"  name="InstallTime"  placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div>					</div>	</div><div class="layui-form-item">	<div class="layui-row">	<div class="layui-col-md6">	<div class="grid-demo">	<div class="layui-inline">	<label class="layui-form-label">填表人</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text" name="preparer" placeholder="请输入" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div><div class="layui-col-md6">	<div class="grid-demo grid-demo-bg1">	<div class="layui-inline">	<label class="layui-form-label">填表时间</label>	<div class="layui-input-inline" style="width:180px;">	<input type="text"  id="preparTimeId" name="preparTime"  placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />	</div>	</div>	</div>	</div>					</div>	</div>		 <div class="layui-form-item" style="margin:25px 0px 25px 0px;"><div style="position:absolute;right:160px;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="projectCheckedSubmit" style="width:80px">提交</button></div></div></form>                </div>            </div>        </div>    </div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -388,44 +390,46 @@ function FuConstPhotoData(projectid) {
                     for (var i in photoList) {
                         var photoname = "";
                         if (photoList[i].type == '1') {
-                            document.getElementById("yiFangYang").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="放样' + (i) + '" ></img></li>';
+                            document.getElementById("yiFangYang").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].smallPhoto + '" url="' + datasurl + photoList[i].photoUrl + '"  alt="放样' + (i) + '" ></img></li>';
                             photoinfots = photoList[i];//把安装这些记录放在放样里面。
                             photoname = "放样";
                         } else if (photoList[i].type == '2') {
-                            document.getElementById("yiWaKeng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="挖坑' + (i) + '"></img></li>';
+                            document.getElementById("yiWaKeng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].smallPhoto + '" url="' + datasurl + photoList[i].photoUrl + '"   alt="挖坑' + (i) + '"></img></li>';
 
                             photoname = "挖坑";
                         } else if (photoList[i].type == '3') {
-                            document.getElementById("yiJiaoZhu").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="浇筑' + (i) + '"></img></li>';
+                            document.getElementById("yiJiaoZhu").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].smallPhoto + '" url="' + datasurl + photoList[i].photoUrl + '"   alt="浇筑' + (i) + '"></img></li>';
                             photoname = "浇筑";
                         } else if (photoList[i].type == '4') {
-                            document.getElementById("yiligan").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="安装' + (i) + '"></img></li>';
+                            document.getElementById("yiligan").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].smallPhoto + '" url="' + datasurl + photoList[i].photoUrl + '"   alt="安装' + (i) + '"></img></li>';
                             photoname = "安装";
-                        } else if (photoList[i].type == '5') {
+                        }
+                        //else if (photoList[i].type == '5') {
 
-                            document.getElementById("yitiaoshi").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="调试' + (i) + '"></img></li>';
-                            photoname = "调试";
+                        //    document.getElementById("yitiaoshi").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].smallPhoto + '" alt="调试' + (i) + '"></img></li>';
+                        //    photoname = "调试";
                             
-                        } else if (photoList[i].type == '6') {
-                            document.getElementById("yiWanCheng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="完成' + (i) + '"></img></li>';
-                            photoname = "立杆";
+                        //}
+                        else if (photoList[i].type == '6') {
+                            document.getElementById("yiWanCheng").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].smallPhoto + '" url="' + datasurl + photoList[i].photoUrl + '"   alt="完成' + (i) + '"></img></li>';
+                            photoname = "完成";
                         } else if (photoList[i].type == '7') {
-                            document.getElementById("qita").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].photoUrl + '" alt="合格证' + (i) + '"></img></li>';
+                            document.getElementById("qita").innerHTML += '<li style="display: inline-block"><img id="appdSrcId" style="width: 160px; margin-top: 20px; height: 160px; margin-left: 10px" src="' + datasurl + photoList[i].smallPhoto + '" url="' + datasurl + photoList[i].photoUrl + '"   alt="合格证' + (i) + '"></img></li>';
                             photoname = "合格证";
                         }
                        
                         if ((parseInt(i) + 1) % 4 == 0) {
                             if (photoList[i].flagReport == "1") {
-                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px; " src="' + datasurl + photoList[i].photoUrl + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" checked=""><hr>'
+                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px; " src="' + datasurl + photoList[i].smallPhoto + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" checked=""><hr>'
                             } else {
-                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px; " src="' + datasurl + photoList[i].photoUrl + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" ><hr>'
+                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px; " src="' + datasurl + photoList[i].smallPhoto + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" ><hr>'
                             }
                         
                         } else {
                             if (photoList[i].flagReport=="1") {
-                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px;  " src="' + datasurl + photoList[i].photoUrl + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" checked="" >'
+                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px;  " src="' + datasurl + photoList[i].smallPhoto + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" checked="" >'
                             } else {
-                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px;  " src="' + datasurl + photoList[i].photoUrl + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" >'
+                                document.getElementById("checkUserId").innerHTML += '<img  style="width: 80px;height: 80px;margin-left: 15px;  " src="' + datasurl + photoList[i].smallPhoto + '" ></img><input style="margin-top: 10px; " type="checkbox" name="' + photoList[i].id + '"title="' + photoname + '" >'
                             }
                             
 
@@ -447,6 +451,7 @@ function FuConstPhotoData(projectid) {
                         show: function () {  // 动态加载图片后，更新实例
                             viewerPhoto.update();
                         },
+                        url: 'url'
                     });
                     viewerPhoto = new Viewer(document.getElementById('yiWaKeng'), {
                         toolbar: true, //显示工具条
@@ -458,6 +463,7 @@ function FuConstPhotoData(projectid) {
                         show: function () {  // 动态加载图片后，更新实例
                             viewerPhoto.update();
                         },
+                        url: 'url'
                     });
                     viewerPhoto = new Viewer(document.getElementById('yiJiaoZhu'), {
                         toolbar: true, //显示工具条
@@ -469,6 +475,7 @@ function FuConstPhotoData(projectid) {
                         show: function () {  // 动态加载图片后，更新实例
                             viewerPhoto.update();
                         },
+                        url: 'url'
                     });
                     viewerPhoto = new Viewer(document.getElementById('yiWanCheng'), {
                         toolbar: true, //显示工具条
@@ -480,6 +487,7 @@ function FuConstPhotoData(projectid) {
                         show: function () {  // 动态加载图片后，更新实例
                             viewerPhoto.update();
                         },
+                        url: 'url'
                     });
                     viewerPhoto = new Viewer(document.getElementById('yiligan'), {
                         toolbar: true, //显示工具条
@@ -491,18 +499,19 @@ function FuConstPhotoData(projectid) {
                         show: function () {  // 动态加载图片后，更新实例
                             viewerPhoto.update();
                         },
+                        url: 'url'
                     });
-                    viewerPhoto = new Viewer(document.getElementById('yitiaoshi'), {
-                        toolbar: true, //显示工具条
-                        viewed() {
-                            viewerPhoto.zoomTo(0.75); // 图片显示比例 75%
-                        },
-                        zIndex: 99999999,
-                        navbar: false,
-                        show: function () {  // 动态加载图片后，更新实例
-                            viewerPhoto.update();
-                        },
-                    });
+                    //viewerPhoto = new Viewer(document.getElementById('yitiaoshi'), {
+                    //    toolbar: true, //显示工具条
+                    //    viewed() {
+                    //        viewerPhoto.zoomTo(0.75); // 图片显示比例 75%
+                    //    },
+                    //    zIndex: 99999999,
+                    //    navbar: false,
+                    //    show: function () {  // 动态加载图片后，更新实例
+                    //        viewerPhoto.update();
+                    //    },
+                    //});
                     viewerPhoto = new Viewer(document.getElementById('qita'), {
                         toolbar: true, //显示工具条
                         viewed() {
@@ -513,6 +522,7 @@ function FuConstPhotoData(projectid) {
                         show: function () {  // 动态加载图片后，更新实例
                             viewerPhoto.update();
                         },
+                        url: 'url'
                     });
                     form.render('checkbox');
                     form.val("projectCheckedinfoform", {
@@ -682,11 +692,11 @@ function FuConstPhotoData(projectid) {
                                 if (constPhotodata[j].type == '4' && mointorStatus < 4) {
                                     mointorStatus = 4;
                                 }
-                                if (constPhotodata[j].type == '5' && mointorStatus < 5) {
+                                //if (constPhotodata[j].type == '5' && mointorStatus < 5) {
+                                //    mointorStatus = 5;
+                                //}
+                                if (constPhotodata[j].type == '6' && mointorStatus < 5) {
                                     mointorStatus = 5;
-                                }
-                                if (constPhotodata[j].type == '6' && mointorStatus < 6) {
-                                    mointorStatus = 6;
                                 }
                             }
                         }
@@ -705,10 +715,10 @@ function FuConstPhotoData(projectid) {
                         if (mointorStatus > 3) {
                             yiligan++;
                         }
+                        //if (mointorStatus > 4) {
+                        //    yitiaoshi++;
+                        //}
                         if (mointorStatus > 4) {
-                            yitiaoshi++;
-                        }
-                        if (mointorStatus > 5) {
                             yiWancheng++;
                         }
                    
@@ -718,18 +728,12 @@ function FuConstPhotoData(projectid) {
                     MonitorStringList.sort(function (a, b) { return b.mointorStatus - a.mointorStatus; } );
                     constPhotoTable.reload({ id: 'constPhotoTableId', data: MonitorStringList });
                     var tempList = [];
-                    //tempList.push({ "name": '放样', "num": yifangyang, "bili": toPercent(yifangyang / MonitorStringList.length)});
-                    //tempList.push({ "name": '挖坑', "num": yiWakeng, "bili": toPercent(yiWakeng / MonitorStringList.length)});
-                    //tempList.push({ "name": '浇筑', "num": yiJiaozhu, "bili": toPercent(yiJiaozhu / MonitorStringList.length)});
-                    //tempList.push({ "name": '立杆', "num": yiligan, "bili": toPercent(yiligan / MonitorStringList.length)});
-                    //tempList.push({ "name": '调试', "num": yitiaoshi, "bili": toPercent(yitiaoshi / MonitorStringList.length) });
-                    //tempList.push({ "name": '完成', "num": yiWancheng, "bili": toPercent(yiWancheng / MonitorStringList.length) });
-                    tempList.push({ "yifangyang": yifangyang, "yiWakeng": yiWakeng, "yiJiaozhu": yiJiaozhu, "yiligan": yiligan, "yitiaoshi": yitiaoshi, "yiWancheng": yiWancheng });
-                    tempList.push({ "yifangyang": toPercent(yifangyang / MonitorStringList.length), "yiWakeng": toPercent(yiWakeng / MonitorStringList.length), "yiJiaozhu": toPercent(yiJiaozhu / MonitorStringList.length), "yiligan": toPercent(yiligan / MonitorStringList.length), "yitiaoshi": toPercent(yitiaoshi / MonitorStringList.length), "yiWancheng": toPercent(yiWancheng / MonitorStringList.length) });
+                
+                    tempList.push({ "yifangyang": yifangyang, "yiWakeng": yiWakeng, "yiJiaozhu": yiJiaozhu, "yiligan": yiligan,  "yiWancheng": yiWancheng });
+                    tempList.push({ "yifangyang": toPercent(yifangyang / MonitorStringList.length), "yiWakeng": toPercent(yiWakeng / MonitorStringList.length), "yiJiaozhu": toPercent(yiJiaozhu / MonitorStringList.length), "yiligan": toPercent(yiligan / MonitorStringList.length), "yiWancheng": toPercent(yiWancheng / MonitorStringList.length) });
 
-                    console.log(tempList);
+                  
                     constdeviceTongjitable.reload({ id: 'constdeviceTongjiId', data: tempList });
-                    //console.log(MonitorStringList);
                 }, datatype: "json"
             });
 

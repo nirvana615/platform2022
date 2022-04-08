@@ -9,7 +9,8 @@ util.fixbar({
     , click: function (type) {
         if (type === 'bar1') {
             //图层列表
-            LoadSteepHillindex(currentprojectid);
+            //LoadSteepHillindex(currentprojectid);
+            xiePuoTongji();
         }
         else if (type === 'bar2') {
             //测量

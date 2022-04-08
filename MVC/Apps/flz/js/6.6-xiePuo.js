@@ -7,28 +7,24 @@ var upload = layui.upload;
 var srcInfo = {};//用来装图片地址，备注等。
 var xiePuoIndex = null;
 var xiePoChakanlayerindex = null;
+var droXiePuoAddlayerindex = null;
+var xiepotableview = null;
 function gotoXiePuo() {
     //本面积计算方法为：将所有点转换为大地坐标BLH，然后将H赋值为最大H，再转换为空间直角坐标XYZ，取XY计算面积
     ClearTemp();
     if (currentprojectid == null) {
-        layer.msg('请先选择项目');
+        layer.msg('请先选择项目', { zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
         return;
     }
     if (modleInfo == null) {
-        layer.msg('请先选择模型');
+        layer.msg('请先选择模型', {  zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
         return;
     }
-    isPoint = false;
-    isLength = false;
-    isHeight = false;
+   // layer.min() 、layer.restore()
+    if (xiePuoIndex!=null) {
+        layer.min(xiePuoIndex);
+    }
     isAraa = true;
-    isAzimuth = false;
-    isRedo = false;
-    isPointLabel = false;
-    isPolylineLabel = false;
-    isPolygonLabel = false;
-    isOccurrence = false;
-    isWindowZiDingyi = false;
 
     if (isAraa) {
         if (handler != undefined) {
@@ -156,7 +152,87 @@ function gotoXiePuo() {
                             }),
                         }
                     });
-                   DrowHuaHua("xiePuo", [], points);
+                   // DrowHuaHua("xiePuo", [], points);
+                    if (droXiePuoAddlayerindex == null) {
+                        //
+                        droXiePuoAddlayerindex = layer.open({
+                            type: 1
+                            , title: ['斜坡新增', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                            , area: ['300px', '300px']
+                            , shade: 0
+                            , offset: 'auto'
+                            , closeBtn: 1
+                            , maxmin: true
+                            , moveOut: true
+                            , content: '<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="addxiePuoinfoform"><div class="layui-form-item" style="margin-top:15px;margin-right:5px;"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">斜坡名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">斜坡备注</label><div class="layui-input-block"><input type="text" name="remarks" lay-verify="required" autocomplete="off" placeholder="请输入"  class="layui-input" style="width:160px;"  /></div></div></div></div></div><div class="layui-form-item" style="margin-top:15px"><div style="position:absolute;right:15px;"><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="addxiePuoinfosubmit" style="width:100px">提交</button></div></div></form>'
+                            , zIndex: layer.zIndex
+                            , success: function (layero) {
+                                //置顶
+                                layer.setTop(layero);
+                                form.render();
+
+                                form.on('submit(addxiePuoinfosubmit)', function (data) {
+                                    var position = points;
+                                    data.field.cookie = document.cookie;
+                                    position.push(position[0]);
+                                    data.field.points = JSON.stringify(position);//直接存吧;
+                                    data.field.projectId = currentprojectid;
+                                    //存一个表，斜坡项目关联表
+                                    data.field.status = '0';
+                                    data.field.modleId = modleInfo.id.split("_")[1];//模型id
+                                    //存下当前视角
+                                    var x = viewer.camera.position;
+                                    var y1 = {
+                                        // 指向
+                                        heading: viewer.camera.heading,
+                                        // 视角
+                                        pitch: viewer.camera.pitch,
+                                        roll: viewer.camera.roll
+                                    }
+                                    var home = {
+                                        destination: x,
+                                        orientation: y1
+                                    }
+                                   
+                                    data.field.level = JSON.stringify(home);
+                                    var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+                                    $.ajax({
+                                        url: servicesurl + "/api/FlzWindowInfo/AddFlzSteepHill", type: "post", data: data.field,
+                                        success: function (result) {
+                                            layer.close(loadingminindex);
+
+                                            if (isNaN(result)) {
+                                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                            } else {
+                                                //关闭
+                                                layer.msg("保存成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                                ClearTemp();
+                                                layer.close(droXiePuoAddlayerindex);
+                                                points = [];
+
+                                            }
+
+
+                                        }, datatype: "json"
+                                    });
+                                    return false;
+                                });
+
+                            }
+                            , end: function () {
+                                droXiePuoAddlayerindex = null;
+                                ClearTemp();
+                            }, cancel: function () {//取消按钮
+
+                                //取消画的图和点
+                                if (handler != undefined) {
+                                    handler.destroy();
+                                }
+                                isRedo = true;
+                                points = [];
+                            }
+                        });
+                    }
 
 
                 }
@@ -188,34 +264,147 @@ function gotoXiePuo() {
                             }),
                         }
                     });
-                    DrowHuaHua("xiePuo", [], points);
-                    console.log(points);
+                   // DrowHuaHua("xiePuo", [], points);
+                    if (droXiePuoAddlayerindex == null) {
+                        //
+                        droXiePuoAddlayerindex = layer.open({
+                            type: 1
+                            , title: ['斜坡新增', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                            , area: ['300px', '300px']
+                            , shade: 0
+                            , offset: 'auto'
+                            , closeBtn: 1
+                            , maxmin: true
+                            , moveOut: true
+                            , content: '<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="addxiePuoinfoform"><div class="layui-form-item" style="margin-top:15px;margin-right:5px;"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">斜坡名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">斜坡备注</label><div class="layui-input-block"><input type="text" name="remarks" lay-verify="required" autocomplete="off" placeholder="请输入"  class="layui-input" style="width:160px;"  /></div></div></div></div></div><div class="layui-form-item" style="margin-top:15px"><div style="position:absolute;right:15px;"><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="addxiePuoinfosubmit" style="width:100px">提交</button></div></div></form>'
+                            , zIndex: layer.zIndex
+                            , success: function (layero) {
+                                //置顶
+                                layer.setTop(layero);
+                                form.render();
+
+                                form.on('submit(addxiePuoinfosubmit)', function (data) {
+                                    var position = points;
+                                    data.field.cookie = document.cookie;
+                                    position.push(position[0]);
+                                    data.field.points = JSON.stringify(position);//直接存吧;
+                                    data.field.projectId = currentprojectid;
+                                    //存一个表，斜坡项目关联表
+                                    data.field.status = '0';
+                                    data.field.modleId = modleInfo.id.split("_")[1];//模型id
+                                    //存下当前视角
+                                    var x = viewer.camera.position;
+                                    var y1 = {
+                                        // 指向
+                                        heading: viewer.camera.heading,
+                                        // 视角
+                                        pitch: viewer.camera.pitch,
+                                        roll: viewer.camera.roll
+                                    }
+                                    var home = {
+                                        destination: x,
+                                        orientation: y1
+                                    }
+
+                                    data.field.level = JSON.stringify(home);
+                                    var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+                                    $.ajax({
+                                        url: servicesurl + "/api/FlzWindowInfo/AddFlzSteepHill", type: "post", data: data.field,
+                                        success: function (result) {
+                                            layer.close(loadingminindex);
+
+                                            if (isNaN(result)) {
+                                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                            } else {
+                                                //关闭
+                                                viewer.entities.add({
+                                                    id: "XIEPUO_" + result,
+                                                    polyline: {
+                                                        positions: position,
+                                                        width: 3,
+                                                        material: Cesium.Color.RED,
+                                                        depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                                            color: Cesium.Color.RED
+                                                        }),
+                                                        show: true,
+                                                        classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                                                    },
+                                                });
+                                               
+                                                viewer.entities.add({
+                                                    id: "XIEPUO_" + result + "_LABEL",
+                                                    position: position[0],
+                                                    label: {
+                                                        text: data.field.name,
+                                                        showBackground: true,
+                                                        backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                                        font: '14px Times New Roman',
+                                                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                                        verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                                        pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                                                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                                        scaleByDistance: new Cesium.NearFarScalar(2000, 1, 10000, 0),
+                                                    }
+                                                });
+                                                layer.msg("保存成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                                ClearTemp();
+                                                layer.close(droXiePuoAddlayerindex);
+                                                points = []; 
+                                                GetSteepHillInfoList({ "jieLun": "" });
+
+                                                if (xiePuoIndex != null) {
+                                                    layer.restore(xiePuoIndex);
+                                                }
+                                            }
+
+
+                                        }, datatype: "json"
+                                    });
+                                    return false;
+                                });
+
+                            }
+                            , end: function () {
+                                droXiePuoAddlayerindex = null;
+                                ClearTemp();
+                            }, cancel: function () {//取消按钮
+
+                                //取消画的图和点
+                                if (handler != undefined) {
+                                    handler.destroy();
+                                }
+                                isRedo = true;
+                                points = [];
+                            }
+                        });
+                    }
                 }
 
             }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
         }
     }
 };
-function LoadSteepHillindex(id){
-    ClearTemp();
+function LoadSteepHillindex(xiePuoinfo){
+    //ClearTemp();
 
     if (currentprojectid == null) {
-        layer.msg('请先选择项目');
+        layer.msg('请先选择项目', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
     }
     if (modleInfo == null) {
-        layer.msg('请先选择模型');
+        layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
     }
     if (xiePuoinfo == null) {
-        layer.msg('请先选择斜坡');
+        layer.msg('请先选择斜坡', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
     }
+    layer.min(xiePuoIndex);
     //console.log(xiePuoinfo);
     if (xiePuoinfoaddlayerindex == null) {
         xiePuoinfoaddlayerindex = layer.open({
             type: 1
-            , title: [xiePuoinfo.title + '隐患识别', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+            , title: [xiePuoinfo.name + '隐患识别', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
             , area: ['400px', '720px']
             , shade: 0
             , offset: 'r'
@@ -243,37 +432,37 @@ function LoadSteepHillindex(id){
                 form.render('select');
                 srcInfo = {};
                 form.val('xiePuoSteepHillFilter', {
-                    appd: xiePuoinfo.datas.appd
-                    , apjg: xiePuoinfo.datas.apjg
-                    , xpbj: xiePuoinfo.datas.xpbj
-                    , yxyz: xiePuoinfo.datas.yxyz
-                    , ruc: xiePuoinfo.datas.ruc
-                    , ytjg: xiePuoinfo.datas.ytjg
-                    , ytfh: xiePuoinfo.datas.ytfh
-                    , ytlh: xiePuoinfo.datas.ytlh
-                    , dxdm: xiePuoinfo.datas.dxdm
-                    , dzgz: xiePuoinfo.datas.dzgz
-                    , gcdz: xiePuoinfo.datas.gcdz
-                    , score: xiePuoinfo.datas.score
-                    ,jieLun: xiePuoinfo.datas.jieLun
+                    appd: xiePuoinfo.appd
+                    , apjg: xiePuoinfo.apjg
+                    , xpbj: xiePuoinfo.xpbj
+                    , yxyz: xiePuoinfo.yxyz
+                    , ruc: xiePuoinfo.ruc
+                    , ytjg: xiePuoinfo.ytjg
+                    , ytfh: xiePuoinfo.ytfh
+                    , ytlh: xiePuoinfo.ytlh
+                    , dxdm: xiePuoinfo.dxdm
+                    , dzgz: xiePuoinfo.dzgz
+                    , gcdz: xiePuoinfo.gcdz
+                    , score: xiePuoinfo.score
+                    ,jieLun: xiePuoinfo.jieLun
                 });
                 srcInfo = {
-                      appdrest: xiePuoinfo.datas.appdrest
-                    , apjgrest: xiePuoinfo.datas.apjgrest
-                    , xpbjrest: xiePuoinfo.datas.xpbjrest
-                    , yxyzrest: xiePuoinfo.datas.yxyzrest
-                    , rucrest: xiePuoinfo.datas.rucrest
-                    , ytjgrest: xiePuoinfo.datas.ytjgrest
-                    , ytfhrest: xiePuoinfo.datas.ytfhrest
-                    , ytlhrest: xiePuoinfo.datas.ytlhrest
-                    , appdSrc: xiePuoinfo.datas.appdSrc
-                    , apjgSrc: xiePuoinfo.datas.apjgSrc
-                    , xpbjSrc: xiePuoinfo.datas.xpbjSrc
-                    , yxyzSrc: xiePuoinfo.datas.yxyzSrc
-                    , rucSrc: xiePuoinfo.datas.rucSrc
-                    , ytjgSrc: xiePuoinfo.datas.ytjgSrc
-                    , ytfhSrc: xiePuoinfo.datas.ytfhSrc
-                    , ytlhSrc: xiePuoinfo.datas.ytlhSrc
+                      appdrest: xiePuoinfo.appdrest
+                    , apjgrest: xiePuoinfo.apjgrest
+                    , xpbjrest: xiePuoinfo.xpbjrest
+                    , yxyzrest: xiePuoinfo.yxyzrest
+                    , rucrest: xiePuoinfo.rucrest
+                    , ytjgrest: xiePuoinfo.ytjgrest
+                    , ytfhrest: xiePuoinfo.ytfhrest
+                    , ytlhrest: xiePuoinfo.ytlhrest
+                    , appdSrc: xiePuoinfo.appdSrc
+                    , apjgSrc: xiePuoinfo.apjgSrc
+                    , xpbjSrc: xiePuoinfo.xpbjSrc
+                    , yxyzSrc: xiePuoinfo.yxyzSrc
+                    , rucSrc: xiePuoinfo.rucSrc
+                    , ytjgSrc: xiePuoinfo.ytjgSrc
+                    , ytfhSrc: xiePuoinfo.ytfhSrc
+                    , ytlhSrc: xiePuoinfo.ytlhSrc
                 }
                 /////////////////////
                 form.on('select(appdSelect)', function (data) {
@@ -321,7 +510,7 @@ function LoadSteepHillindex(id){
                 ////////////////////
                 form.on('submit(xiePuoSteepHillFilterSubmit)', function (data) {
                     data.field.cookie = document.cookie;
-                    data.field.id = xiePuoinfo.id.split('_')[1];
+                    data.field.id = xiePuoinfo.id;
                     //备注
                     if (srcInfo.appdrest != null && srcInfo.appdrest != "") { data.field.appdrest = srcInfo.appdrest };
                     if (srcInfo.apjgrest != null && srcInfo.apjgrest != "") { data.field.apjgrest = srcInfo.apjgrest };
@@ -348,31 +537,15 @@ function LoadSteepHillindex(id){
                         success: function (result) {
                             layer.close(loadinglayerindex);
                             if (result == "更新成功") {
-
-                                for (var m in layers) {
-                                    if (layers[m].type == "XIEPUOFAT") {
-                                        for (var i in layers[m].children) {
-                                            if (layers[m].children[i].id == xiePuoinfo.id) {//更新游戏啊
-                                                xiePuoinfo.datas = data.field;
-                                                layers[m].children[i].datas = data.field;
-                                                layers[m].children[i].checked = true;
-                                                layers[m].children[i].spread = true;
-                                                
-                                                break;
-                                            }
-                                        }
-                                        
-                                    }
-                                }
-                                modeljiazaiFlag = false;
-                                tree.reload('prjlayerlistid', { data: layers });
                                 ClearTemp();
 
                                 layer.msg("提交成功。", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
 
-
+                                if (xiePuoIndex != null) {
+                                    layer.restore(xiePuoIndex);
+                                }
                                 //关闭
-                                
+                                GetSteepHillInfoList({ "jieLun": "" });
                                 layer.close(xiePuoinfoaddlayerindex);
                             }
                             else {
@@ -455,6 +628,9 @@ function LoadSteepHillindex(id){
             , end: function () {
                 xiePuoinfoaddlayerindex = null;
                 srcInfo = {};
+                if (xiePuoIndex != null) {
+                    layer.restore(xiePuoIndex);
+                }
             }
         });
     } else {
@@ -691,7 +867,7 @@ function xiePuoTongji() {
     xiePuoIndex = layer.open({
         type: 1
         , title: ['斜坡信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-        , area: ['1000px', '750px']
+        , area: ['1030px', '750px']
         , shade: 0
         , offset: 'auto'
         , closeBtn: 1
@@ -705,135 +881,18 @@ function xiePuoTongji() {
             form.render();
             form.render('select');
             form.on('submit(queryXieposubmit)', function (data) {
-                data.field.cookie = document.cookie;
-                data.field.id = currentprojectid;
-                //data.field.type = '3';
-                var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
-
-                $.ajax({
-                    url: servicesurl + "/api/FlzWindowInfo/GetSteepHillInfoList", type: "get", data: data.field,
-                    success: function (result) {
-                        layer.close(loadinglayerindex);
-                        xiepotabledata = [];
-                        if (result == "") {
-                            //无监测剖面信息
-                            xiepotableview.reload({ id: 'xiepotableviewid', data: [] });
-                        }
-                        else {
-                            var windowInfos = JSON.parse(result);
-                            var tempList = [];
-                            for (var i in windowInfos) {
-                                var xiepo = new Object;
-                                xiepo.id = windowInfos[i].id;
-                                xiepo.name = windowInfos[i].name;
-                                xiepo.creatTime = windowInfos[i].creatTime;
-                                xiepo.projectId = windowInfos[i].projectId;
-                                xiepo.status = windowInfos[i].status;
-                                xiepo.remarks = windowInfos[i].remarks;
-                                xiepo.appd = windowInfos[i].appd;
-                                xiepo.apjg = windowInfos[i].apjg;
-                                xiepo.xpbj = windowInfos[i].xpbj;
-                                xiepo.yxyz = windowInfos[i].yxyz;
-                                xiepo.ruc = windowInfos[i].ruc;
-                                xiepo.ytjg = windowInfos[i].ytjg;
-                                xiepo.ytfh = windowInfos[i].ytfh;
-                                xiepo.ytlh = windowInfos[i].ytlh;
-                                xiepo.dxdm = windowInfos[i].dxdm;
-                                xiepo.dzgz = windowInfos[i].dzgz;
-                                xiepo.gcdz = windowInfos[i].gcdz;
-                                xiepo.score = windowInfos[i].score;
-                                xiepo.jieLun = windowInfos[i].jieLun;
-                                xiepo.appdrest = windowInfos[i].appdrest;
-                                xiepo.apjgrest = windowInfos[i].apjgrest;
-                                xiepo.xpbjrest = windowInfos[i].xpbjrest;
-                                xiepo.yxyzrest = windowInfos[i].yxyzrest;
-                                xiepo.rucrest = windowInfos[i].rucrest;
-                                xiepo.ytjgrest = windowInfos[i].ytjgrest;
-                                xiepo.ytfhrest = windowInfos[i].ytfhrest;
-                                xiepo.ytlhrest = windowInfos[i].ytlhrest;
-                                xiepo.appdSrc = windowInfos[i].appdSrc;
-                                xiepo.apjgSrc = windowInfos[i].apjgSrc;
-                                xiepo.xpbjSrc = windowInfos[i].xpbjSrc;
-                                xiepo.yxyzSrc = windowInfos[i].yxyzSrc;
-                                xiepo.rucSrc = windowInfos[i].rucSrc;
-                                xiepo.ytjgSrc = windowInfos[i].ytjgSrc;
-                                xiepo.ytfhSrc = windowInfos[i].ytfhSrc;
-                                xiepo.ytlhSrc = windowInfos[i].ytlhSrc;
-
-                                //判断一下有没有图片
-                                var srcList = [];
-                                if (windowInfos[i].appdSrc != null && windowInfos[i].appdSrc.length > 0) {
-                                    var temp = {};
-                                    temp.name = "岸坡坡度";
-                                    temp.url = "http://www.cq107chy.com:4022/SurImage/xiepo/" + windowInfos[i].appdSrc + ".jpg";
-                                    srcList.push(temp);
-                                }
-
-                                if (windowInfos[i].apjgSrc != null && windowInfos[i].apjgSrc.length > 0) {
-                                    var temp = {};
-                                    temp.name = "岸坡结构";
-                                    temp.url = "http://www.cq107chy.com:4022/SurImage/xiepo/" + windowInfos[i].apjgSrc + ".jpg";
-                                    srcList.push(temp);
-                                }
-                                if (windowInfos[i].xpbjSrc != null && windowInfos[i].xpbjSrc.length > 0) {
-                                    var temp = {};
-                                    temp.name = "斜坡边界";
-                                    temp.url = "http://www.cq107chy.com:4022/SurImage/xiepo/" + windowInfos[i].xpbjSrc + ".jpg";
-                                    srcList.push(temp);
-                                }
-                                if (windowInfos[i].yxyzSrc != null && windowInfos[i].yxyzSrc.length > 0) {
-                                    var temp = {};
-                                    temp.name = "岩性岩组";
-                                    temp.url = "http://www.cq107chy.com:4022/SurImage/xiepo/" + windowInfos[i].yxyzSrc + ".jpg";
-                                    srcList.push(temp);
-                                }
-                                if (windowInfos[i].rucSrc != null && windowInfos[i].rucSrc.length > 0) {
-                                    var temp = {};
-                                    temp.name = "软弱层";
-                                    temp.url = "http://www.cq107chy.com:4022/SurImage/xiepo/" + windowInfos[i].rucSrc + ".jpg";
-                                    srcList.push(temp);
-                                }
-                                if (windowInfos[i].ytjgSrc != null && windowInfos[i].ytjgSrc.length > 0) {
-                                    var temp = {};
-                                    temp.name = "岩体结构";
-                                    temp.url = "http://www.cq107chy.com:4022/SurImage/xiepo/" + windowInfos[i].ytjgSrc + ".jpg";
-                                    srcList.push(temp);
-                                }
-                                if (windowInfos[i].ytfhSrc != null && windowInfos[i].ytfhSrc.length > 0) {
-                                    var temp = {};
-                                    temp.name = "岩体风化程度";
-                                    temp.url = "http://www.cq107chy.com:4022/SurImage/xiepo/" + windowInfos[i].ytfhSrc + ".jpg";
-                                    srcList.push(temp);
-                                }
-                                if (windowInfos[i].ytlhSrc != null && windowInfos[i].ytlhSrc.length > 0) {
-                                    var temp = {};
-                                    temp.name = "岩体裂化程度";
-                                    temp.url = "http://www.cq107chy.com:4022/SurImage/xiepo/" + windowInfos[i].ytlhSrc + ".jpg";
-                                    srcList.push(temp);
-                                }
-                                if (srcList.length > 0) {
-                                    xiepo.srcList = srcList;
-                                } else {
-                                    xiepo.srcList = "";
-                                }
-
-                                xiepotabledata.push(xiepo);
-                                
-                            }
-                            xiepotableview.reload({ id: 'xiepotableviewid', data: xiepotabledata });
-                        }
-                    }, datatype: "json"
-                });
+                GetSteepHillInfoList(data.field);
                 return false;
             });
         }
         , end: function () {
             xiePuoIndex = null;
+            xiepotableview = null;
         }
     });
 
     var xiepotabledata = [];
-    var xiepotableview = table.render({
+    xiepotableview = table.render({
         elem: '#xiepotable-view'
         , id: 'xiepotableviewid'
         , title: '斜坡信息'
@@ -846,13 +905,14 @@ function xiePuoTongji() {
         , initSort: { field: 'id', type: 'desc' }
         , cols: [[
             { field: 'id', title: 'ID', hide: true }
+            ,{ type: 'checkbox' }
             , { field: 'name', title: '斜坡名称', width: 120, align: "center", totalRowText: '合计' }
             , { field: 'dxdm', title: '地形地貌得分', width: 120, sort: true, align: "center", totalRow: true }
             , { field: 'dzgz', title: '地质构造得分', width: 120, sort: true, align: "center", totalRow: true }
             , { field: 'gcdz', title: '工程地质得分', width: 120, sort: true, align: "center", totalRow: true }
-            , { field: 'score', title: '斜坡得分', width: 120, sort: true, align: "center", totalRow: true }
+            , { field: 'score', title: '斜坡得分', width: 100, sort: true, align: "center", totalRow: true }
             , {
-                field: 'jieLun', title: '斜坡结果', width: 200, align: "center", templet: function (row) {
+                field: 'jieLun', title: '识别结果', width: 200, align: "center", templet: function (row) {
                     if (row.jieLun != null && row.jieLun.length>0) {
                         return row.jieLun;
                     } else {
@@ -862,15 +922,62 @@ function xiePuoTongji() {
                     //得到当前行数据，并拼接成自定义模板
 
                 } }
-            , { fixed: 'right', width: 180, align: 'center', toolbar: '#processedPatrolButon' }
+            , { fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#processedPatrolButon' }
         ]]
         , data: []
     });
     table.on('tool(xiepotable-view)', function (obj) {
         console.log(obj);
+        var entity = viewer.entities.getById("XIEPUO_" + obj.data.id);
+        if (entity == undefined) {
+            entity = viewer.entities.add({
+                id: "XIEPUO_" + obj.data.id,
+                polyline: {
+                    positions: obj.data.points,
+                    width: 3,
+                    material: Cesium.Color.RED,
+                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                        color: Cesium.Color.RED
+                    }),
+                    show: true,
+                    classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                },
+            });
+        }
+        if (obj.data.level.length > 0) {
+            var home = JSON.parse(obj.data.level);
+            viewer.scene.camera.setView(home);
+        } else {
+            var xyzzz = getChanzhuang(obj.data.points);
+            viewer.zoomTo(entity, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(xyzzz.qingXiang) - 180)), Cesium.Math.toRadians(parseFloat(xyzzz.qingJiao) - 90)));
+
+        }
+
+
+        var entitylabel = viewer.entities.getById("XIEPUO_" + obj.data.id + "_LABEL");
+        if (entitylabel == undefined) {
+            viewer.entities.add({
+                id: "XIEPUO_" + obj.data.id + "_LABEL",
+                position: obj.data.points[0],
+                label: {
+                    text: obj.data.name,
+                    showBackground: true,
+                    backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                    font: '14px Times New Roman',
+                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                    pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                    scaleByDistance: new Cesium.NearFarScalar(2000, 1, 10000, 0),
+                }
+            });
+        }
+
+
+
         if (obj.event === 'detail') {
             var datatemp = obj.data;
-            if (xiePoChakanlayerindex !=null) {
+            if (xiePoChakanlayerindex != null) {
                 layer.msg("已打开查看窗口", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 return;
             }
@@ -947,14 +1054,158 @@ function xiePuoTongji() {
                     xiePoChakanlayerindex = null;
                 }
             });
+        } else if (obj.event === 'delete') {
+            layer.confirm('确认删除' + obj.data.name + '斜坡?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                var temp = {};
+                temp.id = obj.data.id;
+                temp.cookie = document.cookie;
+                var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                $.ajax({
+                    url: servicesurl + "/api/FlzWindowInfo/DeleteFlzSteepHill", type: "delete", data: temp,
+                    success: function (result) {
+                        layer.close(loadinglayerindex);
+                        if (result == "删除成功") {
+                            layer.msg("删除成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            viewer.entities.removeById("XIEPUO_" + obj.data.id);
+                            viewer.entities.removeById("XIEPUO_" + obj.data.id + "_LABEL");
+                            ClearTemp();
+                            GetSteepHillInfoList({ "jieLun": "" });
+                        } else {
+                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        }
+                    }, datatype: "json"
+                });
+            });
+        } else if (obj.event === 'chuli') {
+            LoadSteepHillindex(obj.data);
         }
     });
+    table.on('checkbox(xiepotable-view)', function (obj) {
+        console.log(obj);
+        if (obj.type == "all") {//全选按钮
+            if (obj.checked) {//选中
+                var checkStatus = table.checkStatus('xiepotableviewid').data;
+                var entityList = [];
+                for (var i = 0; i < checkStatus.length;i++) {
+                    var entity = viewer.entities.getById("XIEPUO_" + checkStatus[i].id);
+                    if (entity== undefined) {
+                        entity=viewer.entities.add({
+                            id: "XIEPUO_" + checkStatus[i].id,
+                            polyline: {
+                                positions: checkStatus[i].points,
+                                width: 3,
+                                material: Cesium.Color.RED,
+                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                    color: Cesium.Color.RED
+                                }),
+                                show: true,
+                                classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                            },
+                        });
+                    }
+                    var entitylabel = viewer.entities.getById("XIEPUO_" + checkStatus[i].id+ "_LABEL");
+                    if (entitylabel == undefined) {
+                        viewer.entities.add({
+                            id: "XIEPUO_" + checkStatus[i].id + "_LABEL",
+                            position: checkStatus[i].points[0],
+                            label: {
+                                text: checkStatus[i].name,
+                                showBackground: true,
+                                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                font: '14px Times New Roman',
+                                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                scaleByDistance: new Cesium.NearFarScalar(2000, 1, 10000, 0),
+                            }
+                        });
+                    }
+                    entityList.push(entity);
+                }
+                if (entityList.length>0) {
+                    viewer.flyTo(entityList, { duration: 5, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 10000) });
+                }
+
+            } else {
+                var checkNoStatus = table.cache['xiepotableviewid'];//全部未选中
+                for (var i = 0; i < checkNoStatus.length; i++) {
+                    viewer.entities.removeById("XIEPUO_" + checkNoStatus[i].id);
+                    viewer.entities.removeById("XIEPUO_" + checkNoStatus[i].id + "_LABEL");
+                }
+            }
+        } else {//单选按钮
+            if (obj.checked) {//选中
+                var entity = viewer.entities.getById("XIEPUO_" + obj.data.id);
+                if (entity == undefined) {
+                    entity=viewer.entities.add({
+                        id: "XIEPUO_" + obj.data.id,
+                        polyline: {
+                            positions: obj.data.points,
+                            width: 3,
+                            material: Cesium.Color.RED,
+                            depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                color: Cesium.Color.RED
+                            }),
+                            show: true,
+                            classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                        },
+                    });
+                }
+                if (obj.data.level.length > 0) {
+                    var home = JSON.parse(obj.data.level);
+                    viewer.scene.camera.setView(home);
+                } else {
+                    var xyzzz = getChanzhuang(obj.data.points);
+                    viewer.zoomTo(entity, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(xyzzz.qingXiang) - 180)), Cesium.Math.toRadians(parseFloat(xyzzz.qingJiao) - 90)));
+
+                }
+                
+                
+                var entitylabel = viewer.entities.getById("XIEPUO_" + obj.data.id + "_LABEL");
+                if (entitylabel == undefined) {
+                    viewer.entities.add({
+                        id: "XIEPUO_" + obj.data.id + "_LABEL",
+                        position: obj.data.points[0],
+                        label: {
+                            text: obj.data.name,
+                            showBackground: true,
+                            backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                            font: '14px Times New Roman',
+                            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                            verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                            pixelOffset: new Cesium.Cartesian2(0.0, -36),
+                            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                    scaleByDistance: new Cesium.NearFarScalar(2000, 1, 10000, 0),
+                        }
+                    });
+                }
+            
+            } else {
+                viewer.entities.removeById("XIEPUO_" + obj.data.id);
+                viewer.entities.removeById("XIEPUO_" + obj.data.id + "_LABEL");
+            }
+        }
+
+        //console.log(table.getData('xiepotableviewid'));
+        //console.log(table.cache['xiepotableviewid']);
+        //var checkStatus = table.checkStatus('xiepotableviewid');
+
+        //console.log(checkStatus.data)//选中行数据
+
+        //console.log(checkStatus.data.length)
+    });
+    GetSteepHillInfoList({ "jieLun": ""});
+}
+
+function GetSteepHillInfoList(data) {
     var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
         url: servicesurl + "/api/FlzWindowInfo/GetSteepHillInfoList", type: "get", data: {
             "id": currentprojectid,
             "cookie": document.cookie,
-            "jieLun":''
+            "jieLun": data.jieLun
         },
         success: function (data) {
             layer.close(loadinglayerindex);
@@ -1002,9 +1253,12 @@ function xiePuoTongji() {
                     xiepo.ytjgSrc = windowInfos[i].ytjgSrc;
                     xiepo.ytfhSrc = windowInfos[i].ytfhSrc;
                     xiepo.ytlhSrc = windowInfos[i].ytlhSrc;
+                    xiepo.level = windowInfos[i].level;
+                    xiepo.points = JSON.parse(windowInfos[i].points);
+
                     //判断一下有没有图片
                     var srcList = [];
-                    if (windowInfos[i].appdSrc != null && windowInfos[i].appdSrc.length>0) {
+                    if (windowInfos[i].appdSrc != null && windowInfos[i].appdSrc.length > 0) {
                         var temp = {};
                         temp.name = "岸坡坡度";
                         temp.url = "http://www.cq107chy.com:4022/SurImage/xiepo/" + windowInfos[i].appdSrc + ".jpg";

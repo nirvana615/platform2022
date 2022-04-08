@@ -81,5 +81,9 @@ namespace MODEL
         ///填表时间
         /// </summary>
         public string preparlTime { get; set; }
+        /// <summary>
+        ///小图路由
+        /// </summary>
+        public string smallPhoto { get; set; }
     }
 }

@@ -752,16 +752,22 @@ var xiepoTable = "	<form class='layui-form' style='margin-top:5px;margin-right:5
     + "	        </div>	"
     + "	    </div>	"
     + "	</form>	"
-    
-     + "	<script type='text/html' id='processedPatrolButon'>                                                      "
+
+    + "	<script type='text/html' id='processedPatrolButon'>                                                      "
     //+ "           {{#  if(d.status != 0){ }}"
     //+ "		        <a class='layui-btn layui-btn-xs' lay-event='edit'>查看坡面</a>                       "
     //+ "          {{#  } }} "
+    + "			    <a class='layui-btn  layui-btn-xs' lay-event='chuli'>识别</a>  "
     + "          {{#  if(d.srcList != ''){ }}"
-    + "			    <a class='layui-btn layui-btn-xs layui-btn-xs' lay-event='detail'>查看图片</a>  "
+    + "			    <a class='layui-btn layui-btn-normal layui-btn-xs' lay-event='detail'>查看</a>  "
     + "          {{#  } }} "
+
+    + "			    <a class='layui-btn layui-btn-danger layui-btn-xs' lay-event='delete'>删除</a>  "
     + "		</script>                                                                             "
-    + "	<table class='layui-hide' id='xiepotable-view' lay-filter='xiepotable-view'></table>	";
+    + "	<table class='layui-hide' id='xiepotable-view' lay-filter='xiepotable-view'></table>	"
+    + "	    <div style='width: 370px; margin: 30px 310px;'>"
+    + "	        <button type='button' class='layui-btn  layui-btn-fluid' onclick='gotoXiePuo()'>新增斜坡</button>"
+    + "	    </div>";
 
 var srcChaKan =  "<ul id='xiepochakan'>                                       "
     + "    <li><img id='appdSrcId' style='width:80px;margin-top: 20px; height:80px;margin-left: 10px' alt='岸坡坡度'></li> "
