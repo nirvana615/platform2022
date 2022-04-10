@@ -24,7 +24,7 @@ namespace SERVICE.Controllers
 
 
         /// <summary>
-        /// 后台获取全部模型项目
+        /// 获取全部模型项目（后台）
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -56,57 +56,6 @@ namespace SERVICE.Controllers
                 {
                     return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目！", string.Empty));
                 }
-            }
-        }
-
-        /// <summary>
-        /// 获取用户全部模型项目
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public string GetUserModelProjects(string cookie)
-        {
-            User user = null;
-            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user);
-
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
-            {
-                string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_user_project WHERE userid={0} AND ztm={1} ORDER BY id DESC", user.Id, (int)MODEL.Enum.State.InUse));
-                if (string.IsNullOrEmpty(maps))
-                {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户无项目！", string.Empty));
-                }
-                else
-                {
-                    List<ModelProject> modelProjects = new List<ModelProject>();
-                    string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
-                    for (int i = 0; i < rows.Length; i++)
-                    {
-                        MapUserModelProject mapUserModelProject = ParseModelHelper.ParseMapUserModelProject(rows[i]);
-                        if (mapUserModelProject != null)
-                        {
-                            ModelProject modelProject = ParseModelHelper.ParseModelProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE id={0} AND ztm={1}", mapUserModelProject.ModelProjectId, (int)MODEL.Enum.State.InUse)));
-
-                            if (modelProject != null)
-                            {
-                                modelProjects.Add(modelProject);
-                            }
-                        }
-                    }
-
-                    if (modelProjects.Count > 0)
-                    {
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(modelProjects)));
-                    }
-                    else
-                    {
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目！", string.Empty));
-                    }
-                }
-            }
-            else
-            {
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户验证失败！", string.Empty));
             }
         }
 
@@ -171,7 +120,7 @@ namespace SERVICE.Controllers
             {
                 authmodelprojectlist = modelprojectids.Split(new char[] { ',' }).ToList();//授权项目模型
             }
-            
+
             //查询用户已有模型项目
             string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
             if (!string.IsNullOrEmpty(maps))
@@ -213,6 +162,260 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
 
+
+        /// <summary>
+        /// 获取用户全部模型项目（TODO可以项目列表数据替换，待删除）
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetUserModelProjects(string cookie)
+        {
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_user_project WHERE userid={0} AND ztm={1} ORDER BY id DESC", user.Id, (int)MODEL.Enum.State.InUse));
+                if (string.IsNullOrEmpty(maps))
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户无项目！", string.Empty));
+                }
+                else
+                {
+                    List<ModelProject> modelProjects = new List<ModelProject>();
+                    string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        MapUserModelProject mapUserModelProject = ParseModelHelper.ParseMapUserModelProject(rows[i]);
+                        if (mapUserModelProject != null)
+                        {
+                            ModelProject modelProject = ParseModelHelper.ParseModelProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE id={0} AND ztm={1}", mapUserModelProject.ModelProjectId, (int)MODEL.Enum.State.InUse)));
+
+                            if (modelProject != null)
+                            {
+                                modelProjects.Add(modelProject);
+                            }
+                        }
+                    }
+
+                    if (modelProjects.Count > 0)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(modelProjects)));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目！", string.Empty));
+                    }
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户验证失败！", string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// 获取用户全部模型项目数据（含项目、任务）
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetUserModelProjectDatas(string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                List<ModelProjectInfo> modelProjectInfos = new List<ModelProjectInfo>();
+
+                string projectdatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE bsm{0} AND ztm={1} ORDER BY xmsj DESC", userbsms, (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(projectdatas))
+                {
+                    string[] projectrows = projectdatas.Split(new char[] { COM.ConstHelper.rowSplit });
+
+                    for (int i = 0; i < projectrows.Length; i++)
+                    {
+                        ModelProject modelProject = ParseModelHelper.ParseModelProject(projectrows[i]);
+                        if (modelProject != null)
+                        {
+                            ModelProjectInfo modelProjectInfo = new ModelProjectInfo();
+                            modelProjectInfo.ModelProjects = modelProject;
+
+                            #region 项目对应模型
+                            string project_task_maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_task WHERE projectid={0} AND ztm={1} ORDER BY cjsj DESC", modelProject.Id, (int)MODEL.Enum.State.InUse));
+                            if (!string.IsNullOrEmpty(project_task_maps))
+                            {
+                                ModelTaskInfos modelTaskInfos = new ModelTaskInfos();
+                                modelTaskInfos.Title = "任务";
+
+                                #region 项目对应任务
+                                List<ModelTask> Tasks = new List<ModelTask>();
+
+                                string[] maprows = project_task_maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                                for (int j = 0; j < maprows.Length; j++)
+                                {
+                                    MapModelProjecTask mapModelProjecTask = ParseModelHelper.ParseMapModelProjecTask(maprows[j]);
+                                    if (mapModelProjecTask != null)
+                                    {
+                                        ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
+                                        if (modelTask != null)
+                                        {
+                                            Tasks.Add(modelTask);
+                                        }
+                                    }
+                                }
+                                #endregion
+
+                                if (Tasks.Count > 0)
+                                {
+                                    modelTaskInfos.TaskList = Tasks;
+                                    modelProjectInfo.ModelTasks = modelTaskInfos;
+                                }
+                            }
+                            #endregion
+
+                            modelProjectInfos.Add(modelProjectInfo);
+                        }
+                    }
+                    if (modelProjectInfos.Count > 0)
+                    {
+                        //有项目信息
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(modelProjectInfos)));
+                    }
+                    else
+                    {
+                        //无项目信息
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
+                    }
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
+                }
+            }
+            else
+            {
+                //验证失败
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// 获取用户全部w未关联模型项目数据（含项目、任务）
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetUserNoUseModelProjectDatas(string cookie, string usemodelids)
+        {
+            //已于业务系统关联的模型id
+            List<string> usemodellist = new List<string>();
+            if (!string.IsNullOrEmpty(usemodelids))
+            {
+                usemodellist = usemodelids.Split(new char[] { ',' }).ToList();
+            }
+
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                List<ModelProjectData> modelProjectDatas = new List<ModelProjectData>();
+
+                string projects = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE bsm{0} AND ztm={1} ORDER BY xmsj DESC", userbsms, (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(projects))
+                {
+                    string[] projectrows = projects.Split(new char[] { COM.ConstHelper.rowSplit });
+
+                    for (int i = 0; i < projectrows.Length; i++)
+                    {
+                        ModelProject modelProject = ParseModelHelper.ParseModelProject(projectrows[i]);
+                        if (modelProject != null)
+                        {
+                            ModelProjectData modelProjectData = new ModelProjectData();
+                            modelProjectData.Project = modelProject;
+
+                            #region 项目模型
+                            string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_task WHERE projectid={0} AND ztm={1} ORDER BY cjsj DESC", modelProject.Id, (int)MODEL.Enum.State.InUse));
+                            if (!string.IsNullOrEmpty(maps))
+                            {
+                                List<ModelTask> Tasks = new List<ModelTask>();
+
+                                string[] maprows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                                for (int j = 0; j < maprows.Length; j++)
+                                {
+                                    MapModelProjecTask mapModelProjecTask = ParseModelHelper.ParseMapModelProjecTask(maprows[j]);
+                                    if (mapModelProjecTask != null)
+                                    {
+                                        ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
+                                        if (modelTask != null && !usemodellist.Contains(modelTask.Id.ToString()))
+                                        {
+                                            Tasks.Add(modelTask);
+                                        }
+                                    }
+                                }
+
+                                if (Tasks.Count > 0)
+                                {
+                                    modelProjectData.Tasks = Tasks;
+                                    modelProjectDatas.Add(modelProjectData);
+                                }
+                            }
+                            #endregion
+                        }
+                    }
+
+                    if (modelProjectDatas.Count > 0)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(modelProjectDatas)));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
+                    }
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// 获取项目信息（TODO可以项目列表数据替换，待删除）
+        /// </summary>
+        /// <param name="id">项目id</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetModelProjectInfo(int id, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                ModelProject modelproject = ParseModelHelper.ParseModelProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM model_project WHERE id={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (modelproject != null)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(modelproject)));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无此项目！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
+
         /// <summary>
         /// 新建项目
         /// </summary>
@@ -220,7 +423,6 @@ namespace SERVICE.Controllers
         [HttpPost]
         public string AddModelProject()
         {
-            #region 参数
             string xmmc = HttpContext.Current.Request.Form["model_xmmc_add"];                   //项目名称
             string xmprovince = HttpContext.Current.Request.Form["model_province_add"];         //省市
             string xmdistrict = HttpContext.Current.Request.Form["model_district_add"];         //县级行政区
@@ -230,7 +432,6 @@ namespace SERVICE.Controllers
             string xzqbm = HttpContext.Current.Request.Form["model_district_add"];
             string xmwz = HttpContext.Current.Request.Form["model_xmwz_add"];
             string bz = HttpContext.Current.Request.Form["model_bz_add"];
-            #endregion
 
             User user = null;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
@@ -435,103 +636,8 @@ namespace SERVICE.Controllers
         }
 
 
-
         /// <summary>
-        /// 获取用户全部模型项目（含任务）
-        /// </summary>
-        /// <param name="cookie"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public string GetUserModelProjectList(string cookie)
-        {
-            string userbsms = string.Empty;
-            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
-
-            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
-            {
-                List<ModelProjectInfo> modelProjectInfos = new List<ModelProjectInfo>();
-
-                string projectdatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_project WHERE bsm{0} AND ztm={1} ORDER BY xmsj DESC", userbsms, (int)MODEL.Enum.State.InUse));
-                if (!string.IsNullOrEmpty(projectdatas))
-                {
-                    string[] projectrows = projectdatas.Split(new char[] { COM.ConstHelper.rowSplit });
-
-                    for (int i = 0; i < projectrows.Length; i++)
-                    {
-                        ModelProject modelProject = ParseModelHelper.ParseModelProject(projectrows[i]);
-                        if (modelProject != null)
-                        {
-                            ModelProjectInfo modelProjectInfo = new ModelProjectInfo();
-                            modelProjectInfo.ModelProjects = modelProject;
-
-                            #region 项目对应模型
-                            string project_task_maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_task WHERE projectid={0} AND ztm={1} ORDER BY cjsj DESC", modelProject.Id, (int)MODEL.Enum.State.InUse));
-                            if (!string.IsNullOrEmpty(project_task_maps))
-                            {
-                                ModelTaskInfos modelTaskInfos = new ModelTaskInfos();
-                                modelTaskInfos.Title = "任务";
-
-                                #region 项目对应任务
-                                List<ModelTask> Tasks = new List<ModelTask>();
-
-                                string[] maprows = project_task_maps.Split(new char[] { COM.ConstHelper.rowSplit });
-                                for (int j = 0; j < maprows.Length; j++)
-                                {
-                                    MapModelProjecTask mapModelProjecTask = ParseModelHelper.ParseMapModelProjecTask(maprows[j]);
-                                    if (mapModelProjecTask != null)
-                                    {
-                                        ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
-                                        if (modelTask != null)
-                                        {
-                                            Tasks.Add(modelTask);
-                                        }
-                                    }
-                                }
-                                #endregion
-
-                                if (Tasks.Count > 0)
-                                {
-                                    modelTaskInfos.TaskList = Tasks;
-                                    modelProjectInfo.ModelTasks = modelTaskInfos;
-                                }
-                            }
-                            #endregion
-
-                            modelProjectInfos.Add(modelProjectInfo);
-                        }
-                    }
-                    if (modelProjectInfos.Count > 0)
-                    {
-                        //有项目信息
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(modelProjectInfos)));
-                    }
-                    else
-                    {
-                        //无项目信息
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
-                    }
-                }
-                else
-                {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无项目信息！", string.Empty));
-                }
-            }
-            else
-            {
-                //验证失败
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
-            }
-        }
-
-
-
-
-
-
-
-
-        /// <summary>
-        /// 获取所有项目，以及各项目下的任务实景模型
+        /// 获取所有项目，以及各项目下的任务实景模型（待删除）
         /// </summary>
         /// <param name="cookie"></param>
         /// <returns></returns>
@@ -618,61 +724,100 @@ namespace SERVICE.Controllers
             }
         }
 
+
         /// <summary>
-        /// 获取项目信息（查看+编辑项目）
+        /// 新增业务系统使用模型
         /// </summary>
-        /// <param name="id">项目id</param>
-        /// <param name="cookie">验证信息</param>
         /// <returns></returns>
-        [HttpGet]
-        public string GetModelProjectInfo(int id, string cookie)
+        [HttpPost]
+        public string AddUserModelProjectUse()
         {
-            string userbsms = string.Empty;
-            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+            string useprojectid = HttpContext.Current.Request.Form["useprojectid"];
+            string syscode = HttpContext.Current.Request.Form["syscode"];
+            string modelinfo = HttpContext.Current.Request.Form["modelinfo"];
+
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
-                ModelProject modelproject = ParseModelHelper.ParseModelProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM model_project WHERE id={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
-                if (modelproject != null)
+                List<ModelUse> modelUses = JsonHelper.ToObject<List<ModelUse>>(modelinfo);
+                if (modelUses.Count > 0)
                 {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(modelproject)));
+                    List<int> successmodelids = new List<int>();
+
+                    for (int i = 0; i < modelUses.Count; i++)
+                    {
+                        int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO model_map_project_use (syscode,useprojectid,modelprojectid,modeltaskid,cjsj,ztm) VALUES({0},{1},{2},{3},{4},{5})", syscode, useprojectid, modelUses[i].projectid, modelUses[i].modelid, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
+                        if (id != -1)
+                        {
+                            successmodelids.Add(modelUses[i].modelid);
+                        }
+                    }
+
+                    if (successmodelids.Count > 0)
+                    {
+                        if (successmodelids.Count == modelUses.Count)
+                        {
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(successmodelids)));
+                        }
+                        else
+                        {
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "部分添加成功！", JsonHelper.ToJson(successmodelids)));
+                        }
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "添加实景模型失败！", string.Empty));
+                    }
                 }
                 else
                 {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无此项目！", string.Empty));
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无模型信息！", string.Empty));
                 }
             }
             else
             {
-                //验证失败
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "验证用户失败！", string.Empty));
             }
         }
 
+        /// <summary>
+        /// 取消业务系统使用模型
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        public string CancelUserModelProjectUse()
+        {
+            string useprojectid = HttpContext.Current.Request.Form["useprojectid"];
+            string syscode = HttpContext.Current.Request.Form["syscode"];
+            string modelid = HttpContext.Current.Request.Form["modelid"];
 
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                int count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_map_project_use SET ztm={0} WHERE syscode={1} AND useprojectid={2} AND modeltaskid={3} AND ztm={4}", (int)MODEL.Enum.State.NoUse, syscode, useprojectid, modelid, (int)MODEL.Enum.State.InUse));
+                if (count == 1)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", modelid));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除失败！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "验证用户失败！", string.Empty));
+            }
+        }
 
         /// <summary>
         /// 生成模型项目编码
         /// </summary>
         /// <param name="xjxzq"></param>
-        /// <param name="type"></param>
         /// <returns></returns>
         private string CreateModelProjectCode(string xjxzq)
         {

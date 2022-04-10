@@ -22,7 +22,7 @@ layer.open({
         layer.setTop(layero);
 
         document.getElementById('modelprojectlisttab').parentNode.style.maxHeight = (parseInt(document.getElementById('modelprojectlisttab').parentNode.style.height.replace("px", "")) - 78).toString() + "px";
-        document.getElementById("modelprojectlisttab").parentNode.parentNode.innerHTML += '<!--搜索--><div class="layui-row" style="margin-left:5px;position:absolute;bottom:10px; "><div class="layui-input-inline"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:90px;border-radius:5px;margin-left:5px"><i class="layui-icon layui-icon-search"></i></button></div>';
+        document.getElementById("modelprojectlisttab").parentNode.parentNode.innerHTML += '<!--搜索--><div id="modelsearchid" class="layui-row" style="margin-left:5px;position:absolute;bottom:10px; "><div class="layui-input-inline"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:90px;border-radius:5px;margin-left:5px"><i class="layui-icon layui-icon-search"></i></button></div>';
 
         //获取用户全部项目信息
         GetUserAllModelProjects();
@@ -296,6 +296,12 @@ layer.open({
             }
         })
     }
+    , min: function (layero, index) {
+        document.getElementById("modelsearchid").style.visibility = "hidden";
+    }
+    , restore: function (layero, index) {
+        document.getElementById("modelsearchid").style.visibility = "visible";
+    }
 });
 
 
@@ -312,7 +318,7 @@ function GetUserAllModelProjects(newprojectcode) {
     //Loading
     var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
-        url: servicesurl + "/api/ModelProject/GetUserModelProjectList", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/ModelProject/GetUserModelProjectDatas", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             layer.close(loadinglayerindex);
             var result = JSON.parse(data);
@@ -626,7 +632,7 @@ function ModelProjectNodeClick(obj) {
     else if (obj.data.type == "task") {
         var data = obj.data;
         //目前暂缺判断data.checked是否为true
-        if (curtileset!=null) {
+        if (curtileset != null) {
             //缩放至模型
             //判断是否有最佳视角
             if (data.modelView != null && data.modelView.length > 0) {

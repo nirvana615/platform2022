@@ -6,19 +6,16 @@ using System.Threading.Tasks;
 
 namespace MODEL
 {
-    /// <summary>
-    /// 待删除
-    /// </summary>
-    public class ModelTaskInfos
+    public class ModelProjectData
     {
         /// <summary>
-        /// 标题
+        /// 项目
         /// </summary>
-        public string Title { get; set; } = "任务";
+        public ModelProject Project { get; set; }
 
         /// <summary>
-        /// 模型集
+        /// 模型
         /// </summary>
-        public List<ModelTask> TaskList { get; set; }
+        public List<ModelTask> Tasks { get; set; }
     }
 }

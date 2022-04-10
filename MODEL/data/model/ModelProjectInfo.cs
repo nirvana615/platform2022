@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MODEL
 {
+    /// <summary>
+    /// 待删除
+    /// </summary>
     public class ModelProjectInfo
     {
         /// <summary>

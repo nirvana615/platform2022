@@ -332,7 +332,7 @@ function GetUserAllModelProjects(newprojectcode) {
     //Loading
     var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
-        url: servicesurl + "/api/ModelProject/GetUserModelProjectList", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/ModelProject/GetUserModelProjectDatas", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             layer.close(loadinglayerindex);
             var result = JSON.parse(data);

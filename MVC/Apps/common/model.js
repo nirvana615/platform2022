@@ -105,7 +105,7 @@ function Load3DTiles(model) {
 
     //缩放至模型
     //判断是否有最佳视角
-    if (model.MXSJ != null) {
+    if (model.MXSJ != null && model.MXSJ != "") {
         var home = JSON.parse(model.MXSJ);
         viewer.scene.camera.setView(home);
     } else {
