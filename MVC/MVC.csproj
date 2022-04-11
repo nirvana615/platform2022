@@ -471,7 +471,6 @@
     <Content Include="Apps\common\loaddata.js" />
     <Content Include="Apps\common\map.js" />
     <Content Include="Apps\common\mark.js" />
-    <Content Include="Apps\common\latlonview.js" />
     <Content Include="Apps\common\measure.js" />
     <Content Include="Apps\common\model.js" />
     <Content Include="Apps\flz\css\main.css" />
