@@ -302,18 +302,18 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
-        /// 获取用户全部w未关联模型项目数据（含项目、任务）
+        /// 获取用户全部未关联模型项目数据（含项目、任务）
         /// </summary>
         /// <param name="cookie"></param>
         /// <returns></returns>
         [HttpGet]
-        public string GetUserNoUseModelProjectDatas(string cookie, string usemodelids)
+        public string GetUserNoUseModelProjectDatas(string cookie, string usedmodelid)
         {
-            //已于业务系统关联的模型id
-            List<string> usemodellist = new List<string>();
-            if (!string.IsNullOrEmpty(usemodelids))
+            //业务系统已关联的模型id
+            List<int> usedmodelids = new List<int>();
+            if (!string.IsNullOrEmpty(usedmodelid))
             {
-                usemodellist = usemodelids.Split(new char[] { ',' }).ToList();
+                usedmodelids = JsonHelper.ToObject<List<int>>(usedmodelid);
             }
 
             string userbsms = string.Empty;
@@ -349,7 +349,7 @@ namespace SERVICE.Controllers
                                     if (mapModelProjecTask != null)
                                     {
                                         ModelTask modelTask = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
-                                        if (modelTask != null && !usemodellist.Contains(modelTask.Id.ToString()))
+                                        if (modelTask != null && !usedmodelids.Contains(modelTask.Id))
                                         {
                                             Tasks.Add(modelTask);
                                         }

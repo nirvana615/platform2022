@@ -39,19 +39,28 @@ function AddUavProject() {
                                     newproject.nodeOperate = true;
                                     newproject.spread = false;
 
-                                    var newprojectinfos = [];
-
+                                    var newprojectchild = [];
                                     var createtime = new Object;
                                     createtime.title = "创建时间：" + uavprojectdata.CJSJ;
-                                    newprojectinfos.push(createtime);
-                                    newproject.children = newprojectinfos
+                                    newprojectchild.push(createtime);
+                                    var models = new Object;
+                                    models.id = newproject.id;
+                                    models.title = "实景模型";
+                                    models.spread = true;
+                                    newprojectchild.push(models);
+                                    var routes = new Object;
+                                    routes.id = newproject.id;
+                                    routes.title = "航线任务";
+                                    routes.spread = true;
+                                    newprojectchild.push(routes);
+                                    newproject.children = newprojectchild
 
-                                    var uav_project_list_all_copy = [];
-                                    uav_project_list_all_copy.push(newproject);
+                                    var new_uav_project_list_all = [];
+                                    new_uav_project_list_all.push(newproject);
                                     for (var i in uav_project_list_all) {
-                                        uav_project_list_all_copy.push(uav_project_list_all[i]);
+                                        new_uav_project_list_all.push(uav_project_list_all[i]);
                                     }
-                                    uav_project_list_all = uav_project_list_all_copy;
+                                    uav_project_list_all = new_uav_project_list_all;
                                 }
 
                                 MarkCurrentProject();
@@ -86,12 +95,12 @@ function EditUavProject(uavprojectdata) {
     uavprojecteditlayerindex = layer.open({
         type: 1
         , title: ['编辑项目', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-        , area: ['700px', '450px']
+        , area: ['700px', '430px']
         , shade: 0
         , closeBtn: 1
         , maxmin: true
         , moveOut: true
-        , content: '<!--编辑项目--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px"><ul class="layui-tab-title"><li class="layui-this" style="width:44%;">项目信息</li><li style="width:44%;">实景模型</li></ul><div class="layui-tab-content" style="margin:0px;padding-left:0px;"><!--项目信息--><div class="layui-tab-item layui-show"><form class="layui-form" style="margin-top:0px" lay-filter="uav-project-edit"><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">项目名称</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-xmmc" autocomplete="off" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">项目编码</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-xmbm" autocomplete="off" lay-verify="required" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">创建时间</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-cjsj" autocomplete="off" lay-verify="required" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">备&emsp;&emsp;注</label><div class="layui-input-block" style="margin-left:90px;"><textarea name="uav-project-edit-bz" class="layui-textarea" style="height:170px;"></textarea></div></div><div class="layui-form-item" style="margin-top:10px"><div style="right:5px;text-align:center;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="uav-project-edit-submit" style="width:150px">保存</button></div></div></form></div><!--实景模型--><div class="layui-tab-item"><div class="layui-card-body" style="padding:0px 0px;"><table id="uav-project-model" lay-filter="uav-project-model"></table><script type="text/html" id="uav-project-model-add"><div class="layui-btn-container"><button class="layui-btn layui-btn-sm" style="font-size:14px;width:150px" lay-event="uav-project-model-add">添加实景模型</button></div></script><script type="text/html" id="table-toolbar-model"><a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div>'
+        , content: '<!--编辑项目--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px"><ul class="layui-tab-title"><li class="layui-this" style="width:44%;">项目信息</li><li style="width:44%;">实景模型</li></ul><div class="layui-tab-content" style="margin:0px;padding-left:0px;"><!--项目信息--><div class="layui-tab-item layui-show"><form class="layui-form" style="margin-top:0px" lay-filter="uav-project-edit"><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">项目名称</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-xmmc" autocomplete="off" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">项目编码</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-xmbm" autocomplete="off" lay-verify="required" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">创建时间</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-project-edit-cjsj" autocomplete="off" lay-verify="required" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:60px;">备&emsp;&emsp;注</label><div class="layui-input-block" style="margin-left:90px;"><textarea name="uav-project-edit-bz" class="layui-textarea" style="height:150px;"></textarea></div></div><div class="layui-form-item" style="margin-top:10px"><div style="right:5px;text-align:center;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="uav-project-edit-submit" style="width:150px">保存</button></div></div></form></div><!--实景模型--><div class="layui-tab-item"><div class="layui-card-body" style="padding:0px 0px;"><table id="uav-project-model" lay-filter="uav-project-model"></table><script type="text/html" id="uav-project-model-add"><div class="layui-btn-container"><button class="layui-btn layui-btn-sm" style="font-size:14px;width:150px" lay-event="uav-project-model-add">添加实景模型</button></div></script><script type="text/html" id="table-toolbar-model"><a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div>'
         , zIndex: layer.zIndex
         , success: function (layero) {
             layer.setTop(layero);
@@ -114,43 +123,18 @@ function EditUavProject(uavprojectdata) {
                     success: function (resultdata) {
                         var result = JSON.parse(resultdata);
                         if (result.code == 1) {
-                            //更新成功
                             for (var i in uav_project_list_all) {
-                                if (uav_project_list_all[i].id == data.field.id) {
+                                if (uav_project_list_all[i].id == uavprojectdata.Id) {
                                     uav_project_list_all[i].title = data.field["uav-project-edit-xmmc"];
                                     uav_project_list_all[i].data.XMMC = data.field["uav-project-edit-xmmc"];
                                     uav_project_list_all[i].data.GXSJ = result.data;
                                     uav_project_list_all[i].data.BZ = data.field["uav-project-edit-bz"];
-
-                                    var iscontain = false;
-                                    for (var j in uav_project_list_all[i].children) {
-                                        if (uav_project_list_all[i].children[j].title.indexOf("更新时间") != -1) {
-                                            uav_project_list_all[i].children[j].title = "更新时间：" + result.data;
-                                            iscontain = true;
-                                        }
-                                    }
-
-                                    if (!iscontain) {
-                                        var projectchild = [];
-                                        projectchild.push(uav_project_list_all[i].children[0]);
-                                        var updatetime = new Object;
-                                        updatetime.title = "更新时间：" + result.data;
-                                        projectchild.push(updatetime);
-
-                                        for (var j in uav_project_list_all[i].children) {
-                                            if (j > 0) {
-                                                projectchild.push(uav_project_list_all[i].children[j]);
-                                            }
-                                        }
-
-                                        uav_project_list_all[i].children = projectchild;
-                                    }
-
-                                    MarkCurrentProject();
+                                    break;
                                 }
                             }
-                        }
-                        else {
+
+                            MarkCurrentProject();
+                        } else {
                             //更新失败
                             form.val("uav-project-edit", {
                                 "uav-project-edit-xmmc": uavprojectdata.XMMC
@@ -166,12 +150,12 @@ function EditUavProject(uavprojectdata) {
 
             //项目关联模型
             var modeltabledata = [];
-            var uavprojectmodelids = [];
+            var usedmodelids = [];
             for (var i in uav_project_list_all) {
                 if (uav_project_list_all[i].id == uavprojectdata.Id) {
                     for (var j in uav_project_list_all[i].children) {
                         if (uav_project_list_all[i].children[j].title == "实景模型") {
-                            if (uav_project_list_all[i].children[j].children.length > 0) {
+                            if (uav_project_list_all[i].children[j].children != undefined && uav_project_list_all[i].children[j].children.length > 0) {
                                 for (var k in uav_project_list_all[i].children[j].children) {
                                     var model = new Object;
                                     model.id = uav_project_list_all[i].children[j].children[k].data.Id;
@@ -180,12 +164,13 @@ function EditUavProject(uavprojectdata) {
                                     model.mxsj = uav_project_list_all[i].children[j].children[k].data.YXCJSJ;
                                     model.bz = uav_project_list_all[i].children[j].children[k].data.BZ;
                                     modeltabledata.push(model);
-
-                                    uavprojectmodelids.push(uav_project_list_all[i].children[j].children[k].data.Id);
+                                    usedmodelids.push(uav_project_list_all[i].children[j].children[k].data.Id);//记录已关联模型id
                                 }
                             }
                         }
                     }
+
+                    break;
                 }
             }
 
@@ -229,10 +214,7 @@ function EditUavProject(uavprojectdata) {
                             , success: function (layero) {
                                 layer.setTop(layero);
                                 //加载中
-                                loadlayerindex = layer.load(1, {
-                                    shade: [0.1, '#fff']
-                                    , zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); }
-                                });
+                                loadlayerindex = layer.load(1, { shade: [0.1, '#fff'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
 
                                 var nousemodeltreedata = [];
                                 var uavprojectaddmodels = [];//选中模型
@@ -303,17 +285,8 @@ function EditUavProject(uavprojectdata) {
                                     }
                                 });
 
-                                //项目已关联模型id
-                                var usemodelids = "";
-                                for (var i in uavprojectmodelids) {
-                                    usemodelids += uavprojectmodelids[i] + ",";
-                                }
-                                if (usemodelids != "" && usemodelids.indexOf(",") != -1) {
-                                    usemodelids = usemodelids.substring(0, usemodelids.length - 1);
-                                }
-
                                 $.ajax({
-                                    url: servicesurl + "/api/ModelProject/GetUserNoUseModelProjectDatas", type: "get", data: { "cookie": document.cookie, "usemodelids": usemodelids },
+                                    url: servicesurl + "/api/ModelProject/GetUserNoUseModelProjectDatas", type: "get", data: { "cookie": document.cookie, "usedmodelid": JSON.stringify(usedmodelids) },
                                     success: function (data) {
                                         CloseLayer(loadlayerindex);//关闭正在加载
                                         nousemodeltreedata = [];
@@ -378,7 +351,7 @@ function EditUavProject(uavprojectdata) {
                                                                     model.mxsj = nousemodeltreedata[j].children[k].data.YXCJSJ;
                                                                     model.bz = nousemodeltreedata[j].children[k].data.BZ;
                                                                     modeltabledata.push(model);
-                                                                    uavprojectmodelids.push(nousemodeltreedata[j].children[k].data.Id);
+                                                                    usedmodelids.push(nousemodeltreedata[j].children[k].data.Id);
                                                                     newmodels.push(nousemodeltreedata[j].children[k].data);
                                                                 }
                                                             }
@@ -390,6 +363,7 @@ function EditUavProject(uavprojectdata) {
                                                         if (uav_project_list_all[i].id == uavprojectdata.Id) {
                                                             for (var j in uav_project_list_all[i].children) {
                                                                 if (uav_project_list_all[i].children[j].title == "实景模型") {
+                                                                    iscontainmodel = true;
                                                                     var child = [];
                                                                     for (var k in newmodels) {
                                                                         var model = new Object;
@@ -442,13 +416,12 @@ function EditUavProject(uavprojectdata) {
                             success: function (result) {
                                 var info = JSON.parse(result);
                                 if (info.code == 1) {
-
                                     var newmodeltabledata = [];
-                                    uavprojectmodelids = [];
+                                    usedmodelids = [];
                                     for (var i in modeltabledata) {
                                         if (modeltabledata[i].id.toString() != info.data) {
                                             newmodeltabledata.push(modeltabledata[i]);
-                                            uavprojectmodelids.push(modeltabledata[i].id);
+                                            usedmodelids.push(modeltabledata[i].id);
                                         }
                                     }
                                     modeltabledata = newmodeltabledata;
@@ -485,7 +458,6 @@ function EditUavProject(uavprojectdata) {
                     });
                 }
             });
-
         }
         , end: function () {
             uavprojecteditlayerindex = null;

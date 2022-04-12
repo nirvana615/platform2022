@@ -43,9 +43,7 @@ function LoadAutoDataLayer(id) {
                     monitorstatisticsdata = [];
                 }
             });
-
         }
-
     }
 };
 
@@ -549,8 +547,8 @@ function DisplayGNSS(monitor, data) {
         },
         yAxis: {
             type: 'value',
-            max: yaxismax,
-            min: yaxismin,
+            max: Math.ceil(yaxismax),
+            min: Math.floor(yaxismin),
             splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             axisLabel: {
                 formatter: '{value} mm'
@@ -722,8 +720,8 @@ function DisplayLF(monitor, data) {
         },
         yAxis: {
             type: 'value',
-            min: yaxismin,
-            max: yaxismax,
+            min: Math.floor(yaxismin),
+            max: Math.ceil(yaxismax),
             splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             axisLabel: {
                 formatter: '{value} mm'
@@ -794,6 +792,7 @@ function DisplayQJ(monitor, data) {
 
     var yaxismax = 2 * Math.max.apply(null, values) - Math.min.apply(null, values);
     var yaxismin = 2 * Math.min.apply(null, values) - Math.max.apply(null, values);
+
     //倾角角度较小
     if (yaxismax > 0) {
         if (parseInt(yaxismax) == 0) {
@@ -909,8 +908,8 @@ function DisplayQJ(monitor, data) {
         },
         yAxis: {
             type: 'value',
-            min: yaxismin,
-            max: yaxismax,
+            min: Math.floor(yaxismin),
+            max: Math.ceil(yaxismax),
             splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             axisLabel: {
                 formatter: '{value} °'
@@ -986,8 +985,8 @@ function DisplayYL(monitor, data) {
     document.getElementById("autodatastatisticsdiv").style.visibility = "visible";
     monitorstatisticstable.reload({ id: 'autodatastatisticstableid', data: monitorstatisticsdata });
 
-    var yaxismax = parseInt(GetArrayAvg(avgs) + 12 * GetArrayAvg(sds));
-    var yaxismin = parseInt(GetArrayAvg(avgs) - 12 * GetArrayAvg(sds));
+    var yaxismax = parseInt(GetArrayAvg(avgs) + 12 * GetArrayAvg(sds)) + 1;
+    var yaxismin = parseInt(GetArrayAvg(avgs) - 12 * GetArrayAvg(sds)) - 1;
 
     //图表
     var ps = [];
@@ -1064,8 +1063,8 @@ function DisplayYL(monitor, data) {
         },
         yAxis: {
             type: 'value',
-            min: yaxismin,
-            max: yaxismax,
+            min: Math.floor(yaxismin),
+            max: Math.ceil(yaxismax),
             splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             axisLabel: {
                 formatter: '{value} kN'
@@ -1221,8 +1220,8 @@ function DisplaySBWY(monitor, data) {
         },
         yAxis: {
             type: 'value',
-            min: yaxismin,
-            max: yaxismax,
+            min: Math.floor(yaxismin),
+            max: Math.ceil(yaxismax),
             splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             axisLabel: {
                 formatter: '{value} mm'
@@ -1374,8 +1373,8 @@ function DisplayWATER(monitor, data) {
         },
         yAxis: {
             type: 'value',
-            min: down,
-            max: top,
+            min: Math.floor(down),
+            max: Math.ceil(top),
             splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             axisLabel: {
                 formatter: '{value} m'

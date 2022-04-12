@@ -3275,7 +3275,16 @@ namespace SERVICE.Controllers
                         //更新偏航角
                         customWaypoints[i].Heading = Math.Round(COM.Waypoint.DJIHeadingFollowRoute(new BLH(customWaypoints[i].Latitude, customWaypoints[i].Longitude, customWaypoints[i].Altitude), new BLH(customWaypoints[i + 1].Latitude, customWaypoints[i + 1].Longitude, customWaypoints[i + 1].Altitude)), 2);
 
-                        len += COM.Waypoint.Length3D(new BLH(customWaypoints[i].Latitude, customWaypoints[i].Longitude, customWaypoints[i].Altitude), new BLH(customWaypoints[i + 1].Latitude, customWaypoints[i + 1].Longitude, customWaypoints[i + 1].Altitude));
+                        //len += COM.Waypoint.Length3D(new BLH(customWaypoints[i].Latitude, customWaypoints[i].Longitude, customWaypoints[i].Altitude), new BLH(customWaypoints[i + 1].Latitude, customWaypoints[i + 1].Longitude, customWaypoints[i + 1].Altitude));
+
+                        COM.XYZ p1 = COM.CoordConvert.BLH2XYZ(new BLH(customWaypoints[i].Latitude, customWaypoints[i].Longitude, customWaypoints[i].Altitude), EnumCOM.Datum.CGCS2000, ref info);
+                        COM.XYZ p2 = COM.CoordConvert.BLH2XYZ(new BLH(customWaypoints[i + 1].Latitude, customWaypoints[i + 1].Longitude, customWaypoints[i + 1].Altitude), EnumCOM.Datum.CGCS2000, ref info);
+
+                        double l = Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y) + (p1.Z - p2.Z) * (p1.Z - p2.Z));
+
+                        len += l;
+
+
                         time += len / customWaypoints[i].Speed;
                         if (customWaypoints[i].Actions != null && customWaypoints[i].Actions.Count > 0)
                         {
@@ -3529,30 +3538,28 @@ namespace SERVICE.Controllers
         [HttpPost]
         public string SaveRoute()
         {
-            #region 参数
-            string uavprojectid = HttpContext.Current.Request.Form["uavprojectid"];//当前无人机项目id
+            string uavprojectid = HttpContext.Current.Request.Form["uavprojectid"];                 //当前无人机项目id
             string cookie = HttpContext.Current.Request.Form["cookie"];
-            string line = HttpContext.Current.Request.Form["line"];//路径图形
-            string mis = HttpContext.Current.Request.Form["mis"];//路径json任务
+            string line = HttpContext.Current.Request.Form["line"];                                 //路径图形
+            string mis = HttpContext.Current.Request.Form["mis"];                                   //路径json任务
             string terra = HttpUtility.UrlDecode(HttpContext.Current.Request.Form["terra"]);
             string pilot = HttpUtility.UrlDecode(HttpContext.Current.Request.Form["pilot"]);
-            string waypoints = HttpContext.Current.Request.Form["waypoints"];//路径航点/航区
+            string waypoints = HttpContext.Current.Request.Form["waypoints"];                       //路径航点/航区
 
-            string hxmc = HttpContext.Current.Request.Form["uav-route-add-hxmc"];//航线名称
-            string hxlx = HttpContext.Current.Request.Form["uav-route-add-hxlx"];//航线类型
-            string gclx = HttpContext.Current.Request.Form["uav-route-add-gclx"];//高程类型
-            string hxsd = HttpContext.Current.Request.Form["uav-route-add-hxsd"];//航线速度
-            string hxcd = HttpContext.Current.Request.Form["uav-route-add-hxcd"];//航线长度
-            string fxsj = HttpContext.Current.Request.Form["uav-route-add-fxsj"];//飞行时间
-            string hlds = HttpContext.Current.Request.Form["uav-route-add-hlds"];//航点数量
-            string pzsl = HttpContext.Current.Request.Form["uav-route-add-pzsl"];//拍照数量
+            string hxmc = HttpContext.Current.Request.Form["uav-route-add-hxmc"];                   //航线名称
+            string hxlx = HttpContext.Current.Request.Form["uav-route-add-hxlx"];                   //航线类型
+            string gclx = HttpContext.Current.Request.Form["uav-route-add-gclx"];                   //高程类型
+            string hxsd = HttpContext.Current.Request.Form["uav-route-add-hxsd"];                   //航线速度
+            string hxcd = HttpContext.Current.Request.Form["uav-route-add-hxcd"];                   //航线长度
+            string fxsj = HttpContext.Current.Request.Form["uav-route-add-fxsj"];                   //飞行时间
+            string hlds = HttpContext.Current.Request.Form["uav-route-add-hlds"];                   //航点数量
+            string pzsl = HttpContext.Current.Request.Form["uav-route-add-pzsl"];                   //拍照数量
             string bz = HttpContext.Current.Request.Form["uav-route-add-bz"];
 
-            string drone = HttpContext.Current.Request.Form["uav-route-add-drone"];//无人机
-            string payloadtype = HttpContext.Current.Request.Form["uav-route-add-payloadtype"];//挂载类型
-            string payload = HttpContext.Current.Request.Form["uav-route-add-payload"];//挂载
-            string photoratio = HttpContext.Current.Request.Form["uav-route-add-photoratio"];//照片比例
-            #endregion
+            string drone = HttpContext.Current.Request.Form["uav-route-add-drone"];                 //无人机
+            string payloadtype = HttpContext.Current.Request.Form["uav-route-add-payloadtype"];     //挂载类型
+            string payload = HttpContext.Current.Request.Form["uav-route-add-payload"];             //挂载
+            string photoratio = HttpContext.Current.Request.Form["uav-route-add-photoratio"];       //照片比例
 
 
             string userbsms = string.Empty;

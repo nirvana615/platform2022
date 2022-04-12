@@ -468,7 +468,7 @@
     <Content Include="Apps\admin\widget\factory-add.html" />
     <Content Include="Apps\admin\widget\user-add.html" />
     <Content Include="Apps\common\common.js" />
-    <Content Include="Apps\common\loaddata.js" />
+    <Content Include="Apps\common\localdata.js" />
     <Content Include="Apps\common\map.js" />
     <Content Include="Apps\common\mark.js" />
     <Content Include="Apps\common\measure.js" />
@@ -776,8 +776,7 @@
     <Content Include="Resources\img\pointcloud\oranig.png" />
     <Content Include="Resources\img\pointcloud\red.png" />
     <Content Include="Resources\img\pointcloud\yellow.png" />
-    <Content Include="Resources\pic\bg\bg6.jpg" />
-    <Content Include="Resources\pic\bg\bg7.JPG" />
+    <Content Include="Resources\pic\bg\bg6.JPG" />
     <Content Include="Resources\pic\bg\bg_admin.jpg" />
     <Content Include="Resources\pic\bg_image\1.jpg" />
     <Content Include="Resources\pic\bg_model\1.jpg" />

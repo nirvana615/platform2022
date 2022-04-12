@@ -3981,7 +3981,7 @@ function ComputeMission() {
         else {
             data.field.cookie = document.cookie;
             data.field.waypoint = ClearHtml(JSON.stringify(uav_route_add_waypointtreedata));
-            data.field.pointcloud = current_project_pointcloudid;
+            //data.field.pointcloud = current_project_pointcloudid;
 
             $.ajax({
                 url: servicesurl + "/api/UavRoute/ComputeMission", type: "post", data: data.field,
