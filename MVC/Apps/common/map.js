@@ -272,7 +272,7 @@ function RemoveEntitiesInViewer(entities) {
 
 //定位entity
 function ZoomToEntity(entity) {
-    viewer.zoomTo(entity, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-45), 5));
+    viewer.zoomTo(entity, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 5000));
 };
 
 //清除全部模型和几何对象
