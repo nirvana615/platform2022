@@ -68,29 +68,54 @@ namespace SERVICE.Controllers
                     
                     projectLayer.YXFW = null;
 
-                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT a.* from survey_model a join monitor_map_project_survey b on a.id=b.surveyid where b.projectid={0} and b.type={1}", id,'5' ));
-                    if (!string.IsNullOrEmpty(data))
+                List<ModelTask> models = new List<ModelTask>();
+
+                string modelmaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_use WHERE syscode={0} AND useprojectid={1} AND ztm={2} ORDER BY id DESC", (int)MODEL.Enum.System.Geology, id, (int)MODEL.Enum.State.InUse));
+                if (!string.IsNullOrEmpty(modelmaps))
+                {
+                    string[] modelrows = modelmaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int j = 0; j < modelrows.Length; j++)
                     {
-                        SurModels surModels = new SurModels();
-                        surModels.Title = "三维实景模型";
-
-                        List<SurModel> surModelList = new List<SurModel>();
-                        string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
-                        for (int i = 0; i < rows.Length; i++)
+                        MapModelProjectUse mapModelProjectUse = ParseModelHelper.ParseMapModelProjectUse(modelrows[j]);
+                        if (mapModelProjectUse != null)
                         {
-                            SurModel surModel = ParseMonitorHelper.ParseSurModel(rows[i]);
-                            surModelList.Add(surModel);
+                            ModelTask model = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjectUse.ModelTaskId, (int)MODEL.Enum.State.InUse)));
+                            if (model != null)
+                            {
+                                models.Add(model);
+                            }
                         }
+                    }
+                }
 
-                        if (surModelList.Count > 0)
-                        {
-                            surModels.SurModelList = surModelList;
-                        }
+                if (models.Count > 0)
+                {
+                    projectLayer.Models = models;
+                }
 
-                        projectLayer.SurModels = surModels;
+                string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT a.* from survey_model a join monitor_map_project_survey b on a.id=b.surveyid where b.projectid={0} and b.type={1}", id, '5'));
+                if (!string.IsNullOrEmpty(data))
+                {
+                    SurModels surModels = new SurModels();
+                    surModels.Title = "三维实景模型";
+
+                    List<SurModel> surModelList = new List<SurModel>();
+                    string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        SurModel surModel = ParseMonitorHelper.ParseSurModel(rows[i]);
+                        surModelList.Add(surModel);
                     }
 
-                    layers.ProjectLayer = projectLayer;
+                    if (surModelList.Count > 0)
+                    {
+                        surModels.SurModelList = surModelList;
+                    }
+
+                    projectLayer.SurModels = surModels;
+                }
+
+                layers.ProjectLayer = projectLayer;
                 #endregion
 
                 FlzDataLayer flzDataLayer = new FlzDataLayer();

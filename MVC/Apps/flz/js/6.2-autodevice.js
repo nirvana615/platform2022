@@ -221,6 +221,9 @@ var jiegouupd = "	<form class='layui-form' style='margin-top:5px;margin-right:25
 
 //查看点信息
 var drwInfox = null;
+var sanweiinfoeditlayerindex = null;
+var modeledittable = null;
+var modeltabledata = [];
 function DrwInfo(data,flag) {
    
     console.log(data);
@@ -511,23 +514,428 @@ function DrwInfo(data,flag) {
 
                     var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                     var data2 = {
-                        mxfw: JSON.stringify(home),
+                        mxsj: JSON.stringify(home),
                         id: data.data.id.split("_")[1]//模型id
                     }
+
                     $.ajax({
-                        url: servicesurl + "/api/Survey/UpdateModelGoodView", type: "put", data: data2,
+                        url: servicesurl + "/api/ModelTask/UpdateModelGoodView", type: "put", data: data2,
                         success: function (result) {
                             layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                            
+                            //刷新项目列表
+                            for (var i in layers) {
+                                if (layers[i].type == "SANWEI") {
+                                    for (var j in layers[i].children) {
+                                        if (data.data.id == layers[i].children[j].id) {
+                                            layers[i].children[j].modelView = JSON.stringify(home);
+                                        }
+                                    }
+                                }
+                            }
                             layer.close(loadingminindex);
                         }, datatype: "json"
                     });
+                    
                 });
             } else {
                 layer.msg("请选择该模型进行最佳视图更新", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 return;
             }
             
+        }
+        else if (data.data.type == "SANWEI") {
+            if (sanweiinfoeditlayerindex == null) {
+                sanweiinfoeditlayerindex = layer.open({
+                    type: 1
+                    , title: ['模型编辑', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                    , area: ['600px', '410px']
+                    , shade: 0
+                    , offset: 'auto'
+                    , closeBtn: 1
+                    , maxmin: true
+                    , moveOut: true
+                    , content: '<!--实景模型--><table id="uav-project-model" lay-filter="uav-project-model"></table><script type="text/html" id="uav-project-model-add"><div class="layui-btn-container"><button class="layui-btn layui-btn-sm" style="font-size:14px;width:150px" lay-event="uav-project-model-add">添加实景模型</button></div></script><script type="text/html" id="table-toolbar-model"><a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:20px;font-size:20px!important;color:#666!important;"></i></a></script>'
+                   // , content:'20'
+                    , zIndex: layer.zIndex
+                    , success: function (layero) {
+                        layer.setTop(layero);
+
+                    
+                        //更新项目
+                        form.on('submit(editprojectinfosubmit)', function (data) {
+                            data.field.id = id;
+                            data.field.cookie = document.cookie;
+
+                            var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                            $.ajax({
+                                url: servicesurl + "/api/FLZ/UpdateProject", type: "put", data: data.field,
+                                success: function (result) {
+                                    layer.close(loadinglayerindex);
+                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                    console.log(result);
+                                    if (result == "更新成功！") {
+                                        //关闭
+                                        layer.close(sanweiinfoeditlayerindex);
+
+                                        //刷新项目列表
+                                        GetUserProjects();
+                                    }
+                                }, datatype: "json"
+                            });
+                            return false;
+                        });
+                        //项目关联模型
+                        modeltabledata = [];
+                        var uavprojectmodelids = [];
+                        for (var i in layers) {
+                            if (layers[i].title == "三维实景模型") {
+                                for (var j in layers[i].children) {
+                                    var model = new Object;
+                                    model.id = layers[i].children[j].data.Id;
+                                    model.mxmc = layers[i].children[j].data.RWMC;
+                                    model.mxbm = layers[i].children[j].data.RWBM;
+                                    model.mxsj = layers[i].children[j].data.YXCJSJ;
+                                    model.bz = layers[i].children[j].data.BZ;
+                                    modeltabledata.push(model);
+
+                                    uavprojectmodelids.push(layers[i].children[j].data.Id);
+
+                                }
+                            }
+                        }
+
+
+
+                           modeledittable = table.render({
+                            elem: '#uav-project-model'
+                            , id: 'uavprojectmodeltableid'
+                            , title: '实景模型'
+                            , skin: 'line'
+                            , even: false
+                            , page: { layout: ['prev', 'page', 'next', 'count'] }
+                            , limit: 5
+                            , toolbar: '#uav-project-model-add'
+                            , totalRow: false
+                            , initSort: { field: 'id', type: 'asc' }
+                            , cols: [[
+                                { field: 'id', title: 'ID', hide: true }
+                                , { field: 'mxmc', title: '模型名称', align: "center" }
+                                , { field: 'mxbm', title: '模型编码', align: "center" }
+                                , { field: 'mxsj', title: '生产时间', align: "center" }
+                                , { field: 'bz', title: '备注', align: "center" }
+                                , { fixed: 'right', width: 100, align: 'center', toolbar: '#table-toolbar-model' }
+                            ]]
+                            , data: modeltabledata
+                        });
+
+                        //添加实景模型
+                        table.on('toolbar(uav-project-model)', function (obj) {
+                            switch (obj.event) {
+                                case 'uav-project-model-add':
+                                    var addmodellayerindex = layer.open({
+                                        type: 1
+                                        , title: ['添加实景模型', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                                        , area: ['450px', '450px']
+                                        , shade: 0.5
+                                        , offset: 'auto'
+                                        , closeBtn: 1
+                                        , maxmin: false
+                                        , moveOut: true
+                                        , content: '<div style="overflow:hidden;"><form class="layui-form" style="margin-top:5px" lay-filter="addmodeluseform"><div class="layui-form-item" style="border-bottom: solid 1px rgb(248,248,248);height:345px;max-height:345px;overflow:auto;"><div id="usemodeltree"></div></div><div class="layui-form-item" style="margin-top:10px"><div class="layui-input-block" style="margin-left:0px;text-align:center;position:relative;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="addmodelusesubmit" style="width:150px">添加</button></div></div></form></div>'
+                                        , zIndex: layer.zIndex
+                                        , success: function (layero) {
+                                            layer.setTop(layero);
+                                            //加载中
+                                            loadlayerindex = layer.load(1, {
+                                                shade: [0.1, '#fff']
+                                                , zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); }
+                                            });
+
+                                            var nousemodeltreedata = [];
+                                            var uavprojectaddmodels = [];//选中模型
+                                            //渲染模型树
+                                            tree.render({
+                                                elem: '#usemodeltree'
+                                                , data: []
+                                                , id: 'usemodeltreeid'
+                                                , showCheckbox: true
+                                                , accordion: false
+                                                , showLine: true
+                                                , cancelNodeFileIcon: true
+                                                , text: { none: '无数据' }
+                                                , oncheck: function (obj) {
+                                                    if (obj.checked) {
+                                                        //选中
+                                                        if (obj.data.type == "projectnode") {
+                                                            //项目节点
+                                                            for (var i in obj.data.children) {
+                                                                var model = new Object;
+                                                                model.projectid = obj.data.id;
+                                                                model.modelid = obj.data.children[i].id;
+                                                                uavprojectaddmodels.push(model);
+                                                            }
+                                                        }
+                                                        else {
+                                                            //模型节点
+                                                            var model = new Object;
+                                                            for (var i in nousemodeltreedata) {
+                                                                for (var j in nousemodeltreedata[i].children) {
+                                                                    if (nousemodeltreedata[i].children[j].id == obj.data.id) {
+                                                                        model.projectid = nousemodeltreedata[i].id;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                            model.modelid = obj.data.id;
+                                                            uavprojectaddmodels.push(model);
+                                                        }
+                                                    }
+                                                    else {
+                                                        //取消选中
+                                                        if (obj.data.type == "projectnode") {
+                                                            //项目节点
+                                                            var newuavprojectaddmodels = [];
+
+                                                            for (var i in uavprojectaddmodels) {
+                                                                if (uavprojectaddmodels[i].projectid != obj.data.id) {
+                                                                    newuavprojectaddmodels.push(uavprojectaddmodels[i]);
+                                                                }
+                                                            }
+
+                                                            uavprojectaddmodels = newuavprojectaddmodels;
+                                                        }
+                                                        else {
+                                                            //模型节点
+                                                            var newuavprojectaddmodels = [];
+
+                                                            for (var i in uavprojectaddmodels) {
+                                                                if (uavprojectaddmodels[i].modelid != obj.data.id) {
+                                                                    newuavprojectaddmodels.push(uavprojectaddmodels[i]);
+                                                                }
+                                                            }
+
+                                                            uavprojectaddmodels = newuavprojectaddmodels;
+                                                        }
+                                                    }
+                                                }
+                                            });
+
+                                            //项目已关联模型id
+                                            var usemodelids = "";
+                                            for (var i in uavprojectmodelids) {
+                                                usemodelids += uavprojectmodelids[i] + ",";
+                                            }
+                                            if (usemodelids != "" && usemodelids.indexOf(",") != -1) {
+                                                usemodelids = usemodelids.substring(0, usemodelids.length - 1);
+                                            }
+
+                                            $.ajax({
+                                                url: servicesurl + "/api/ModelProject/GetUserNoUseModelProjectDatas", type: "get", data: { "cookie": document.cookie, "usemodelids": usemodelids },
+                                                success: function (data) {
+                                                    layer.close(loadlayerindex);//关闭正在加载
+                                                    nousemodeltreedata = [];
+
+                                                    var result = JSON.parse(data);
+                                                    if (result.code == 1) {
+                                                        var resultdata = JSON.parse(result.data);
+                                                        for (var i in resultdata) {
+                                                            var project = new Object;
+                                                            project.id = resultdata[i].Project.Id;
+                                                            project.title = resultdata[i].Project.XMMC;
+                                                            project.checked = false;
+                                                            project.type = "projectnode";
+
+                                                            var projectchild = [];
+                                                            for (var j in resultdata[i].Tasks) {
+                                                                var model = new Object;
+                                                                model.id = resultdata[i].Tasks[j].Id;
+                                                                model.title = resultdata[i].Tasks[j].RWMC;
+                                                                model.type = "modelnode";
+                                                                model.checked = false;
+                                                                model.data = resultdata[i].Tasks[j];
+                                                                projectchild.push(model);
+                                                            }
+
+                                                            project.children = projectchild;
+                                                            nousemodeltreedata.push(project);
+                                                        }
+                                                    }
+
+                                                    tree.reload('usemodeltreeid', { data: nousemodeltreedata });
+                                                    layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                                }, datatype: "json"
+                                            });
+
+                                            form.render();
+                                            form.render('select');
+
+                                            form.on('submit(addmodelusesubmit)', function (data) {
+                                                if (uavprojectaddmodels.length > 0) {
+                                                    data.field.useprojectid = currentprojectid;
+                                                    data.field.cookie = document.cookie;
+                                                    data.field.syscode = 4;
+                                                    data.field.modelinfo = JSON.stringify(uavprojectaddmodels);
+
+                                                    $.ajax({
+                                                        url: servicesurl + "/api/ModelProject/AddUserModelProjectUse", type: "post", data: data.field,
+                                                        success: function (result) {
+                                                            var info = JSON.parse(result);
+                                                            if (info.code == 1) {
+                                                                var newmodelids = JSON.parse(info.data);//已关联成功模型id
+                                                                var newmodels = [];//已关联成功模型
+
+                                                                for (var i in newmodelids) {
+                                                                    for (var j in nousemodeltreedata) {
+                                                                        for (var k in nousemodeltreedata[j].children) {
+                                                                            if (newmodelids[i] == nousemodeltreedata[j].children[k].id) {
+                                                                                var model = new Object;
+                                                                                model.id = nousemodeltreedata[j].children[k].id;
+                                                                                model.mxmc = nousemodeltreedata[j].children[k].data.RWMC;
+                                                                                model.mxbm = nousemodeltreedata[j].children[k].data.RWBM;
+                                                                                model.mxsj = nousemodeltreedata[j].children[k].data.YXCJSJ;
+                                                                                model.bz = nousemodeltreedata[j].children[k].data.BZ;
+                                                                                model.bz = nousemodeltreedata[j].children[k].data.BZ;
+                                                                                model.bz = nousemodeltreedata[j].children[k].data.BZ;
+                                                                                modeltabledata.push(model);
+                                                                                uavprojectmodelids.push(nousemodeltreedata[j].children[k].data.Id);
+                                                                                newmodels.push(nousemodeltreedata[j].children[k].data);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                modeledittable.reload({ id: 'uavprojectmodeltableid', data: modeltabledata });
+
+                                                                var child = [];
+                                                                for (var k in newmodels) {
+                                                                    var model = new Object;
+                                                                    model.id = "PROJECTSUMODELL_" + newmodels[k].Id;
+                                                                    model.icon = MODELICON;
+                                                                    model.type = "PROJECTSUMODEL";
+                                                                    model.title = newmodels[k].RWMC;
+                                                                    model.data = newmodels[k];
+                                                                    model.showCheckbox = true;
+                                                                    model.checked = false;
+                                                                    model.spread = true;
+                                                                    model.path = newmodels[k].MXLJ;
+                                                                    model.gcgz = newmodels[k].GCYC;
+                                                                    model.modelView = newmodels[k].MXSJ;
+                                                                    child.push(model);
+                                                                }
+                                                                for (var i in layers) {
+                                                                    if (layers[i].type == "SANWEI") {
+                                                                        for (var j in layers[i].children) {
+                                                                            child.push(layers[i].children[j]);
+                                                                        }
+                                                                        layers[i].children = child;
+                                                                        layers[i].spread = true;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                if (curtileset != null) {//有模型的情况下就不刷新了
+                                                                    modeljiazaiFlag = false;
+                                                                }// 不刷新的问题是。现在设置的checked为false  当选择模型的时候，树上没有同步更改
+                                                               
+                                                                tree.reload('prjlayerlistid', { data: layers });
+                                                                ClearTemp();
+                                                                
+                                                            }
+
+                                                            layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+
+                                                        }, datatype: "json"
+                                                    });
+
+                                                    layer.close(addmodellayerindex);
+                                                } else {
+                                                    layer.msg("请先勾选需要的实景模型！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                                }
+
+                                                return false;
+                                            });
+                                        }
+                                        , end: function () { }
+                                    });
+                                    break;
+                            };
+                        });
+
+                        //操作实景模型
+                        table.on('tool(uav-project-model)', function (obj) {
+                           
+                            if (obj.event === 'modeldel') {
+                                layer.confirm('是否删除?', { icon: 3, title: '消息', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                                    $.ajax({
+                                        url: servicesurl + "/api/ModelProject/CancelUserModelProjectUse", type: "delete", data: { "syscode": 4, "useprojectid": currentprojectid, "modelid": obj.data.id, "cookie": document.cookie },
+                                        success: function (result) {
+                                            var info = JSON.parse(result);
+                                            if (info.code == 1) {
+
+                                                var newmodeltabledata = [];
+                                                uavprojectmodelids = [];
+                                                for (var i in modeltabledata) {
+                                                    if (modeltabledata[i].id.toString() != info.data) {
+                                                        newmodeltabledata.push(modeltabledata[i]);
+                                                        uavprojectmodelids.push(modeltabledata[i].id);
+                                                    }
+                                                }
+                                                modeltabledata = newmodeltabledata;
+                                                modeledittable.reload({ id: 'uavprojectmodeltableid', data: modeltabledata });
+
+                                                //TODO删除的为选中加载的模型时需从地图的删除
+                                                var child = [];
+
+                                                for (var i in layers) {
+                                                    if (layers[i].type == "SANWEI") {
+                                                        for (var j in layers[i].children) {
+                                                            if (layers[i].children[j].id.split("_")[1] != obj.data.id) {
+                                                                child.push(layers[i].children[j]);
+                                                            } else {
+                                                                if (layers[i].children[j].checked) {//选中
+                                                                    if (modleInfo.id == layers[i].children[j].id) {
+                                                                        viewer.scene.primitives.remove(curtileset);
+                                                                        curtileset = null;
+                                                                        modleInfo = null;
+                                                                    }
+                                                                }
+                                                            }
+                                                            
+                                                        }
+                                                        layers[i].children = child;
+                                                        layers[i].spread = true;
+                                                        break;
+                                                    }
+                                                }
+                                                if (curtileset != null) {//有模型的情况下就不刷新了
+                                                    modeljiazaiFlag = false;
+                                                }// 不刷新的问题是。现在设置的checked为false  当选择模型的时候，树上没有同步更改
+
+                                                tree.reload('prjlayerlistid', { data: layers });
+                                                ClearTemp();
+
+                                                
+                                            }
+
+                                            layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                        }, datatype: "json"
+                                    });
+
+                                    layer.close(index);
+                                });
+                            }
+                        });
+
+
+
+                    }
+                    , end: function () {
+                        sanweiinfoeditlayerindex = null;
+                        modeledittable = null;
+                    }
+                });
+            } else {
+                layer.msg("已打开添加模型窗口", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            }
         }
         else {//最开始的点线面。
             var temptitle = data.data.title;

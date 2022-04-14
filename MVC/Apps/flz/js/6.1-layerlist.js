@@ -3,6 +3,7 @@ var windowInfoList = [];//测区数据
 var modleInfoList = [];//模型数据
 var modeljiazaiFlag = true;//控制模型的加载？
 var xiePuoinfo = null;//装当前斜坡的信息
+var MODELICON = '<span style="margin-left:0px;margin-right:2px;"><img src="../../../Resources/img/map/model.png" style="width:14px;height:14px;"/></span>';
 //图层列表widget
 function LoadLayerListLayer(id) {
     if (id == null) {
@@ -143,27 +144,38 @@ function LoadLayerListLayer(id) {
                         layers.push(projectlayer);
                         //项目图层（项目位置、空间范围、影响范围、实景模型）
                         if (layerlist.ProjectLayer != null) {
-
-                            if (layerlist.ProjectLayer.SurModels != null) {
+                            
+                            if (layerlist.ProjectLayer.Models != null) {//新东西
                                 var prjsurmodel = new Object;
-                               // prjsurmodel.title = layerlist.ProjectLayer.SurModels.Title;
-                                prjsurmodel.title = layerlist.ProjectLayer.SurModels.Title;
+                                // prjsurmodel.title = layerlist.ProjectLayer.Models.Title;
+                                prjsurmodel.title = "三维实景模型";
+                                prjsurmodel.type = "SANWEI";
                                 var prjsurmodelchild = [];
-                                modleInfoList = layerlist.ProjectLayer.SurModels.SurModelList;//把模型的值存起来
-                                for (var i in layerlist.ProjectLayer.SurModels.SurModelList) {
+                                modleInfoList = layerlist.ProjectLayer.Models;//把模型的值存起来
+                                for (var i in modleInfoList) {
                                     var surmodel = new Object;
-                                    surmodel.title =layerlist.ProjectLayer.SurModels.SurModelList[i].MXMC;
-                                    surmodel.id = "PROJECTSUMODEL_" + layerlist.ProjectLayer.SurModels.SurModelList[i].Id;
+                                    surmodel.title = modleInfoList[i].RWMC;
+                                    surmodel.id = "PROJECTSUMODEL_" + modleInfoList[i].Id;
                                     surmodel.type = "PROJECTSUMODEL";
-                                    surmodel.path = layerlist.ProjectLayer.SurModels.SurModelList[i].MXLJ;
+                                    surmodel.path = modleInfoList[i].MXLJ;
+                                    surmodel.icon = MODELICON;
                                     surmodel.checked = false;
                                     surmodel.showCheckbox = true;//显示复选框
-                                    surmodel.gcgz = layerlist.ProjectLayer.SurModels.SurModelList[i].MXST;
-                                    surmodel.modelView = layerlist.ProjectLayer.SurModels.SurModelList[i].MXFW;
+                                    surmodel.gcgz = modleInfoList[i].GCYC;
+                                    surmodel.modelView = modleInfoList[i].MXSJ;
+                                    surmodel.data = modleInfoList[i];
+
                                     prjsurmodelchild.push(surmodel);
                                 }
                                 console.log(modleInfoList);
                                 prjsurmodel.children = prjsurmodelchild;
+                                layers.push(prjsurmodel);
+                            } else {
+                                var prjsurmodel = new Object;
+                                // prjsurmodel.title = layerlist.ProjectLayer.Models.Title;
+                                prjsurmodel.title = "三维实景模型";
+                                prjsurmodel.type = "SANWEI";
+                                //prjsurmodel.children = [];
                                 layers.push(prjsurmodel);
                             }
                         }
@@ -395,7 +407,6 @@ function LoadLayerListLayer(id) {
                                         //如果选中就缩放到目标
                                         //如果未选中就不做任何处理
                                         var data = obj.data;
-                                        console.log(data);
                                         if (data.checked) {
                                             if (data.children != undefined) {
                                                 if (data.type == "FLZWINDOW") {
@@ -816,7 +827,7 @@ function LoadLayerListLayer(id) {
                                                     }
                                                
                                                     layer.close(loadingceindex);
-                                                    //data.checked = true;
+                                                    data.checked = true;
                                                 }
                                                 else if (data.type == "FLZJIELI") {
                                                     //节理
@@ -1318,7 +1329,63 @@ function LoadLayerListLayer(id) {
                                                         }
                                                     }, datatype: "json"
                                                 });
-                                            }else {
+                                            } else if (data.type == "PROJECTSUMODEL") {//删除斜坡范围，也是删除斜坡
+                                               $.ajax({
+                                                        url: servicesurl + "/api/ModelProject/CancelUserModelProjectUse", type: "delete", data: { "syscode": 4, "useprojectid": currentprojectid, "modelid": obj.data.data.Id, "cookie": document.cookie },
+                                                        success: function (result) {
+                                                            var info = JSON.parse(result);
+                                                            if (info.code == 1) {
+                                                                
+                                                                //TODO删除的为选中加载的模型时需从地图的删除
+                                                                var child = [];
+                                                                modeltabledata = [];
+                                                                for (var i in layers) {
+                                                                    if (layers[i].type == "SANWEI") {
+                                                                        for (var j in layers[i].children) {
+                                                                            if (layers[i].children[j].id != obj.data.id) {
+                                                                                child.push(layers[i].children[j]);
+                                                                                var model = new Object;
+                                                                                model.id = layers[i].children[j].data.Id;
+                                                                                model.mxmc = layers[i].children[j].data.RWMC;
+                                                                                model.mxbm = layers[i].children[j].data.RWBM;
+                                                                                model.mxsj = layers[i].children[j].data.YXCJSJ;
+                                                                                model.bz = layers[i].children[j].data.BZ;
+                                                                                modeltabledata.push(model);
+                                                                            } else {
+                                                                                if (layers[i].children[j].checked) {//选中
+                                                                                    if (modleInfo.id == layers[i].children[j].id) {
+                                                                                        viewer.scene.primitives.remove(curtileset);
+                                                                                        curtileset = null;
+                                                                                        modleInfo = null;
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                        }
+                                                                        layers[i].children = child;
+                                                                        layers[i].spread = true;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                if (modeledittable!=null) {
+                                                                    modeledittable.reload({ id: 'uavprojectmodeltableid', data: modeltabledata });
+                                                                }
+                                                                
+
+                                                                if (curtileset != null) {//有模型的情况下就不刷新了
+                                                                    modeljiazaiFlag = false;
+                                                                }// 不刷新的问题是。现在设置的checked为false  当选择模型的时候，树上没有同步更改
+
+                                                                tree.reload('prjlayerlistid', { data: layers });
+                                                                ClearTemp();
+
+
+                                                            }
+
+                                                            layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                                        }, datatype: "json"
+                                                    });
+                                             }else {
                                                 $.ajax({
                                                     url: servicesurl + "/api/FlzData/DeleteFlzPoint", type: "delete", data: { "id": obj.data.id.split("_")[1], "cookie": document.cookie },
                                                     success: function (result) {

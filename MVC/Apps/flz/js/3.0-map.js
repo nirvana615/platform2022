@@ -205,38 +205,9 @@ function FlyToChina() {
  */
 function LoadModel(obj) {
     //var modelurl = "../Data/SurModel" + obj.path;
-    console.log(obj);
-    var modelurl =''
-    if (currentprojectid == 23 || currentprojectid == 24|| currentprojectid ==25|| currentprojectid == 26
-	|| currentprojectid == 29|| currentprojectid == 1) {//
-        //modelurl = datasurl + "/SurModel" + obj.path;
-		modelurl = datasurl + "/GeoModel" + obj.path;
-    } else {
-		modelurl = datasurl + "/SurModel" + obj.path;
-        
-    }
-   
-    //if (obj.MXST != null) {
-    //    //使用设置的最优视图
-    //}
-    //else {
-    //    //设置视图
-    //    $.getJSON(modelurl, function (data) {
-    //        var arry = data.root.boundingVolume.sphere;
-    //        var boundingSphere = new Cesium.BoundingSphere(new Cesium.Cartesian3(arry[0], arry[1], arry[2]), arry[3]);
-
-    //        //home按钮功能
-    //        viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (commandInfo) {
-    //            viewer.camera.flyToBoundingSphere(boundingSphere);
-    //            commandInfo.cancel = true;
-    //        });
-
-    //        //设置初始位置
-    //        viewer.camera.flyToBoundingSphere(boundingSphere, { duration: 1 });
-    //    });
-    //}
-
+    var modelurl = datasurl + "/AllModel/" + obj.path;
     //删除上一个模型（保证只有一个模型）
+
     if (curtileset != null) {
         viewer.scene.primitives.remove(curtileset);
     }
@@ -247,14 +218,22 @@ function LoadModel(obj) {
         maximumScreenSpaceError: isMobile.any() ? 1 : 1,
         maximumNumberOfLoadedTiles: isMobile.any() ? 1000 : 1000
     }));
- 
-    if (obj.modelView != null && obj.modelView.length>0) {
+
+    //缩放至模型
+    //判断是否有最佳视角
+    if (obj.modelView != null && obj.modelView.length > 0) {
         var home = JSON.parse(obj.modelView);
         viewer.scene.camera.setView(home);
-        console.log(home);
     } else {
         viewer.zoomTo(curtileset);
     }
+
+    //测量工具测量类型（跳转到模型测量）
+    viewer.scene.globe.depthTestAgainstTerrain = false;
+    elem.tabChange('measureway', 'modelMeasure');//模型测量
+    //删除上一个模型（保证只有一个模型）
+  
+
     
 
 };

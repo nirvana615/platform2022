@@ -25,11 +25,14 @@ namespace MODEL
         /// </summary>
         public Extent YXFW { get; set; }
         /// <summary>
-        /// 
+        /// 老模型信心
         /// </summary>
         public SurModels SurModels { get; set; }
 
-
+        /// <summary>
+        /// 新模型信息
+        /// </summary>
+        public List<ModelTask> Models { get; set; }
         /*
          * TODO 扩展
          */
