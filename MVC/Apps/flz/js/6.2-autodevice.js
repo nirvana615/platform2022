@@ -224,6 +224,7 @@ var drwInfox = null;
 var sanweiinfoeditlayerindex = null;
 var modeledittable = null;
 var modeltabledata = [];
+var usemodelids = [];
 function DrwInfo(data,flag) {
    
     console.log(data);
@@ -365,6 +366,8 @@ function DrwInfo(data,flag) {
 
                 }
             });
+        } else if (data.data.type == "DIZHISON") {//地质识别查看
+            xiePuoPhotoSee(data.data.datas);
         } else if ((data.data.type == "FLZLINE" || data.data.type == "FLZAREA") && data.data.id != undefined) {
             console.log(data);
             drwInfox = layer.open({
@@ -454,16 +457,40 @@ function DrwInfo(data,flag) {
                                 layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
 
                                 if ("更新成功" == result) {
-                                    for (var i in layers[0].children) {
-                                        if (data.data.id == layers[0].children[i].id) {
-                                            layers[0].children[i].title = temp.field.name;
-                                            layers[0].children[i].remarks = temp.field.remarks;
-                                            layers[0].spread = true;
-                                            layers[0].children[i].spread = true;
+
+                                    for (var i in layers) {
+                                        if (layers[i].type == "FLZWINDOWFA") {//测窗的
+                                         
+                                            for (var j in layers[i].children) {
+                                                if (layers[i].children[j].id == data.data.id) {
+                                                    layers[i].children[j].title = temp.field.name;
+                                                    layers[i].children[j].remarks = temp.field.remarks;
+                                                    layers[i].spread = true;
+                                                    layers[i].children[j].spread = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (cequ != null) {
+                                        for (var m in windowtabledata) {
+                                            if ((windowtabledata[m].id) == data.data.datas.id) {
+                                                windowtabledata[m].name = temp.field.name;
+                                                windowtabledata[m].remarks = temp.field.remarks;
+                                                break;
+                                            }
+                                        }
+                                        windowtableview.reload({ id: 'windowtableviewid', data: windowtabledata });
+                                    }
+
+                                    for (var m in windowInfoList) {
+                                        if ((windowInfoList[m].id) == data.data.datas.id) {
+                                            windowInfoList[m].name = temp.field.name;
+                                            windowInfoList[m].remarks = temp.field.remarks;
                                             break;
                                         }
-
                                     }
+
 
                                     modeljiazaiFlag = false;
                                     tree.reload('prjlayerlistid', { data: layers });
@@ -598,8 +625,8 @@ function DrwInfo(data,flag) {
                                     model.mxsj = layers[i].children[j].data.YXCJSJ;
                                     model.bz = layers[i].children[j].data.BZ;
                                     modeltabledata.push(model);
-
-                                    uavprojectmodelids.push(layers[i].children[j].data.Id);
+                                    usemodelids.push(layers[i].children[j].data.Id);
+                                    //uavprojectmodelids.push(layers[i].children[j].data.Id);
 
                                 }
                             }
@@ -722,16 +749,16 @@ function DrwInfo(data,flag) {
                                             });
 
                                             //项目已关联模型id
-                                            var usemodelids = "";
-                                            for (var i in uavprojectmodelids) {
-                                                usemodelids += uavprojectmodelids[i] + ",";
-                                            }
-                                            if (usemodelids != "" && usemodelids.indexOf(",") != -1) {
-                                                usemodelids = usemodelids.substring(0, usemodelids.length - 1);
-                                            }
-
+                                            //var usemodelids = "";
+                                            //for (var i in uavprojectmodelids) {
+                                            //    usemodelids += uavprojectmodelids[i] + ",";
+                                            //}
+                                            //if (usemodelids != "" && usemodelids.indexOf(",") != -1) {
+                                            //    usemodelids = usemodelids.substring(0, usemodelids.length - 1);
+                                            //}
+                                            
                                             $.ajax({
-                                                url: servicesurl + "/api/ModelProject/GetUserNoUseModelProjectDatas", type: "get", data: { "cookie": document.cookie, "usemodelids": usemodelids },
+                                                url: servicesurl + "/api/ModelProject/GetUserNoUseModelProjectDatas", type: "get", data: { "cookie": document.cookie, "usedmodelid": JSON.stringify(usemodelids) },
                                                 success: function (data) {
                                                     layer.close(loadlayerindex);//关闭正在加载
                                                     nousemodeltreedata = [];
@@ -784,7 +811,6 @@ function DrwInfo(data,flag) {
                                                             if (info.code == 1) {
                                                                 var newmodelids = JSON.parse(info.data);//已关联成功模型id
                                                                 var newmodels = [];//已关联成功模型
-
                                                                 for (var i in newmodelids) {
                                                                     for (var j in nousemodeltreedata) {
                                                                         for (var k in nousemodeltreedata[j].children) {
@@ -798,7 +824,7 @@ function DrwInfo(data,flag) {
                                                                                 model.bz = nousemodeltreedata[j].children[k].data.BZ;
                                                                                 model.bz = nousemodeltreedata[j].children[k].data.BZ;
                                                                                 modeltabledata.push(model);
-                                                                                uavprojectmodelids.push(nousemodeltreedata[j].children[k].data.Id);
+                                                                                usemodelids.push(nousemodeltreedata[j].children[k].data.Id);
                                                                                 newmodels.push(nousemodeltreedata[j].children[k].data);
                                                                             }
                                                                         }
@@ -872,11 +898,11 @@ function DrwInfo(data,flag) {
                                             if (info.code == 1) {
 
                                                 var newmodeltabledata = [];
-                                                uavprojectmodelids = [];
+                                                usemodelids = [];
                                                 for (var i in modeltabledata) {
                                                     if (modeltabledata[i].id.toString() != info.data) {
                                                         newmodeltabledata.push(modeltabledata[i]);
-                                                        uavprojectmodelids.push(modeltabledata[i].id);
+                                                        usemodelids.push(modeltabledata[i].id);
                                                     }
                                                 }
                                                 modeltabledata = newmodeltabledata;
@@ -931,100 +957,33 @@ function DrwInfo(data,flag) {
                     , end: function () {
                         sanweiinfoeditlayerindex = null;
                         modeledittable = null;
+                        drwInfox = null;
+                        modeledittable = null;
+                        modeltabledata = [];
+                        usemodelids = [];
                     }
                 });
             } else {
                 layer.msg("已打开添加模型窗口", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
             }
         }
+        else if (data.data.type == "DIZHISON") {//地质修改
+            if (data.data.checked) {
+                LoadSteepHillindex(data.data.datas);
+            } else {
+                layer.msg("请选择该地质范围进行识别", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return;
+            }
+            
+        } else if (data.data.type == "FLZJIELI") {
+            updateJieLi(data.data.datas);
+        }
+
+        
         else {//最开始的点线面。
             var temptitle = data.data.title;
-            if (data.data.type == "FLZJIELI" || data.data.type == "YOUSHIMIAN") {//节理信息修改
-                drwInfox = layer.open({
-                    type: 1
-                    , title: ['确认修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-                    , area: ['300px', '300px']
-                    , shade: 0
-                    , offset: 'auto'
-                    , closeBtn: 1
-                    , maxmin: true
-                    , moveOut: true
-                    , content: data.data.type == "FLZJIELI" ? jieliupd : jiegouupd
-                    , zIndex: layer.zIndex
-                    , success: function (layero) {
-                        //置顶
-                        layer.setTop(layero);
-                        form.render();
-                        form.val("updpointinfoform", {
-                            "name": data.data.title
-                            , "remarks": data.data.remarks,
-                            "avgOpening": data.data.datas.avgOpening,// "3"
-
-                        });
-
-                        form.on('submit(updpointinfosubmit)', function (temp) {
-                            data.data.title = temp.field.name;
-                            data.data.remarks = temp.field.remarks;
-                            data.data.avgOpening = temp.field.avgOpening;
-                            //tree.reload(data.data.id, { data: data.data });
-
-                            temp.field.id = data.data.id.split("_")[1];//把id往后面传
-                            temp.field.cookie = document.cookie;
-                            console.log(layers);
-                            var loadingjieliindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
-
-                            $.ajax({
-                                url: servicesurl + "/api/FlzData/UpdateFlzPoint", type: "post", data: temp.field,
-                                success: function (result) {
-                                    layer.close(loadingjieliindex);
-                                    //创建失败
-                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-
-                                    if ("更新成功" == result) {
-                                            for (var i in layers[0].children) {
-                                                for (var j in layers[0].children[i].children) {
-                                                    if (data.data.id == layers[0].children[i].children[j].id) {
-                                                        layers[0].children[i].children[j].title = temp.field.name;
-                                                        layers[0].children[i].children[j].remarks = temp.field.remarks;
-                                                        layers[0].children[i].children[j].datas.avgOpening = temp.field.avgOpening;
-                                                        layers[0].children[i].children[j].datas.remarks = temp.field.remarks;
-                                                        layers[0].children[i].children[j].datas.name = temp.field.name;
-                                                        layers[0].spread = true;
-                                                        layers[0].children[i].spread = true;
-                                                        layers[0].children[i].children[j].spread = true;
-                                                        console.log(layers[0].children[i].children[j]);
-                                                        break;
-                                                    }
-                                                }
-
-                                            }
-                                        
-
-
-                                        modeljiazaiFlag = false;
-                                        tree.reload('prjlayerlistid', { data: layers });
-                                        ClearTemp();
-                                        //关闭,更改图上显示
-                                        if (data.data.checked) {
-                                            var entity = viewer.entities.getById(data.data.id + "_LABEL");
-                                            console.log(entity);
-                                            entity.label.text = entity.label.text._value.replace(temptitle, temp.field.name);
-
-                                        }
-                                        var entity = viewer.entities.getById(data.id);
-                                        layer.close(drwInfox);
-                                    }
-
-                                }, datatype: "json"
-                            });
-                            return false;
-                        });
-
-                    }
-                    , end: function () {
-                        layer.close(drwInfox);
-                    }
-                });
+            if (data.data.type == "YOUSHIMIAN") {//节理信息修改
+                updateJieGou(data.data.datas);
             } else if ((data.data.type == "FLZPOINT"||data.data.type == "FLZLINE" || data.data.type == "FLZAREA") && data.data.id != undefined) {//节理信息修改
                 drwInfox = layer.open({
                     type: 1

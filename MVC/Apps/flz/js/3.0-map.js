@@ -179,7 +179,7 @@ viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) 
 /*
  * 修改样式
  */
-document.getElementsByClassName("cesium-viewer-toolbar")[0].style = "right:25px;top:218px;width:50px;height:50px";
+document.getElementsByClassName("cesium-viewer-toolbar")[0].style = "right:25px;top:105px;width:50px;height:50px";
 document.getElementsByClassName("cesium-button cesium-toolbar-button")[0].style = "width:50px;height:50px";                                         //修改工具栏样式
 document.getElementsByClassName("cesium-button cesium-toolbar-button")[1].style = "width:50px;height:50px";
 document.getElementsByClassName("cesium-baseLayerPicker-selected")[0].style = "width:50px;height:50px";

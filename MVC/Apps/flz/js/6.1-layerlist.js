@@ -24,17 +24,75 @@ function LoadLayerListLayer(id) {
                         console.log(layerlist);
                         layers = [];//图层列表数据
 
+                        
+                        if (layerlist.ProjectLayer != null) {
+                            if (layerlist.ProjectLayer.CenterPoint != null) {
+                                var prjcenter = new Object;
+                                prjcenter.title = "项目位置";
+                                prjcenter.label = layerlist.ProjectLayer.CenterPoint.Label;
+                                prjcenter.bl = layerlist.ProjectLayer.CenterPoint.BL;
+                                prjcenter.id = "PROJECTCENTER_" + id;
+                                prjcenter.type = "PROJECTCENTER";
+                                var entity = viewer.entities.getById(prjcenter.id);
+                                if (entity != undefined) {
+                                    prjcenter.checked = true;
+                                }
+                                else {
+                                    prjcenter.checked = false;
+                                }
+                                prjcenter.showCheckbox = true;//显示复选框
+                                layers.push(prjcenter);
+                            }
+                        }
+                        
                         //项目图层（项目位置、空间范围、影响范围、实景模型）
                         if (layerlist.ProjectLayer != null) {
-                            var projectlayer = new Object;
-                            //projectlayer.title = layerlist.ProjectLayer.Title;
-                            projectlayer.title ="测窗";
+                            
+                            if (layerlist.ProjectLayer.Models != null) {//新东西
+                                var prjsurmodel = new Object;
+                                // prjsurmodel.title = layerlist.ProjectLayer.Models.Title;
+                                prjsurmodel.title = "三维实景模型";
+                                prjsurmodel.type = "SANWEI";
+                                var prjsurmodelchild = [];
+                                modleInfoList = layerlist.ProjectLayer.Models;//把模型的值存起来
+                                for (var i in modleInfoList) {
+                                    var surmodel = new Object;
+                                    surmodel.title = modleInfoList[i].RWMC;
+                                    surmodel.id = "PROJECTSUMODEL_" + modleInfoList[i].Id;
+                                    surmodel.type = "PROJECTSUMODEL";
+                                    surmodel.path = modleInfoList[i].MXLJ;
+                                    surmodel.icon = MODELICON;
+                                    surmodel.checked = false;
+                                    surmodel.showCheckbox = true;//显示复选框
+                                    surmodel.gcgz = modleInfoList[i].GCYC;
+                                    surmodel.modelView = modleInfoList[i].MXSJ;
+                                    surmodel.data = modleInfoList[i];
 
-                            var projectlayerchild = [];
-                          
+                                    prjsurmodelchild.push(surmodel);
+                                }
+                                console.log(modleInfoList);
+                                prjsurmodel.children = prjsurmodelchild;
+                                layers.push(prjsurmodel);
+                            } else {
+                                var prjsurmodel = new Object;
+                                // prjsurmodel.title = layerlist.ProjectLayer.Models.Title;
+                                prjsurmodel.title = "三维实景模型";
+                                prjsurmodel.type = "SANWEI";
+                                //prjsurmodel.children = [];
+                                layers.push(prjsurmodel);
+                            }
+                        }
+                        
+
+                        //项目图层（项目位置、空间范围、影响范围、实景模型）
+                        if (layerlist.ProjectLayer != null) {
+                            
+                            //projectlayer.title = layerlist.ProjectLayer.Title;
+
+
                             // 优势结构面
                             if (layerlist.FlzDataLayer != null && layerlist.FlzDataLayer.FlzDataList != null) {
-                                windowInfoList = layerlist.FlzDataLayer.FlzWindowInfoList;
+                               
                                 var dominantStructuralPlane = new Object;
                                 dominantStructuralPlane.title = "优势结构面";
                                 dominantStructuralPlane.type = "DOMSTRPLA";
@@ -72,13 +130,21 @@ function LoadLayerListLayer(id) {
                                         }
                                     }
                                 }
-                                dominantStructuralPlane.children = dominantStructuralPlanechild;
-                                projectlayerchild.push(dominantStructuralPlane);
-
                                 
+                                if (dominantStructuralPlanechild.length>0) {
+                                    dominantStructuralPlane.children = dominantStructuralPlanechild;
+                                    layers.push(dominantStructuralPlane);
+                                }
+                                
+
+
                             }
                             //测区
                             if (layerlist.FlzDataLayer != null && layerlist.FlzDataLayer.FlzWindowInfoList != null) {
+                                var projectlayer = new Object;
+                                projectlayer.title = "测窗";
+                                projectlayer.type = "FLZWINDOWFA";//测窗的老爸
+                                var projectlayerchild = [];
                                 windowInfoList = layerlist.FlzDataLayer.FlzWindowInfoList;
                                 for (var i in layerlist.FlzDataLayer.FlzWindowInfoList) {
                                     var flzWindowLayer = new Object;
@@ -135,69 +201,43 @@ function LoadLayerListLayer(id) {
                                     }
                                     flzWindowLayer.children = flzWindowLayerchild;
                                     projectlayerchild.push(flzWindowLayer);
-
+                                    
                                 }
+                                projectlayer.children = projectlayerchild;
+                                layers.push(projectlayer);
                             }
-                        }
+                            // 地质识别
+                            if (layerlist.FlzDataLayer != null && layerlist.FlzDataLayer.FlzSteepHillList != null) {
+                                var flzSteepHillList = layerlist.FlzDataLayer.FlzSteepHillList;
+                                var dominantStructuralPlane = new Object;
+                                dominantStructuralPlane.title = "地质识别";
+                                dominantStructuralPlane.type = "DIZHIFA";
+                                dominantStructuralPlane.id = "DIZHIFA_" + id;
+                                dominantStructuralPlane.checked = false;
+                                dominantStructuralPlane.showCheckbox = true;//显示复选框
+                                var dominantStructuralPlanechild = [];
+                                if (flzSteepHillList != null) {
+                                    for (var j in flzSteepHillList) {//已经是项目id相同的查回来的。根据类型来显示
+                                        var pointListtem = JSON.parse(flzSteepHillList[j].points);
+                                        flzSteepHillList[j].postion = pointListtem;
+                                        var flzline = new Object;
+                                        flzline.title = flzSteepHillList[j].name;
+                                        flzline.id = "DIZHISON_" + flzSteepHillList[j].id;
+                                        flzline.type = "DIZHISON";
+                                        flzline.remarks = flzSteepHillList[j].remarks;
+                                        flzline.datas = flzSteepHillList[j];
+                                        flzline.pointList = pointListtem;
+                                        flzline.checked = false;
+                                        flzline.showCheckbox = true;//显示复选框
+                                        dominantStructuralPlanechild.push(flzline);
+                                    }
+                                }
+                                dominantStructuralPlane.children = dominantStructuralPlanechild;
+                                
+                                layers.push(dominantStructuralPlane);
 
-                        projectlayer.children = projectlayerchild;
-                        layers.push(projectlayer);
-                        //项目图层（项目位置、空间范围、影响范围、实景模型）
-                        if (layerlist.ProjectLayer != null) {
-                            
-                            if (layerlist.ProjectLayer.Models != null) {//新东西
-                                var prjsurmodel = new Object;
-                                // prjsurmodel.title = layerlist.ProjectLayer.Models.Title;
-                                prjsurmodel.title = "三维实景模型";
-                                prjsurmodel.type = "SANWEI";
-                                var prjsurmodelchild = [];
-                                modleInfoList = layerlist.ProjectLayer.Models;//把模型的值存起来
-                                for (var i in modleInfoList) {
-                                    var surmodel = new Object;
-                                    surmodel.title = modleInfoList[i].RWMC;
-                                    surmodel.id = "PROJECTSUMODEL_" + modleInfoList[i].Id;
-                                    surmodel.type = "PROJECTSUMODEL";
-                                    surmodel.path = modleInfoList[i].MXLJ;
-                                    surmodel.icon = MODELICON;
-                                    surmodel.checked = false;
-                                    surmodel.showCheckbox = true;//显示复选框
-                                    surmodel.gcgz = modleInfoList[i].GCYC;
-                                    surmodel.modelView = modleInfoList[i].MXSJ;
-                                    surmodel.data = modleInfoList[i];
+                            }
 
-                                    prjsurmodelchild.push(surmodel);
-                                }
-                                console.log(modleInfoList);
-                                prjsurmodel.children = prjsurmodelchild;
-                                layers.push(prjsurmodel);
-                            } else {
-                                var prjsurmodel = new Object;
-                                // prjsurmodel.title = layerlist.ProjectLayer.Models.Title;
-                                prjsurmodel.title = "三维实景模型";
-                                prjsurmodel.type = "SANWEI";
-                                //prjsurmodel.children = [];
-                                layers.push(prjsurmodel);
-                            }
-                        }
-                        if (layerlist.ProjectLayer != null) {
-                            if (layerlist.ProjectLayer.CenterPoint != null) {
-                                var prjcenter = new Object;
-                                prjcenter.title = layerlist.ProjectLayer.CenterPoint.Title;
-                                prjcenter.label = layerlist.ProjectLayer.CenterPoint.Label;
-                                prjcenter.bl = layerlist.ProjectLayer.CenterPoint.BL;
-                                prjcenter.id = "PROJECTCENTER_" + id;
-                                prjcenter.type = "PROJECTCENTER";
-                                var entity = viewer.entities.getById(prjcenter.id);
-                                if (entity != undefined) {
-                                    prjcenter.checked = true;
-                                    projectlayer.spread = true;
-                                }
-                                else {
-                                    prjcenter.checked = false;
-                                }
-                                prjcenter.showCheckbox = true;//显示复选框
-                                layers.push(prjcenter);
-                            }
                         }
                         //斜坡体
                         if (layerlist.ProjectLayer != null && layerlist.ProjectLayer.KJFW != null ) {
@@ -218,8 +258,9 @@ function LoadLayerListLayer(id) {
                             bianjie.showCheckbox = true;//显示复选框
                             layers.push(bianjie);
                         }
-                        
-                        
+
+
+                        //FlzSteepHillList
 
                 
                         //监测图层（监测点、监测剖面）
@@ -412,8 +453,13 @@ function LoadLayerListLayer(id) {
                                                 if (data.type == "FLZWINDOW") {
                                                     //viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"));
                                                     console.log(data);
-                                                    viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(data.datas.level))), Cesium.Math.toRadians(data.datas.vertical), 40));
-
+                                                    if (data.datas.level.indexOf("y") != -1) {
+                                                        var home = JSON.parse(data.datas.level);
+                                                        viewer.scene.camera.setView(home);
+                                                    } else {//老视角，
+                                                        viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(data.datas.level))), Cesium.Math.toRadians(data.datas.vertical), 40));
+                                                    }
+                                                    
                                                 } else {
                                                     var entities = [];
                                                     for (var i in data.children) {
@@ -430,27 +476,43 @@ function LoadLayerListLayer(id) {
                                             
                                             }
                                             else {
-                                                console.log(data);
-                                                //  viewer.flyTo(viewer.entities.getById(data.id), { duration: 1, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 50) });
-                                                // viewer.zoomTo(viewer.entities.getById(data.id));//
                                                 if (data.type == "FLZJIELI") {// || data.type == "YOUSHIMIAN"
-                                                    //viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"));
-                                                    console.log(data);//测窗的
-                                                    for (var i in layers[0].children) {
-                                                        for (var j in layers[0].children[i].children) {
-                                                            if (data.id == layers[0].children[i].children[j].id) {
-                                                                console.log(layers[0].children[i]);
-                                                                viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(layers[0].children[i].datas.level))), Cesium.Math.toRadians(layers[0].children[i].datas.vertical), 20));
-                                                                break;
+                                                    
+                                                    for (var m in layers) {
+                                                        if (layers[m].type =="FLZWINDOWFA") {
+                                                            for (var i in layers[m].children) {
+                                                                if (layers[m].children[i].datas.id == data.datas.windowId) {
+                                                                    if (layers[m].children[i].datas.level.indexOf("y") != -1) {
+                                                                        var home = JSON.parse(layers[m].children[i].datas.level);
+                                                                        viewer.scene.camera.setView(home);
+                                                                    } else {//老视角，
+                                                                        viewer.zoomTo(viewer.entities.getById(layers[m].children[i].id + "_LABEL"), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(layers[m].children[i].datas.level))), Cesium.Math.toRadians(layers[m].children[i].datas.vertical), 40));
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                
+                                                    
                                                 
                                                 } else if (data.type == "YOUSHIMIAN") {// || data.type == "YOUSHIMIAN"
                                                     //viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"));
+
                                                     console.log(data);
-                                                    viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(data.datas.inclination - 180), Cesium.Math.toRadians(data.datas.dipAngle-90), 40));
+                                                    if (data.datas.src.length > 0) {//存的最佳视角
+                                                        var home = JSON.parse(data.datas.src);
+                                                        viewer.scene.camera.setView(home);
+                                                    } else {//历史数据
+                                                        viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(data.datas.inclination - 180), Cesium.Math.toRadians(data.datas.dipAngle - 90), 40));
+                                                    }
+                                                } else if (data.type == "DIZHISON") {// 地质识别
+                                                    if (data.datas.level && data.datas.level.length > 0) {
+                                                        var home = JSON.parse(data.datas.level);
+                                                        viewer.scene.camera.setView(home);
+                                                    } else {
+                                                        viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"));
+
+                                                    }
+
                                                 } else if (data.type == "PROJECTSUMODEL") {// || data.type == "YOUSHIMIAN"
                                                     if (curtileset != null) {
                                                         if (data.modelView != null && data.modelView.length > 0) {
@@ -577,12 +639,11 @@ function LoadLayerListLayer(id) {
                                                     //全选侧窗
                                                     console.log(data);
                                                     var entityFater = viewer.entities.getById(data.id);
-                                                    var sum = 0;
                                               
                                                     if (entityFater == undefined) {
                                                         var points = data.pointList;
                                                         points.push(points[0]);
-                                                        viewer.entities.add({
+                                                        entityFater = viewer.entities.add({
                                                             id: data.id,
                                                             polyline: {
                                                                 positions: points,
@@ -594,16 +655,24 @@ function LoadLayerListLayer(id) {
                                                                // classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
                                                             },
                                                         });
-                                                        viewer.entities.add({
-                                                            id: data.id + "_LABEL",
-                                                            position: new Cesium.Cartesian3(data.Centerx, data.Centery, data.Centerz),
-                                                            point: {
-                                                                pixelSize: 1,
-                                                                color: Cesium.Color.BLUE
-                                                            }
-                                                        });
+                                                        //viewer.entities.add({
+                                                        //    id: data.id + "_LABEL",
+                                                        //    position: new Cesium.Cartesian3(data.Centerx, data.Centery, data.Centerz),
+                                                        //    point: {
+                                                        //        pixelSize: 1,
+                                                        //        color: Cesium.Color.BLUE
+                                                        //    }
+                                                        //});
 
                                                     }
+                                                    //选中就跑去最佳视角。
+                                                    //if (data.datas.level.indexOf("y")!= -1) {
+                                                    //    var home = JSON.parse(data.datas.level);
+                                                    //    viewer.scene.camera.setView(home);
+                                                    //} else {//老视角，
+                                                    //    viewer.zoomTo(entityFater, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(data.datas.level))), Cesium.Math.toRadians(data.datas.vertical), 40));
+                                                    //}
+
                                                     for (var i in data.children) {
                                                     
                                                         var entity = viewer.entities.getById(data.children[i].id);
@@ -716,6 +785,37 @@ function LoadLayerListLayer(id) {
                                                             viewer.entities.add({
                                                                 id: data.children[i].id + "_LABEL",
                                                                 position: new Cesium.Cartesian3(data.children[i].Centerx, data.children[i].Centery, data.children[i].Centerz),
+                                                                point: {
+                                                                    pixelSize: 1,
+                                                                    color: Cesium.Color.ORANGE
+                                                                }
+                                                            });
+                                                        }
+                                                        data.children[i].checked = true;
+                                                    }
+                                                } else if (data.type == "DIZHIFA") {//地质识别
+
+
+                                                    console.log(data);
+                                                    //点击的线
+                                                    //全选优势结构面
+                                                    for (var i in data.children) {
+                                                        var entity = viewer.entities.getById(data.children[i].id);
+                                                        if (entity == undefined) {
+                                                            viewer.entities.add({
+                                                                id: data.children[i].id,
+                                                                polyline: {
+                                                                    positions: data.children[i].pointList,
+                                                                    width: 2,
+                                                                    material: Cesium.Color.RED,
+                                                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                                                        color: Cesium.Color.RED
+                                                                    })
+                                                                }
+                                                            });
+                                                            viewer.entities.add({
+                                                                id: data.children[i].id + "_LABEL",
+                                                                position: data.children[i].pointList[0],
                                                                 point: {
                                                                     pixelSize: 1,
                                                                     color: Cesium.Color.ORANGE
@@ -925,6 +1025,40 @@ function LoadLayerListLayer(id) {
                                                     }
                                                     data.checked = true;
                                                     //看看把父亲也选中
+                                                } else if (data.type == "DIZHISON") {
+                                                    //地质识别
+                                                   
+                                                    var entityFater = viewer.entities.getById(data.id);
+                                                    var sum = 0;
+
+                                                    if (entityFater == undefined) {
+                                                        var points = data.pointList;
+                                                        entityFater=viewer.entities.add({
+                                                            id: data.id,
+                                                            polyline: {
+                                                                positions: points,
+                                                                width: 2,
+                                                                //arcType: Cesium.ArcType.RHUMB,
+                                                                material: Cesium.Color.RED,
+                                                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                                                    color: Cesium.Color.RED
+                                                                }),
+                                                                show: true,
+                                                                //clampToGround: true,
+                                                                classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
+                                                            },
+                                                        });
+
+
+                                                    }
+                                                    if (data.datas.level&&data.datas.level.length > 0) {
+                                                        var home = JSON.parse(data.datas.level);
+                                                        viewer.scene.camera.setView(home);
+                                                    } else {
+                                                        viewer.zoomTo(entityFater);
+
+                                                    }
+                                                    data.checked = true;
                                                 }
                                                 else if (data.type == "BIANJIE") {
                                                     //消落带边界
@@ -1086,48 +1220,6 @@ function LoadLayerListLayer(id) {
                                                                 disableDepthTestDistance: Number.POSITIVE_INFINITY
                                                             }
                                                         });   
-                                                    //data.checked = true;
-
-                                                        //viewer.entities.add({
-                                                        //    id: data.id,
-                                                        //    polygon: {
-                                                        //        hierarchy: {
-                                                        //            positions: points
-                                                        //        },
-                                                        //        material: Cesium.Color.YELLOW.withAlpha(0.3),
-                                                        //        classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
-                                                        //    }
-                                                        //});
-
-                                                        //计算面积
-                                                        //var cartesian2s = [];
-                                                        //for (var i = 0; i < newcartesian3s.length; i++) {
-                                                        //    var cartesian3 = Cesium.Cartesian3.fromDegrees(newcartesian3s[i].y, newcartesian3s[i].x, maxHeight);
-                                                        //    var cartesian2 = new Cesium.Cartesian2(cartesian3.x, cartesian3.y);
-                                                        //    cartesian2s.push(cartesian2);
-                                                        //}
-                                                        //cartesian2s.push(cartesian2s[0]);
-                                                        //var area = 0;
-                                                        //for (var i = 0; i < cartesian2s.length - 1; i++) {
-                                                        //    area += (cartesian2s[i].x - cartesian2s[0].x) * (cartesian2s[i + 1].y - cartesian2s[0].y) - (cartesian2s[i].y - cartesian2s[0].y) * (cartesian2s[i + 1].x - cartesian2s[0].x);
-                                                        //}
-                                                        //area = Math.abs(area);
-
-                                                        //计算重心
-                                                        //viewer.entities.add({
-                                                        //    id: data.id + "_LABEL",
-                                                        //    position: Cesium.Cartesian3.fromDegrees(lSum / points.length, bSum / points.length, maxHeight + 1),
-                                                        //    label: {
-                                                        //        text: data.title + '面积：' + area.toFixed(2) + '平方米',
-                                                        //        showBackground: true,
-                                                        //        backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                                                        //        font: '24px Times New Roman',
-                                                        //        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                                                        //        verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                                                        //        pixelOffset: new Cesium.Cartesian2(0.0, -10),
-                                                        //    }
-                                                        //});
-                                                  
 
                                                     }
 
@@ -1240,33 +1332,7 @@ function LoadLayerListLayer(id) {
                                             DrwInfo(obj, "update");
                                         } else if (type === 'del') { //删除节点
                                             if (data.type == "FLZWINDOW") {//删除测窗
-                                                $.ajax({
-                                                    url: servicesurl + "/api/FlzWindowInfo/DeleteFlzWindow", type: "delete", data: { "id": obj.data.id.split("_")[1], "cookie": document.cookie },
-                                                    success: function (result) {
-                                                        layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-
-
-                                                        viewer.entities.removeById(obj.data.id);
-                                                        viewer.entities.removeById(obj.data.id + "_LABEL");
-                                                        for (var i in layers[0].children) {
-                                                            if (obj.data.id == layers[0].children[i].id) {
-                                                                layers[0].children.splice(i, 1);
-                                                                break;
-                                                            }
-
-                                                        }
-                                                        modeljiazaiFlag = false;
-                                                        tree.reload('prjlayerlistid', { data: layers });
-                                                        ClearTemp();
-                                                        for (var m in windowInfoList) {
-                                                            if (("FLZWINDOW_" + windowInfoList[m].id) == obj.data.id) {
-                                                                windowInfoList.splice(m, 1);
-                                                            }
-                                                        }
-
-
-                                                    }, datatype: "json"
-                                                });
+                                                deleteWindow(obj.data.datas);
                                             } else if (data.type == "BIANJIE") {//删除边界范围
                                                 var temp = {};
                                                 temp.id = currentprojectid;
@@ -1329,7 +1395,7 @@ function LoadLayerListLayer(id) {
                                                         }
                                                     }, datatype: "json"
                                                 });
-                                            } else if (data.type == "PROJECTSUMODEL") {//删除斜坡范围，也是删除斜坡
+                                            } else if (data.type == "PROJECTSUMODEL") {//删除模型
                                                $.ajax({
                                                         url: servicesurl + "/api/ModelProject/CancelUserModelProjectUse", type: "delete", data: { "syscode": 4, "useprojectid": currentprojectid, "modelid": obj.data.data.Id, "cookie": document.cookie },
                                                         success: function (result) {
@@ -1385,7 +1451,13 @@ function LoadLayerListLayer(id) {
                                                             layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                                                         }, datatype: "json"
                                                     });
-                                             }else {
+                                            } else if (data.type == "DIZHISON") {//地质识别
+                                                deleteDiZhiShiBie(data.datas);
+                                            } else if (data.type == "FLZJIELI") {//删除节理
+                                                deleteJieli(data.datas);
+                                            } else if (data.type == "YOUSHIMIAN") {//删除结构面
+                                                deleteJieGou(data.datas);
+                                            }else {
                                                 $.ajax({
                                                     url: servicesurl + "/api/FlzData/DeleteFlzPoint", type: "delete", data: { "id": obj.data.id.split("_")[1], "cookie": document.cookie },
                                                     success: function (result) {
@@ -1393,26 +1465,16 @@ function LoadLayerListLayer(id) {
                                                         viewer.entities.removeById(obj.data.id);
                                                         viewer.entities.removeById(obj.data.id + "_LABEL");
                                                         console.log(layers);
-                                                        if (data.type == "FLZJIELI" || data.type == "YOUSHIMIAN") {
-                                                            for (var i in layers[0].children) {
-                                                                for (var j in layers[0].children[i].children) {
-                                                                    if (obj.data.id == layers[0].children[i].children[j].id) {
-                                                                        layers[0].children[i].children.splice(j, 1);
-
-                                                                        break;
-                                                                    }
-                                                                }
-                                                            }
-                                                        }  else{//点数据成图
-                                                            for (var i in layers[layers.length-1].children) {
-                                                                for (var j in layers[layers.length - 1].children[i].children) {
-                                                                    if (obj.data.id == layers[layers.length - 1].children[i].children[j].id) {
-                                                                        layers[layers.length - 1].children[i].children.splice(j,1);
-                                                                        break;
-                                                                    }
+                                                      //点数据成图
+                                                        for (var i in layers[layers.length-1].children) {
+                                                            for (var j in layers[layers.length - 1].children[i].children) {
+                                                                if (obj.data.id == layers[layers.length - 1].children[i].children[j].id) {
+                                                                    layers[layers.length - 1].children[i].children.splice(j,1);
+                                                                    break;
                                                                 }
                                                             }
                                                         }
+                                                        
                                                     
                                                         modeljiazaiFlag = false;
                                                         tree.reload('prjlayerlistid', { data: layers });

@@ -2,20 +2,6 @@
 var handler;
 var scene = viewer.scene;
 var canvas = scene.canvas;
-var isPoint = false;                        //坐标量测
-var isLength = false;                     //长度量测
-var isHeight = false;                       //高度量测
-var isAraa = false;                         //面积量测
-var isAzimuth = false;                      //方位角量测
-var isRedo = false;                         //继续绘制
-var isPointLabel = false;                   //点标注
-var isPolylineLabel = false;                //线标注
-var isPolygonLabel = false;                 //面标注
-var isOccurrence = false;                   //产状
-var isWindowZiDingyi = false;                  //迹线
-var points = [];                            //临时点集
-var pointLabelCount = 0;
-var curId = "0";
 var linepoints = [];
 var linepointcount = 0;
 var polylineId = 0;
@@ -44,74 +30,8 @@ var isClose = true;//采集人
 var eyespoints = [];
 var jielitext = null;//节理弹出框
 var cequList = [];
-console.log(mouth);
-//绘制widget
-function LoadDrawLayer() {
-
-
-    var drawlayerindex = layer.open({
-        type: 1
-        , title: ['绘制', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-        , area: ['500px', '500px']
-        , shade: 0
-        , offset: 'auto'
-        , closeBtn: 1
-        , maxmin: true
-        , moveOut: true
-        , content: ''
-        , zIndex: layer.zIndex
-        , success: function (layero) {
-            //置顶
-            layer.setTop(layero);
-        }
-    });
-
-
-
-
-
-
-}
-//显示/隐藏功能面板
-var isOpenMenu = false;
-function openMenu() {
-    isOpenMenu = !isOpenMenu;
-
-    if (isOpenMenu) {
-        document.getElementById("menu").style.visibility = "visible";
-        document.getElementById("openmenu").style.right = "247px";
-        document.getElementById("openmenu").src = "../../../Resources/img/icon/right.png";
-        document.getElementById("openmenu").title = "收起功能面板";
-    }
-    else {
-        document.getElementById("menu").style.visibility = "hidden";
-        document.getElementById("openmenu").style.right = "20px";
-        document.getElementById("openmenu").src = "../../../Resources/img/icon/left.png";
-        document.getElementById("openmenu").title = "展开功能面板";
-    }
-}
-//显示/隐藏鹰眼视图
-var isOpenOverview = false;
-function openOverview() {
-    isOpenOverview = !isOpenOverview;
-
-    if (isOpenOverview) {
-        document.getElementById("overview").style.visibility = "visible";
-        document.getElementById("openoverview").style.bottom = "260px";
-        document.getElementById("openoverview").style.right = "260px";
-        document.getElementById("openoverview").src = "image/icon/narrow.png";
-        document.getElementById("openoverview").title = "隐藏鹰眼视图";
-        //document.getElementById("openoverview").style.backgroundColor = "rgba(255,255,255,0.5)";
-    }
-    else {
-        document.getElementById("overview").style.visibility = "hidden";
-        document.getElementById("openoverview").style.bottom = "0px";
-        document.getElementById("openoverview").style.right = "0px";
-        document.getElementById("openoverview").src = "image/icon/expand.png";
-        document.getElementById("openoverview").title = "显示鹰眼视图";
-    }
-}
-
+var drwjieliUpdInfox = null;//节理弹出框修改
+var drwjieGouUpdInfox = null;//结构修改
 //清除
 function Clear() {
     ClearAction();
@@ -166,58 +86,6 @@ function ClearTemp() {
     points = [];
     eyespoints = [];
 }
-//坐标量测
-function pointMeasure() {
-    ClearTemp();
-
-    isPoint = true;
-    isLength = false;
-    isHeight = false;
-    isAraa = false;
-    isAzimuth = false;
-    isRedo = false;
-    isPointLabel = false;
-    isPolylineLabel = false;
-    isPolygonLabel = false;
-    isOccurrence = false;
-    isWindowZiDingyi = false;
-
-    if (isPoint) {
-        if (handler != undefined) {
-            handler.destroy();
-        }
-        handler = new Cesium.ScreenSpaceEventHandler(canvas);
-
-        //左击
-        handler.setInputAction(function (leftclick) {
-            if (isPoint) {
-                var pickedOject = scene.pick(leftclick.position);
-                if (pickedOject != undefined) {
-                    var position = scene.pickPosition(leftclick.position);
-                    if (position != undefined) {
-                        var cartesian3 = Cesium.Cartographic.fromCartesian(position);                        //笛卡尔XYZ
-
-                        if (cartesian3.height > 0) {
-
-                            if (Cesium.defined(position)) {
-                                //var drowinfoAddlayerindex = null;                           //画点新增，弹出框
-                                DrowHuaHua("point", cartesian3, position);
-                                // ClearTemp();
-
-                                //针对移动设备
-                                if (isMobile.any()) {
-                                    if (handler != undefined) {
-                                        handler.destroy();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-    }
-};
 //生成随机数
 function NewGuid() {
     return ((((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
@@ -230,524 +98,8 @@ function NewGuid() {
         + (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1));
 }
 
-//长度量测
-function lengthMeasure() {
-    ClearTemp();
-
-    isPoint = false;
-    isLength = true;
-    isHeight = false;
-    isAraa = false;
-    isAzimuth = false;
-    isRedo = false;
-    isPointLabel = false;
-    isPolylineLabel = false;
-    isPolygonLabel = false;
-    isOccurrence = false;
-    isWindowZiDingyi = false;
-
-    if (isLength) {
-        if (handler != undefined) {
-            handler.destroy();
-        }
-
-        handler = new Cesium.ScreenSpaceEventHandler(canvas);
-
-        //左击
-        handler.setInputAction(function (leftclik) {
-            if (isRedo) {
-                ClearTemp();
-                isRedo = false;
-                linepoints = [];
-                points = [];
-            }
-
-            var pickedOject = scene.pick(leftclik.position);
-            if (pickedOject != undefined) {
-                var position = scene.pickPosition(leftclik.position);
-                if (position != undefined) {
-                    if (Cesium.defined(position)) {
-                        var cartesian3 = new Cesium.Cartesian3(position.x, position.y, position.z);
-                        linepoints.push(Cesium.Cartographic.fromCartesian(position));
-                        points.push(position);
-
-                        viewer.entities.add({
-                            name: "ptMeasue" + NewGuid(),
-                            position: position,
-                            point: {
-                                pixelSize: 10,
-                                color: Cesium.Color.YELLOW,
-                                disableDepthTestDistance: Number.POSITIVE_INFINITY
-                            }
-                        });
-
-                        if (points.length > 1) {
-                            var point = points[points.length - 2];
-                            viewer.entities.add({
-                                name: "plMeasue" + NewGuid(),
-                                polyline: {
-                                    positions: [point, position],
-                                    width: 2,
-                                    arcType: Cesium.ArcType.RHUMB,
-                                    material: Cesium.Color.RED,
-                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                        color: Cesium.Color.RED,
-                                    }),
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-        //移动
-        handler.setInputAction(function (move) {
-            if (points.length > 0) {
-                //清除多边形临时边线
-
-                var pick = viewer.scene.pick(move.endPosition);
-                if (pick != undefined) {
-                    var XYZ = viewer.scene.pickPosition(move.endPosition);
-                    if (XYZ != undefined) {
-                        //删除
-                        if (viewer.entities.getById("line_temp9999") != null) {
-                            viewer.entities.removeById("line_temp9999");
-                        }
-
-                        //绘制多边形临时边线
-                        viewer.entities.add({
-                            id: "line_temp9999",
-                            polyline: {
-                                positions: [points[points.length - 1], XYZ],
-                                width: 2,
-                                arcType: Cesium.ArcType.RHUMB,
-                                material: Cesium.Color.RED,
-                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                    color: Cesium.Color.RED,
-                                }),
-                            }
-                        });
-
-                    }
-                }
-            }
-
-        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-
-        if (isMobile.any()) {//双指
-            handler.setInputAction(function (pinch) {
-                if (points.length > 1) {
-                    //删除
-                    if (viewer.entities.getById("line_temp9999") != null) {
-                        viewer.entities.removeById("line_temp9999");
-                    }
-                    if (handler != undefined) {
-                        handler.destroy();
-                    }
-                    DrowHuaHua("line", linepoints, points);
-                }
-
-            }, Cesium.ScreenSpaceEventType.PINCH_START);
-        }
-        else {//右击
-            handler.setInputAction(function (rightclik) {
-                if (points.length > 1) {
-                    //删除
-                    if (viewer.entities.getById("line_temp9999") != null) {
-                        viewer.entities.removeById("line_temp9999");
-                    }
-                    if (handler != undefined) {
-                        handler.destroy();
-                    }
-                    DrowHuaHua("line", linepoints, points);
-                    
-                }
-
-            }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
-        }
-    }
-};
-//面积测量
-/*
-面积计算包括表面积、投影面积计算
-投影面积计算过程：
-（1）获取空间直角坐标XYZ
-（2）转换为大地坐标BLH
-（3）转换为平面直角坐标xy
-（4）计算面积
-*/
-function areaMeasure() {
-    //本面积计算方法为：将所有点转换为大地坐标BLH，然后将H赋值为最大H，再转换为空间直角坐标XYZ，取XY计算面积
-    ClearTemp();
-    if (currentprojectid == null) {
-        layer.msg('请先选择项目');
-        return;
-    }
-    if (modleInfoList.length == 0) {
-        layer.msg('请先选择模型');
-        return;
-    }
-    isPoint = false;
-    isLength = false;
-    isHeight = false;
-    isAraa = true;
-    isAzimuth = false;
-    isRedo = false;
-    isPointLabel = false;
-    isPolylineLabel = false;
-    isPolygonLabel = false;
-    isOccurrence = false;
-    isWindowZiDingyi = false;
-
-    if (isAraa) {
-        if (handler != undefined) {
-            handler.destroy();
-        }
-
-        handler = new Cesium.ScreenSpaceEventHandler(canvas);
-
-        //左击
-        handler.setInputAction(function (leftclik) {
-            if (isRedo) {
-                ClearTemp();
-                isRedo = false;
-                linepoints = [];
-                points = [];
-            }
-
-            var pickedOject = scene.pick(leftclik.position);
-            if (pickedOject != undefined) {
-                var position = scene.pickPosition(leftclik.position);
-                if (position != undefined) {
-                    if (Cesium.defined(position)) {
-                        viewer.entities.add({
-                            name: "ptMeasue" + NewGuid(),
-                            position: position,
-                            point: {
-                                pixelSize: 10,
-                                color: Cesium.Color.YELLOW,
-                                disableDepthTestDistance: Number.POSITIVE_INFINITY
-                            }
-                        });
-                        points.push(position);
-                        if (points.length > 1) {
-                            var point = points[points.length - 2];
-                            //polylineOnModel("plMeasue" + NewGuid(), [point, position], 0.05, 10, Cesium.Color.AQUAMARINE);             
-                            viewer.entities.add({
-                                name: "plMeasue" + NewGuid(),
-                                polyline: {
-                                    positions: [point, position],
-                                    width: 2,
-                                    arcType: Cesium.ArcType.RHUMB,
-                                    material: Cesium.Color.RED,
-                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                        color: Cesium.Color.RED,
-                                    }),
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-        //移动
-        handler.setInputAction(function (move) {
-            if (points.length > 0) {
-                //清除多边形临时边线
-
-                var pick = viewer.scene.pick(move.endPosition);
-                if (pick != undefined) {
-                    var XYZ = viewer.scene.pickPosition(move.endPosition);
-                    if (XYZ != undefined) {
-                        //删除
-                        if (viewer.entities.getById("line_temp9999") != null) {
-                            viewer.entities.removeById("line_temp9999");
-                        }
-
-                        //绘制多边形临时边线
-                        viewer.entities.add({
-                            id: "line_temp9999",
-                            polyline: {
-                                positions: [points[points.length - 1], XYZ],
-                                width: 2,
-                                arcType: Cesium.ArcType.RHUMB,
-                                material: Cesium.Color.RED,
-                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                    color: Cesium.Color.RED,
-                                }),
-                            }
-                        });
-
-                        if (points.length > 1) {
-                            //绘制多边形临时闭合线
-                            if (viewer.entities.getById("line_temp9998") != null) {
-                                viewer.entities.removeById("line_temp9998");
-                            }
-                            viewer.entities.add({
-                                id: "line_temp9998",
-                                polyline: {
-                                    positions: [points[0], XYZ],
-                                    width: 2,
-                                    arcType: Cesium.ArcType.RHUMB,
-                                    material: Cesium.Color.RED,
-                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                        color: Cesium.Color.RED,
-                                    }),
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-
-        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-        if (isMobile.any()) {
-            //双指
-            handler.setInputAction(function (pinch) {
-                if (points.length > 2) {
-                    if (viewer.entities.getById("line_temp9999") != null) {
-                        viewer.entities.removeById("line_temp9999");
-                    }
-                    if (viewer.entities.getById("line_temp9998") != null) {
-                        viewer.entities.removeById("line_temp9998");
-                    }
-                    if (handler != undefined) {
-                        handler.destroy();
-                    }
-                    viewer.entities.add({
-                        name: "plMeasue" + NewGuid(),
-                        polyline: {
-                            positions: [points[0], points[points.length-1]],
-                            width: 2,
-                            arcType: Cesium.ArcType.RHUMB,
-                            material: Cesium.Color.RED,
-                            depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                color: Cesium.Color.RED,
-                            }),
-                        }
-                    });
-                    DrowHuaHua("area", linepoints, points);
 
 
-                }
-
-            }, Cesium.ScreenSpaceEventType.PINCH_START);
-        }
-        else {
-            //右击
-            handler.setInputAction(function (rightclik) {
-                if (points.length > 2) {
-                    if (viewer.entities.getById("line_temp9999") != null) {
-                        viewer.entities.removeById("line_temp9999");
-                    }
-                    if (viewer.entities.getById("line_temp9998") != null) {
-                        viewer.entities.removeById("line_temp9998");
-                    }
-                    if (handler != undefined) {
-                        handler.destroy();
-                    }
-                    viewer.entities.add({
-                        name: "plMeasue" + NewGuid(),
-                        polyline: {
-                            positions: [points[0], points[points.length - 1]],
-                            width: 2,
-                            arcType: Cesium.ArcType.RHUMB,
-                            material: Cesium.Color.RED,
-                            depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                color: Cesium.Color.RED,
-                            }),
-                        }
-                    });
-                    getEncryptionPoint(points, false, 6);
-                    DrowHuaHua("area", linepoints, points);
-                    
-                }
-
-            }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
-        }
-    }
-};
-
-
-var wPosition = [];
-
-//方位角量测
-//function azimuthMeasure() {
-//    ClearTemp();
-
-//    isPoint = false;
-//    isLength = false;
-//    isHeight = false;
-//    isAraa = false;
-//    isAzimuth = true;
-//    isRedo = false;
-//    isPointLabel = false;
-//    isPolylineLabel = false;
-//    isPolygonLabel = false;
-//    isOccurrence = false;
-//    isWindowZiDingyi = false;
-
-//    if (isAzimuth) {
-//        if (handler != undefined) {
-//            handler.destroy();
-//        }
-
-//        handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
-
-//        //左击
-//        handler.setInputAction(function (leftclik) {
-//            if (isRedo) {
-//                ClearTemp();
-//                isRedo = false;
-//                wPosition = [];
-//            }
-
-//            wPosition.push(new Cesium.Cartesian2(leftclik.position.x, leftclik.position.y));
-
-//            var pickedOject = scene.pick(leftclik.position);
-//            if (pickedOject != undefined) {
-//                var xyz = scene.pickPosition(leftclik.position);
-//                if (xyz != undefined) {
-//                    var rblh = Cesium.Cartographic.fromCartesian(xyz);
-
-//                    //viewer.entities.add({
-//                    //    name: "ptMeasue" + NewGuid(),
-//                    //    position: xyz,
-//                    //    point: {
-//                    //        pixelSize: 8,
-//                    //        color: Cesium.Color.YELLOW
-//                    //    }
-//                    //});
-//                    viewer.entities.add({
-//                        name: "ptMeasue" + NewGuid(),
-//                        position: xyz,
-//                        billboard: {
-//                            image: 'image/survey/marker.png',
-//                            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-//                            width: 24,
-//                            height: 24,
-//                        }
-//                    });
-//                    points.push(xyz);
-
-//                    if (points.length == 2) {
-//                        var point = points[0];
-//                        if (false) {
-//                            //绘制贴模型线
-//                            //polylineOnModel("plMeasue" + NewGuid(), [point, xyz], 0.5, 5, Cesium.Color.WHITE);
-
-//                            viewer.entities.add({
-//                                name: "plMeasue" + NewGuid(),
-//                                polyline: {
-//                                    positions: [point, xyz],
-//                                    width: 5,
-//                                    arcType: Cesium.ArcType.RHUMB,
-//                                    material: Cesium.Color.YELLOW,
-//                                    show: true,
-//                                    clampToGround: true,
-//                                    classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
-//                                }
-//                            });
-//                        }
-//                        else {
-//                            //viewer.entities.add({
-//                            //    name: "plMeasue" + NewGuid(),
-//                            //    polyline: {
-//                            //        positions: [point, xyz],
-//                            //        width: 5,
-//                            //        material: Cesium.Color.YELLOW,
-//                            //    }
-//                            //});
-
-//                            var start = wPosition[0];
-//                            var end = wPosition[1];
-
-//                            var count = Math.ceil(Cesium.Cartesian2.distance(start, end) / 1);
-//                            var cartesians = [];
-//                            cartesians.push(scene.pickPosition(start));
-
-
-//                            for (var i = 0; i < count; ++i) {
-//                                var offset = i / (count - 1);
-//                                //cartesians[i] = Cesium.Cartesian2.lerp(start, end, offset, new Cesium.Cartesian2());
-//                                cartesians.push(scene.pickPosition(Cesium.Cartesian2.lerp(start, end, offset, new Cesium.Cartesian2())));
-//                            }
-
-//                            cartesians.push(scene.pickPosition(end));
-//                            viewer.entities.add({
-//                                name: "plMeasue" + NewGuid(),
-//                                polyline: {
-//                                    positions: cartesians,
-//                                    width: 10,
-//                                    material: Cesium.Color.YELLOW,
-//                                }
-//                            });
-
-
-
-
-//                        }
-
-//                        var rblh1 = Cesium.Cartographic.fromCartesian(point);//第一个点
-//                        var rblh2 = Cesium.Cartographic.fromCartesian(xyz);//第二个点
-
-//                        //计算方位角
-//                        var r = Math.atan((rblh2.longitude * 180 / Math.PI - rblh1.longitude * 180 / Math.PI) * Math.cos(rblh2.latitude) / (rblh2.latitude * 180 / Math.PI - rblh1.latitude * 180 / Math.PI)) * 180 / Math.PI;
-
-//                        //判断
-//                        if ((rblh1.latitude > rblh2.latitude) && (rblh1.longitude > rblh2.longitude)) {
-//                            r += 180;
-//                        }
-//                        else if ((rblh1.latitude > rblh2.latitude) && (rblh1.longitude == rblh2.longitude)) {
-//                            r = 180;
-//                        }
-//                        else if ((rblh1.latitude > rblh2.latitude) && (rblh1.longitude < rblh2.longitude)) {
-//                            r += 180;
-//                        }
-//                        else if ((rblh1.latitude == rblh2.latitude) && (rblh1.longitude > rblh2.longitude)) {
-//                            r = 270;
-//                        }
-//                        else if ((rblh1.latitude == rblh2.latitude) && (rblh1.longitude < rblh2.longitude)) {
-//                            r = 90;
-//                        }
-//                        else if ((rblh1.latitude < rblh2.latitude) && (rblh1.longitude > rblh2.longitude)) {
-//                            r += 360;
-//                        }
-//                        else if ((rblh1.latitude < rblh2.latitude) && (rblh1.longitude == rblh2.longitude)) {
-//                            r = 0;
-//                        }
-//                        else if ((rblh1.latitude < rblh2.latitude) && (rblh1.longitude < rblh2.longitude)) {
-//                            //r
-//                        }
-//                        else {
-//                            //error:不存在两点经纬度均相同的情况
-//                        }
-
-//                        viewer.entities.add({
-//                            name: "alMeasue" + NewGuid(),
-//                            position: Cesium.Cartesian3.fromElements((point.x + xyz.x) / 2, (point.y + xyz.y) / 2, (point.z + xyz.z) / 2),
-//                            label: {
-//                                text: '方位角：' + r.toFixed(2) + '度',
-//                                showBackground: true,
-//                                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-//                                font: '24px Times New Roman',
-//                                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-//                                verticalOrigin: Cesium.VerticalOrigin.CENTER,
-//                                pixelOffset: new Cesium.Cartesian2(0.0, -60),
-//                            }
-//                        });
-
-//                        isRedo = true;
-//                    }
-//                }
-//            }
-//        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-//    }
-//}
-
-
-
-//测窗自定义
 /*
 测窗大小由自己确定
 （1）获取空间直角坐标XYZ
@@ -949,626 +301,6 @@ function windowInfoZiDingYi() {
         }
     }
 };
-
-
-//测试标注
-function testLabel() {
-    var scene = viewer.scene;
-    var canvas = scene.canvas;
-    var pinBuilder = new Cesium.PinBuilder();
-
-    var groceryPin = Cesium.when(pinBuilder.fromUrl('App/Cesium1.54/Assets/Textures/maki/basketball.png', Cesium.Color.GREEN, 48), function (canvas) {
-        var entity = viewer.entities.add({
-            name: 'Amway Center',
-            position: Cesium.Cartesian3.fromDegrees(107.1390014, 28.9414251, 1856.38),
-            billboard: {
-                image: canvas.toDataURL(),
-                verticalOrigin: Cesium.VerticalOrigin.BOTTOM
-            },
-            show: false,
-            description:
-                '<img width="50%" style="float:left; margin: 0 1em 1em 0;" src="Resources/AmwayCenterCourt.jpg"/>\n' +
-                '<p>The <b>Amway Center</b> is a sports and entertainment venue in Orlando, Florida, located in the Downtown area. It is part of Downtown Orlando Master Plan 3: a plan that also involves improvements to the Citrus Bowl and a new performing arts center. The arena is home to the <a href="http://www.nba.com/magic/" target="_blank">Orlando Magic</a> of the NBA, the <a href="www.orlandopredators.com/" target="_blank">Orlando Predators</a> of the Arena Football League, the <a href="www.orlandosolarbearshockey.com/" target="_blank">Orlando Solar Bears</a> of the ECHL, and hosted the 2012 NBA All-Star Game, plus the 2015 ECHL All-Star Game.</p>\n' +
-                '<p>Source: <a href="https://en.wikipedia.org/wiki/Amway_Center" target="_blank">Wikipedia</a>.</p>'
-        });
-
-        entity.show = true;
-    });
-}
-
-//获取点标注样式
-function getPointStyle(event) {
-    var e = event || window.event || arguments.callee.caller.arguments[0];
-    var pointstyle = document.elementFromPoint(e.clientX, e.clientY);
-    if ((pointstyle.id == "p1") || (pointstyle.id == "p2") || (pointstyle.id == "p3") || (pointstyle.id == "p4") || (pointstyle.id == "p5")
-        || (pointstyle.id == "p6") || (pointstyle.id == "p7") || (pointstyle.id == "p8") || (pointstyle.id == "p9") || (pointstyle.id == "p10")
-        || (pointstyle.id == "p11") || (pointstyle.id == "p12") || (pointstyle.id == "p13") || (pointstyle.id == "p14") || (pointstyle.id == "p15")) {
-
-        pointPic = pointstyle.src;
-
-        var pointPicture = document.getElementById("pointpic");
-        var childs = pointPicture.childNodes;
-        var count = 0;
-        while (childs.length > 0) {
-            for (var i = 0; i < childs.length; i++) {
-                if (childs[i].id != undefined) {
-                    //childs[i].style.border = "";
-                    childs[i].style.background = "";
-                }
-            }
-            count++;
-            if (count > 50) {
-                break;
-            }
-        }
-
-        //pointstyle.style.border = "1px solid #DA2527";
-        pointstyle.style.background = "#004689";
-    }
-}
-//添加点标注
-function addPointLabel() {
-    isPoint = false;
-    isLength = false;
-    isHeight = false;
-    isAraa = false;
-    isAzimuth = false;
-    isPointLabel = true;
-    isPolylineLabel = false;
-    isPolygonLabel = false;
-
-    if (isPointLabel) {
-        if (handler != undefined) {
-            handler.destroy();
-        }
-        handler = new Cesium.ScreenSpaceEventHandler(canvas);
-
-        //左击
-        handler.setInputAction(function (leftclick) {
-            if (isPointLabel) {
-                var pickedOject = scene.pick(leftclick.position);
-                if (pickedOject != undefined) {
-                    var position = scene.pickPosition(leftclick.position);
-                    if (position != undefined) {
-                        var cartesian3 = Cesium.Cartographic.fromCartesian(position);
-                        var height = cartesian3.height;
-
-                        if (height > 0) {
-                            if (Cesium.defined(position)) {
-                                pointLabelCount++;
-
-                                viewer.entities.add({
-                                    name: 'point' + pointLabelCount,
-                                    position: position,
-                                    billboard: {
-                                        image: pointPic,
-                                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                                        width: 30,
-                                        height: 30,
-                                    }
-                                });
-
-                                viewer.entities.add({
-                                    name: 'pointlabel' + pointLabelCount,
-                                    position: position,
-                                    label: {
-                                        text: 'pointlabel' + pointLabelCount,
-                                        font: '24px Times New Roman',
-                                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                                        verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                                        pixelOffset: new Cesium.Cartesian2(0.0, -60),
-                                    }
-                                });
-
-                                var pointLabels = document.getElementById("pointLabel");
-                                var image = '<img id="img' + pointLabelCount + '" src="' + pointPic + '" width="24" height="24" style="vertical-align: middle" />';
-                                var text = '<input id="txt' + pointLabelCount + '" value="' + 'pointlabel' + pointLabelCount + '" type="text" style="background-color: rgba(255,255,255,0);border:0px;width: 150px;vertical-align: middle;text-overflow:ellipsis" />';
-                                var remove = '<img id="rem' + pointLabelCount + '" src="../../Resources/img/survey/remove.png" width="20" height="20" style="vertical-align: middle" />'
-                                var br = '<br id="br' + pointLabelCount + '" />';
-                                pointLabels.innerHTML += image + text + remove + br;
-                                pointLabels.className = "divborder";
-
-                                //针对移动设备
-                                if (isMobile.any()) {
-                                    if (handler != undefined) {
-                                        handler.destroy();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
-        //右击
-        handler.setInputAction(function (rightclik) {
-            if (handler != undefined) {
-                handler.destroy();
-            }
-
-        }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
-    }
-}
-//删除点标注
-function deletePointLabel(event) {
-    var e = event || window.event || arguments.callee.caller.arguments[0]; //var e = event || window.event;
-    var pointLabel = document.elementFromPoint(e.clientX, e.clientY);
-    var curID = pointLabel.id.toString();
-    if (curID.indexOf("rem") > -1) {
-        var pointL = document.getElementById("pointLabel");
-        var childs = pointL.childNodes;
-
-        var count = 0;
-
-        while (count < 10) {
-            for (var i = 0; i < childs.length; i++) {
-                if ((childs[i].id == curID) || (childs[i].id == curID.replace("rem", "img")) || (childs[i].id == curID.replace("rem", "txt")) || (childs[i].id == curID.replace("rem", "br"))) {
-                    pointL.removeChild(childs[i]);
-                }
-            }
-
-            count++;
-        }
-
-        count = 0;
-        while (count < 50) {
-            for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                if ((viewer.entities._entities._array[i]._name == "point" + curID.replace("rem", "")) || (viewer.entities._entities._array[i]._name == "pointlabel" + curID.replace("rem", ""))) {
-                    viewer.entities.remove(viewer.entities._entities._array[i]);
-                }
-            }
-            count++
-        }
-
-    }
-    else if (curID.indexOf("txt") > -1) {
-        curId = curID.replace("txt", "");
-
-        if (curId != "0") {
-            for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                if (viewer.entities._entities._array[i]._name.indexOf("point" + curId) > -1) {
-                    viewer.zoomTo(viewer.entities._entities._array[i]);
-                }
-            }
-        }
-
-    }
-    else { }
-
-    if (document.getElementById("pointLabel").innerHTML == "") {
-        document.getElementById("pointLabel").className = "";
-    }
-}
-//修改点标注
-function modiftyPointLabel(event) {
-    var e = event || window.event || arguments.callee.caller.arguments[0];
-    if (e && e.keyCode == 13) {
-        if (curId != "0") {
-            for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                if (viewer.entities._entities._array[i]._name.indexOf("pointlabel" + curId) > -1) {
-                    var oldvalue = viewer.entities._entities._array[i]._label._text._value;
-                    viewer.entities._entities._array[i]._label._text._value = document.getElementById("txt" + curId).value;
-                    document.getElementById("pointLabel").innerHTML = document.getElementById("pointLabel").innerHTML.replace(oldvalue, document.getElementById("txt" + curId).value);
-                }
-            }
-        }
-    }
-
-}
-//删除全部点标注
-function deleteAllPointLabel() {
-    var pointL = document.getElementById("pointLabel");
-    var childs = pointL.childNodes;
-    var count = 0;
-    while (childs.length > 0) {
-        for (var i = 0; i < childs.length; i++) {
-            pointL.removeChild(childs[i]);
-        }
-        count++;
-        if (count > 50) {
-            break;
-        }
-    }
-
-    count = 0;
-    while (count < 50) {
-        for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-            if ((viewer.entities._entities._array[i]._name.indexOf("point") > -1) || (viewer.entities._entities._array[i]._name.indexOf("pointlabel") > -1)) {
-                viewer.entities.remove(viewer.entities._entities._array[i]);
-            }
-        }
-        count++
-    }
-
-    pointLabelCount = 0;
-    document.getElementById("pointLabel").className = "";
-}
-
-//获取线标注样式
-function getLineStyle(event) {
-    var e = event || window.event || arguments.callee.caller.arguments[0];
-    var linestyle = document.elementFromPoint(e.clientX, e.clientY);
-    if ((linestyle.id == "l1") || (linestyle.id == "l2") || (linestyle.id == "l3") || (linestyle.id == "l4")) {
-        document.getElementById("l0").src = linestyle.src;
-    }
-}
-//添加线标注
-function addLineLabel() {
-
-    isPoint = false;
-    isLength = false;
-    isHeight = false;
-    isAraa = false;
-    isAzimuth = false;
-    isPointLabel = false;
-    isPolylineLabel = true;
-    isPolygonLabel = false;
-
-    linepoints = [];
-    linepointcount = 0;
-
-    if (isPolylineLabel) {
-        if (handler != undefined) {
-            handler.destroy();
-        }
-        handler = new Cesium.ScreenSpaceEventHandler(canvas);
-
-        //左击
-        handler.setInputAction(function (leftclik) {
-            var pickedOject = scene.pick(leftclik.position);
-            if (pickedOject != undefined) {
-                var position = scene.pickPosition(leftclik.position);
-                if (position != undefined) {
-                    if (Cesium.defined(position)) {
-                        linepoints.push(position);
-                        linepointcount++;
-
-                        viewer.entities.add({
-                            name: "linepoint" + linepointcount,
-                            position: position,
-                            point: {
-                                pixelSize: 1,
-                                color: Cesium.Color.YELLOW
-                            }
-                        });
-
-                        var line0 = document.getElementById('l0').src;
-                        var material = Cesium.Color.fromCssColorString(document.getElementById("linecolor").value);
-                        if ((line0.indexOf("l2.png") > -1) || (line0.indexOf("l4.png") > -1)) {
-                            material = new Cesium.PolylineDashMaterialProperty({ color: Cesium.Color.fromCssColorString(document.getElementById("linecolor").value) });
-                        }
-
-                        if (linepoints.length > 1) {
-                            var point = linepoints[linepoints.length - 2];
-                            if (isModelLine) {
-                                //绘制贴模型线
-                                //polylineOnModel("linesegment" + linepointcount, [point, position], 0.5, document.getElementById("linewidth").value, material);
-
-                                viewer.entities.add({
-                                    name: "linesegment" + linepointcount,
-                                    polyline: {
-                                        positions: [point, position],
-                                        width: document.getElementById("linewidth").value,
-                                        arcType: Cesium.ArcType.RHUMB,
-                                        material: material,
-                                        show: true,
-                                        clampToGround: true,
-                                        classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
-                                    }
-                                });
-                            }
-                            else {
-                                material
-                                viewer.entities.add({
-                                    name: "linesegment" + linepointcount,
-                                    polyline: {
-                                        positions: [point, position],
-                                        width: document.getElementById("linewidth").value,
-                                        material: material
-                                    }
-                                });
-                            }
-                        }
-                    }
-
-                }
-            }
-
-        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
-        if (isMobile.any()) {
-            //双指
-            handler.setInputAction(function (pinch) {
-                if (linepoints.length > 1) {
-                    var line = [];
-                    for (var i = 0; i < linepoints.length; i++) {
-                        line.push(linepoints[i]);
-                    }
-
-                    polylineId++;
-
-                    var line0 = document.getElementById('l0').src;
-                    var material = Cesium.Color.fromCssColorString(document.getElementById("linecolor").value);
-                    if (line0.indexOf("l2.png") > -1) {
-                        material = new Cesium.PolylineDashMaterialProperty({ color: Cesium.Color.fromCssColorString(document.getElementById("linecolor").value) });
-                    }
-                    else if (line0.indexOf("l3.png") > -1) {
-                        material = new Cesium.PolylineArrowMaterialProperty(Cesium.Color.fromCssColorString(document.getElementById("linecolor").value));
-                    }
-                    else { }
-
-                    if (isModelLine) {
-                        //绘制贴模型线
-                        viewer.entities.add({
-                            name: "polyline" + polylineId,
-                            polyline: {
-                                positions: line,
-                                width: document.getElementById("linewidth").value,
-                                arcType: Cesium.ArcType.RHUMB,
-                                material: material,
-                                show: true,
-                                clampToGround: true,
-                                classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
-                            }
-                        });
-                    }
-                    else {
-
-                        viewer.entities.add({
-                            name: "polyline" + polylineId,
-                            polyline: {
-                                positions: line,
-                                width: document.getElementById("linewidth").value,
-                                material: material
-                            }
-                        });
-                    }
-
-                    viewer.entities.add({
-                        name: "polylinelabel" + polylineId,
-                        position: linepoints[linepoints.length - 1],
-                        label: {
-                            text: "polylinelabel" + polylineId,
-                            font: '20px Times New Roman',
-                            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                            verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                            pixelOffset: new Cesium.Cartesian2(0.0, -32),
-                        }
-                    });
-
-                    var count = 0;
-                    while (count < 100) {
-                        for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                            if ((viewer.entities._entities._array[i]._name.indexOf("linepoint") > -1) || (viewer.entities._entities._array[i]._name.indexOf("linesegment") > -1)) {
-                                viewer.entities.remove(viewer.entities._entities._array[i]);
-                            }
-                        }
-
-                        count++
-                    }
-
-                    var lineLabels = document.getElementById("lineLabel");
-                    var lI = '<img id="li' + polylineId + '" src="' + document.getElementById("l0").src + '" width="24" height="24" style="vertical-align: middle" />';
-                    var lT = '<input id="lt' + polylineId + '" value="' + 'polylinelabel' + polylineId + '" type="text" style="background-color: rgba(255,255,255,0);border:0px;width: 150px;vertical-align: middle;text-overflow:ellipsis" />';
-                    var lR = '<img id="lr' + polylineId + '" src="image/survey/remove.png" width="20" height="20" style="vertical-align: middle" />'
-                    var lBr = '<br id="lbr' + polylineId + '" />';
-                    lineLabels.innerHTML += lI + lT + lR + lBr;
-                    lineLabels.className = "divborder";
-
-                    linepoints = [];
-                    linepointcount = 0;
-
-                    //针对移动设备
-                    if (isMobile.any()) {
-                        if (handler != undefined) {
-                            handler.destroy();
-                        }
-                    }
-                }
-                else {
-
-                }
-
-            }, Cesium.ScreenSpaceEventType.PINCH_START);
-        }
-        else {
-            //右击
-            handler.setInputAction(function (rightclik) {
-                if (linepoints.length > 1) {
-                    var line = [];
-                    for (var i = 0; i < linepoints.length; i++) {
-                        line.push(linepoints[i]);
-                    }
-
-                    polylineId++;
-
-                    var line0 = document.getElementById('l0').src;
-                    var material = Cesium.Color.fromCssColorString(document.getElementById("linecolor").value);
-                    if (line0.indexOf("l2.png") > -1) {
-                        material = new Cesium.PolylineDashMaterialProperty({ color: Cesium.Color.fromCssColorString(document.getElementById("linecolor").value) });
-                    }
-                    else if (line0.indexOf("l3.png") > -1) {
-                        material = new Cesium.PolylineArrowMaterialProperty(Cesium.Color.fromCssColorString(document.getElementById("linecolor").value));
-                    }
-                    else { }
-
-                    if (isModelLine) {
-                        //绘制贴模型线
-                        //polylineOnModel("polyline" + polylineId, line, 0.5, document.getElementById("linewidth").value, material);
-
-                        viewer.entities.add({
-                            name: "polyline" + polylineId,
-                            polyline: {
-                                positions: line,
-                                width: document.getElementById("linewidth").value,
-                                arcType: Cesium.ArcType.RHUMB,
-                                material: material,
-                                show: true,
-                                clampToGround: true,
-                                classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
-                            }
-                        });
-                    }
-                    else {
-                        viewer.entities.add({
-                            name: "polyline" + polylineId,
-                            polyline: {
-                                positions: line,
-                                width: document.getElementById("linewidth").value,
-                                material: material
-                            }
-                        });
-                    }
-
-                    viewer.entities.add({
-                        name: "polylinelabel" + polylineId,
-                        position: linepoints[linepoints.length - 1],
-                        label: {
-                            text: "polylinelabel" + polylineId,
-                            font: '24px Times New Roman',
-                            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                            verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                            pixelOffset: new Cesium.Cartesian2(0.0, -60),
-                        }
-                    });
-
-                    var count = 0;
-                    while (count < 100) {
-                        for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                            if ((viewer.entities._entities._array[i]._name.indexOf("linepoint") > -1) || (viewer.entities._entities._array[i]._name.indexOf("linesegment") > -1)) {
-                                viewer.entities.remove(viewer.entities._entities._array[i]);
-                            }
-                        }
-
-                        count++
-                    }
-
-                    var lineLabels = document.getElementById("lineLabel");
-                    var lI = '<img id="li' + polylineId + '" src="' + document.getElementById("l0").src + '" width="24" height="24" style="vertical-align: middle" />';
-                    var lT = '<input id="lt' + polylineId + '" value="' + 'polylinelabel' + polylineId + '" type="text" style="background-color: rgba(255,255,255,0);border:0px;width: 150px;vertical-align: middle;text-overflow:ellipsis" />';
-                    var lR = '<img id="lr' + polylineId + '" src="image/survey/remove.png" width="20" height="20" style="vertical-align: middle" />'
-                    var lBr = '<br id="lbr' + polylineId + '" />';
-                    lineLabels.innerHTML += lI + lT + lR + lBr;
-                    lineLabels.className = "divborder";
-
-                    linepoints = [];
-                    linepointcount = 0;
-                }
-                else {
-
-                }
-
-            }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
-
-        }
-
-        //中键
-        handler.setInputAction(function (middleclik) {
-            if (handler != undefined) {
-                handler.destroy();
-            }
-
-        }, Cesium.ScreenSpaceEventType.MIDDLE_CLICK);
-    }
-
-}
-//删除线标注
-function deleteLineLabel(event) {
-    var e = event || window.event || arguments.callee.caller.arguments[0];
-    var lineLabel = document.elementFromPoint(e.clientX, e.clientY);
-    var curID = lineLabel.id.toString();
-    if (curID.indexOf("lr") > -1) {
-        var lineL = document.getElementById("lineLabel");
-        var childs = lineL.childNodes;
-
-        var count = 0;
-
-        while (count < 10) {
-            for (var i = 0; i < childs.length; i++) {
-                if ((childs[i].id == curID) || (childs[i].id == curID.replace("lr", "li")) || (childs[i].id == curID.replace("lr", "lt")) || (childs[i].id == curID.replace("lr", "lbr"))) {
-                    lineL.removeChild(childs[i]);
-                }
-            }
-
-            count++;
-        }
-
-        count = 0;
-        while (count < 50) {
-            for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                if ((viewer.entities._entities._array[i]._name == "polyline" + curID.replace("lr", "")) || (viewer.entities._entities._array[i]._name == "polylinelabel" + curID.replace("lr", ""))) {
-                    viewer.entities.remove(viewer.entities._entities._array[i]);
-                }
-            }
-            count++
-        }
-
-    }
-    else if (curID.indexOf("lt") > -1) {
-        lineId = curID.replace("lt", "");
-
-        if (lineId != "0") {
-            for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                if (viewer.entities._entities._array[i]._name.indexOf("polyline" + lineId) > -1) {
-                    viewer.zoomTo(viewer.entities._entities._array[i]);
-                }
-            }
-        }
-
-    }
-    else { }
-
-    if (document.getElementById("lineLabel").innerHTML == "") {
-        document.getElementById("lineLabel").className = "";
-
-    }
-
-}
-//修改线标注
-function modiftyLineLabel(event) {
-    var e = event || window.event || arguments.callee.caller.arguments[0];
-    if (e && e.keyCode == 13) {
-        if (lineId != "0") {
-            for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                if (viewer.entities._entities._array[i]._name.indexOf("polylinelabel" + lineId) > -1) {
-                    var oldvalue = viewer.entities._entities._array[i]._label._text._value;
-                    viewer.entities._entities._array[i]._label._text._value = document.getElementById("lt" + lineId).value;
-                    document.getElementById("lineLabel").innerHTML = document.getElementById("lineLabel").innerHTML.replace(oldvalue, document.getElementById("lt" + lineId).value);
-                }
-            }
-        }
-    }
-}
-//删除全部线标注
-function deleteAllLineLabel() {
-    var polylineL = document.getElementById("lineLabel");
-    var childs = polylineL.childNodes;
-    var count = 0;
-    while (childs.length > 0) {
-        for (var i = 0; i < childs.length; i++) {
-            polylineL.removeChild(childs[i]);
-        }
-        count++;
-        if (count > 50) {
-            break;
-        }
-    }
-
-    count = 0;
-    while (count < 50) {
-        for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-            if ((viewer.entities._entities._array[i]._name.indexOf("polyline") > -1) || (viewer.entities._entities._array[i]._name.indexOf("polylineLabel") > -1)) {
-                viewer.entities.remove(viewer.entities._entities._array[i]);
-            }
-        }
-        count++
-    }
-
-    polylineId = 0;
-    document.getElementById("lineLabel").className = "";
-}
-
 //添加侧窗
 function addAreaLabel() {
     if (currentprojectid == null) {
@@ -1675,103 +407,6 @@ function addAreaLabel() {
         }, Cesium.ScreenSpaceEventType.MIDDLE_CLICK);
     }
 }
-//删除面标注
-function deleteAreaLabel(event) {
-    var e = event || window.event || arguments.callee.caller.arguments[0];
-    var areaLabel = document.elementFromPoint(e.clientX, e.clientY);
-    var curID = areaLabel.id.toString();
-    if (curID.indexOf("ar") > -1) {
-        var areaL = document.getElementById("areaLabel");
-        var childs = areaL.childNodes;
-
-        var count = 0;
-
-        while (count < 10) {
-            for (var i = 0; i < childs.length; i++) {
-                if ((childs[i].id == curID) || (childs[i].id == curID.replace("ar", "aa")) || (childs[i].id == curID.replace("ar", "at")) || (childs[i].id == curID.replace("ar", "abr"))) {
-                    areaL.removeChild(childs[i]);
-                }
-            }
-
-            count++;
-        }
-
-        count = 0;
-        while (count < 50) {
-            for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                if ((viewer.entities._entities._array[i]._name == "polygon" + curID.replace("ar", "")) || (viewer.entities._entities._array[i]._name == "polygonlabel" + curID.replace("ar", ""))) {
-                    viewer.entities.remove(viewer.entities._entities._array[i]);
-                }
-            }
-            count++
-        }
-
-    }
-    else if (curID.indexOf("at") > -1) {
-        areaId = curID.replace("at", "");
-
-        if (areaId != "0") {
-            for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                if (viewer.entities._entities._array[i]._name.indexOf("polygonlabel" + areaId) > -1) {
-                    viewer.zoomTo(viewer.entities._entities._array[i]);
-                }
-            }
-        }
-
-    }
-    else { }
-
-    if (document.getElementById("areaLabel").innerHTML == "") {
-        document.getElementById("areaLabel").className = "";
-    }
-}
-//修改面标注
-function modiftyAreaLabel(event) {
-    var e = event || window.event || arguments.callee.caller.arguments[0];
-    if (e && e.keyCode == 13) {
-        if (areaId != "0") {
-            for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-                if (viewer.entities._entities._array[i]._name.indexOf("polygonlabel" + areaId) > -1) {
-                    var oldvalue = viewer.entities._entities._array[i]._label._text._value;
-                    viewer.entities._entities._array[i]._label._text._value = document.getElementById("at" + areaId).value;
-                    document.getElementById("areaLabel").innerHTML = document.getElementById("areaLabel").innerHTML.replace(oldvalue, document.getElementById("at" + areaId).value);
-                }
-            }
-        }
-    }
-}
-
-//删除全部面标注
-function deleteAllAreaLabel() {
-    var polygonL = document.getElementById("areaLabel");
-    var childs = polygonL.childNodes;
-    var count = 0;
-    while (childs.length > 0) {
-        for (var i = 0; i < childs.length; i++) {
-            polygonL.removeChild(childs[i]);
-        }
-        count++;
-        if (count > 50) {
-            break;
-        }
-    }
-
-    count = 0;
-    while (count < 50) {
-        for (var i = 0; i < viewer.entities._entities._array.length; i++) {
-            if (viewer.entities._entities._array[i]._name.indexOf("polygon") > -1) {
-                viewer.entities.remove(viewer.entities._entities._array[i]);
-            }
-        }
-
-        count++
-    }
-
-    polygonId = 0;
-    document.getElementById("areaLabel").className = "";
-}
-
-
 
 //画点弹出框
 function DrowHuaHua(flag, cartesian3, position) {
@@ -2824,21 +1459,15 @@ function DrowHuaHua(flag, cartesian3, position) {
         
         var data = {};
         var positList = position;
-        var linepointList = linepoints;
-       
         //
         data.cookie = document.cookie;
-       
      // data.position = positList;//直接存吧;
         data.projectId = currentprojectid;
         data.type = "3";//面
         var tempLista = {};
         tempLista.xyzs = JSON.stringify(position);
         tempLista.mw = windouinfo.normal;
-
         //
-
-
         var point2sList = [];
         var loadingjieliindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
 
@@ -2865,9 +1494,6 @@ function DrowHuaHua(flag, cartesian3, position) {
                 data.windowId = windouinfo.id;//测窗id，
                 data.modleId = modleInfo.id.split("_")[1];//模型id
                 data.modleTime = modleInfo.title;//模型时间
-
-                console.log(modleInfo);
-                console.log(windouinfo);
 
                 //计算面积，
                 points = [];
@@ -2898,55 +1524,79 @@ function DrowHuaHua(flag, cartesian3, position) {
                 $.ajax({
                     url: servicesurl + "/api/FlzData/AddFlzPoint", type: "post", data: data,
                     success: function (result) {
-                        layer.close(loadingjieliindex);
+                        
                         if (isNaN(result)) {
                             layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         } else {
                             //关闭
                             layer.msg("保存成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                            for (var j in layers[0].children) {
-                                if (layers[0].children[j].type == "FLZWINDOW" && layers[0].children[j].id == ("FLZWINDOW_" + windouinfo.id)) {
-                                    var flzline = new Object;
-                                    var xSum = 0;//求一个平均点，用于定位
-                                    var ySum = 0;
-                                    var zSum = 0;
-                                    for (var m = 0; m < positList.length; m++) {
-                                        xSum = xSum + parseFloat(positList[m].x);
-                                        ySum = ySum + parseFloat(positList[m].y);
-                                        zSum = zSum + parseFloat(positList[m].z);
+                            for (var i in layers) {
+                                if (layers[i].type =="FLZWINDOWFA") {
+                                    for (var j in layers[i].children) {
+                                        if (layers[i].children[j].type == "FLZWINDOW" && layers[i].children[j].id == ("FLZWINDOW_" + windouinfo.id)) {
+                                            var flzline = new Object;
+                                            var xSum = 0;//求一个平均点，用于定位
+                                            var ySum = 0;
+                                            var zSum = 0;
+                                            for (var m = 0; m < positList.length; m++) {
+                                                xSum = xSum + parseFloat(positList[m].x);
+                                                ySum = ySum + parseFloat(positList[m].y);
+                                                zSum = zSum + parseFloat(positList[m].z);
+                                            }
+                                            flzline.Centerx = xSum / positList.length;
+                                            flzline.Centery = ySum / positList.length;
+                                            flzline.Centerz = zSum / positList.length;
+                                            flzline.title = "节理" + (parseInt(result)-1);
+                                            flzline.id = "FLZJIELI_" + result;
+                                            flzline.type = "FLZJIELI";
+                                            flzline.remarks = data.remarks;
+                                            flzline.datas = data;
+                                            flzline.datas.pointList = positList;
+                                            flzline.datas.name = flzline.title;
+                                            flzline.datas.id = result;
+                                            flzline.pointList = positList;
+                                            flzline.checked = true;
+                                            flzline.spread = true;
+                                            flzline.showCheckbox = true;//显示复选框spread = true
+                                            layers[i].children[j].children.push(flzline);
+                                            layers[i].children[j].spread = true;
+                                            layers[i].spread = true;
+                                            //更新一下表
+                                            if (jielitableview!=null) {
+                                                var jieli = new Object;
+                                                jieli.id = result;
+                                                jieli.name = parseInt(result) - 1;
+                                                jieli.avgOpening = data.avgOpening;
+                                                jieli.inclination = data.inclination;
+                                                jieli.dipAngle = data.dipAngle;
+                                                jieli.trend = data.trend;
+                                                jieli.traceLength = data.traceLength;
+                                                jieli.measure = data.measure;
+                                                jieli.modleTime = data.modleTime;
+                                                jieli.creatTime = data.creatTime;
+                                                jieli.remarks = data.remarks;
+                                                jieli.collector = data.collector;
+                                                jieli.windowId = data.windowId; 
+                                                jielitabledata.push(jieli);
+                                                jielitableview.reload({ id: 'jielitableviewid', data: jielitabledata });
+                                            }
+                                        }
                                     }
-                                    flzline.Centerx = xSum / positList.length;
-                                    flzline.Centery = ySum / positList.length;
-                                    flzline.Centerz = zSum / positList.length;
-                                    flzline.title = "节理" + (parseInt(result) - 1);
-                                    flzline.id = "FLZJIELI_" + result;
-                                    flzline.type = "FLZJIELI";
-                                    flzline.remarks = data.remarks;
-                                    flzline.datas = data;
-                                    flzline.datas.pointList = positList;
-                                    flzline.datas.name = flzline.title;
-                                    flzline.pointList = positList;
-                                    flzline.checked = true;
-                                    flzline.spread = true;
-                                    flzline.showCheckbox = true;//显示复选框spread = true
-                                    layers[0].children[j].children.push(flzline);
-                                    layers[0].children[j].spread = true;
-                                    layers[0].spread = true;
 
                                 }
                             }
                             modeljiazaiFlag = false;
                             tree.reload('prjlayerlistid', { data: layers });
                             ClearTemp();
-                            for (var m in points) {
-                                viewer.entities.removeById("jielitemp" + m);
+                            for (i = 0; i < 50; i++) {
+                                viewer.entities.removeById("jielitemp" + i);
                             }
 
                             isRedo = true;
                             points = [];
                             linepoints = [];
                         }
-
+                        layer.close(loadingjieliindex);
                     }, datatype: "json"
                 });
             }, datatype: "json"
@@ -2984,13 +1634,36 @@ function DrowHuaHua(flag, cartesian3, position) {
             data.trend = (parseFloat(qingXiang) + 90).toFixed(2);//走向
         }
 
+        //cun一个当前视野。
+        var x = viewer.camera.position;
+        var y1 = {
+            // 指向
+            heading: viewer.camera.heading,
+            // 视角
+            pitch: viewer.camera.pitch,
+            roll: viewer.camera.roll
+        }
+        var home = {
+            destination: x,
+            orientation: y1
+        }
         
+        //用src去装最佳视角
+        data.src = JSON.stringify(home);
         data.creatTime = y + '-' + (mouth < 10 ? '0' + mouth : mouth) + '-' + (d < 10 ? '0' + d : d);
         data.modleId = modleInfo.id.split("_")[1];//模型id
         data.modleTime = modleInfo.title;//模型时间
         data.remarks = "结构面";//模型时间
         //计算迹长，
-
+        if (data.inclination == "NaN" || data.dipAngle == "NaN") {
+            layer.msg("计算产状失败，请重新选择", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            for (var m in points) {
+                viewer.entities.removeById("jiegoutemp" + m);
+            }
+            points = [];
+            linepoints = [];
+            return;
+        }
         $.ajax({
             url: servicesurl + "/api/FlzData/AddFlzPoint", type: "post", data: data,
             success: function (result) {
@@ -3002,8 +1675,8 @@ function DrowHuaHua(flag, cartesian3, position) {
                     layer.close(drowinfoAddlayerindex);
                     console.log(layers);
                     var isDomdtrpla = true;//查看是否有优势结构面
-                    for (var j in layers[0].children) {
-                        if (layers[0].children[j].type == "DOMSTRPLA") {
+                    for (var i in layers) {
+                        if (layers[i].type =="DOMSTRPLA") {
                             isDomdtrpla = false;
                             var flzline = new Object;
                             var xSum = 0;//求一个平均点，用于定位
@@ -3022,28 +1695,82 @@ function DrowHuaHua(flag, cartesian3, position) {
                             flzline.type = "YOUSHIMIAN";
                             flzline.remarks = data.remarks;
                             flzline.datas = data;
+                            flzline.datas.id = result;
                             flzline.datas.name = flzline.title;
                             flzline.datas.pointList = positList;
                             flzline.pointList = positList;
                             flzline.checked = true;
                             flzline.spread = true;
                             flzline.showCheckbox = true;//显示复选框spread = true
-                            layers[0].children[j].children.push(flzline);
-                            layers[0].children[j].spread = true;
-                            layers[0].spread = true;
-
+                            layers[i].children.push(flzline);
+                            layers[i].children.spread = true;
+                            layers[i].spread = true;
                         }
                     }
+                    
                     if (isDomdtrpla) {//根本没有又是结构面的时候，
+                        var dominantStructuralPlane = new Object;
+                        dominantStructuralPlane.title = "优势结构面";
+                        dominantStructuralPlane.type = "DOMSTRPLA";
+                        dominantStructuralPlane.showCheckbox = true;//显示复选框
+                        var dominantStructuralPlanechild = [];
 
+                        var flzline = new Object;
+                        var xSum = 0;//求一个平均点，用于定位
+                        var ySum = 0;
+                        var zSum = 0;
+                        for (var m = 0; m < positList.length; m++) {
+                            xSum = xSum + parseFloat(positList[m].x);
+                            ySum = ySum + parseFloat(positList[m].y);
+                            zSum = zSum + parseFloat(positList[m].z);
+                        }
+                        flzline.Centerx = xSum / positList.length;
+                        flzline.Centery = ySum / positList.length;
+                        flzline.Centerz = zSum / positList.length;
+                        flzline.title = (parseInt(result) - 1);
+                        flzline.id = "YOUSHIMIAN_" + result;
+                        flzline.type = "YOUSHIMIAN";
+                        flzline.remarks = data.remarks;
+                        flzline.datas = data;
+                        flzline.datas.id = result;
+                        flzline.datas.name = flzline.title;
+                        flzline.datas.pointList = positList;
+                        flzline.pointList = positList;
+                        flzline.checked = true;
+                        flzline.spread = true;
+                        flzline.showCheckbox = true;//显示复选框spread = true
+                        dominantStructuralPlanechild.push(flzline)
+                        dominantStructuralPlane.spread = true;
+                        dominantStructuralPlane.children = dominantStructuralPlanechild
+                        layers.push(dominantStructuralPlane);
                     }
+                    //更新一下表
+                    if (jieGoutableview != null) {
+                        var jieGou = new Object;
+                        jieGou.id = result;
+                        jieGou.name = parseInt(result) - 1;
+                        jieGou.avgOpening = data.avgOpening;
+                        jieGou.inclination = data.inclination;
+                        jieGou.dipAngle = data.dipAngle;
+                        jieGou.trend = data.trend;
+                        jieGou.traceLength = data.traceLength;
+                        jieGou.modleTime = data.modleTime;
+                        jieGou.creatTime = data.creatTime;
+                        jieGou.remarks = data.remarks;
+                        jieGoutabledata.push(jieGou);
+                        if (jieGouTongjilayer != null) {
+                            layer.restore(jieGouTongjilayer);
+                        }
+                        jieGoutableview.reload({ id: 'jieGoutableviewid', data: jieGoutabledata });
+                    }
+
                     modeljiazaiFlag = false;
                     tree.reload('prjlayerlistid', { data: layers });
                     ClearTemp();
                     if (handler != undefined) {
                         handler.destroy();
                     }
-                    
+
 
                     isRedo = true;
                     points = [];
@@ -3059,6 +1786,7 @@ function DrowHuaHua(flag, cartesian3, position) {
         if (handler != undefined) {
             handler.destroy();
         }
+        viewer._container.style.cursor = "default";//还原鼠标样式
         for (var m in points) {
             viewer.entities.removeById("jiegoutemp" + m);
         }
@@ -3254,20 +1982,21 @@ function jisumianji(postList) {
     return area;
 }
 
-
-
 function gotoJieli() {
     if (currentprojectid == null) {
-        layer.msg('请先选择项目');
+        layer.msg('请先选择项目',{ zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
     }
     if (modleInfo == null) {
-        layer.msg('请先选择模型');
+        layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
     }
     if (jielitext!=null) {
-        layer.msg('已打开节理窗口');
+        layer.msg('已打开节理窗口', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
+    }
+    if (jieLiTongjilayer!=null) {
+        layer.min(jieLiTongjilayer);
     }
     jielitext = layer.open({
         type: 1
@@ -3292,33 +2021,38 @@ function gotoJieli() {
             form.render();
             form.render('select');
             form.on('submit(querypdfjielisubmit)', function (data) {
-                console.log(data);
+                ClearTemp();
                 isClose = data.field.isClose ? true : false;
                 collector = data.field.collector;
-                console.log(isClose);
+
                 for (var i in windowInfoList) {
                     if (windowInfoList[i].id == data.field.jieliId) {
-                        for (var j in layers[0].children) {
-                            if (layers[0].children[j].type && layers[0].children[j].type == "FLZWINDOW" && layers[0].children[j].id == ("FLZWINDOW_" + data.field.jieliId)) {
-                                windouinfo = windowInfoList[i];
-                                console.log(windouinfo);
-                                cequList = JSON.parse(windouinfo.vertices3dlbh);
-                                var entityFater = viewer.entities.getById(layers[0].children[j].id);
-                                if (entityFater == undefined) {
-
-                                    //自己自己去实现，
-                                    layers[0].spread = true;
-                                    layers[0].children[j].spread = true;
-                                    layers[0].children[j].checked = true;
-                                    //功能强大
-                                    modeljiazaiFlag = false;
-                                    tree.reload('prjlayerlistid', { data: layers });
-                                    ClearTemp();
-                                    viewer.zoomTo(viewer.entities.getById(layers[0].children[j].id + "_LABEL"), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(layers[0].children[j].datas.level))), Cesium.Math.toRadians(parseFloat(layers[0].children[j].datas.vertical)), 40));
-                                } else {
-                                    viewer.zoomTo(viewer.entities.getById(layers[0].children[j].id + "_LABEL"), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(layers[0].children[j].datas.level))), Cesium.Math.toRadians(parseFloat(layers[0].children[j].datas.vertical)), 40));
+                        cequList = JSON.parse(windowInfoList[i].vertices3dlbh);
+                        windouinfo = windowInfoList[i];
+                        for (var m in layers) {
+                            if (layers[m].type == "FLZWINDOWFA") {
+                                for (var j in layers[m].children) {
+                                    if (layers[m].children[j].id == ("FLZWINDOW_" + data.field.jieliId)) {
+                                        var entityFater = viewer.entities.getById(layers[m].children[j].id);
+                                        if (entityFater == null) {
+                                            layers[m].spread = true;
+                                            layers[m].children[j].spread = true;
+                                            layers[m].children[j].checked = true;
+                                            layers[m].spread = true;
+                                            modeljiazaiFlag = false;
+                                            tree.reload('prjlayerlistid', { data: layers });
+                                            ClearTemp();
+                                        } 
+                                        if (layers[m].children[j].datas.level.indexOf("y") != -1) {
+                                            var home = JSON.parse(layers[m].children[j].datas.level);
+                                            viewer.scene.camera.setView(home);
+                                        } else {//老视角，
+                                            viewer.zoomTo(entityFater, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(layers[m].children[j].datas.level))), Cesium.Math.toRadians(layers[m].children[j].datas.vertical), 40));
+                                        }
+                                        break;
+                                    }
                                 }
-                                break;
+
                             }
                         }
 
@@ -3328,7 +2062,7 @@ function gotoJieli() {
                     handler.destroy();
                 }
                 handler = new Cesium.ScreenSpaceEventHandler(canvas);
-
+                viewer._container.style.cursor = "crosshair";//修改鼠标样式
                 linepoints = [];
                 //左击
                 handler.setInputAction(function (leftclik) {
@@ -3437,7 +2171,278 @@ function gotoJieli() {
         }
         , end: function () {
             jielitext = null;
+            cequList = [];
+            windouinfo = null;
+            if (jieLiTongjilayer != null) {
+                layer.restore(jieLiTongjilayer);
+            }
+            viewer._container.style.cursor = "default";//还原鼠标样式
+            ClearTemp();
+            //取消画的图和点
+            if (handler != undefined) {
+                handler.destroy();
+            }
         }
     });
     
+}
+//删除节理
+function deleteJieli(data) {
+    var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    $.ajax({
+        url: servicesurl + "/api/FlzData/DeleteFlzPoint", type: "delete", data: { "id": data.id, "cookie": document.cookie },
+        success: function (result) {
+            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            viewer.entities.removeById("FLZJIELI_"+data.id);
+            for (var i in layers) {
+                if (layers[i].type == "FLZWINDOWFA") {//测窗的
+                    for (var j in layers[i].children) {
+                        if (layers[i].children[j].datas.id == data.windowId) {//测窗id相同
+                            for (var m in layers[i].children[j].children) {
+                                if (layers[i].children[j].children[m].datas.id == data.id) {
+                                    layers[i].children[j].children.splice(m, 1);
+                                    layers[i].children[j].children.spread = true;
+                                    layers[i].children[j].spread = true;
+                                    layers[i].spread = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (jielitableview != null) {
+                for (var i in jielitabledata){
+                    if (jielitabledata[i].id == data.id) {
+                        jielitabledata.splice(i, 1);
+                        break;
+                    }
+                }
+                jielitableview.reload({ id: 'jielitableviewid', data: jielitabledata });
+            }
+
+
+            layer.close(loadingceindex);
+            modeljiazaiFlag = false;
+            tree.reload('prjlayerlistid', { data: layers });
+            ClearTemp();
+        }, datatype: "json"
+    });
+}
+//修改节理
+function updateJieLi(data) {
+    if (drwjieliUpdInfox!=null) {
+        layer.msg('已打开节理修改窗口', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        return;
+    }
+    drwjieliUpdInfox = layer.open({
+        type: 1
+        , title: ['确认修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+        , area: ['300px', '300px']
+        , shade: 0
+        , offset: 'auto'
+        , closeBtn: 1
+        , maxmin: true
+        , moveOut: true
+        , content: jieliupd
+        , zIndex: layer.zIndex
+        , success: function (layero) {
+            //置顶
+            layer.setTop(layero);
+            form.render();
+            form.val("updpointinfoform", {
+                "name": data.name
+                , "remarks": data.remarks,
+                "avgOpening": data.avgOpening,// "3"
+
+            });
+
+            form.on('submit(updpointinfosubmit)', function (temp) {
+                temp.field.id = data.id;//把id往后面传
+                temp.field.cookie = document.cookie;
+                var loadingjieliindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                $.ajax({
+                    url: servicesurl + "/api/FlzData/UpdateFlzPoint", type: "post", data: temp.field,
+                    success: function (result) {
+                        layer.close(loadingjieliindex);
+                        //创建失败
+                        layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+
+                        if ("更新成功" == result) {
+
+                            for (var i in layers) {
+                                if (layers[i].type == "FLZWINDOWFA") {//测窗的
+                                    for (var j in layers[i].children) {
+                                        if (layers[i].children[j].datas.id == data.windowId) {//测窗id相同
+                                            for (var m in layers[i].children[j].children) {
+                                                if (layers[i].children[j].children[m].datas.id == data.id) {
+                                                    layers[i].children[j].children[m].title = temp.field.name;
+                                                    layers[i].children[j].children[m].remarks = temp.field.remarks;
+                                                    layers[i].children[j].children[m].datas.avgOpening = temp.field.avgOpening;
+                                                    layers[i].children[j].children[m].datas.remarks = temp.field.remarks;
+                                                    layers[i].children[j].children[m].datas.name = temp.field.name;
+                                                    layers[i].children[j].children.spread = true;
+                                                    layers[i].children[j].spread = true;
+                                                    layers[i].spread = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (jielitabledata != null) {
+                                for (var i in jielitabledata) {
+                                    if (jielitabledata[i].id == data.id) {
+                                        jielitabledata[i].avgOpening = temp.field.avgOpening;
+                                        jielitabledata[i].remarks = temp.field.remarks;
+                                        jielitabledata[i].name = temp.field.name;
+                                        break;
+                                    }
+                                }
+                                jielitableview.reload({ id: 'jielitableviewid', data: jielitabledata });
+                            }
+                            modeljiazaiFlag = false;
+                            tree.reload('prjlayerlistid', { data: layers });
+                            ClearTemp();
+                            //关闭,更改图上显示
+                            layer.close(drwjieliUpdInfox);
+                        }
+
+                    }, datatype: "json"
+                });
+                return false;
+            });
+
+        }
+        , end: function () {
+            drwjieliUpdInfox = null;
+        }
+    });
+}
+//删除结构
+function deleteJieGou(data) {
+    var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    $.ajax({
+        url: servicesurl + "/api/FlzData/DeleteFlzPoint", type: "delete", data: { "id": data.id, "cookie": document.cookie },
+        success: function (result) {
+            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            viewer.entities.removeById("YOUSHIMIAN_" + data.id);
+            for (var i in layers) {
+                if (layers[i].type == "DOMSTRPLA") {//结构父节点
+                    if (layers[i].children.length==1) {//只有一条数据
+                        layers.splice(i, 1);
+                        break;
+                    }
+                    for (var j in layers[i].children) {
+                        if (layers[i].children[j].datas.id == data.id) {//结构面相同的id
+                            layers[i].children.splice(j, 1);
+                            layers[i].children.spread = true;
+                            layers[i].spread = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (jieGoutableview != null) {
+                for (var i in jieGoutabledata) {
+                    if (jieGoutabledata[i].id == data.id) {
+                        jieGoutabledata.splice(i, 1);
+                        break;
+                    }
+                }
+                jieGoutableview.reload({ id: 'jieGoutableviewid', data: jieGoutabledata });
+            }
+
+
+            layer.close(loadingceindex);
+            modeljiazaiFlag = false;
+            tree.reload('prjlayerlistid', { data: layers });
+            ClearTemp();
+        }, datatype: "json"
+    });
+}
+//修改结构
+function updateJieGou(data) {
+    if (drwjieGouUpdInfox != null) {
+        layer.msg('已打开节理修改窗口', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        return;
+    }
+    drwjieGouUpdInfox = layer.open({
+        type: 1
+        , title: ['确认修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+        , area: ['300px', '300px']
+        , shade: 0
+        , offset: 'auto'
+        , closeBtn: 1
+        , maxmin: true
+        , moveOut: true
+        , content: jiegouupd
+        , zIndex: layer.zIndex
+        , success: function (layero) {
+            //置顶
+            layer.setTop(layero);
+            form.render();
+            form.val("updpointinfoform", {
+                "name": data.name
+                , "remarks": data.remarks,
+            });
+
+            form.on('submit(updpointinfosubmit)', function (temp) {
+                temp.field.id = data.id;//把id往后面传
+                temp.field.cookie = document.cookie;
+                var loadingjieGouindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                $.ajax({
+                    url: servicesurl + "/api/FlzData/UpdateFlzPoint", type: "post", data: temp.field,
+                    success: function (result) {
+                        layer.close(loadingjieGouindex);
+                        //创建失败
+                        layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+
+                        if ("更新成功" == result) {
+
+                            for (var i in layers) {
+                                if (layers[i].type == "DOMSTRPLA") {//优势结构面
+                                    for (var j in layers[i].children) {
+                                        if (layers[i].children[j].datas.id == data.id) {//结构面id相同
+                                            layers[i].children[j].title = temp.field.name;
+                                            layers[i].children[j].remarks = temp.field.remarks;
+                                            layers[i].children[j].datas.remarks = temp.field.remarks;
+                                            layers[i].children[j].datas.name = temp.field.name;
+                                            layers[i].children[j].spread = true;
+                                            layers[i].spread = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (jieGoutabledata != null) {
+                                for (var i in jieGoutabledata) {
+                                    if (jieGoutabledata[i].id == data.id) {
+                                        jieGoutabledata[i].remarks = temp.field.remarks;
+                                        jieGoutabledata[i].name = temp.field.name;
+                                        break;
+                                    }
+                                }
+                                jieGoutableview.reload({ id: 'jieGoutableviewid', data: jieGoutabledata });
+                            }
+                            modeljiazaiFlag = false;
+                            tree.reload('prjlayerlistid', { data: layers });
+                            ClearTemp();
+                            //关闭,更改图上显示
+                            layer.close(drwjieGouUpdInfox);
+                        }
+
+                    }, datatype: "json"
+                });
+                return false;
+            });
+
+        }
+        , end: function () {
+            drwjieGouUpdInfox = null;
+        }
+    });
 }

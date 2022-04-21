@@ -2801,6 +2801,10 @@ namespace SERVICE.Controllers
                     string datacons = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM const_photo_info WHERE monitor_id ={0} and type='1' ORDER BY type ", SQLHelper.UpdateString(monitorString.Id + "")));
                     constPhotoIn = ParseMonitorHelper.ParseConstPhotoInfo(datacons);
                 }
+                if (constPhotoIn==null)//未放样。把他跳出，说明还没开始
+                {
+                    continue;
+                }
                 //查询设备信息
                 string sqldevice = "select a.* from monitor_device a,monitor_map_monitor_device b where a.id=b.deviceid and b.monitorid={0}";
                 string deviceDatas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sqldevice, SQLHelper.UpdateString(monitorString.Id + "")));
@@ -2885,7 +2889,7 @@ namespace SERVICE.Controllers
                                 {
                                     TxtInfo txtInfo = new TxtInfo();
                                     txtInfo.Size = 23;
-                                    txtInfo.Content = monitorString.PMWZX;
+                                    txtInfo.Content = Convert.ToDouble(monitorString.PMWZY).ToString("f2");
                                     txtInfo.FontFamily = "仿宋";
                                     zzz.AddContent(txtInfo);
                                     continue;
@@ -2894,7 +2898,7 @@ namespace SERVICE.Controllers
                                 {
                                     TxtInfo txtInfo = new TxtInfo();
                                     txtInfo.Size = 23;
-                                    txtInfo.Content = monitorString.PMWZY;
+                                    txtInfo.Content = Convert.ToDouble(monitorString.PMWZX).ToString("f2");
                                     txtInfo.FontFamily = "仿宋";
                                     zzz.AddContent(txtInfo);
                                     continue;
@@ -3170,6 +3174,15 @@ namespace SERVICE.Controllers
             //保存文档
             doc.SaveToFile(imgdir + "/SurImage/Download/"  + projectString.XMMC+"施工安装记录表.docx", FileFormat.Docx2013);
 
+            for (int i = 0; i < docName.Count; i++)
+            {
+                //删除文件
+                System.IO.FileInfo DeleFilesamll = new System.IO.FileInfo(docName[i]);
+                if (DeleFilesamll.Exists)
+                {
+                    DeleFilesamll.Delete();
+                }
+            }
 
             return projectString.XMMC + "施工安装记录表.docx";
           

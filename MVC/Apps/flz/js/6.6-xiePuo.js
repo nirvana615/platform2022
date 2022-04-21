@@ -206,6 +206,8 @@ function gotoXiePuo() {
                                             } else {
                                                 //关闭
                                                 layer.msg("保存成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                                //修改树
+
                                                 ClearTemp();
                                                 layer.close(droXiePuoAddlayerindex);
                                                 points = [];
@@ -316,43 +318,60 @@ function gotoXiePuo() {
                                             if (isNaN(result)) {
                                                 layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                                             } else {
-                                                //关闭
-                                                viewer.entities.add({
-                                                    id: "XIEPUO_" + result,
-                                                    polyline: {
-                                                        positions: position,
-                                                        width: 3,
-                                                        material: Cesium.Color.RED,
-                                                        depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                                            color: Cesium.Color.RED
-                                                        }),
-                                                        show: true,
-                                                        classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
-                                                    },
-                                                });
-                                               
-                                                viewer.entities.add({
-                                                    id: "XIEPUO_" + result + "_LABEL",
-                                                    position: position[0],
-                                                    label: {
-                                                        text: data.field.name,
-                                                        showBackground: true,
-                                                        backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
-                                                        font: '14px Times New Roman',
-                                                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                                                        verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                                                        pixelOffset: new Cesium.Cartesian2(0.0, -36),
-                                                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                                                        scaleByDistance: new Cesium.NearFarScalar(2000, 1, 10000, 0),
+                                                var firstflag = true;
+                                                for (var i in layers) {
+                                                    if (layers[i].type == "DIZHIFA") {
+                                                        firstflag = false;
+                                                        var flzline = new Object;
+                                                        flzline.title = data.field.name;
+                                                        flzline.id = "DIZHISON_" + result;
+                                                        flzline.type = "DIZHISON";
+                                                        flzline.remarks = data.field.remarks;
+                                                        flzline.datas = data.field;
+                                                        flzline.datas.id = result;
+                                                        flzline.pointList = position;
+                                                        flzline.checked = true;
+                                                        flzline.spread = true;
+                                                        flzline.showCheckbox = true;//显示复选框
+
+                                                        layers[i].children.push(flzline);
+                                                        layers[i].spread = true;
                                                     }
-                                                });
-                                                layer.msg("保存成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                                }
+                                                if (firstflag) {//第一次，数据里面没有地质识别。
+                                                    var dominantStructuralPlane = new Object;
+                                                    dominantStructuralPlane.title = "地质识别";
+                                                    dominantStructuralPlane.type = "DIZHIFA";
+                                                    dominantStructuralPlane.checked = false;
+                                                    dominantStructuralPlane.spread = false;
+                                                    dominantStructuralPlane.showCheckbox = true;//显示复选框
+
+                                                    var child = [];
+                                                    var flzline = new Object;
+                                                    flzline.title = data.field.name;
+                                                    flzline.id = "DIZHISON_" + result;
+                                                    flzline.type = "DIZHISON";
+                                                    flzline.remarks = data.field.remarks;
+                                                    flzline.datas = data.field;
+                                                    flzline.datas.id = result;
+                                                    flzline.pointList = position;
+                                                    flzline.checked = true;
+                                                    flzline.spread = true;
+                                                    flzline.showCheckbox = true;//显示复选框
+                                                    child.push(flzline);
+                                                    dominantStructuralPlane.children = child;
+                                                    layers.push(dominantStructuralPlane);
+                                                }
+                                                
+                                                modeljiazaiFlag = false;
+                                                tree.reload('prjlayerlistid', { data: layers });
                                                 ClearTemp();
+                                                layer.msg("保存成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                                                 layer.close(droXiePuoAddlayerindex);
                                                 points = []; 
-                                                GetSteepHillInfoList({ "jieLun": "" });
 
                                                 if (xiePuoIndex != null) {
+                                                    GetSteepHillInfoList({ "jieLun": "" });
                                                     layer.restore(xiePuoIndex);
                                                 }
                                             }
@@ -399,7 +418,10 @@ function LoadSteepHillindex(xiePuoinfo){
         layer.msg('请先选择斜坡', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
     }
-    layer.min(xiePuoIndex);
+    if (xiePuoIndex!=null) {
+        layer.min(xiePuoIndex);
+    }
+    
     //console.log(xiePuoinfo);
     if (xiePuoinfoaddlayerindex == null) {
         xiePuoinfoaddlayerindex = layer.open({
@@ -512,23 +534,37 @@ function LoadSteepHillindex(xiePuoinfo){
                     data.field.cookie = document.cookie;
                     data.field.id = xiePuoinfo.id;
                     //备注
-                    if (srcInfo.appdrest != null && srcInfo.appdrest != "") { data.field.appdrest = srcInfo.appdrest };
-                    if (srcInfo.apjgrest != null && srcInfo.apjgrest != "") { data.field.apjgrest = srcInfo.apjgrest };
-                    if (srcInfo.xpbjrest != null && srcInfo.xpbjrest != "") { data.field.xpbjrest = srcInfo.xpbjrest };
-                    if (srcInfo.yxyzrest != null && srcInfo.yxyzrest != "") { data.field.yxyzrest = srcInfo.yxyzrest };
-                    if (srcInfo.rucrest != null && srcInfo.rucrest != "") { data.field.rucrest = srcInfo.rucrest };
-                    if (srcInfo.ytjgrest != null && srcInfo.ytjgrest != "") { data.field.ytjgrest = srcInfo.ytjgrest };
-                    if (srcInfo.ytfhrest != null && srcInfo.ytfhrest != "") { data.field.ytfhrest = srcInfo.ytfhrest };
-                    if (srcInfo.ytlhrest != null && srcInfo.ytlhrest != "") { data.field.ytlhrest = srcInfo.ytlhrest };
-                    //src
-                    if (srcInfo.appdSrc != null && srcInfo.appdSrc != "") { data.field.appdSrc = srcInfo.appdSrc };
-                    if (srcInfo.apjgSrc != null && srcInfo.apjgSrc != "") { data.field.apjgSrc = srcInfo.apjgSrc };
-                    if (srcInfo.xpbjSrc != null && srcInfo.xpbjSrc != "") { data.field.xpbjSrc = srcInfo.xpbjSrc };
-                    if (srcInfo.yxyzSrc != null && srcInfo.yxyzSrc != "") { data.field.yxyzSrc = srcInfo.yxyzSrc };
-                    if (srcInfo.rucSrc != null && srcInfo.rucSrc != "") { data.field.rucSrc = srcInfo.rucSrc };
-                    if (srcInfo.ytjgSrc != null && srcInfo.ytjgSrc != "") { data.field.ytjgSrc = srcInfo.ytjgSrc };
-                    if (srcInfo.ytfhSrc != null && srcInfo.ytfhSrc != "") { data.field.ytfhSrc = srcInfo.ytfhSrc };
-                    if (srcInfo.ytlhSrc != null && srcInfo.ytlhSrc != "") { data.field.ytlhSrc = srcInfo.ytlhSrc };
+                    if (srcInfo.appdrest != null && srcInfo.appdrest != "") { data.field.appdrest = srcInfo.appdrest; xiePuoinfo.appdrest = srcInfo.appdrest };
+                    if (srcInfo.apjgrest != null && srcInfo.apjgrest != "") { data.field.apjgrest = srcInfo.apjgrest; xiePuoinfo.apjgrest = srcInfo.apjgrest };
+                    if (srcInfo.xpbjrest != null && srcInfo.xpbjrest != "") { data.field.xpbjrest = srcInfo.xpbjrest; xiePuoinfo.xpbjrest = srcInfo.xpbjrest };
+                    if (srcInfo.yxyzrest != null && srcInfo.yxyzrest != "") { data.field.yxyzrest = srcInfo.yxyzrest; xiePuoinfo.yxyzrest = srcInfo.yxyzrest };
+                    if (srcInfo.rucrest != null && srcInfo.rucrest != "") { data.field.rucrest = srcInfo.rucrest; xiePuoinfo.rucrest = srcInfo.rucrest };
+                    if (srcInfo.ytjgrest != null && srcInfo.ytjgrest != "") { data.field.ytjgrest = srcInfo.ytjgrest; xiePuoinfo.ytjgrest = srcInfo.ytjgrest };
+                    if (srcInfo.ytfhrest != null && srcInfo.ytfhrest != "") { data.field.ytfhrest = srcInfo.ytfhrest; xiePuoinfo.ytfhrest = srcInfo.ytfhrest };
+                    if (srcInfo.ytlhrest != null && srcInfo.ytlhrest != "") { data.field.ytlhrest = srcInfo.ytlhrest; xiePuoinfo.ytlhrest = srcInfo.ytlhrest };
+                    //src                                         
+                    if (srcInfo.appdSrc != null && srcInfo.appdSrc != "") { data.field.appdSrc = srcInfo.appdSrc; xiePuoinfo.appdSrc = srcInfo.appdSrc };
+                    if (srcInfo.apjgSrc != null && srcInfo.apjgSrc != "") { data.field.apjgSrc = srcInfo.apjgSrc; xiePuoinfo.apjgSrc = srcInfo.apjgSrc };
+                    if (srcInfo.xpbjSrc != null && srcInfo.xpbjSrc != "") { data.field.xpbjSrc = srcInfo.xpbjSrc; xiePuoinfo.xpbjSrc = srcInfo.xpbjSrc };
+                    if (srcInfo.yxyzSrc != null && srcInfo.yxyzSrc != "") { data.field.yxyzSrc = srcInfo.yxyzSrc; xiePuoinfo.yxyzSrc = srcInfo.yxyzSrc };
+                    if (srcInfo.rucSrc != null && srcInfo.rucSrc != "") { data.field.rucSrc = srcInfo.rucSrc; xiePuoinfo.rucSrc = srcInfo.rucSrc };
+                    if (srcInfo.ytjgSrc != null && srcInfo.ytjgSrc != "") { data.field.ytjgSrc = srcInfo.ytjgSrc; xiePuoinfo.ytjgSrc = srcInfo.ytjgSrc };
+                    if (srcInfo.ytfhSrc != null && srcInfo.ytfhSrc != "") { data.field.ytfhSrc = srcInfo.ytfhSrc; xiePuoinfo.ytfhSrc = srcInfo.ytfhSrc };
+                    if (srcInfo.ytlhSrc != null && srcInfo.ytlhSrc != "") { data.field.ytlhSrc = srcInfo.ytlhSrc; xiePuoinfo.ytlhSrc = srcInfo.ytlhSrc };
+                    xiePuoinfo.appd = data.field.appd;
+                    xiePuoinfo.apjg = data.field.apjg;
+                    xiePuoinfo.xpbj = data.field.xpbj;
+                    xiePuoinfo.yxyz = data.field.yxyz;
+                    xiePuoinfo.ruc = data.field.ruc;
+                    xiePuoinfo.ytjg = data.field.ytjg;
+                    xiePuoinfo.ytfh = data.field.ytfh;
+                    xiePuoinfo.ytlh = data.field.ytlh;
+                    xiePuoinfo.dxdm = data.field.dxdm;
+                    xiePuoinfo.dzgz = data.field.dzgz;
+                    xiePuoinfo.gcdz = data.field.gcdz;
+                    xiePuoinfo.score = data.field.score;
+                    xiePuoinfo.jieLun = data.field.jieLun;
+                    xiePuoinfo.status = "1";
 
                     var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
 
@@ -538,14 +574,32 @@ function LoadSteepHillindex(xiePuoinfo){
                             layer.close(loadinglayerindex);
                             if (result == "更新成功") {
                                 ClearTemp();
-
+                                
+                                for (var i in layers) {
+                                    if (layers[i].type == "DIZHIFA") {
+                                    
+                                        for (var j in layers[i].children) {
+                                            if (layers[i].children[j].id == "DIZHISON_" + xiePuoinfo.id) {
+                                                layers[i].children[j].datas = xiePuoinfo;
+                                                layers[i].children[j].checked = true;
+                                                layers[i].children[j].spread = true;
+                                                layers[i].spread = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                modeljiazaiFlag = false;
+                                tree.reload('prjlayerlistid', { data: layers });
+                                ClearTemp();
                                 layer.msg("提交成功。", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
 
-                                if (xiePuoIndex != null) {
+                                if (xiePuoIndex != null ) {
                                     layer.restore(xiePuoIndex);
+                                    GetSteepHillInfoList({ "jieLun": "" });
                                 }
                                 //关闭
-                                GetSteepHillInfoList({ "jieLun": "" });
+                                
                                 layer.close(xiePuoinfoaddlayerindex);
                             }
                             else {
@@ -557,18 +611,6 @@ function LoadSteepHillindex(xiePuoinfo){
 
                     return false;
                 });
-                //layui.$('#LAY-component-form-setval').on('click', function () {
-                //    form.val('xiePuoSteepHillFilter', {
-                //        "username": "贤心" // "name": "value"
-                //        , "password": "123456"
-                //        , "interest": 1
-                //        , "like[write]": true //复选框选中状态
-                //        , "close": true //开关状态
-                //        , "sex": "女"
-                //        , "desc": "我爱 layui"
-                //    });
-                //});
-
                 //表单取值
                 layui.$('#LAY-component-form-getval').on('click', function () {
                     var data = form.val('xiePuoSteepHillFilter');
@@ -867,7 +909,7 @@ function xiePuoTongji() {
     xiePuoIndex = layer.open({
         type: 1
         , title: ['斜坡信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-        , area: ['1030px', '750px']
+        , area: ['1030px', '700px']
         , shade: 0
         , offset: 'auto'
         , closeBtn: 1
@@ -900,7 +942,7 @@ function xiePuoTongji() {
         , even: false
         , page: true
         , limit: 10
-        , toolbar: true
+        , toolbar: '#xie-puo-add'
         , totalRow: false
         , initSort: { field: 'id', type: 'desc' }
         , cols: [[
@@ -928,10 +970,10 @@ function xiePuoTongji() {
     });
     table.on('tool(xiepotable-view)', function (obj) {
         console.log(obj);
-        var entity = viewer.entities.getById("XIEPUO_" + obj.data.id);
+        var entity = viewer.entities.getById("DIZHISON_" + obj.data.id);
         if (entity == undefined) {
             entity = viewer.entities.add({
-                id: "XIEPUO_" + obj.data.id,
+                id: "DIZHISON_" + obj.data.id,
                 polyline: {
                     positions: obj.data.points,
                     width: 3,
@@ -954,10 +996,10 @@ function xiePuoTongji() {
         }
 
 
-        var entitylabel = viewer.entities.getById("XIEPUO_" + obj.data.id + "_LABEL");
+        var entitylabel = viewer.entities.getById("DIZHISON_" + obj.data.id + "_LABEL");
         if (entitylabel == undefined) {
             viewer.entities.add({
-                id: "XIEPUO_" + obj.data.id + "_LABEL",
+                id: "DIZHISON_" + obj.data.id + "_LABEL",
                 position: obj.data.points[0],
                 label: {
                     text: obj.data.name,
@@ -976,106 +1018,10 @@ function xiePuoTongji() {
 
 
         if (obj.event === 'detail') {
-            var datatemp = obj.data;
-            if (xiePoChakanlayerindex != null) {
-                layer.msg("已打开查看窗口", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                return;
-            }
-            xiePoChakanlayerindex = layer.open({
-                type: 1
-                , title: [datatemp.name + '图片查看', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-                , area: ['420px', '400px']
-                , shade: 0
-                , offset: 'auto'
-                , closeBtn: 1
-                , maxmin: true
-                , moveOut: true
-                , content: srcChaKan
-                , zIndex: layer.zIndex
-                , success: function (layero) {
-                    layer.setTop(layero);
-
-                    if (datatemp.appdSrc != null && datatemp.appdSrc.length > 0) {
-                        document.getElementById("appdSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.appdSrc + ".jpg";
-                    } else {
-                        $("#appdSrcId").hide();
-                    }
-
-
-                    if (datatemp.apjgSrc != null && datatemp.apjgSrc.length > 0) {
-                        document.getElementById("apjgSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.apjgSrc + ".jpg";
-                    } else {
-                        $("#apjgSrcId").hide();
-                    }
-                    if (datatemp.xpbjSrc != null && datatemp.xpbjSrc.length > 0) {
-                        document.getElementById("xpbjSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.xpbjSrc + ".jpg";
-                    } else {
-                        $("#xpbjSrcId").hide();
-                    }
-                    if (datatemp.yxyzSrc != null && datatemp.yxyzSrc.length > 0) {
-                        document.getElementById("yxyzSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.yxyzSrc + ".jpg";
-                    } else {
-                        $("#yxyzSrcId").hide();
-                    }
-                    if (datatemp.rucSrc != null && datatemp.rucSrc.length > 0) {
-                        document.getElementById("rucSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.rucSrc + ".jpg";
-                    } else {
-                        $("#rucSrcId").hide();
-                    }
-                    if (datatemp.ytjgSrc != null && datatemp.ytjgSrc.length > 0) {
-                        document.getElementById("ytjgSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.ytjgSrc + ".jpg";
-                    } else {
-                        $("#ytjgSrcId").hide();
-                    }
-                    if (datatemp.ytfhSrc != null && datatemp.ytfhSrc.length > 0) {
-                        document.getElementById("ytfhSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.ytfhSrc + ".jpg";
-                    } else {
-                        $("#ytfhSrcId").hide();
-                    }
-                    if (datatemp.ytlhSrc != null && datatemp.ytlhSrc.length > 0) {
-                        document.getElementById("ytlhSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.ytlhSrc + ".jpg";
-                    } else {
-                        $("#ytlhSrcId").hide();
-                    }
-                    viewerPhoto = new Viewer(document.getElementById('xiepochakan'), {
-                        toolbar: true, //显示工具条
-                        viewed() {
-                            viewerPhoto.zoomTo(1.2); // 图片显示比例 75%
-                        },
-                        zIndex: 99999999,
-                        navbar: false,
-                        show: function () {  // 动态加载图片后，更新实例
-                            viewerPhoto.update();
-                        },
-                    });
-
-                }
-                , end: function () {
-                    xiePoChakanlayerindex = null;
-                }
-            });
+            xiePuoPhotoSee(obj.data);
         } else if (obj.event === 'delete') {
             layer.confirm('确认删除' + obj.data.name + '斜坡?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
-                var temp = {};
-                temp.id = obj.data.id;
-                temp.cookie = document.cookie;
-                var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
-
-                $.ajax({
-                    url: servicesurl + "/api/FlzWindowInfo/DeleteFlzSteepHill", type: "delete", data: temp,
-                    success: function (result) {
-                        layer.close(loadinglayerindex);
-                        if (result == "删除成功") {
-                            layer.msg("删除成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                            viewer.entities.removeById("XIEPUO_" + obj.data.id);
-                            viewer.entities.removeById("XIEPUO_" + obj.data.id + "_LABEL");
-                            ClearTemp();
-                            GetSteepHillInfoList({ "jieLun": "" });
-                        } else {
-                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                        }
-                    }, datatype: "json"
-                });
+                deleteDiZhiShiBie(obj.data);
             });
         } else if (obj.event === 'chuli') {
             LoadSteepHillindex(obj.data);
@@ -1088,10 +1034,10 @@ function xiePuoTongji() {
                 var checkStatus = table.checkStatus('xiepotableviewid').data;
                 var entityList = [];
                 for (var i = 0; i < checkStatus.length;i++) {
-                    var entity = viewer.entities.getById("XIEPUO_" + checkStatus[i].id);
+                    var entity = viewer.entities.getById("DIZHISON_" + checkStatus[i].id);
                     if (entity== undefined) {
                         entity=viewer.entities.add({
-                            id: "XIEPUO_" + checkStatus[i].id,
+                            id: "DIZHISON_" + checkStatus[i].id,
                             polyline: {
                                 positions: checkStatus[i].points,
                                 width: 3,
@@ -1104,10 +1050,10 @@ function xiePuoTongji() {
                             },
                         });
                     }
-                    var entitylabel = viewer.entities.getById("XIEPUO_" + checkStatus[i].id+ "_LABEL");
+                    var entitylabel = viewer.entities.getById("DIZHISON_" + checkStatus[i].id+ "_LABEL");
                     if (entitylabel == undefined) {
                         viewer.entities.add({
-                            id: "XIEPUO_" + checkStatus[i].id + "_LABEL",
+                            id: "DIZHISON_" + checkStatus[i].id + "_LABEL",
                             position: checkStatus[i].points[0],
                             label: {
                                 text: checkStatus[i].name,
@@ -1131,16 +1077,16 @@ function xiePuoTongji() {
             } else {
                 var checkNoStatus = table.cache['xiepotableviewid'];//全部未选中
                 for (var i = 0; i < checkNoStatus.length; i++) {
-                    viewer.entities.removeById("XIEPUO_" + checkNoStatus[i].id);
-                    viewer.entities.removeById("XIEPUO_" + checkNoStatus[i].id + "_LABEL");
+                    viewer.entities.removeById("DIZHISON_" + checkNoStatus[i].id);
+                    viewer.entities.removeById("DIZHISON_" + checkNoStatus[i].id + "_LABEL");
                 }
             }
         } else {//单选按钮
             if (obj.checked) {//选中
-                var entity = viewer.entities.getById("XIEPUO_" + obj.data.id);
+                var entity = viewer.entities.getById("DIZHISON_" + obj.data.id);
                 if (entity == undefined) {
                     entity=viewer.entities.add({
-                        id: "XIEPUO_" + obj.data.id,
+                        id: "DIZHISON_" + obj.data.id,
                         polyline: {
                             positions: obj.data.points,
                             width: 3,
@@ -1163,10 +1109,10 @@ function xiePuoTongji() {
                 }
                 
                 
-                var entitylabel = viewer.entities.getById("XIEPUO_" + obj.data.id + "_LABEL");
+                var entitylabel = viewer.entities.getById("DIZHISON_" + obj.data.id + "_LABEL");
                 if (entitylabel == undefined) {
                     viewer.entities.add({
-                        id: "XIEPUO_" + obj.data.id + "_LABEL",
+                        id: "DIZHISON_" + obj.data.id + "_LABEL",
                         position: obj.data.points[0],
                         label: {
                             text: obj.data.name,
@@ -1183,8 +1129,8 @@ function xiePuoTongji() {
                 }
             
             } else {
-                viewer.entities.removeById("XIEPUO_" + obj.data.id);
-                viewer.entities.removeById("XIEPUO_" + obj.data.id + "_LABEL");
+                viewer.entities.removeById("DIZHISON_" + obj.data.id);
+                viewer.entities.removeById("DIZHISON_" + obj.data.id + "_LABEL");
             }
         }
 
@@ -1196,6 +1142,11 @@ function xiePuoTongji() {
 
         //console.log(checkStatus.data.length)
     });
+    //新增按钮
+    table.on('toolbar(xiepotable-view)', function (obj) {
+        gotoXiePuo();
+    });
+
     GetSteepHillInfoList({ "jieLun": ""});
 }
 
@@ -1316,6 +1267,129 @@ function GetSteepHillInfoList(data) {
                     xiepotabledata.push(xiepo);
                 }
                 xiepotableview.reload({ id: 'xiepotableviewid', data: xiepotabledata });
+            }
+        }, datatype: "json"
+    });
+}
+//识别图片查看
+function xiePuoPhotoSee(datatemp) {
+    if (xiePoChakanlayerindex != null) {
+        layer.msg("已打开查看窗口", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        return;
+    }
+    xiePoChakanlayerindex = layer.open({
+        type: 1
+        , title: [datatemp.name + '图片查看', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+        , area: ['420px', '400px']
+        , shade: 0
+        , offset: 'auto'
+        , closeBtn: 1
+        , maxmin: true
+        , moveOut: true
+        , content: srcChaKan
+        , zIndex: layer.zIndex
+        , success: function (layero) {
+            layer.setTop(layero);
+
+            if (datatemp.appdSrc != null && datatemp.appdSrc.length > 0) {
+                document.getElementById("appdSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.appdSrc + ".jpg";
+            } else {
+                $("#appdSrcId").hide();
+            }
+
+
+            if (datatemp.apjgSrc != null && datatemp.apjgSrc.length > 0) {
+                document.getElementById("apjgSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.apjgSrc + ".jpg";
+            } else {
+                $("#apjgSrcId").hide();
+            }
+            if (datatemp.xpbjSrc != null && datatemp.xpbjSrc.length > 0) {
+                document.getElementById("xpbjSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.xpbjSrc + ".jpg";
+            } else {
+                $("#xpbjSrcId").hide();
+            }
+            if (datatemp.yxyzSrc != null && datatemp.yxyzSrc.length > 0) {
+                document.getElementById("yxyzSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.yxyzSrc + ".jpg";
+            } else {
+                $("#yxyzSrcId").hide();
+            }
+            if (datatemp.rucSrc != null && datatemp.rucSrc.length > 0) {
+                document.getElementById("rucSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.rucSrc + ".jpg";
+            } else {
+                $("#rucSrcId").hide();
+            }
+            if (datatemp.ytjgSrc != null && datatemp.ytjgSrc.length > 0) {
+                document.getElementById("ytjgSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.ytjgSrc + ".jpg";
+            } else {
+                $("#ytjgSrcId").hide();
+            }
+            if (datatemp.ytfhSrc != null && datatemp.ytfhSrc.length > 0) {
+                document.getElementById("ytfhSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.ytfhSrc + ".jpg";
+            } else {
+                $("#ytfhSrcId").hide();
+            }
+            if (datatemp.ytlhSrc != null && datatemp.ytlhSrc.length > 0) {
+                document.getElementById("ytlhSrcId").src = "http://www.cq107chy.com:4022/SurImage/xiepo/" + datatemp.ytlhSrc + ".jpg";
+            } else {
+                $("#ytlhSrcId").hide();
+            }
+            viewerPhoto = new Viewer(document.getElementById('xiepochakan'), {
+                toolbar: true, //显示工具条
+                viewed() {
+                    viewerPhoto.zoomTo(1.2); // 图片显示比例 75%
+                },
+                zIndex: 99999999,
+                navbar: false,
+                show: function () {  // 动态加载图片后，更新实例
+                    viewerPhoto.update();
+                },
+            });
+
+        }
+        , end: function () {
+            xiePoChakanlayerindex = null;
+        }
+    });
+}
+//识别删除
+function deleteDiZhiShiBie(data) {
+    var temp = {};
+    temp.id = data.id;
+    temp.cookie = document.cookie;
+    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+    $.ajax({
+        url: servicesurl + "/api/FlzWindowInfo/DeleteFlzSteepHill", type: "delete", data: temp,
+        success: function (result) {
+            layer.close(loadinglayerindex);
+            if (result == "删除成功") {
+                layer.msg("删除成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                for (var i in layers) {
+                    if (layers[i].type == "DIZHIFA") {
+                        if (layers[i].children.length==0) {//当只有一条的时候
+                            layers.splice(i, 1);
+                            break;
+                        }
+                        for (var j in layers[i].children) {
+                            if (layers[i].children[j].id == "DIZHISON_" + data.id) {
+                                layers[i].children.splice(j, 1)
+                                layers[i].spread = true;
+                                break;
+                            } 
+                        }
+                    }
+                }
+               
+                modeljiazaiFlag = false;
+                tree.reload('prjlayerlistid', { data: layers });
+                viewer.entities.removeById("DIZHISON_" + data.id);
+                viewer.entities.removeById("DIZHISON_" + data.id + "_LABEL");
+                ClearTemp();
+                if (xiePuoIndex!=null) {
+                    GetSteepHillInfoList({ "jieLun": "" });
+                }
+            } else {
+                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
             }
         }, datatype: "json"
     });

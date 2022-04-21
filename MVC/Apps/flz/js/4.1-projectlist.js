@@ -6,7 +6,7 @@ var projectindex=layer.open({
     , title: ['项目', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
     , area: ['250px', '660px']
     , shade: 0
-    , offset: ['85px', '0px']//头部，左边
+    , offset: ['48px', '0px']//头部，左边
     , closeBtn: 0
     , shift:3
     //, maxmin: true

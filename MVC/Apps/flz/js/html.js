@@ -764,10 +764,8 @@ var xiepoTable = "	<form class='layui-form' style='margin-top:5px;margin-right:5
 
     + "			    <a class='layui-btn layui-btn-danger layui-btn-xs' lay-event='delete'>删除</a>  "
     + "		</script>                                                                             "
-    + "	<table class='layui-hide' id='xiepotable-view' lay-filter='xiepotable-view'></table>	"
-    + "	    <div style='width: 370px; margin: 30px 310px;'>"
-    + "	        <button type='button' class='layui-btn  layui-btn-fluid' onclick='gotoXiePuo()'>新增斜坡</button>"
-    + "	    </div>";
+    + "	<table class='layui-hide' id='xiepotable-view' lay-filter='xiepotable-view'></table> 	<script type='text/html' id='xie-puo-add'><div class='layui-btn-container'><button class='layui-btn layui-btn-sm' style='font-size:14px;width:150px' lay-event='xie-puo-add'>添加斜坡</button></div></script>";
+
 
 var srcChaKan =  "<ul id='xiepochakan'>                                       "
     + "    <li><img id='appdSrcId' style='width:80px;margin-top: 20px; height:80px;margin-left: 10px' alt='岸坡坡度'></li> "

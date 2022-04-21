@@ -155,6 +155,24 @@ namespace SERVICE.Controllers
                     flzDataLayer.FlzWindowInfoList = flzWindowInfo;
 
                 }
+                #endregion
+                //地质识别
+
+
+                #region
+                string data2 = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM flz_steep_hill_info WHERE project_id ={0}", id));
+                if (!string.IsNullOrEmpty(data2))
+                {
+                    List<FlzSteepHillInfo> flSteepHillInfo = new List<FlzSteepHillInfo>();
+                    string[] rows = data2.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        FlzSteepHillInfo flzData = ParseFlzoneHelper.ParseFlzSteepHillInfo(rows[i]);
+                        flSteepHillInfo.Add(flzData);
+                    }
+                    flzDataLayer.FlzSteepHillList = flSteepHillInfo;
+                }
+                
 
 
                 layers.FlzDataLayer = flzDataLayer;

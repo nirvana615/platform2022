@@ -213,7 +213,9 @@ namespace SERVICE.Controllers
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_window_info  WHERE id={0}", id));
-                if (updatecount == 1)
+                //删除节理数据
+                updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_data_point  WHERE window_id={0}", id));
+                if (updatecount!= -1)
                 {
                     return "删除成功";
                 }

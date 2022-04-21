@@ -18,8 +18,12 @@ namespace MODEL
         /// 监测点
         /// </summary>
         public List<FlzData> FlzDataList { get; set; }
+        /// <summary>
+        /// 地质识别
+        /// </summary>
+        public List<FlzSteepHillInfo> FlzSteepHillList { get; set; }
 
 
-        
+
     }
 }
