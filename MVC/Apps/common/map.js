@@ -193,9 +193,9 @@ var viewer = new Cesium.Viewer("map", {
 });
 
 //修改
-viewer._cesiumWidget._creditContainer.style.display = "none";           //隐藏版权信息
-viewer.scene.globe.enableLighting = false;                              //日夜区分
-viewer.scene.globe.depthTestAgainstTerrain = false; 
+viewer._cesiumWidget._creditContainer.style.display = "none";                                           //隐藏版权信息
+viewer.scene.globe.enableLighting = false;                                                              //日夜区分
+viewer.scene.globe.depthTestAgainstTerrain = false;
 viewer.homeButton.viewModel.tooltip = "初始视图";
 viewer.baseLayerPicker.viewModel.buttonTooltip = "地图及地形";
 viewer.baseLayerPicker.viewModel.toggleDropDown.afterExecute.addEventListener(function () {
@@ -211,9 +211,9 @@ viewer.baseLayerPicker.viewModel.toggleDropDown.afterExecute.addEventListener(fu
     }
 });
 //扩展
-viewer.extend(Cesium.viewerCesiumNavigationMixin, {});                                          //扩展导航功能
-document.getElementsByClassName("navigation-controls")[0].style = "visibility:hidden";          //修改工具栏样式
-document.getElementsByClassName("compass")[0].style = "top:10px";                               //修改指南针位置
+viewer.extend(Cesium.viewerCesiumNavigationMixin, {});                                                  //扩展导航功能
+document.getElementsByClassName("navigation-controls")[0].style = "visibility:hidden";                  //修改工具栏样式
+document.getElementsByClassName("compass")[0].style = "top:10px";                                       //修改指南针位置
 
 
 //移动端判断
@@ -244,7 +244,7 @@ function AddEntityInViewer(entity) {
         viewer.entities.add(entity);
     }
 };
-//viewer添加entity集合
+//viewer添加entities
 function AddEntitiesInViewer(entities) {
     if (entities.length > 0) {
         for (var i in entities) {
@@ -261,7 +261,7 @@ function RemoveEntityInViewer(entity) {
         viewer.entities.remove(entity);
     }
 };
-//viewer删除entity集合
+//viewer删除entities
 function RemoveEntitiesInViewer(entities) {
     for (var i in entities) {
         if (viewer.entities.contains(entities[i])) {
@@ -274,8 +274,12 @@ function RemoveEntitiesInViewer(entities) {
 function ZoomToEntity(entity) {
     viewer.zoomTo(entity, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 5000));
 };
+//定位entities
+function ZoomToEntities(entities) {
+    viewer.zoomTo(entities, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 5000));
+};
 
-//清除全部模型和几何对象
+//清除全部模型和几何
 function ClearAllModelAndGeometry() {
     viewer.scene.primitives.removeAll();//清除模型
     viewer.entities.removeAll();//清除几何

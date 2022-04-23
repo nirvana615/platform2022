@@ -2,7 +2,6 @@
  * 必须先创建viewer变量
  */
 
-
 //获取视角
 function GetView() {
     var view = {
@@ -42,10 +41,13 @@ function Load3DTiles(model) {
             viewer.zoomTo(curtileset);
         }
 
-        curtileset.name = "tiles" + model.Id;
+        curtileset.data = model;//附加数据
+
         return curtileset;
     }
 };
+
+
 
 
 
@@ -96,7 +98,6 @@ function modelview(id, rwbm) {
 
     }
 };
-
 //待删除
 function LoadModel(obj) {
     var modelurl = datasurl + "/AllModel/" + obj.path;

@@ -2,7 +2,6 @@
 function AddUavProject() {
     if (uavprojectaddlayerindex == null) {
         CloseAllLayer();//关闭所有图层
-        ClearAllModelAndGeometry();//清除全部模型和几何对象
 
         uavprojectaddlayerindex = layer.open({
             type: 1
@@ -58,12 +57,40 @@ function AddUavProject() {
                                     var new_uav_project_list_all = [];
                                     new_uav_project_list_all.push(newproject);
                                     for (var i in uav_project_list_all) {
-                                        new_uav_project_list_all.push(uav_project_list_all[i]);
+                                        if (current_project_id == null) {
+                                            new_uav_project_list_all.push(uav_project_list_all[i]);
+                                        }
+                                        else {
+                                            for (var j in uav_project_list_all[i].children) {
+                                                if (uav_project_list_all[i].children[j].title == "实景模型" || uav_project_list_all[i].children[j].title == "航线任务") {
+                                                    if (uav_project_list_all[i].children[j].children != undefined && uav_project_list_all[i].children[j].children.length > 0) {
+                                                        for (var k in uav_project_list_all[i].children[j].children) {
+                                                            uav_project_list_all[i].children[j].children[k].checked = false;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            new_uav_project_list_all.push(uav_project_list_all[i]);
+                                        }
                                     }
                                     uav_project_list_all = new_uav_project_list_all;
+
+                                    //清除模型和航线图形
+                                    if (current_project_tile != null) {
+                                        viewer.scene.primitives.remove(current_project_tile);//清除当前模型
+                                        current_project_tile = null;
+                                    }
+                                    if (current_entities_route.length > 0) {
+                                        RemoveEntitiesInViewer(current_entities_route);
+                                        current_entities_route = [];
+                                    }
+
+                                    //viewer.entities.removeAll();//删除所有要素
                                 }
 
+                                isReloadTree = true;//标记重载
                                 MarkCurrentProject();
+                                isReloadTree = false;//重载后还原
                                 layer.close(uavprojectaddlayerindex);
                             }
 
@@ -385,7 +412,9 @@ function EditUavProject(uavprojectdata) {
                                                             }
                                                         }
                                                     }
+                                                    isReloadTree = true;//标记重载
                                                     MarkCurrentProject();
+                                                    isReloadTree = false;//重载后还原
                                                 }
 
                                                 layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -475,6 +504,16 @@ function DeleteUavProject(uavprojectid) {
                 if (uavprojectid == current_project_id) {
                     current_project_id = null;
                     current_project_title = null;
+
+                    //清除模型和航线图形
+                    if (current_project_tile != null) {
+                        viewer.scene.primitives.remove(current_project_tile);//清除当前模型
+                        current_project_tile = null;
+                    }
+                    if (current_entities_route.length > 0) {
+                        RemoveEntitiesInViewer(current_entities_route);
+                        current_entities_route = [];
+                    }
                 }
 
                 var new_uav_project_list_all = [];
@@ -487,7 +526,9 @@ function DeleteUavProject(uavprojectid) {
                 uav_project_list_all = new_uav_project_list_all;
             }
 
+            isReloadTree = true;//标记重载
             MarkCurrentProject();
+            isReloadTree = false;//重载后还原
             layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         }, datatype: "json"
     });

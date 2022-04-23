@@ -1,134 +1,135 @@
-﻿<form class="layui-form" style="margin-top:10px" lay-filter="adddeviceform">
-
-    <div class="layui-row">
-        <div class="layui-col-md6">
-            <div class="grid-demo grid-demo-bg1">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">唯一编码</label>
-                    <div class="layui-input-block" style="padding-right:10px">
-                        <input type="text" name="code" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" />
+﻿<div style="overflow:hidden;">
+    <form class="layui-form" style="margin-top:10px" lay-filter="adddeviceform">
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">唯一编码</label>
+                        <div class="layui-input-block" style="padding-right:10px">
+                            <input type="text" name="code" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="grid-demo">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">设备名称</label>
+                        <div class="layui-input-block" style="padding-right:10px">
+                            <input type="text" name="sbmc" autocomplete="off" placeholder="请输入" class="layui-input" />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="layui-col-md6">
-            <div class="grid-demo">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">设备名称</label>
-                    <div class="layui-input-block" style="padding-right:10px">
-                        <input type="text" name="sbmc" autocomplete="off" placeholder="请输入" class="layui-input" />
+
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">设备编号</label>
+                        <div class="layui-input-block" style="padding-right:10px">
+                            <input type="text" name="sbbh" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="grid-demo">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">设备型号</label>
+                        <div class="layui-input-block" style="padding-right:10px">
+                            <input type="text" name="sbxh" autocomplete="off" placeholder="请输入" class="layui-input" />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="layui-row">
-        <div class="layui-col-md6">
-            <div class="grid-demo grid-demo-bg1">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">设备编号</label>
-                    <div class="layui-input-block" style="padding-right:10px">
-                        <input type="text" name="sbbh" autocomplete="off" placeholder="请输入" class="layui-input" lay-verify="required" />
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="grid-demo grid-demo-bg1">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">设备类型</label>
+                        <div class="layui-input-block" style="padding-right:10px">
+                            <select id="sblxid" name="sblx" lay-filter="sblxselect" lay-verify="required">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="grid-demo">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">供电方式</label>
+                        <div class="layui-input-block" style="padding-right:10px">
+                            <select id="gdfsid" name="gdfs" lay-filter="gdfsselect" lay-verify="required">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="layui-col-md6">
-            <div class="grid-demo">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">设备型号</label>
-                    <div class="layui-input-block" style="padding-right:10px">
-                        <input type="text" name="sbxh" autocomplete="off" placeholder="请输入" class="layui-input" />
-                    </div>
-                </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">备&emsp;&emsp;注</label>
+            <div class="layui-input-block" style="padding-right:10px">
+                <input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" />
             </div>
         </div>
-    </div>
 
-    <div class="layui-row">
-        <div class="layui-col-md6">
-            <div class="grid-demo grid-demo-bg1">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">设备类型</label>
-                    <div class="layui-input-block" style="padding-right:10px">
-                        <select id="sblxid" name="sblx" lay-filter="sblxselect" lay-verify="required">
-                            <option value="">请选择</option>
-                        </select>
-                    </div>
-                </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备厂家</label>
+            <div class="layui-input-block" style="padding-right:10px;">
+                <select id="cjid" name="cj" lay-filter="cjselect">
+                    <option value="">请选择</option>
+                </select>
             </div>
         </div>
-        <div class="layui-col-md6">
-            <div class="grid-demo">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">供电方式</label>
-                    <div class="layui-input-block" style="padding-right:10px">
-                        <select id="gdfsid" name="gdfs" lay-filter="gdfsselect" lay-verify="required">
-                            <option value="">请选择</option>
-                        </select>
-                    </div>
-                </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备经销商</label>
+            <div class="layui-input-block" style="padding-right:10px;">
+                <select id="jxsid" name="jxs" lay-filter="jxsselect">
+                    <option value="">请选择</option>
+                </select>
             </div>
         </div>
-    </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">备&emsp;&emsp;注</label>
-        <div class="layui-input-block" style="padding-right:10px">
-            <input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">监测数据库</label>
+            <div class="layui-input-block" style="padding-right:10px;">
+                <select id="dbid" name="db" lay-filter="dbselect">
+                    <option value="">请选择</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">设备厂家</label>
-        <div class="layui-input-block" style="padding-right:10px;">
-            <select id="cjid" name="cj" lay-filter="cjselect">
-                <option value="">请选择</option>
-            </select>
+        <div class="layui-form-item">
+            <label class="layui-form-label">读取SQL</label>
+            <div class="layui-input-block" style="padding-right:10px;">
+                <select id="readsqlid" name="readsql" lay-filter="readsqlselect">
+                    <option value="">请选择</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">设备经销商</label>
-        <div class="layui-input-block" style="padding-right:10px;">
-            <select id="jxsid" name="jxs" lay-filter="jxsselect">
-                <option value="">请选择</option>
-            </select>
+        <div class="layui-form-item">
+            <label class="layui-form-label">写入SQL</label>
+            <div class="layui-input-block" style="padding-right:10px;">
+                <select id="writesqlid" name="writesql" lay-filter="writesqlselect">
+                    <option value="">请选择</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">监测数据库</label>
-        <div class="layui-input-block" style="padding-right:10px;">
-            <select id="dbid" name="db" lay-filter="dbselect">
-                <option value="">请选择</option>
-            </select>
+        <div class="layui-form-item" style="margin-top:30px">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="adddevicesubmit" style="width:80px;margin-left:200px">提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button>
+            </div>
         </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">读取SQL</label>
-        <div class="layui-input-block" style="padding-right:10px;">
-            <select id="readsqlid" name="readsql" lay-filter="readsqlselect">
-                <option value="">请选择</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">写入SQL</label>
-        <div class="layui-input-block" style="padding-right:10px;">
-            <select id="writesqlid" name="writesql" lay-filter="writesqlselect">
-                <option value="">请选择</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="layui-form-item" style="margin-top:30px">
-        <div class="layui-input-block">
-            <button type="submit" class="layui-btn" lay-submit="" lay-filter="adddevicesubmit" style="width:80px;margin-left:200px">提交</button>
-            <button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button>
-        </div>
-    </div>
-</form>
+    </form>
+</div>

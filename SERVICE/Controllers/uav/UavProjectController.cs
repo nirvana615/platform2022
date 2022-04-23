@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+
 using COM;
 using DAL;
 using MODEL;
@@ -13,7 +14,7 @@ using MODEL;
 namespace SERVICE.Controllers
 {
     /// <summary>
-    /// 无人机项目
+    /// 航任务项目
     /// </summary>
     public class UavProjectController : ApiController
     {
@@ -424,7 +425,7 @@ namespace SERVICE.Controllers
 
 
         /// <summary>
-        /// 删除无人机项目
+        /// 删除航线任务项目
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
@@ -437,22 +438,15 @@ namespace SERVICE.Controllers
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
-                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_project SET ztm={0} WHERE id={1}", (int)MODEL.Enum.State.NoUse, id));
-                if (updatecount == 1)
+                //删除用户与项目映射
+                int updatemapcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_map_user_project SET ztm={0} WHERE userid={1} AND projectid={2} AND ztm={2}", (int)MODEL.Enum.State.NoUse, user.Id, id, (int)MODEL.Enum.State.InUse));
+                if (updatemapcount == 1)
                 {
-                    int updatemapcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_map_user_project SET ztm={0} WHERE userid={1} AND projectid={2}", (int)MODEL.Enum.State.NoUse, user.Id, id));
-                    if (updatemapcount == 1)
-                    {
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", string.Empty));
-                    }
-                    else
-                    {
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除用户-项目映射出错！", string.Empty));
-                    }
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", string.Empty));
                 }
                 else
                 {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除项目出错！", string.Empty));
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除失败！", string.Empty));
                 }
             }
             else

@@ -2231,6 +2231,59 @@ function EditUavRoute(type, routeid) {
     }
 };
 
+//删除航线
+function DeleteUavRoute(uavrouteid) {
+    $.ajax({
+        url: servicesurl + "/api/UavRoute/DeleteUavRoute", type: "delete", data: { "id": uavrouteid, "cookie": document.cookie },
+        success: function (data) {
+            var result = JSON.parse(data);
+            if (result.code == 1) {
+                for (var i in uav_project_list_all) {
+                    if (uav_project_list_all[i].id == current_project_id) {
+                        for (var j in uav_project_list_all[i].children) {
+                            if (uav_project_list_all[i].children[j].title == "航线任务") {
+                                var routechild = [];
+
+                                for (var k in uav_project_list_all[i].children[j].children) {
+                                    if (uav_project_list_all[i].children[j].children[k].id != uavrouteid) {
+                                        routechild.push(uav_project_list_all[i].children[j].children[k]);
+                                    }
+                                }
+                                uav_project_list_all[i].children[j].children = routechild;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                //清除路径
+                if (current_entities_route.length > 0) {
+                    var new_current_entities_route = [];
+
+                    for (var i in current_entities_route) {
+                        if (current_entities_route[i].id == ("UAVROUTE_" + uavrouteid)) {
+                            RemoveEntityInViewer(entity);
+                        }
+                        else {
+                            new_current_entities_route.push(current_entities_route[i]);
+                        }
+                    }
+
+                    current_entities_route = new_current_entities_route;
+                }
+            }
+
+            isReloadTree = true;//标记重载
+            MarkCurrentProject();
+            isReloadTree = false;//重载后还原
+            layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        }, datatype: "json"
+    });
+};
+
+
+
+
 
 //无人机切换
 function SelectDrone() {
@@ -4097,8 +4150,8 @@ function SaveMission(type) {
             data.field.cookie = document.cookie;
             data.field.line = JSON.stringify(current_line);
             data.field.mis = current_json;
-            data.field.terra = encodeURI(current_djiterra_kml);
-            data.field.pilot = encodeURI(current_djipilot_kml);
+            //data.field.terra = encodeURI(current_djiterra_kml);
+            //data.field.pilot = encodeURI(current_djipilot_kml);
             data.field.waypoints = ClearHtml(JSON.stringify(uav_route_add_waypointtreedata));
 
             $.ajax({
@@ -4114,11 +4167,62 @@ function SaveMission(type) {
                             layer.close(uavrouteeditlayerindex);
                         }
 
-                        //刷新项目树
-                        GetUserUavProjectInfos(current_project_id, parseInt(result.data));
-                    }
-                    else {
+                        var uavroute = JSON.parse(result.data);
 
+                        for (var i in uav_project_list_all) {
+                            if (uav_project_list_all[i].id == current_project_id) {
+                                for (var j in uav_project_list_all[i].children) {
+                                    if (uav_project_list_all[i].children[j].title == "航线任务") {
+
+                                        var routechild = [];
+
+                                        var route = new Object;
+                                        route.id = uavroute.Id;
+                                        route.icon = WAYLINECON;
+                                        route.type = "uavroute";
+                                        route.title = uavroute.HXMC;
+                                        route.class = uavroute.HXLX;
+                                        route.line = uavroute.LINE;
+                                        route.data = uavroute;
+                                        route.nodeOperate = true;
+                                        route.showCheckbox = true;
+                                        route.checked = true;
+                                        routechild.push(route);
+
+                                        if (uav_project_list_all[i].children[j].children != undefined && uav_project_list_all[i].children[j].children.length > 0) {
+                                            for (var k in uav_project_list_all[i].children[j].children) {
+                                                routechild.push(uav_project_list_all[i].children[j].children[k]);
+                                            }
+                                        }
+
+                                        uav_project_list_all[i].children[j].children = routechild;
+
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+
+                        var entity_route = new Cesium.Entity({
+                            id: "UAVROUTE_" + uavroute.Id,
+                            polyline: {
+                                positions: JSON.parse(uavroute.LINE),
+                                width: 3,
+                                arcType: Cesium.ArcType.RHUMB,
+                                material: Cesium.Color.GREENYELLOW,
+                                show: true,
+                                clampToGround: false,
+                            },
+                        });
+
+                        current_entities_route.push(entity_route);
+                        AddEntityInViewer(entity_route);
+                        ZoomToEntity(entity_route);
+
+                        isReloadTree = true;//标记重载
+                        MarkCurrentProject();
+                        isReloadTree = false;//重载后还原
                     }
 
                     layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -4131,24 +4235,7 @@ function SaveMission(type) {
 };
 
 
-//删除路径
-function DeleteUavRoute(uavrouteid) {
-    $.ajax({
-        url: servicesurl + "/api/UavRoute/DeleteUavRoute", type: "delete", data: { "id": uavrouteid, "cookie": document.cookie },
-        success: function (data) {
-            var result = JSON.parse(data);
-            if (result.code == 1) {
-                GetUserUavProjectInfos(current_project_id, -1);
-            }
-            else {
-                tree.reload('uav-project-list-treeid', { data: uav_project_list_all });
-                MarkNode();
-            }
 
-            layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-        }, datatype: "json"
-    });
-};
 
 //重置路径元数
 function ResetRouteElements() {
@@ -4231,7 +4318,6 @@ function ResetRouteElements() {
     current_line = null;
 };
 
-
 function ExportPoint(points) {
     var result = "";
     for (var i in points) {
@@ -4239,7 +4325,6 @@ function ExportPoint(points) {
     }
     console.log(result);
 };
-
 
 //删除数组元素
 function RemoveArrayElemnet(arr, elemid, label) {

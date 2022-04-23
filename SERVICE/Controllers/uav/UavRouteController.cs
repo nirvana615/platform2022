@@ -3539,11 +3539,10 @@ namespace SERVICE.Controllers
         public string SaveRoute()
         {
             string uavprojectid = HttpContext.Current.Request.Form["uavprojectid"];                 //当前无人机项目id
-            string cookie = HttpContext.Current.Request.Form["cookie"];
             string line = HttpContext.Current.Request.Form["line"];                                 //路径图形
             string mis = HttpContext.Current.Request.Form["mis"];                                   //路径json任务
-            string terra = HttpUtility.UrlDecode(HttpContext.Current.Request.Form["terra"]);
-            string pilot = HttpUtility.UrlDecode(HttpContext.Current.Request.Form["pilot"]);
+            //string terra = HttpUtility.UrlDecode(HttpContext.Current.Request.Form["terra"]);
+            //string pilot = HttpUtility.UrlDecode(HttpContext.Current.Request.Form["pilot"]);
             string waypoints = HttpContext.Current.Request.Form["waypoints"];                       //路径航点/航区
 
             string hxmc = HttpContext.Current.Request.Form["uav-route-add-hxmc"];                   //航线名称
@@ -3563,7 +3562,7 @@ namespace SERVICE.Controllers
 
 
             string userbsms = string.Empty;
-            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref userbsms);
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 #region 路径
@@ -3593,7 +3592,7 @@ namespace SERVICE.Controllers
 
                 if (uavrouteid == -1)
                 {
-                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "创建路径失败！", string.Empty));
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "创建航线失败！", string.Empty));
                 }
                 #endregion
 
@@ -3739,7 +3738,15 @@ namespace SERVICE.Controllers
                 }
                 #endregion
 
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", uavrouteid.ToString()));//返回路径id
+                UavRoute uavRoute = ParseUavHelper.ParseUavRoute(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uav_route WHERE id={0} AND ztm={1}", uavrouteid, (int)MODEL.Enum.State.InUse)));
+                if (uavRoute == null)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "返回航线信息失败！", string.Empty));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(uavRoute)));
+                }
             }
             else
             {
@@ -3761,10 +3768,10 @@ namespace SERVICE.Controllers
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
-                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_route SET ztm={0} WHERE id={1}", (int)MODEL.Enum.State.NoUse, id));
+                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_route SET ztm={0} WHERE id={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, id, (int)MODEL.Enum.State.InUse));
                 if (updatecount == 1)
                 {
-                    int updatemapcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_map_project_route SET ztm={0} WHERE routeid={1}", (int)MODEL.Enum.State.NoUse, id));
+                    int updatemapcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_map_project_route SET ztm={0} WHERE routeid={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, id, (int)MODEL.Enum.State.InUse));
                     if (updatemapcount == 1)
                     {
                         return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", string.Empty));
@@ -3785,6 +3792,9 @@ namespace SERVICE.Controllers
             }
         }
 
+
+
+        #region 方法
         /// <summary>
         /// 航点类型反翻译
         /// </summary>
@@ -3867,6 +3877,7 @@ namespace SERVICE.Controllers
                 }
             }
         }
+        #endregion
 
     }
 }

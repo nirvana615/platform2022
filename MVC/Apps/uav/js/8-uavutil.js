@@ -31,9 +31,7 @@ util.fixbar({
                     && headerselayerindex == null) {
                     AddUavProject();
                 } else {
-                    layer.confirm('是否打开新的模块?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
-                        CloseAllLayer();//关闭所有图层
-                        ClearAllModelAndGeometry();//清除全部模型和几何对象
+                    layer.confirm('<p style="font-size:16px">是否确定新建航线任务规划项目？</p><br/>', { icon: 3, title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
                         AddUavProject();
                         layer.close(index);
                     });

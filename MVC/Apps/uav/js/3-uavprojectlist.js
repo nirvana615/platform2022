@@ -1,6 +1,4 @@
-﻿var loadlayerindex = null;
-
-//航线任务规划项目列表
+﻿//项目列表
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
@@ -98,7 +96,6 @@ function GetUserUavProjects() {
         }, datatype: "json"
     });
 };
-
 //获取用户全部航线任务项目（包括模型、路径）
 function GetUserUavProjectInfos() {
     $.ajax({
@@ -197,14 +194,14 @@ function UavProjectNodeClick(obj) {
         else {
             if (obj.data.id != current_project_id) {
                 //切换当前项目
-                layer.confirm('是否切换当前项目?', {
-                    icon: 3, title: '提示',
+                layer.confirm('<p style="font-size:16px">是否切换当前项目？</p><br/>', {
+                    icon: 3,
+                    title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'],
+                    shade: 0.5,
                     zIndex: layer.zIndex,
-                    cancel: function () {
-                    },
-                    success: function (layero) {
-                        layer.setTop(layero);
-                    },
+                    cancel: function () { },
+                    success: function (layero) { layer.setTop(layero); },
+                    btnAlign: 'c',
                     btn: ['是', '否']
                 }, function (index, layero) {
                     //是
@@ -214,10 +211,34 @@ function UavProjectNodeClick(obj) {
                     //关闭所有图层
                     CloseAllLayer();
 
-                    //清除模型和图形
-                    ClearAllModelAndGeometry()
+                    //清除模型
+                    if (current_project_tile != null) {
+                        viewer.scene.primitives.remove(current_project_tile);//清除模型
+                        current_project_tile = null;
+                    }
 
+                    //清除路径
+                    if (current_entities_route.length > 0) {
+                        RemoveEntitiesInViewer(current_entities_route);
+                        current_entities_route = [];
+                    }
+
+                    //取消所有选中
+                    for (var i in uav_project_list_all) {
+                        for (var j in uav_project_list_all[i].children) {
+                            if (uav_project_list_all[i].children[j].title == "实景模型" || uav_project_list_all[i].children[j].title == "航线任务") {
+                                if (uav_project_list_all[i].children[j].children != undefined && uav_project_list_all[i].children[j].children.length > 0) {
+                                    for (var k in uav_project_list_all[i].children[j].children) {
+                                        uav_project_list_all[i].children[j].children[k].checked = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    isReloadTree = true;//标记重载
                     MarkCurrentProject();
+                    isReloadTree = false;//重载后还原
 
                     layer.close(index);
                 }, function (index) {
@@ -227,14 +248,40 @@ function UavProjectNodeClick(obj) {
         }
     }
     else if (obj.data.type == "uavsurmodel") {
-        if (obj.data.checked) {
-            //TODO 如果是当前加载模型，则缩放至最佳视图
+        if (current_project_tile != null) {
+            if (obj.data.id == ("UAVSURMODEL_" + current_project_tile.data.Id)) {
+                if (current_project_tile.data.MXSJ != undefined && current_project_tile.data.MXSJ != "") {
+                    viewer.scene.camera.setView(JSON.parse(current_project_tile.data.MXSJ));
+                }
+                else {
+                    viewer.zoomTo(current_project_tile);
+                }
+            }
         }
     }
     else if (obj.data.type == "uavroute") {
-        if (obj.data.checked == true) {
-            //TODO 如果已加载要素，则缩放至要素
-
+        for (var i in uav_project_list_all) {
+            if (current_project_id == uav_project_list_all[i].id) {
+                for (var j in uav_project_list_all[i].children) {
+                    if (uav_project_list_all[i].children[j].title == "航线任务") {
+                        for (var k in uav_project_list_all[i].children[j].children) {
+                            if (obj.data.id == uav_project_list_all[i].children[j].children[k].id) {
+                                if (uav_project_list_all[i].children[j].children[k].checked) {
+                                    for (var m in current_entities_route) {
+                                        if (("UAVROUTE_" + obj.data.id) == current_entities_route[m].id) {
+                                            ZoomToEntity(current_entities_route[m]);
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
         }
     }
     else {
@@ -247,8 +294,9 @@ function UavProjectNodeClick(obj) {
                 }
             }
 
-            tree.reload('uav-project-list-treeid', { data: uav_project_list_all });
-            MarkNode();//高亮当前节点
+            isReloadTree = true;//标记重载
+            MarkCurrentProject();
+            isReloadTree = false;//重载后还原
         }
     }
 };
@@ -258,14 +306,15 @@ function UavProjectNodeOperate(obj) {
     if (obj.data.type == "uavproject") {
         //项目
         if (obj.type === 'add') {
-            ViewUavProject(obj.data.data);//查看项目
+            //查看项目
+            ViewUavProject(obj.data.data);
         } else if (obj.type === 'update') {
             EditUavProject(obj.data.data);//编辑项目
         } else if (obj.type === 'del') {
             DeleteUavProject(obj.data.id);//删除项目
         };
     } else if (obj.data.type == "uavroute") {
-        //航线
+        //路径
         if (obj.type === 'add') {
             //查看航线
             ViewUavRoute(obj.data.class, obj.data.id);
@@ -273,13 +322,10 @@ function UavProjectNodeOperate(obj) {
             //编辑航线
             EditUavRoute(obj.data.class, obj.data.id);
         } else if (obj.type === 'del') {
-            //删除航线
-            DeleteUavRoute(obj.data.id);
+            DeleteUavRoute(obj.data.id);//删除航线
         };
     }
 };
-
-var isReloadTree = false;//是否tree重载（默认否）
 
 //节点选中/取消选中
 function UavProjectNodeCheck(obj) {
