@@ -2427,20 +2427,24 @@ function uploadProjectLineMarkEntity(id, title,position,style, color) {
             polyline: {
                 positions: lineposition,
                 width: JSON.parse(style).width,
-                material: Cesium.Color.fromCssColorString(color),
-                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                    color: Cesium.Color.fromCssColorString(color),
-                }),
+                material: Cesium.Color.fromCssColorString(color), 
+                depthFailMaterial: Cesium.Color.fromCssColorString(color),
+                //depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                //    color: Cesium.Color.fromCssColorString(color),
+                //}),
                 distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0.0, 15000),
             }
         });
 
         var styletemp = JSON.parse(style).stylesrc.replace('../Resources/img/mark/', '').replace('.png', '');
         if (styletemp == "img_mark_l1") {
-            tempentity_line.polyline.material = Cesium.Color.fromCssColorString(color);
+            
         }
         else if (styletemp == "img_mark_l2") {
             tempentity_line.polyline.material = new Cesium.PolylineDashMaterialProperty({
+                color: Cesium.Color.fromCssColorString(color)
+            });
+            tempentity_line.polyline.depthFailMaterial = new Cesium.PolylineDashMaterialProperty({
                 color: Cesium.Color.fromCssColorString(color)
             });
         }
@@ -2482,18 +2486,20 @@ function uploadProjectPolygonMarkEntity(id, title, position,style, color) {
             polyline: {
                 positions: polygonposition,
                 width: JSON.parse(style).width,
-                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                    color: Cesium.Color.fromCssColorString(color),
-                }),
+                material: Cesium.Color.fromCssColorString(color),
+                depthFailMaterial: Cesium.Color.fromCssColorString(color),
                 distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0.0, 15000),
             }
         });
         var styletemp = JSON.parse(style).stylesrc.replace('../Resources/img/mark/', '').replace('.png', '');
         if (styletemp == "img_mark_A1") {
-            tempentity_line.polyline.material = Cesium.Color.fromCssColorString(color);
+            
         }
         else if (styletemp == "img_mark_A2") {
             tempentity_line.polyline.material = new Cesium.PolylineDashMaterialProperty({
+                color: Cesium.Color.fromCssColorString(color)
+            });
+            tempentity_line.polyline.depthFailMaterial = new Cesium.PolylineDashMaterialProperty({
                 color: Cesium.Color.fromCssColorString(color)
             });
         }
