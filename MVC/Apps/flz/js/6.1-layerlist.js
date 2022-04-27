@@ -769,18 +769,23 @@ function LoadLayerListLayer(id) {
                                                     for (var i in data.children) {
                                                         var entity = viewer.entities.getById(data.children[i].id);
                                                         if (entity == undefined) {
-                                                        
+                                                            var points = data.children[i].pointList;
+                                                            points.push(points[0]);
                                                             viewer.entities.add({
                                                                 id: data.children[i].id,
-                                                                polygon: {
-                                                                    hierarchy: {
-                                                                        positions: data.children[i].pointList
-                                                                    },
-                                                                    classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
-                                                                    material: Cesium.Color.ORANGE.withAlpha(0.3),
-
-                                                                    //depthFailMaterial: Cesium.Color.ORANGE.withAlpha(0.3),
-                                                                }
+                                                              
+                                                                polyline: {
+                                                                    positions: points,
+                                                                    width: 2,
+                                                                    //arcType: Cesium.ArcType.RHUMB,
+                                                                    material: Cesium.Color.ORANGE,
+                                                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                                                        color: Cesium.Color.ORANGE
+                                                                    }),
+                                                                    show: true,
+                                                                    //clampToGround: true,
+                                                                    classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
+                                                                },
                                                             });
                                                             viewer.entities.add({
                                                                 id: data.children[i].id + "_LABEL",
@@ -1001,17 +1006,22 @@ function LoadLayerListLayer(id) {
                                                     if (entity == undefined) {
                                                         var points = data.pointList;
                                                         var sum = 0;
-                                                    
+                                                        points.push(points[0]);
                                                         viewer.entities.add({
                                                             id: data.id,
-                                                            polygon: {
-                                                                hierarchy: {
-                                                                    positions: points
-                                                                },
-                                                                material: Cesium.Color.ORANGE.withAlpha(0.5),
-                                                             //   depthFailMaterial: Cesium.Color.ORANGE.withAlpha(0.3),
-                                                                classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
-                                                            }
+                                                             polyline: {
+                                                                positions: points,
+                                                                width: 2,
+                                                                //arcType: Cesium.ArcType.RHUMB,
+                                                                 material: Cesium.Color.ORANGE,
+                                                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                                                    color: Cesium.Color.ORANGE
+                                                                }),
+                                                                show: true,
+                                                                //clampToGround: true,
+                                                                classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
+                                                            },
+
                                                         });
 
                                                         viewer.entities.add({

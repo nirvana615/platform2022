@@ -311,12 +311,12 @@ function windowTongji() {
         , title: ['测窗信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
         , area: ['500px', '400px']
         , shade: 0
-        , offset: 'auto'
+        
         , closeBtn: 1
         , anim: 0
         , maxmin: true
         , moveOut: true
-        ,offset:'rt'
+        , offset: ['60px', '1340px']
         , content: '<table class="layui-hide" id="windowtable-view" lay-filter="windowtable-view"></table><script type="text/html" id="flz-window-add"><div class="layui-btn-container"><button class="layui-btn layui-btn-sm" style="font-size:14px;width:120px" lay-event="flzwindow-add">绘制测窗</button><button class="layui-btn layui-btn-sm" style="font-size:14px;width:120px;" lay-event="flzwindow-pdf">测窗成图</button></div></script><script type="text/html" id="table-toolbar-model"><a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:20px;font-size:20px!important;color:#666!important;"></i></a></script>'
         , zIndex: layer.zIndex
         , success: function (layero) {
