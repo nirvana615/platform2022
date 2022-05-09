@@ -1,5 +1,7 @@
 ﻿//弹出项目列表widget
 var projectLists = [];//项目列表信息
+var LANDSLIDEICON = '<span style="margin-left:5px;margin-right:5px;"><img src="../../../Resources/img/map/project_type_landslide.png" style="width:14px;height:14px;"/></span>';
+var ROCKFALLICON = '<span style="margin-left:5px;margin-right:5px;"><img src="../../../Resources/img/map/project_type_rockfall.png" style="width:14px;height:14px;"/></span>';
 var projectindex=layer.open({
     type: 1
     ,skin: 'layui-layer-rim'
@@ -63,26 +65,72 @@ function GetUserProjects() {
                 document.getElementById("projectbyarea").innerHTML = "";
                 var projectlist = JSON.parse(data);
                 projectLists = projectlist;//展示一下项目列表。
+                console.log(projectLists);
                 //构造项目列表数据
                 projectdatagrouptime = [];      //按时间组织
                 projectdatagrouparea = [];      //按地区组织
+                var areas = [];                 //所有地区
 
+                for (var i in projectlist) {
+                    var area = projectlist[i].XZQBM.substr(0, 6);
+                    if (areas.indexOf(area) == -1) {
+                        areas.push(area);
+                    }
+                }
+                //areas.sort();
+                for (var i in areas) {
+                    var father = new Object;
+                    if ((xjxzqs != null) && (xjxzqs.length > 0)) {
+                        //行政区编码转行政区名称
+                        for (var j in xjxzqs) {
+                            if (areas[i] == xjxzqs[j].value) {
+                                father.title = xjxzqs[j].name;
+                            }
+                        }
+                    }
+                    else {
+                        father.title = areas[i];
+                    }
 
-                
-                       for (var j in projectlist) {
+                    if (i == 0) {
+                        //默认展开第一项
+                        father.spread = true;
+                    }
+                    else {
+                        father.spread = false;
+                    }
+                    var children = [];
+                    for (var j in projectlist) {
+                        if (projectlist[j].XZQBM.substr(0, 6) == areas[i]) {
                             var son = new Object;
+                            son.nodeOperate = true;
                             son.title = projectlist[j].XMMC;
                             son.xmmc = projectlist[j].XMMC;
                             son.id = projectlist[j].Id;
-                           projectdatagrouparea.push(son);
+                            son.icon = LANDSLIDEICON;
+                            children.push(son);
+                        }
                     }
+                    father.children = children;
+                    projectdatagrouparea.push(father);
+                }
+
+                    //   for (var j in projectlist) {
+                    //        var son = new Object;
+                    //        son.title = projectlist[j].XMMC;
+                    //        son.xmmc = projectlist[j].XMMC;
+                    //        son.id = projectlist[j].Id;
+                    //       projectdatagrouparea.push(son);
+                    //}
 
                 //按地区渲染
                 tree.render({
                     elem: '#projectbyarea'
                     , data: projectdatagrouparea
                     , edit: ['add', 'update', 'del']
+                    , customOperate: true
                     , accordion: true
+                    , cancelNodeFileIcon: true
                     , click: function (obj) {
                         ProjectNodeClick(obj);
                     }
@@ -90,6 +138,7 @@ function GetUserProjects() {
                         ProjectNodeOperate(obj);
                     }
                 });
+              
 
 
                 projectentities = [];                   //项目位置及标注
