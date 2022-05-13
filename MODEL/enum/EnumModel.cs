@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using COM;
 
 namespace MODEL
@@ -13,28 +14,27 @@ namespace MODEL
     public static class EnumModel
     {
         /// <summary>
-        /// 采集设备
+        /// 任务相机
         /// </summary>
-        public enum AircrafType
+        public enum TaskCamera
         {
-
-            [RemarkAttribute("精灵 PHANTOM 4 RTK Camera")]
+            [RemarkAttribute("精灵 PHANTOM 4 RTK")]
             P4R = 0,
 
-            [RemarkAttribute("精灵 PHANTOM 4 PRO camera")]
+            [RemarkAttribute("精灵 PHANTOM 4 PRO")]
             P4P = 1,
 
-            [RemarkAttribute("经纬 M300 RTK P1 35mm")]
-            JMR = 2
+            [RemarkAttribute("经纬 M300 RTK P1(35mm)")]
+            P135mm = 2
         }
 
         /// <summary>
-        /// 成果
+        /// 任务产品
         /// </summary>
-        public enum ResultType
+        public enum TaskProduct
         {
-            [RemarkAttribute("3D Tiles")]
-            SystemModel = 0,
+            [RemarkAttribute("3DTiles")]
+            Tiles = 0,
 
             [RemarkAttribute("DOM&DSM")]
             DOMDSM = 1,
@@ -62,47 +62,37 @@ namespace MODEL
             [RemarkAttribute("已完成")]
             Finished = 2
         }
+        /// <summary>
+        /// 模型等级
+        /// </summary>
+        public enum ModelLevel
+        {
+            [RemarkAttribute("无")]
+            No = -1,
 
+            [RemarkAttribute("整体")]
+            Whole = 0,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            [RemarkAttribute("局部")]
+            Part = 1
+        }
 
         /// <summary>
-        /// 模型系统角色
+        /// 高程系统
         /// </summary>
-        public enum ModelRole
+        public enum ElevationSystem
         {
-            [RemarkAttribute("模型采集员")]
-            Modelc = 1,
+            [RemarkAttribute("椭球高")]
+            TQG = 0,
 
-            [RemarkAttribute("模型处理员")]
-            Modelp = 2,
-
-            [RemarkAttribute("模型用户")]
-            Modelv = 3
+            [RemarkAttribute("1985国家高程基准")]
+            GJGC1985 = 1
         }
+
+
+
+
+
 
     }
 }

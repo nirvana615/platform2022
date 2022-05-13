@@ -1,6 +1,5 @@
 ﻿
 @{
-    /**/
 
     Layout = null;
 }
@@ -18,6 +17,9 @@
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/layui/layui.all.js"></script>
 
+    <script src="~/Scripts/three.r119.min.js"></script>
+    <script src="~/Scripts/vanta.birds.min.js"></script>
+
     <style>
         .gbGlassmorphism {
             backdrop-filter: blur(10px) saturate(180%);
@@ -29,6 +31,19 @@
             backdrop-filter: blur(10px) saturate(100%);
             -webkit-backdrop-filter: blur(16px) saturate(180%);
             background-color: rgba(17, 25, 40, 0.25);
+            border-radius: 15px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -250px;
+            margin-top: -250px;
+            text-align: center;
+            width: 520px;
+            height: 420px;
+        }
+
+        .cardGlassmorphism1 {
+            background-color: rgba(17, 25, 40, 0.1);
             border-radius: 15px;
             position: absolute;
             left: 50%;
@@ -56,16 +71,13 @@
     </style>
 </head>
 <body>
-    <div style="position:absolute;width:100%;height:100%;">
+    <div id="bg" style="position:absolute;width:100%;height:100%;">
         <!--背景-->
-        <img class="bgpic" src="~/Resources/pic/bg/bg_admin.jpg" alt="" />
-
+        <!--<img class="bgpic" src="~/Resources/pic/bg/bg_admin.jpg" alt="" />-->
         <!--背景模糊-->
-        <div class="gbGlassmorphism" style="position:absolute;width:100%;height:100%;"></div>
-
+        <!--<div class="gbGlassmorphism" style="position:absolute;width:100%;height:100%;"></div>-->
         <!--窗体模糊-->
-        <div class="cardGlassmorphism">
-
+        <div class="cardGlassmorphism1">
             <div style="margin-top:30px;margin-bottom:50px;">
                 <p class="chinaTitle">后台管理系统</p>
             </div>
@@ -108,5 +120,19 @@
             </div>
         </div>
     </div>
+
+    <script>
+        if (window.VANTA) window.VANTA.BIRDS({
+            el: "#bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00
+        })
+    </script>
+
 </body>
 </html>

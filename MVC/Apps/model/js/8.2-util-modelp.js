@@ -8,7 +8,7 @@ util.fixbar({
     , click: function (type) {
         if (type === 'bar1') {
             //任务管理
-            LoadNewModelTask();
+            LoadTaskProcess();
         }
         else if (type === 'bar2') {
             //测量工具

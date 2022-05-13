@@ -215,6 +215,7 @@ function UavProjectNodeClick(obj) {
                     if (current_project_tile != null) {
                         viewer.scene.primitives.remove(current_project_tile);//清除模型
                         current_project_tile = null;
+                        current_model_id = null;
                     }
 
                     //清除路径
@@ -431,6 +432,7 @@ function UavProjectNodeCheck(obj) {
             if (current_project_tile != null) {
                 viewer.scene.primitives.remove(current_project_tile);//清除模型
                 current_project_tile = null;
+                current_model_id = null;
             }
 
             for (var i in uav_project_list_all) {

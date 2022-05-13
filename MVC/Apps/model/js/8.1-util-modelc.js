@@ -18,35 +18,58 @@ util.fixbar({
                 layer.setTop(modelprojectinfoaddlayerindex);
             }
             else {
-                if (modelprojectinfoviewlayerindex != null
-                    || modelprojectinfoeditlayerindex != null
-                    || modeltaskinfoviewlayerindex != null
-                    || modeltaskinfoaddlayerindex != null
-                    || modeltaskinfoeditlayerindex != null
-                    || modelprojectauthlayerindex != null
-                    || newmodeltaskinfolayerindex != null
-                    || modelheaderuserlayerindex != null
-                    || modelheadernoticelayerindex != null
-                    || modelheadersetlayerindex != null
+                if (modelprojectinfoviewlayerindex == null
+                    && modelprojectinfoeditlayerindex == null
+                    && modeltaskinfoviewlayerindex == null
+                    && modeltaskinfoaddlayerindex == null
+                    && modeltaskinfoeditlayerindex == null
+                    && modelprojectauthlayerindex == null
+                    && modeltaskprocesslayerindex == null
+                    && modelheaderuserlayerindex == null
+                    && modelheadernoticelayerindex == null
+                    && modelheadersetlayerindex == null
                 ) {
-                    layer.confirm('是否打开新的模块?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
-                        CloseAllLayer();
-                        ModelProjectInfo(null, "add");
-                        layer.close(index);
-                    });
+                    AddModelProject();
                 }
                 else {
-                    ModelProjectInfo(null, "add");
+                    layer.confirm('<p style="font-size:16px">是否确定新建实景模型项目？</p><br/>', { icon: 3, title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                        AddModelProject();
+                        layer.close(index);
+                    });
                 }
             }
         }
         else if (type === 'bar3') {
-            //新建任务
-            ModelTaskInfo(currentprojectid, "add");
+            //新建模型
+            if (modeltaskinfoaddlayerindex != null) {
+                layer.setTop(modeltaskinfoaddlayerindex);
+            }
+            else {
+                if (modelprojectinfoviewlayerindex == null
+                    && modelprojectinfoaddlayerindex == null
+                    && modelprojectinfoeditlayerindex == null
+                    && modeltaskinfoviewlayerindex == null
+                    && modeltaskinfoeditlayerindex == null
+                    && modeltaskinfoeditlayerindex == null
+                    && modelprojectauthlayerindex == null
+                    && modeltaskprocesslayerindex == null
+                    && modelheaderuserlayerindex == null
+                    && modelheadernoticelayerindex == null
+                    && modelheadersetlayerindex == null
+                ) {
+                    AddModelTask(currentprojectid);
+                }
+                else {
+                    layer.confirm('<p style="font-size:16px">是否确定新建模型？</p><br/>', { icon: 3, title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                        AddModelTask(currentprojectid);
+                        layer.close(index);
+                    });
+                }
+            }   
         }
         else if (type === 'bar4') {
             //任务管理
-            //LoadNewModelTask();
+            LoadTaskManage();
         }
         else if (type === 'bar5') {
             //测量工具
@@ -93,7 +116,7 @@ $("#utilbar2").on("mouseleave", function () {
 
 $("#utilbar3").on("mouseenter", function () {
     if (tipslayer == -1) {
-        tipslayer = layer.tips('新建任务', '#utilbar3', {
+        tipslayer = layer.tips('新建模型', '#utilbar3', {
             tips: [4, '#78BA32']
         });
     }

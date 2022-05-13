@@ -36,7 +36,7 @@ namespace MODEL
         /// </summary>
         public int RWZT { get; set; }
         /// <summary>
-        /// 影像采集人
+        /// 影像采集人员
         /// </summary>
         public string YXCJRY { get; set; }
         /// <summary>
@@ -46,7 +46,7 @@ namespace MODEL
         /// <summary>
         /// 影像采集设备
         /// </summary>
-        public int YXCJSB { get; set; }
+        public int? YXCJSB { get; set; }
         /// <summary>
         /// 影像数量
         /// </summary>
@@ -63,6 +63,10 @@ namespace MODEL
         /// 空间参考
         /// </summary>
         public int SRID { get; set; }
+        /// <summary>
+        /// 高程系统
+        /// </summary>
+        public int? GCXT { get; set; }
         /// <summary>
         /// 高程异常
         /// </summary>

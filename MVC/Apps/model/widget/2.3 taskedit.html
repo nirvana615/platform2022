@@ -1,81 +1,171 @@
-﻿<!--编辑任务-->
-<form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="editModeltaskinfoform">
+﻿<!--编辑模型-->
+<div style="overflow:hidden;">
+    <form class="layui-form" style="margin-top:5px;margin-right:10px;" lay-filter="editmodeltaskinfoform">
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">模型名称</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <input type="text" name="model_rwmc_edit" autocomplete="off" lay-verify="required" placeholder="请输入" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">模型编码</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <input type="text" name="model_rwbm_edit" autocomplete="off" lay-verify="required" readonly="readonly" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="layui-form-item">
-        <div class="layui-row">
-            <div class="layui-col-md6">
-                <div class="grid-demo">
-                    <label class="layui-form-label">任务名称</label>
-                    <div class="layui-input-block"> <input type="text" name="model_rwmc_edit" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /> </div>
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">采集时间</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <input type="text" name="model_yxcjsj_edit" id="yxcjsjid" lay-verify="required|date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="layui-col-md6">
-                <div class="grid-demo">
-                    <label class="layui-form-label">任务编码</label>
-                    <div class="layui-input-block"> <input type="text" name="model_rwbm_edit" readonly="readonly" class="layui-input" /> </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-row">
-            <div class="layui-col-md6">
-                <div class="grid-demo">
-                    <label class="layui-form-label">采集人员</label>
-                    <div class="layui-input-block"> <input type="text" name="model_yxcjry_edit" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /> </div>
-                </div>
-            </div>
-            <div class="layui-col-md6">
-                <div class="grid-demo">
-                    <label class="layui-form-label">影像数量</label>
-                    <div class="layui-input-block"> <input type="text" name="model_yxsl_edit" autocomplete="off" placeholder="请输入数字" lay-verify="required|number" class="layui-input" /> </div>
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">采集设备</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <select id="yxcjsbid" name="model_yxcjsb_edit">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-row">
-            <div class="layui-col-md6">
-                <div class="grid-demo">
-                    <label class="layui-form-label">采集时间</label>
-                    <div class="layui-input-block"> <input type="text" id="yxcjsjid" name="model_yxcjsj_edit" lay-verify="required|date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" /> </div>
-                </div>
-            </div>
-            <div class="layui-col-md6">
-                <div class="grid-demo">
-                    <label class="layui-form-label">采集设备</label>
-                    <div class="layui-input-block"> <select id="yxcjsbid" name="model_yxcjsb_edit" lay-verify="required"></select> </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">坐标系统</label>
-        <div class="layui-input-block"> <select id="kjckid" name="model_kjck_edit" lay-verify="required"></select> </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">目标成果</label>
-        <div class="layui-input-block" id="sxcgid"></div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">影像链接</label>
-        <div class="layui-input-block"> <input type="text" name="model_yxcflj_edit" autocomplete="off" placeholder="请输入影像链接" lay-verify="required" class="layui-input" /> </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">控制点</label>
-        <div class="layui-input-block">
-            <textarea name="model_yxkzd_edit" class="layui-textarea" rows="6" style="resize:none"  autocomplete="off" placeholder="请输入txt格式"></textarea>
-        </div>
-    </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">任务描述</label>
-        <div class="layui-input-block"> <input type="text" name="model_rwms_edit" autocomplete="off" placeholder="请输入" class="layui-input"> </div>
-    </div>
-    <div class="layui-form-item" style="margin-top:10px">
-        <div style="text-align:center">
-            <button type="button" class="layui-btn layui-btn-primary" id="modelview" style="width:100px;border-radius:5px;">模型视角</button>
-            <button type="submit" class="layui-btn" lay-submit="" lay-filter="editModeltaskinfosubmit" style="width:100px;border-radius:5px;">保存</button>
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">采集人员</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <input type="text" name="model_yxcjry_edit" autocomplete="off" placeholder="请输入" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">影像数量</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <input type="text" name="model_yxsl_edit" autocomplete="off" placeholder="请输入数字" lay-verify="required|number" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</form>'
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:60px;">影像地址</label>
+            <div class="layui-input-block" style="margin-left:90px;">
+                <input type="text" name="model_yxcflj_edit" autocomplete="off" placeholder="请输入" class="layui-input" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">像&ensp;控&ensp;点</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <textarea name="model_yxkzd_edit" class="layui-textarea" rows="5" style="resize:none" autocomplete="off" placeholder="格式:像控点编号,x,y,h"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">影像pos</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <textarea name="model_yxpos_edit" class="layui-textarea" rows="5" style="resize:none" autocomplete="off" placeholder="格式:影像名称,纬度,经度,高程"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:60px;">坐标系统</label>
+            <div class="layui-input-block" style="margin-left:90px;">
+                <select id="kjckid" name="model_kjck_edit" lay-verify="required">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">高程系统</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <select id="gcxtid" name="model_gcxt_edit">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">高程异常</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <input type="text" name="model_gcyc_edit" autocomplete="off" placeholder="请输入数字" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">模型等级</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <select id="mxdjid" name="model_mxdj_edit">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <label class="layui-form-label" style="width:60px;">生产状态</label>
+                        <div class="layui-input-block" style="margin-left:90px;">
+                            <input type="text" name="model_rwzt_edit" autocomplete="off" readonly="readonly" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:60px;">成&emsp;&emsp;果</label>
+            <div class="layui-input-block" id="sxcgid" style="margin-left:90px;"></div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:60px;">描&emsp;&emsp;述</label>
+            <div class="layui-input-block" style="margin-left:90px;">
+                <input type="text" name="model_rwms_edit" autocomplete="off" placeholder="请输入" class="layui-input" />
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="margin-top:10px">
+            <div style="text-align:center">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="editmodeltaskinfosubmit" style="width:120px;border-radius:5px;">更新</button>
+                <button type="submit" class="layui-btn layui-btn-disabled" lay-submit="" lay-filter="setmodelviewsubmit" id="setmodelviewsubmitid" style="width:120px;border-radius:5px;">设置视角</button>
+            </div>
+        </div>
+    </form>
+</div>

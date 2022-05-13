@@ -40,7 +40,7 @@ namespace SERVICE.Controllers
                 string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_project_disaster WHERE projectid={0} AND ztm={1} ORDER BY id ASC", id, (int)MODEL.Enum.State.InUse));
                 if (!string.IsNullOrEmpty(data))
                 {
-                    string[] rows = data.Split(new char[] {COM.ConstHelper.rowSplit});
+                    string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
                     for (int i = 0; i < rows.Length; i++)
                     {
                         MapProjectDisaster mapProjectDisaster = ParseMonitorHelper.ParseMapProjectDisaster(rows[i]);
@@ -52,7 +52,7 @@ namespace SERVICE.Controllers
                                 string data1 = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_disaster_section WHERE disasterid={0} AND ztm={1} ORDER BY id ASC", disaster.Id, (int)MODEL.Enum.State.InUse));
                                 if (!string.IsNullOrEmpty(data1))
                                 {
-                                    string[] rows1 = data1.Split(new char[] {COM.ConstHelper.rowSplit});
+                                    string[] rows1 = data1.Split(new char[] { COM.ConstHelper.rowSplit });
                                     for (int j = 0; j < rows1.Length; j++)
                                     {
                                         MapDisasterSection mapDisasterSection = ParseMonitorHelper.ParseMapDisasterSection(rows1[j]);
@@ -104,13 +104,15 @@ namespace SERVICE.Controllers
                 int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM monitor_disaster WHERE id={0} AND bsm{1} AND ztm={2}", pmzhtid, userbsms, (int)MODEL.Enum.State.InUse));
                 if (count == 1)
                 {
+                    Disaster disaster = ParseMonitorHelper.ParseDisaster(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_disaster WHERE id={0} AND bsm{1} AND ztm={2}", pmzhtid, userbsms, (int)MODEL.Enum.State.InUse)));
+
                     if (!string.IsNullOrEmpty(pmmc) && !string.IsNullOrEmpty(pmbh))
                     {
                         string value = "("
                         + SQLHelper.UpdateString(pmmc) + ","
                         + SQLHelper.UpdateString(pmbh) + ","
                         + SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + ","
-                        + SQLHelper.UpdateString(pmzhtid) + ","
+                        + SQLHelper.UpdateString(disaster.BSM) + ","
                         + (int)MODEL.Enum.State.InUse + ","
                         + SQLHelper.UpdateString(bz) + ")";
 

@@ -84,10 +84,8 @@
     <Compile Include="data\modelmap\MapUserModelProject.cs" />
     <Compile Include="data\model\ModelProject.cs" />
     <Compile Include="data\model\ModelProjectData.cs" />
-    <Compile Include="data\model\ModelProjectInfo.cs" />
     <Compile Include="data\model\ModelTask.cs" />
     <Compile Include="data\model\ModelTaskStatus.cs" />
-    <Compile Include="data\model\ModelTaskInfos.cs" />
     <Compile Include="data\model\ModelUse.cs" />
     <Compile Include="data\monitormap\MapDeviceInterval.cs" />
     <Compile Include="data\monitormap\MapDisasterProperty.cs" />
@@ -248,8 +246,6 @@
     <Compile Include="data\uav\waypoint\WaypointInfo.cs" />
     <Compile Include="data\uav\waypoint\xyz.cs" />
     <Compile Include="enum\EnumModel.cs" />
-    <Compile Include="enum\EnumPointCloud.cs" />
-    <Compile Include="enum\EnumFlz.cs" />
     <Compile Include="enum\EnumIMG.cs" />
     <Compile Include="enum\EnumMonitor.cs" />
     <Compile Include="parse\ParseFlzoneHelper.cs" />

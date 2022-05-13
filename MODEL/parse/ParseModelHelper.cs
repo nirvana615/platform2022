@@ -138,7 +138,6 @@ namespace MODEL
                     RWBM = row[2].ToString(),
                     YXCJRY = row[3].ToString(),
                     YXCJSJ = row[4].ToString(),
-                    YXCJSB = Convert.ToInt32(row[5].ToString()),
                     YXSL = Convert.ToInt32(row[6].ToString()),
                     YXKZD = row[7].ToString(),
                     YXFW = row[8].ToString(),
@@ -155,6 +154,14 @@ namespace MODEL
                     YXPOS = row[20].ToString()
                 };
 
+                if (string.IsNullOrEmpty(row[5].ToString()))
+                {
+                    modelTask.YXCJSB = null;
+                }
+                else
+                {
+                    modelTask.YXCJSB = Convert.ToInt32(row[5].ToString());
+                }
                 if (string.IsNullOrEmpty(row[21].ToString()))
                 {
                     modelTask.MXDJ = null;
@@ -169,14 +176,22 @@ namespace MODEL
                 }
                 else
                 {
-                    modelTask.GCYC = Convert.ToDouble(row[22].ToString()); ;
+                    modelTask.GCYC = Convert.ToDouble(row[22].ToString());
+                }
+                if (string.IsNullOrEmpty(row[23].ToString()))
+                {
+                    modelTask.GCXT = null;
+                }
+                else
+                {
+                    modelTask.GCXT = Convert.ToInt16(row[23].ToString());
                 }
 
                 return modelTask;
             }
             catch (Exception ex)
             {
-                logger.Error("ModelData解析失败：" + data, ex);
+                logger.Error("ModelTask解析失败：" + data, ex);
                 return null;
             }
         }

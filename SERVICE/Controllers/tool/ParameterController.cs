@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+
 using COM;
 using DAL;
 using MODEL;
@@ -46,6 +47,28 @@ namespace SERVICE.Controllers
                 {
                     return JsonHelper.ToJson(coordinates);
                 }
+            }
+
+            return string.Empty;
+        }
+        /// <summary>
+        /// 高程系统
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetGCXT()
+        {
+            List<string[]> gcxts = new List<string[]>();
+            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.ElevationSystem));
+            foreach (var value in values)
+            {
+                string[] gcxt = (EnumExtension.GetRemark((MODEL.EnumModel.ElevationSystem)System.Enum.Parse(typeof(MODEL.EnumModel.ElevationSystem), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
+                gcxts.Add(gcxt);
+            }
+
+            if (gcxts.Count > 0)
+            {
+                return JsonHelper.ToJson(gcxts);
             }
 
             return string.Empty;
@@ -1087,54 +1110,53 @@ namespace SERVICE.Controllers
 
         #endregion
 
-        #region 三维模型参数
+        #region 模型参数
         /// <summary>
-        ///采集设备
+        /// 任务相机
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public string GetCJSB()
+        public string GetRWXJ()
         {
-            List<string[]> cjsbs = new List<string[]>();
-            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.AircrafType));
+            List<string[]> rwxjs = new List<string[]>();
+            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.TaskCamera));
             foreach (var value in values)
             {
-                string[] cjsb = (EnumExtension.GetRemark((MODEL.EnumModel.AircrafType)System.Enum.Parse(typeof(MODEL.EnumModel.AircrafType), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
-                cjsbs.Add(cjsb);
+                string[] rwxj = (EnumExtension.GetRemark((MODEL.EnumModel.TaskCamera)System.Enum.Parse(typeof(MODEL.EnumModel.TaskCamera), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
+                rwxjs.Add(rwxj);
             }
 
-            if (cjsbs.Count > 0)
+            if (rwxjs.Count > 0)
             {
-                return JsonHelper.ToJson(cjsbs);
+                return JsonHelper.ToJson(rwxjs);
             }
 
             return string.Empty;
         }
         /// <summary>
-        ///所需成果
+        /// 任务产品
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public string GetSXCG()
+        public string GetRWCP()
         {
-            List<string[]> sxcgs = new List<string[]>();
-            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.ResultType));
+            List<string[]> rwcps = new List<string[]>();
+            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.TaskProduct));
             foreach (var value in values)
             {
-                string[] sxcg = (EnumExtension.GetRemark((MODEL.EnumModel.ResultType)System.Enum.Parse(typeof(MODEL.EnumModel.ResultType), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
-                sxcgs.Add(sxcg);
+                string[] rwcp = (EnumExtension.GetRemark((MODEL.EnumModel.TaskProduct)System.Enum.Parse(typeof(MODEL.EnumModel.TaskProduct), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
+                rwcps.Add(rwcp);
             }
 
-            if (sxcgs.Count > 0)
+            if (rwcps.Count > 0)
             {
-                return JsonHelper.ToJson(sxcgs);
+                return JsonHelper.ToJson(rwcps);
             }
 
             return string.Empty;
         }
-
         /// <summary>
-        ///任务状态
+        /// 任务状态
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -1155,8 +1177,29 @@ namespace SERVICE.Controllers
 
             return string.Empty;
         }
-        #endregion
+        /// <summary>
+        /// 模型等级
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetMXDJ()
+        {
+            List<string[]> mxdjs = new List<string[]>();
+            System.Array values = System.Enum.GetValues(typeof(MODEL.EnumModel.ModelLevel));
+            foreach (var value in values)
+            {
+                string[] mxdj = (EnumExtension.GetRemark((MODEL.EnumModel.ModelLevel)System.Enum.Parse(typeof(MODEL.EnumModel.ModelLevel), ((int)value).ToString())) + ";" + (int)value).Split(new char[] { ';' });
+                mxdjs.Add(mxdj);
+            }
 
+            if (mxdjs.Count > 0)
+            {
+                return JsonHelper.ToJson(mxdjs);
+            }
+
+            return string.Empty;
+        }
+        #endregion
 
     }
 }

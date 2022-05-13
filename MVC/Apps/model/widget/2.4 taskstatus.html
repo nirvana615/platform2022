@@ -1,34 +1,21 @@
-﻿<!--任务管理-->
-<div class="layui-tab layui-tab-brief" lay-filter="demo" style="margin:0px;">
-    <ul class="layui-tab-title">
-        <li class="layui-this" style="width:29%;padding-top: 0px;">待处理任务</li>
-        <li style="width:30%;padding-top: 0px;">正在处理任务</li>
-        <li style="width:29%;padding-top: 0px;">已完成任务</li>
-    </ul>
-    <div class="layui-tab-content">
-        <div class="layui-tab-item layui-show">
-            <table class="layui-hide" id="newtasktable_Pending" lay-filter="newtasktable_Pending"></table>
-            <script type="text/html" id="barDemo_Pending">
-                <a class="layui-btn layui-bg-gray layui-btn-xs" title="查看" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Pending_detail"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
-                <a class="layui-btn layui-bg-gray layui-btn-xs" title="编辑" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Pending_edit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
-            
-            </script>
-        </div>
-        <div class="layui-tab-item">
-            <table class="layui-hide" id="newtasktable_Processing" lay-filter="newtasktable_Processing"></table>
-            <script type="text/html" id="barDemo_Processing">
-                <a class="layui-btn layui-bg-gray layui-btn-xs" title="查看" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Processing_detail"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
-                <!--<a class="layui-btn layui-bg-gray layui-btn-xs" title="编辑" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Processing_edit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>-->
+﻿<!--模型任务处理-->
+<div>
+    <div style="margin-top: 10px;margin-left:10px;">
+        <button id="btn-task-p" type="button" class="layui-btn layui-btn-orange" style="width:150px;height:50px;">待处理  <span id="task-p-count"></span></button>
+        <button id="btn-task-i" type="button" class="layui-btn" style="width:150px;height:50px;">处理中  <span id="task-i-count"></span></button>
+        <button id="btn-task-f" type="button" class="layui-btn layui-btn-primary" style="width:150px;height:50px;">已完成  <span id="task-f-count"></span></button>
+    </div>
 
-            </script>
-        </div>
-        <div class="layui-tab-item">
-            <table class="layui-hide" id="newtasktable_Finished" lay-filter="newtasktable_Finished"></table>
-            <script type="text/html" id="barDemo_Finished">
-                <a class="layui-btn layui-bg-gray layui-btn-xs" title="查看" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="Finished_detail"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
-                                                               
-            </script>
-        </div>
-        
+    <div class="layui-card-body" style="margin-top:10px;padding:0px 0px;">
+        <table id="modeltasktable" lay-filter="modeltasktable"></table>
+
+        <script type="text/html" id="table-toolbar-modeltaskp">
+            <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeltaskview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+            <a class="layui-btn layui-bg-blue layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeltaskedit"><i class="layui-icon layui-icon-edit" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+        </script>
+
+        <script type="text/html" id="table-toolbar-modeltaskv">
+            <a class="layui-btn layui-bg-gray layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeltaskview"><i class="layui-icon layui-icon-read" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a>
+        </script>
     </div>
 </div>

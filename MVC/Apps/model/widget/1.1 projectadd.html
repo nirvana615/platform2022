@@ -1,13 +1,22 @@
 ﻿<div style="overflow:hidden;">
     <!--创建项目-->
-    <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="addModelprojectinfoform">
+    <form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="addModelprojectform">
         <div class="layui-form-item">
             <label class="layui-form-label">项目名称</label>
             <div class="layui-input-block"><input type="text" name="model_xmmc_add" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">项目简称</label>
+            <div class="layui-input-block"><input type="text" name="model_xmjc_add" autocomplete="off" placeholder="请输入" class="layui-input" /></div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">行政区划</label>
-            <div class="layui-input-block"><select id="province1id" name="model_province_add" lay-verify="required"><option value="">省/市</option><option value="0">重庆市</option></select></div>
+            <div class="layui-input-block">
+                <select id="province1id" name="model_province_add" lay-verify="required">
+                    <option value="">省/市</option>
+                    <option value="0">重庆市</option>
+                </select>
+            </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label"></label>
@@ -53,11 +62,9 @@
         </div>
         <div class="layui-form-item" style="margin-top:10px">
             <div style="text-align:center">
-                <button type="submit" class="layui-btn" lay-submit="" lay-filter="addModelprojectinfosubmit" style="width:20%;border-radius:5px;">提交</button>
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="addModelprojectsubmit" style="width:20%;border-radius:5px;">提交</button>
                 <button type="reset" id="model_reset_add" class="layui-btn layui-btn-primary" style="width:100px;border-radius:5px;">重置</button>
-
             </div>
         </div>
     </form>
-
 </div>

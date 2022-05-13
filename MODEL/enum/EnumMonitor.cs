@@ -326,21 +326,6 @@ namespace MODEL
         }
 
         /// <summary>
-        /// 模型类型
-        /// </summary>
-        public enum ModelLevel
-        {
-            [RemarkAttribute("无")]
-            No = -1,
-
-            [RemarkAttribute("整体")]
-            Whole = 0,
-
-            [RemarkAttribute("局部")]
-            Part = 1
-        }
-
-        /// <summary>
         /// 测绘数据类型
         /// </summary>
         public enum SurveyDataType

@@ -1,12 +1,12 @@
-﻿<!--查看模型-->
-<form class="layui-form" style="margin-top:5px;margin-right:10px;" lay-filter="viewmodeltaskinfoform">
+﻿<!--处理模型-->
+<form class="layui-form" style="margin-top:5px;margin-right:10px;" lay-filter="processmodeltaskinfoform">
     <div class="layui-form-item">
         <div class="layui-row">
             <div class="layui-col-md6">
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">模型名称</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <input type="text" name="model_rwmc_view" autocomplete="off" readonly="readonly" class="layui-input" />
+                        <input type="text" name="model_rwmc_process" autocomplete="off" readonly="readonly" class="layui-input" />
                     </div>
                 </div>
             </div>
@@ -14,7 +14,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">模型编码</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <input type="text" name="model_rwbm_view" autocomplete="off" readonly="readonly" class="layui-input" />
+                        <input type="text" name="model_rwbm_process" autocomplete="off" readonly="readonly" class="layui-input" />
                     </div>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">采集时间</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <input type="text" name="model_yxcjsj_view" readonly="readonly" class="layui-input" />
+                        <input type="text" name="model_yxcjsj_process" readonly="readonly" class="layui-input" />
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">采集设备</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <input type="text" name="model_yxcjsb_view" readonly="readonly" class="layui-input" />
+                        <input type="text" name="model_yxcjsb_process" readonly="readonly" class="layui-input" />
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">采集人员</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <input type="text" name="model_yxcjry_view" readonly="readonly" class="layui-input" />
+                        <input type="text" name="model_yxcjry_process" readonly="readonly" class="layui-input" />
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">影像数量</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <input type="text" name="model_yxsl_view" readonly="readonly" class="layui-input" />
+                        <input type="text" name="model_yxsl_process" readonly="readonly" class="layui-input" />
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label" style="width:60px;">影像地址</label>
         <div class="layui-input-block" style="margin-left:90px;">
-            <input type="text" name="model_yxcflj_view" readonly="readonly" class="layui-input" />
+            <input type="text" name="model_yxcflj_process" readonly="readonly" class="layui-input" />
         </div>
     </div>
 
@@ -76,7 +76,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">像&ensp;控&ensp;点</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <textarea name="model_yxkzd_view" class="layui-textarea" rows="5" style="resize:none" autocomplete="off" readonly="readonly"></textarea>
+                        <textarea name="model_yxkzd_process" class="layui-textarea" rows="5" style="resize:none" autocomplete="off" readonly="readonly"></textarea>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">影像pos</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <textarea name="model_yxpos_view" class="layui-textarea" rows="5" style="resize:none" autocomplete="off" readonly="readonly"></textarea>
+                        <textarea name="model_yxpos_process" class="layui-textarea" rows="5" style="resize:none" autocomplete="off" readonly="readonly"></textarea>
                     </div>
                 </div>
             </div>
@@ -94,7 +94,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label" style="width:60px;">坐标系统</label>
         <div class="layui-input-block" style="margin-left:90px;">
-            <input type="text" name="model_kjck_view" readonly="readonly" class="layui-input" />
+            <input type="text" name="model_kjck_process" readonly="readonly" class="layui-input" />
         </div>
     </div>
 
@@ -104,7 +104,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">高程系统</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <input type="text" name="model_gcxt_view" readonly="readonly" class="layui-input" />
+                        <input type="text" name="model_gcxt_process" readonly="readonly" class="layui-input" />
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">高程异常</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <input type="text" name="model_gcyc_view" readonly="readonly" class="layui-input" />
+                        <input type="text" name="model_gcyc_process" readonly="readonly" class="layui-input" />
                     </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">模型等级</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <input type="text" name="model_mxdj_view" readonly="readonly" class="layui-input" />
+                        <input type="text" name="model_mxdj_process" readonly="readonly" class="layui-input" />
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@
                 <div class="grid-demo">
                     <label class="layui-form-label" style="width:60px;">生产状态</label>
                     <div class="layui-input-block" style="margin-left:90px;">
-                        <input type="text" name="model_rwzt_view" readonly="readonly" class="layui-input" />
+                        <input type="text" name="model_rwzt_process" readonly="readonly" class="layui-input" />
                     </div>
                 </div>
             </div>
@@ -143,14 +143,20 @@
     <div class="layui-form-item">
         <label class="layui-form-label" style="width:60px;">成&emsp;&emsp;果</label>
         <div class="layui-input-block" style="margin-left:90px;">
-            <input type="text" name="model_sxcg_view" readonly="readonly" class="layui-input" />
+            <input type="text" name="model_sxcg_process" readonly="readonly" class="layui-input" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label" style="width:60px;">描&emsp;&emsp;述</label>
         <div class="layui-input-block" style="margin-left:90px;">
-            <input type="text" name="model_rwms_view" readonly="readonly" class="layui-input">
+            <input type="text" name="model_rwms_process" readonly="readonly" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:10px">
+        <div style="text-align:center">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="processmodeltaskinfosubmit" style="width:120px;border-radius:5px;">确认处理</button>
         </div>
     </div>
 </form>

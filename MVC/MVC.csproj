@@ -525,28 +525,24 @@
     <Content Include="Apps\model\js\3.2-projectlist-modelp.js" />
     <Content Include="Apps\model\js\3.3-projectlist-modelv.js" />
     <Content Include="Apps\model\js\3.1-projectlist-modelc.js" />
-    <Content Include="Apps\model\js\4.2-projectinfo-modelp.js" />
-    <Content Include="Apps\model\js\4.3-projectinfo-modelv.js" />
-    <Content Include="Apps\model\js\4.1-projectinfo-modelc.js" />
+    <Content Include="Apps\model\js\4-projectinfo.js" />
+    <Content Include="Apps\model\js\5-taskinfo.js" />
+    <Content Include="Apps\model\js\6-taskprocess.js" />
     <Content Include="Apps\model\js\7-projectauth.js" />
-    <Content Include="Apps\model\js\5.2-taskinfo-modelp.js" />
-    <Content Include="Apps\model\js\5.3-taskinfo-modelv.js" />
-    <Content Include="Apps\model\js\5.1-taskinfo-modelc.js" />
-    <Content Include="Apps\model\js\6-taskstatus-modelp.js" />
     <Content Include="Apps\model\js\9-header.js" />
     <Content Include="Apps\model\js\8.2-util-modelp.js" />
     <Content Include="Apps\model\js\8.3-util-modelv.js" />
     <Content Include="Apps\model\js\8.1-util-modelc.js" />
+    <Content Include="Apps\model\widget\2.5 taskviewprocess.html" />
+    <Content Include="Apps\model\widget\2.3 taskedit.html" />
+    <Content Include="Apps\model\widget\2.4 taskstatus.html" />
     <Content Include="Apps\model\widget\addmodel.html" />
     <Content Include="Apps\model\widget\0-projectlist.html" />
     <Content Include="Apps\model\widget\1.1 projectadd.html" />
     <Content Include="Apps\model\widget\1.2 projectview.html" />
     <Content Include="Apps\model\widget\1.3 projectedit.html" />
     <Content Include="Apps\model\widget\2.1 taskadd.html" />
-    <Content Include="Apps\model\widget\2.5 taskview-modelp.html" />
     <Content Include="Apps\model\widget\2.2 taskview.html" />
-    <Content Include="Apps\model\widget\2.4 taskstatus.html" />
-    <Content Include="Apps\model\widget\2.3 taskedit.html" />
     <Content Include="Apps\model\widget\3.0 projectauth.html" />
     <Content Include="Apps\monitor\js\01-monitorconfig.js" />
     <Content Include="Apps\monitor\js\02-monitorpara.js" />
@@ -651,8 +647,8 @@
     <Content Include="Apps\uav\widget\2.0-uavroutetype.html" />
     <Content Include="Apps\uav\widget\1.0-uavproject-add.html" />
     <Content Include="Resources\img\map\map.png" />
-    <Content Include="Resources\img\map\model.png" />
     <Content Include="Resources\img\map\project.png" />
+    <Content Include="Resources\img\map\model.png" />
     <Content Include="Resources\img\mark\img_mark_A2.png" />
     <Content Include="Resources\img\mark\img_mark_A1.png" />
     <Content Include="Resources\img\mark\img_mark_l4.png" />
@@ -1355,6 +1351,8 @@
     <Content Include="Scripts\openseadragon\LICENSE.txt" />
     <Content Include="Scripts\openseadragon\openseadragon.js" />
     <Content Include="Scripts\openseadragon\openseadragon.min.js" />
+    <Content Include="Scripts\three.r119.min.js" />
+    <Content Include="Scripts\vanta.birds.min.js" />
     <Content Include="Scripts\viewer.min.css" />
     <Content Include="Scripts\viewer.min.js" />
     <Content Include="Web.config">
@@ -1395,10 +1393,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Data\GeoModel\" />
-    <Folder Include="Data\SurDOMDSM\" />
-    <Folder Include="Data\SurModel\" />
-    <Folder Include="Data\SurPointCloud\" />
+    <Folder Include="Data\" />
     <Folder Include="Log\" />
     <Folder Include="Models\" />
   </ItemGroup>

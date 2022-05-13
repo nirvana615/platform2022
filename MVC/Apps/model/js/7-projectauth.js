@@ -1,5 +1,5 @@
-﻿var usermodelprojects = [];//用户全部模型项目
-var userid = null;//授权用户
+﻿var userid = null;//授权用户
+var usermodelprojects = [];//用户全部模型项目
 
 //模型项目授权
 function ModelProjectAuth() {
@@ -22,11 +22,23 @@ function ModelProjectAuth() {
             , success: function (layero) {
                 layer.setTop(layero);
 
+                if (modelprojectlistarea.length > 0) {
+                    for (var i in modelprojectlistarea) {
+                        for (var j in modelprojectlistarea[i].children) {
+                            var modelproject = new Object;
+                            modelproject.id = modelprojectlistarea[i].children[j].data.Id;
+                            modelproject.title = modelprojectlistarea[i].children[j].data.XMSJ + " " + modelprojectlistarea[i].children[j].data.XMMC;
+                            modelproject.checked = false;
+                            usermodelprojects.push(modelproject);
+                        }
+                    }
+                }
+
                 //渲染模型项目
                 tree.render({
                     elem: '#modelprojectid'
                     , id: 'modelprojecttreeid'
-                    , data: []
+                    , data: usermodelprojects
                     , accordion: true
                     , showCheckbox: true
                     , showLine: false
@@ -49,7 +61,6 @@ function ModelProjectAuth() {
                 });
 
                 GetAllUserExceptSelf();
-                GetUserModelProjects();
 
                 form.render();
                 form.render('select');
@@ -91,12 +102,10 @@ function ModelProjectAuth() {
                                     data.field.modelprojectids = modelprojectids;
                                 }
                             }
-                            //Loading
-                            var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
                             $.ajax({
                                 url: servicesurl + "/api/ModelProject/UpdateMapUserModelProject", type: "put", data: data.field,
                                 success: function (result) {
-                                    layer.close(loadinglayerindex);
                                     layer.msg("授权成功！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                                 }, datatype: "json"
                             });
@@ -115,12 +124,9 @@ function ModelProjectAuth() {
 
 //获取全部用户信息（除自己）
 function GetAllUserExceptSelf() {
-    //Loading
-    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
         url: servicesurl + "/api/User/GetUserExceptSelf", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
-            layer.close(loadinglayerindex);
             if (data == "") {
                 layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 userid = null;
@@ -148,12 +154,9 @@ function GetAllUserExceptSelf() {
                     }
                     else {
                         userid = data.value;
-                        //Loading
-                        var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                         $.ajax({
                             url: servicesurl + "/api/ModelProject/GetMapUserModelProject", type: "get", data: { "id": data.value },
                             success: function (data) {
-                                layer.close(loadinglayerindex);
                                 if (data == "") {
                                     for (var i in usermodelprojects) {
                                         usermodelprojects[i].checked = false;
@@ -184,38 +187,6 @@ function GetAllUserExceptSelf() {
                     }
                 });
             }
-        }, datatype: "json"
-    });
-};
-
-//获取用户全部模型项目
-function GetUserModelProjects() {
-    //Loading
-    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
-    $.ajax({
-        url: servicesurl + "/api/ModelProject/GetUserModelProjects", type: "get", data: { "cookie": document.cookie },
-        success: function (data) {
-            layer.close(loadinglayerindex);
-            usermodelprojects = [];
-
-            var result = JSON.parse(data);
-            if (result.code == 1) {
-                var modelprojectdatas = JSON.parse(result.data);
-                for (var i in modelprojectdatas) {
-                    var modelproject = new Object;
-                    modelproject.id = modelprojectdatas[i].Id;
-                    modelproject.title = modelprojectdatas[i].XMSJ + " " + modelprojectdatas[i].XMMC;
-                    modelproject.checked = false;
-                    usermodelprojects.push(modelproject);
-                }
-            }
-            else {
-                layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-            }
-
-            tree.reload('modelprojecttreeid', {
-                data: usermodelprojects
-            });
         }, datatype: "json"
     });
 };
