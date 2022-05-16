@@ -52,7 +52,7 @@ function Markwidget(id) {
         , title: ['标绘', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
         , area: ['350px', '850px']
         , shade: 0
-        , offset: ['85px', '1350px']
+        , offset: ['66px', '77%']
         , closeBtn: 1
         , moveOut: true
         , maxmin: true

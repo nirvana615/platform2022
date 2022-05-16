@@ -18,7 +18,7 @@ var projectindex=layer.open({
         layer.setTop(layero);
         GetUserProjects();
     }
-    , btn: ['新增','列表']
+    , btn: ['新增']
     , yes: function (index, layero) {
         //新增项目
         projiectAdd();
