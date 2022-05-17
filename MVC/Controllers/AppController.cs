@@ -132,7 +132,7 @@ namespace MVC.Controllers
         }
 
         /// <summary>
-        /// 影像对比分析系统
+        /// 影像对比分析系统(END)
         /// </summary>
         /// <returns></returns>
         [AuthorityFilter]
@@ -141,6 +141,18 @@ namespace MVC.Controllers
             List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
             ViewBag.User = userinfo[1];
             logger.Info("【" + ViewBag.User + "】登录影像分析系统");
+            return View();
+        }
+        /// <summary>
+        /// 无人机巡查系统
+        /// </summary>
+        /// <returns></returns>
+        [AuthorityFilter]
+        public ActionResult UavFind()
+        {
+            List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
+            ViewBag.User = userinfo[1];
+            logger.Info("【" + ViewBag.User + "】登录无人机巡查系统");
             return View();
         }
 

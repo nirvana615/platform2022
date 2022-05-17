@@ -246,6 +246,7 @@
     <Compile Include="data\uav\waypoint\photogrammetry.cs" />
     <Compile Include="data\uav\waypoint\WaypointInfo.cs" />
     <Compile Include="data\uav\waypoint\xyz.cs" />
+    <Compile Include="enum\EnumUavFind.cs" />
     <Compile Include="enum\EnumModel.cs" />
     <Compile Include="enum\EnumIMG.cs" />
     <Compile Include="enum\EnumMonitor.cs" />
@@ -257,6 +258,7 @@
     <Compile Include="parse\ParseMonitorHelper.cs" />
     <Compile Include="parse\ParsePointCloudHelper.cs" />
     <Compile Include="parse\ParseRockHelper.cs" />
+    <Compile Include="parse\ParseUavFindHelper.cs" />
     <Compile Include="parse\ParseUavHelper.cs" />
     <Compile Include="data\uavmap\MapProjectRoute.cs" />
     <Compile Include="data\uavmap\MapUserUavProject.cs" />
@@ -305,6 +307,10 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\uavfindmap\" />
+    <Folder Include="data\uavfind\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

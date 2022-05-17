@@ -58,7 +58,10 @@ namespace MODEL
             Image = 5,
 
             [RemarkAttribute("点云对比分析系统")]
-            Pointcloud = 6
+            Pointcloud = 6,
+
+            [RemarkAttribute("无人机巡查系统")]
+            UavFind = 7
         }
 
 

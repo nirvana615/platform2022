@@ -1391,8 +1391,11 @@
     <Content Include="Scripts\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui\font\iconfont.woff" />
     <Content Include="Scripts\layui\font\iconfont.woff2" />
+    <Content Include="Views\App\UavFind.cshtml" />
+    <Content Include="Views\Platform\LoginUavFind.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Apps\uavfind\" />
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Log\" />
