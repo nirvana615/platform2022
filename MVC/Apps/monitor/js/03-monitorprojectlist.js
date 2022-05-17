@@ -264,7 +264,8 @@ function ProjectNodeClick(obj) {
 
                 //TODO请求项目相关信息（图层、监测点）
                 GetProjectMonitor(currentprojectid);
-
+                //预加载项目设备统计信息
+                GetPreProjectDatas(currentprojectid, 0);
 
                 //监听清除当前项目操作
                 $(() => {
@@ -281,8 +282,6 @@ function ProjectNodeClick(obj) {
                         }
                     });
                 });
-
-
                 //获取entity
                 var projectentity = null;
                 var projectentitylabel = null;

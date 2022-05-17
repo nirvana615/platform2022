@@ -98,6 +98,8 @@
     <Compile Include="data\monitormap\MapMonitorThreshold.cs" />
     <Compile Include="data\monitormap\MapUserMonitorProject.cs" />
     <Compile Include="data\monitor\device\DeviceCountDay.cs" />
+    <Compile Include="data\monitor\device\DeviceOnlineResult.cs" />
+    <Compile Include="data\monitor\device\MonitorDeviceMap.cs" />
     <Compile Include="data\monitor\device\DeviceCountResult.cs" />
     <Compile Include="data\monitor\data\GNSSZheXian.cs" />
     <Compile Include="data\monitor\data\Interval.cs" />

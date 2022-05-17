@@ -651,6 +651,434 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
 
+        /// <summary>
+        /// 获取设备预设时间范围全部日期在线设备
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="predatetime"></param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetProjectDevicebyPreDateTime(int id, string predatetime, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                string starttime = string.Empty;//开始时间（含）
+                string endtime = string.Empty;//结束时间（含）
+                string datetime = GetDateTimebyPre(Convert.ToInt16(predatetime), ref starttime, ref endtime);//时间范围
+                if (!string.IsNullOrEmpty(datetime))
+                {
+                    try
+                    {
+                        DeviceOnlineResult deviceOnlineResult = GetDeviceOnlineResult(id, starttime, endtime, datetime, userbsms);
+
+                        if (deviceOnlineResult != null)
+                        {
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(deviceOnlineResult)));
+                        }
+                        else
+                        {
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无数据！", string.Empty));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "出现异常：" + ex.Message, string.Empty));
+                    }
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "获取时间范围为空！", string.Empty));
+                }
+            }
+            else
+            {
+                //验权失败
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, COM.CookieHelper.CookieResult.SuccessCookie.GetRemark(), string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// 返回设备自定义时间范围全部日期在线设备
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <param name="customdatetime"></param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetProjectDevicebyCustomDateTime(int id, string customdatetime, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                try
+                {
+                    //获取时间范围
+                    string[] timerange = customdatetime.Replace(" - ", ";").Split(new char[] { ';' });
+                    string starttime = timerange[0] + " 00:00:00";//开始时间（含）
+                    string endtime = timerange[1] + " 59:59:59";//结束时间（含）
+                    string datetime = string.Format("gcsj>='{0}' AND gcsj<'{1}'", starttime, endtime);
+                    DeviceOnlineResult deviceOnlineResult = GetDeviceOnlineResult(id, timerange[0], timerange[1], datetime, userbsms);
+
+                    if (deviceOnlineResult != null)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(deviceOnlineResult)));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "数据为空！", string.Empty));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "出现异常：" + ex.Message, string.Empty));
+                }
+            }
+            else
+            {
+                //验权失败
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, COM.CookieHelper.CookieResult.SuccessCookie.GetRemark(), string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// 返回指定时间段监测设备在线信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private DeviceOnlineResult GetDeviceOnlineResult(int id, string starttime, string endtime, string datetime, string userbsms)
+        {
+            DeviceOnlineResult deviceOnlineResult = new DeviceOnlineResult();
+            deviceOnlineResult.DateTimes = COM.DateHelper.GetAllDays(starttime, endtime);
+
+            List<MonitorDeviceMap> MonitorDeviceMaps = new List<MonitorDeviceMap>();
+            List<GNSS> GNSSDatas = new List<GNSS>();
+            List<LF> LFDatas = new List<LF>();
+            List<QJ> QJDatas = new List<QJ>();
+            List<YL> YLDatas = new List<YL>();
+            List<RAIN> RAINDatas = new List<RAIN>();
+            List<SBWY> SBWYDatas = new List<SBWY>();
+            List<WATER> WATERDatas = new List<WATER>();
+            int monitorcount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT * FROM monitor_project  WHERE id={0}  AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
+            if (monitorcount != 0)
+            {
+                MonitorProject monitorproject = ParseMonitorHelper.ParseMonitorProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_project  WHERE id={0}  AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (monitorproject != null)
+                {
+                    //GNSS
+                    string GNSSs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_gnss WHERE id in(SELECT min(id) FROM monitor_data_gnss WHERE bsm={0} AND {1} GROUP BY LEFT(gcsj,10),code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM), datetime));
+                    if (!string.IsNullOrEmpty(GNSSs))
+                    {
+                        string[] datarows = StringHelper.String2Array(GNSSs);
+                        for (int j = 0; j < datarows.Length; j++)
+                        {
+                            GNSS GNSSData = ParseMonitorHelper.ParseGNSS(datarows[j]);
+                            GNSSDatas.Add(GNSSData);
+                        }
+                        if (GNSSDatas.Count > 0)
+                        {
+                            deviceOnlineResult.GNSSDatas = GNSSDatas;
+                        }
+
+                    }
+                    //裂缝
+                    string LFs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_lf WHERE id in(SELECT min(id) FROM monitor_data_lf WHERE bsm={0} AND {1} GROUP BY LEFT(gcsj,10),code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM), datetime));
+                    if (!string.IsNullOrEmpty(LFs))
+                    {
+                        string[] datarows = StringHelper.String2Array(LFs);
+                        for (int j = 0; j < datarows.Length; j++)
+                        {
+                            LF LFData = ParseMonitorHelper.ParseLF(datarows[j]);
+                            LFDatas.Add(LFData);
+                        }
+                        if (LFDatas.Count > 0)
+                        {
+                            deviceOnlineResult.LFDatas = LFDatas;
+                        }
+
+                    }
+                    //倾角
+                    string QJs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_qj WHERE id in(SELECT min(id) FROM monitor_data_qj WHERE bsm={0} AND {1} GROUP BY LEFT(gcsj,10),code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM), datetime));
+                    if (!string.IsNullOrEmpty(QJs))
+                    {
+                        string[] datarows = StringHelper.String2Array(QJs);
+                        for (int j = 0; j < datarows.Length; j++)
+                        {
+                            QJ QJData = ParseMonitorHelper.ParseQJ(datarows[j]);
+                            QJDatas.Add(QJData);
+                        }
+                        if (QJDatas.Count > 0)
+                        {
+                            deviceOnlineResult.QJDatas = QJDatas;
+                        }
+
+                    }
+                    //应力
+                    string YLs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_yl WHERE id in(SELECT min(id) FROM monitor_data_yl WHERE bsm={0} AND {1} GROUP BY LEFT(gcsj,10),code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM), datetime));
+                    if (!string.IsNullOrEmpty(YLs))
+                    {
+                        string[] datarows = StringHelper.String2Array(YLs);
+                        for (int j = 0; j < datarows.Length; j++)
+                        {
+                            YL YLData = ParseMonitorHelper.ParseYL(datarows[j]);
+                            YLDatas.Add(YLData);
+                        }
+                        if (YLDatas.Count > 0)
+                        {
+                            deviceOnlineResult.YLDatas = YLDatas;
+                        }
+
+                    }
+                    //雨量
+                    string RAINs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_rain WHERE id in(SELECT min(id) FROM monitor_data_rain WHERE bsm={0} AND {1} GROUP BY LEFT(gcsj,10),code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM), datetime));
+                    if (!string.IsNullOrEmpty(RAINs))
+                    {
+                        string[] datarows = StringHelper.String2Array(RAINs);
+                        for (int j = 0; j < datarows.Length; j++)
+                        {
+                            RAIN RAINData = ParseMonitorHelper.ParseRAIN(datarows[j]);
+                            RAINDatas.Add(RAINData);
+                        }
+                        if (RAINDatas.Count > 0)
+                        {
+                            deviceOnlineResult.RAINDatas = RAINDatas;
+                        }
+
+                    }
+                    //深部位移
+                    string SBWYs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_sbwy WHERE id in(SELECT min(id) FROM monitor_data_sbwy WHERE bsm={0} AND {1} GROUP BY LEFT(gcsj,10),code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM), datetime));
+                    if (!string.IsNullOrEmpty(SBWYs))
+                    {
+                        string[] datarows = StringHelper.String2Array(SBWYs);
+                        for (int j = 0; j < datarows.Length; j++)
+                        {
+                            SBWY SBWYData = ParseMonitorHelper.ParseSBWY(datarows[j]);
+                            SBWYDatas.Add(SBWYData);
+                        }
+                        if (SBWYDatas.Count > 0)
+                        {
+                            deviceOnlineResult.SBWYDatas = SBWYDatas;
+                        }
+
+                    }
+                    //水位
+                    string WATERs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_water WHERE id in(SELECT min(id) FROM monitor_data_water WHERE bsm={0} AND {1} GROUP BY LEFT(gcsj,10),code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM), datetime));
+                    if (!string.IsNullOrEmpty(WATERs))
+                    {
+                        string[] datarows = StringHelper.String2Array(WATERs);
+                        for (int j = 0; j < datarows.Length; j++)
+                        {
+                            WATER WATERData = ParseMonitorHelper.ParseWATER(datarows[j]);
+                            WATERDatas.Add(WATERData);
+                        }
+                        if (WATERDatas.Count > 0)
+                        {
+                            deviceOnlineResult.WATERDatas = WATERDatas;
+                        }
+
+                    }
+
+                }
+
+            }
+            return deviceOnlineResult;
+        }
+
+        /// <summary>
+        /// 返回离线设备连续离线天数
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <param name="customdatetime"></param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetProjectDeviceDayCounts(int id, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                DeviceOnlineResult deviceOnlineResult = new DeviceOnlineResult();
+                List<MonitorDeviceMap> MonitorDeviceMaps = new List<MonitorDeviceMap>();
+                List<GNSS> GNSSDatas = new List<GNSS>();
+                List<LF> LFDatas = new List<LF>();
+                List<QJ> QJDatas = new List<QJ>();
+                List<YL> YLDatas = new List<YL>();
+                List<RAIN> RAINDatas = new List<RAIN>();
+                List<SBWY> SBWYDatas = new List<SBWY>();
+                List<WATER> WATERDatas = new List<WATER>();
+                int monitorcount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT * FROM monitor_project  WHERE id={0}  AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
+                if (monitorcount != 0)
+                {
+
+                    MonitorProject monitorproject = ParseMonitorHelper.ParseMonitorProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_project  WHERE id={0}  AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                    if (monitorproject != null)
+                    {
+                        try
+                        {
+                            //GNSS
+                            string GNSSs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_gnss WHERE id in(SELECT max(id) FROM monitor_data_gnss WHERE GROUP BY code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM)));
+                            if (!string.IsNullOrEmpty(GNSSs))
+                            {
+                                string[] datarows = StringHelper.String2Array(GNSSs);
+                                for (int j = 0; j < datarows.Length; j++)
+                                {
+                                    GNSS GNSSData = ParseMonitorHelper.ParseGNSS(datarows[j]);
+                                    GNSSDatas.Add(GNSSData);
+                                }
+                                if (GNSSDatas.Count > 0)
+                                {
+                                    deviceOnlineResult.GNSSDatas = GNSSDatas;
+                                }
+
+                            }
+                            //裂缝
+                            string LFs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_lf WHERE id in(SELECT max(id) FROM monitor_data_lf WHERE bsm={0} GROUP BY code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM)));
+                            if (!string.IsNullOrEmpty(LFs))
+                            {
+                                string[] datarows = StringHelper.String2Array(LFs);
+                                for (int j = 0; j < datarows.Length; j++)
+                                {
+                                    LF LFData = ParseMonitorHelper.ParseLF(datarows[j]);
+                                    LFDatas.Add(LFData);
+                                }
+                                if (LFDatas.Count > 0)
+                                {
+                                    deviceOnlineResult.LFDatas = LFDatas;
+                                }
+
+                            }
+                            //倾角
+                            string QJs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_qj WHERE id in(SELECT max(id) FROM monitor_data_qj WHERE bsm={0} GROUP BY code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM)));
+                            if (!string.IsNullOrEmpty(QJs))
+                            {
+                                string[] datarows = StringHelper.String2Array(QJs);
+                                for (int j = 0; j < datarows.Length; j++)
+                                {
+                                    QJ QJData = ParseMonitorHelper.ParseQJ(datarows[j]);
+                                    QJDatas.Add(QJData);
+                                }
+                                if (QJDatas.Count > 0)
+                                {
+                                    deviceOnlineResult.QJDatas = QJDatas;
+                                }
+
+                            }
+                            //应力
+                            string YLs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_yl WHERE id in(SELECT max(id) FROM monitor_data_yl WHERE bsm={0} GROUP BY code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM)));
+                            if (!string.IsNullOrEmpty(YLs))
+                            {
+                                string[] datarows = StringHelper.String2Array(YLs);
+                                for (int j = 0; j < datarows.Length; j++)
+                                {
+                                    YL YLData = ParseMonitorHelper.ParseYL(datarows[j]);
+                                    YLDatas.Add(YLData);
+                                }
+                                if (YLDatas.Count > 0)
+                                {
+                                    deviceOnlineResult.YLDatas = YLDatas;
+                                }
+
+                            }
+                            //雨量
+                            string RAINs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_rain WHERE id in(SELECT max(id) FROM monitor_data_rain WHERE bsm={0} GROUP BY code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM)));
+                            if (!string.IsNullOrEmpty(RAINs))
+                            {
+                                string[] datarows = StringHelper.String2Array(RAINs);
+                                for (int j = 0; j < datarows.Length; j++)
+                                {
+                                    RAIN RAINData = ParseMonitorHelper.ParseRAIN(datarows[j]);
+                                    RAINDatas.Add(RAINData);
+                                }
+                                if (RAINDatas.Count > 0)
+                                {
+                                    deviceOnlineResult.RAINDatas = RAINDatas;
+                                }
+
+                            }
+                            //深部位移
+                            string SBWYs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_sbwy WHERE id in(SELECT max(id) FROM monitor_data_sbwy WHERE bsm={0} GROUP BY code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM)));
+                            if (!string.IsNullOrEmpty(SBWYs))
+                            {
+                                string[] datarows = StringHelper.String2Array(SBWYs);
+                                for (int j = 0; j < datarows.Length; j++)
+                                {
+                                    SBWY SBWYData = ParseMonitorHelper.ParseSBWY(datarows[j]);
+                                    SBWYDatas.Add(SBWYData);
+                                }
+                                if (SBWYDatas.Count > 0)
+                                {
+                                    deviceOnlineResult.SBWYDatas = SBWYDatas;
+                                }
+
+                            }
+                            //水位
+                            string WATERs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_water WHERE id in(SELECT max(id) FROM monitor_data_water WHERE bsm={0} GROUP BY code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM)));
+                            if (!string.IsNullOrEmpty(WATERs))
+                            {
+                                string[] datarows = StringHelper.String2Array(WATERs);
+                                for (int j = 0; j < datarows.Length; j++)
+                                {
+                                    WATER WATERData = ParseMonitorHelper.ParseWATER(datarows[j]);
+                                    WATERDatas.Add(WATERData);
+                                }
+                                if (WATERDatas.Count > 0)
+                                {
+                                    deviceOnlineResult.WATERDatas = WATERDatas;
+                                }
+
+                            }
+
+                            //获取monitor jcbh与device code映射
+                            string monitordevice = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT a.jcdbh,c.code,c.sblx FROM monitor_monitor  a LEFT JOIN monitor_map_monitor_device b ON a.id=b.monitorid LEFT JOIN monitor_device c ON b.deviceid=c.id  WHERE a.bsm={0}  AND a.ztm={1} ORDER BY a.jcdbh", SQLHelper.UpdateString(monitorproject.BSM), (int)MODEL.Enum.State.InUse));
+                            if (!string.IsNullOrEmpty(monitordevice))
+                            {
+                                string[] datarows = StringHelper.String2Array(monitordevice);
+                                for (int i = 0; i < datarows.Length; i++)
+                                {
+                                    MonitorDeviceMap monitordevicemap = new MonitorDeviceMap();
+                                    string[] row = datarows[i].Split(new char[] { COM.ConstHelper.columnSplit });
+                                    monitordevicemap.JCDBH = row[0].ToString();
+                                    monitordevicemap.CODE = row[1].ToString();
+                                    MonitorDeviceMaps.Add(monitordevicemap);
+                                }
+                                if (MonitorDeviceMaps.Count > 0)
+                                {
+                                    deviceOnlineResult.MonitorDeviceMaps = MonitorDeviceMaps;
+                                }
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "出现异常：" + ex.Message, string.Empty));
+                        }
+                    }
+                }
+                if (deviceOnlineResult != null)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功", JsonHelper.ToJson(deviceOnlineResult)));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无数据！", string.Empty));
+                }
+            }
+            else
+            {
+                //验权失败
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, COM.CookieHelper.CookieResult.SuccessCookie.GetRemark(), string.Empty));
+            }
+        }
 
         /// <summary>
         /// 返回设备预设时间范围全部日期数据采集数量
@@ -745,8 +1173,6 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, COM.CookieHelper.CookieResult.SuccessCookie.GetRemark(), string.Empty));
             }
         }
-
-
 
         /// <summary>
         /// 获取监测指定时间段每天（含由数据和无数据）数据采集数量
@@ -1033,7 +1459,6 @@ namespace SERVICE.Controllers
 
             return string.Format("(gcsj>='{0}' AND gcsj<'{1}')", starttime, endtime);
         }
-
 
 
     }
