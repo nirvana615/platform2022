@@ -101,7 +101,7 @@ namespace MVC
                     return LoginResult.NoUser;//用户不存在
                 }
 
-                usercount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE username={0} AND password={1} AND ztm={2}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(MD5Encrypt.Encrypt(password)), (int)MODEL.Enum.State.InUse));
+                usercount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE username={0} AND password={1} AND ztm={2}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(MD5Encrypt.Encrypt2(password)), (int)MODEL.Enum.State.InUse));
                 if (usercount < 1)
                 {
                     return LoginResult.ErrorPassword;//密码错误
@@ -113,7 +113,7 @@ namespace MVC
                 #endregion
 
                 #region 验证成功
-                user = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE username={0} AND password={1} AND ztm={2}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(MD5Encrypt.Encrypt(password)), (int)MODEL.Enum.State.InUse)));
+                user = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE username={0} AND password={1} AND ztm={2}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(MD5Encrypt.Encrypt2(password)), (int)MODEL.Enum.State.InUse)));
                 if (user == null)
                 {
                     return LoginResult.NoUser;//获取用户失败

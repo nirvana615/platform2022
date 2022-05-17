@@ -672,6 +672,7 @@
     <Content Include="Resources\img\mark\img_mark_P7.png" />
     <Content Include="Resources\img\mark\img_mark_P8.png" />
     <Content Include="Resources\img\mark\img_mark_P9.png" />
+    <Content Include="Resources\img\model\modelprojecticon.png" />
     <Content Include="Resources\img\survey\area.png" />
     <Content Include="Resources\img\survey\areabiaozhu.png" />
     <Content Include="Resources\img\survey\azimuth.png" />

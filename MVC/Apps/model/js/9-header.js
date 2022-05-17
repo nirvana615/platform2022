@@ -122,56 +122,56 @@ $("#userbtn").on("click", function () {
     }
 });
 
-//消息
-$("#noticebtn").on("click", function () {
-    if (modelheadernoticelayerindex == null) {
-        modelheadernoticelayerindex = layer.open({
-            type: 1
-            , title: ['消息', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-            , area: ['500px', '500px']
-            , shade: 0
-            , offset: 'auto'
-            , closeBtn: 1
-            , maxmin: true
-            , moveOut: true
-            , content: '<p>敬请期待……</p>'
-            , zIndex: layer.zIndex
-            , success: function (layero) {
-                layer.setTop(layero);
-                //TODO
-            }
-            , end: function () {
-                modelheadernoticelayerindex = null;
-            }
-        });
-    } else {
-        layer.setTop(modelheadernoticelayerindex);
-    }
-});
+////消息
+//$("#noticebtn").on("click", function () {
+//    if (modelheadernoticelayerindex == null) {
+//        modelheadernoticelayerindex = layer.open({
+//            type: 1
+//            , title: ['消息', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+//            , area: ['500px', '500px']
+//            , shade: 0
+//            , offset: 'auto'
+//            , closeBtn: 1
+//            , maxmin: true
+//            , moveOut: true
+//            , content: '<p>敬请期待……</p>'
+//            , zIndex: layer.zIndex
+//            , success: function (layero) {
+//                layer.setTop(layero);
+//                //TODO
+//            }
+//            , end: function () {
+//                modelheadernoticelayerindex = null;
+//            }
+//        });
+//    } else {
+//        layer.setTop(modelheadernoticelayerindex);
+//    }
+//});
 
-//设置
-$("#setbtn").on("click", function () {
-    if (modelheadersetlayerindex == null) {
-        modelheadersetlayerindex = layer.open({
-            type: 1
-            , title: ['设置', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-            , area: ['500px', '500px']
-            , shade: 0
-            , offset: 'auto'
-            , closeBtn: 1
-            , maxmin: true
-            , moveOut: true
-            , content: '<p>敬请期待……</p>'
-            , zIndex: layer.zIndex
-            , success: function (layero) {
-                layer.setTop(layero);
-                //TODO
-            }
-            , end: function () {
-                modelheadersetlayerindex = null;
-            }
-        });
-    } else {
-        layer.setTop(modelheadersetlayerindex);
-    }
-});
+////设置
+//$("#setbtn").on("click", function () {
+//    if (modelheadersetlayerindex == null) {
+//        modelheadersetlayerindex = layer.open({
+//            type: 1
+//            , title: ['设置', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+//            , area: ['500px', '500px']
+//            , shade: 0
+//            , offset: 'auto'
+//            , closeBtn: 1
+//            , maxmin: true
+//            , moveOut: true
+//            , content: '<p>敬请期待……</p>'
+//            , zIndex: layer.zIndex
+//            , success: function (layero) {
+//                layer.setTop(layero);
+//                //TODO
+//            }
+//            , end: function () {
+//                modelheadersetlayerindex = null;
+//            }
+//        });
+//    } else {
+//        layer.setTop(modelheadersetlayerindex);
+//    }
+//});

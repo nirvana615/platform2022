@@ -375,7 +375,7 @@ namespace SERVICE.Controllers
                 string value = "("
                     + SQLHelper.UpdateString(username) + ","
                     + SQLHelper.UpdateString(aliasname) + ","
-                    + SQLHelper.UpdateString(MD5Encrypt.Encrypt(password)) + ","
+                    + SQLHelper.UpdateString(MD5Encrypt.Encrypt2(password)) + ","
                     + SQLHelper.UpdateString(Guid.NewGuid().ToString("D")) + ","
                     + SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + ","
                     + SQLHelper.UpdateString("") + ","
@@ -425,7 +425,7 @@ namespace SERVICE.Controllers
                 }
                 else
                 {
-                    count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET username={0},aliasname={1},password={2},ssdw={3},ssqy={4},bz={5} WHERE id={6} AND ztm={7}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(aliasname), SQLHelper.UpdateString(MD5Encrypt.Encrypt(password)), SQLHelper.UpdateString(ssdw), SQLHelper.UpdateString(ssqy), SQLHelper.UpdateString(bz), id, (int)MODEL.Enum.State.InUse));
+                    count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET username={0},aliasname={1},password={2},ssdw={3},ssqy={4},bz={5} WHERE id={6} AND ztm={7}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(aliasname), SQLHelper.UpdateString(MD5Encrypt.Encrypt2(password)), SQLHelper.UpdateString(ssdw), SQLHelper.UpdateString(ssqy), SQLHelper.UpdateString(bz), id, (int)MODEL.Enum.State.InUse));
                 }
 
                 if (count == 1)
@@ -468,7 +468,7 @@ namespace SERVICE.Controllers
                     }
                     else
                     {
-                        int count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET username={0},password={1} WHERE id={2}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(MD5Encrypt.Encrypt(newpassword1)), user.Id));
+                        int count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET username={0},password={1} WHERE id={2}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(MD5Encrypt.Encrypt2(newpassword1)), user.Id));
                         if (count == 1)
                         {
                             return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", string.Empty));

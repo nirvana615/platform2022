@@ -1,8 +1,6 @@
 ﻿//新建模型项目
 function AddModelProject() {
     if (modelprojectinfoaddlayerindex == null) {
-        CloseAllLayer();//关闭所有图层
-
         modelprojectinfoaddlayerindex = layer.open({
             type: 1
             , title: ['新建项目', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
@@ -201,7 +199,7 @@ function AddModelProject() {
                                     id: "PROJECTCENTER_" + modelproject.Id,
                                     position: Cesium.Cartesian3.fromDegrees(modelproject.ZXJD, modelproject.ZXWD),
                                     billboard: {
-                                        image: '../../Resources/img/mark/p19.png',
+                                        image: '../../Resources/img/model/modelprojecticon.png',
                                         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                                         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                         width: 40,
@@ -555,7 +553,7 @@ function mapPosition(type) {
                         name: "temp_modelproject_position",
                         position: position,
                         billboard: {
-                            image: '../../Resources/img/mark/p19.png',
+                            image: '../../Resources/img/model/modelprojecticon.png',
                             verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             width: 40,
@@ -599,6 +597,118 @@ function ClearMapPoint() {
     }
 };
 
+
+//项目搜索
+function ProjectSearch() {
+    //搜索
+    $('#projectsearch').click(function () {
+        var filter = $('#projectfiltersearch').val();
+        if (filter == "") {
+            layer.msg("请输入搜索关键字！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            return;
+        }
+        var re = new RegExp("^[ ]+$");
+        if (re.test(filter)) {
+            layer.msg("请输入有效搜索关键字！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            return;
+        }
+        if (modelprojectlistarea.length == 0 && modelprojectlistyear.length == 0) {
+            layer.msg("无项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        }
+
+        for (var i in modelprojectlistarea) {
+            if (modelprojectlistarea[i].title.indexOf(filter) != -1) {
+                if (searchresult.indexOf(modelprojectlistarea[i].title) == -1) {
+                    searchresult.push(modelprojectlistarea[i].title);
+                }
+            }
+
+            for (var j in modelprojectlistarea[i].children) {
+                if (modelprojectlistarea[i].children[j].title.indexOf(filter) != -1) {
+                    if (searchresult.indexOf(modelprojectlistarea[i].children[j].title) == -1) {
+                        searchresult.push(modelprojectlistarea[i].children[j].title);
+                    }
+
+                    if (searchresult.indexOf(modelprojectlistarea[i].title) == -1) {
+                        searchresult.push(modelprojectlistarea[i].title);
+                    }
+                }
+
+                if (modelprojectlistarea[i].children[j].children != undefined && modelprojectlistarea[i].children[j].children.length > 0) {
+                    for (var k in modelprojectlistarea[i].children[j].children) {
+                        if (modelprojectlistarea[i].children[j].children[k].title.indexOf(filter) != -1) {
+                            if (searchresult.indexOf(modelprojectlistarea[i].children[j].children[k].title) == -1) {
+                                searchresult.push(modelprojectlistarea[i].children[j].children[k].title);
+                            }
+
+                            if (searchresult.indexOf(modelprojectlistarea[i].children[j].title) == -1) {
+                                searchresult.push(modelprojectlistarea[i].children[j].title);
+                            }
+
+                            if (searchresult.indexOf(modelprojectlistarea[i].title) == -1) {
+                                searchresult.push(modelprojectlistarea[i].title);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (var i in modelprojectlistyear) {
+            if (modelprojectlistyear[i].title.indexOf(filter) != -1) {
+                if (searchresult.indexOf(modelprojectlistyear[i].title) == -1) {
+                    searchresult.push(modelprojectlistyear[i].title);
+                }
+            }
+
+            for (var j in modelprojectlistyear[i].children) {
+                if (modelprojectlistyear[i].children[j].title.indexOf(filter) != -1) {
+                    if (searchresult.indexOf(modelprojectlistyear[i].children[j].title) == -1) {
+                        searchresult.push(modelprojectlistyear[i].children[j].title);
+                    }
+
+                    if (searchresult.indexOf(modelprojectlistyear[i].title) == -1) {
+                        searchresult.push(modelprojectlistyear[i].title);
+                    }
+                }
+
+                if (modelprojectlistyear[i].children[j].children != undefined && modelprojectlistyear[i].children[j].children.length > 0) {
+                    for (var k in modelprojectlistyear[i].children[j].children) {
+                        if (modelprojectlistyear[i].children[j].children[k].title.indexOf(filter) != -1) {
+                            if (searchresult.indexOf(modelprojectlistyear[i].children[j].children[k].title) == -1) {
+                                searchresult.push(modelprojectlistyear[i].children[j].children[k].title);
+                            }
+
+                            if (searchresult.indexOf(modelprojectlistyear[i].children[j].title) == -1) {
+                                searchresult.push(modelprojectlistyear[i].children[j].title);
+                            }
+
+                            if (searchresult.indexOf(modelprojectlistyear[i].title) == -1) {
+                                searchresult.push(modelprojectlistyear[i].title);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        isReloadTree = true;//标记重载
+        MarkCurrentProject();
+        isReloadTree = false;//重载后还原
+
+    });
+
+    //清除
+    $('#projectclear').click(function () {
+        $('#projectfiltersearch').val('');//清空
+        searchresult = [];
+
+        isReloadTree = true;//标记重载
+        MarkCurrentProject();
+        isReloadTree = false;//重载后还原
+    });
+
+};
 
 //更新模型是否可可中（用于标识模型生产完成）
 function UpdateModelTask() {

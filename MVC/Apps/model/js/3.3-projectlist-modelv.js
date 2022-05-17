@@ -26,7 +26,7 @@ function GetUserAllModelProjectsQuick() {
                         layer.setTop(layero);
 
                         document.getElementById('modelprojectlisttab').parentNode.style.maxHeight = (parseInt(document.getElementById('modelprojectlisttab').parentNode.style.height.replace("px", "")) - 78).toString() + "px";
-                        document.getElementById("modelprojectlisttab").parentNode.parentNode.innerHTML += '<!--搜索--><div id="modelsearchid" class="layui-row" style="margin-left:5px;position:absolute;bottom:10px; "><div class="layui-input-inline"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:90px;border-radius:5px;margin-left:5px"><i class="layui-icon layui-icon-search"></i></button></div>';
+                        document.getElementById("modelprojectlisttab").parentNode.parentNode.innerHTML += '<!--搜索--><div id="modelsearchid" class="layui-row" style="margin-left:5px;position:absolute;bottom:10px; "><div class="layui-input-inline" style="border-color:#e6e6e6;"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:50px;border-radius:5px;margin-left:5px;border-color:#e6e6e6;"><i class="layui-icon layui-icon-search"></i></button><button id="projectclear" type="button" class="layui-btn layui-btn-primary" style="width:50px;border-radius:5px;margin-left:5px;border-color:#e6e6e6;"><i class="layui-icon layui-icon-delete"></i></button></div>';
 
                         //获取用户全部模型项目数据
                         GetUserAllModelProjects();
@@ -78,165 +78,6 @@ function GetUserAllModelProjectsQuick() {
                                 ModelProjectNodeCheck(obj);//节点选中or取消选中
                             }
                         });
-
-
-                        //搜索
-                        var lay_id;
-                        elem.on('tab(modelprojectListTab)', function (elem) {
-                            lay_id = $(this).attr('lay-id');
-                        });
-                        //1点击按钮树搜索
-                        $('#projectsearch').click(function () {
-
-
-                            if (lay_id == 'list_year') {
-                                var value = $("#projectfiltersearch").val();
-                                if (value) {
-                                    //首选应将文本的颜色恢复正常
-                                    var node = $("#projectbyyear");
-                                    node.find('.layui-tree-txt').css('color', '');
-
-                                    tree.reload('yearprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
-                                    viewer.scene.primitives.remove(curtileset);//删除加载的模型
-
-                                    $.each(node.find('.layui-tree-txt'), function (index, elem) {
-                                        elem = $(elem);
-                                        let textTemp = elem.text();
-                                        if (textTemp.indexOf(value) !== -1) {//查询相当于模糊查找
-                                            elem.addClass("tree-txt-active");
-                                            console.log('elem:', elem);
-                                            elem.filter(':contains(' + value + ')').css('color', '#FFB800'); //搜索文本并设置标志颜色
-                                        }
-                                    });
-
-                                    $.each($("#projectbyyear").find('.tree-txt-active'), function (index, elem) {
-                                        elem = $(elem);
-                                        // 展开所有父节点
-                                        elem.parents('.layui-tree-set').each(function (i, item) {
-                                            if (!$(item).hasClass('layui-tree-spread')) {
-                                                $(item).find('.layui-tree-iconClick:first').click();
-                                            }
-                                        });
-                                    });
-                                }
-                            }
-                            else {
-                                var value = $("#projectfiltersearch").val();
-                                if (value) {
-                                    //首选应将文本的颜色恢复正常
-                                    var node = $("#projectbyarea");
-                                    node.find('.layui-tree-txt').css('color', '');
-
-                                    tree.reload('areaprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
-                                    viewer.scene.primitives.remove(curtileset);//删除加载的模型
-
-                                    $.each(node.find('.layui-tree-txt'), function (index, elem) {
-                                        elem = $(elem);
-                                        let textTemp = elem.text();
-                                        if (textTemp.indexOf(value) !== -1) {//查询相当于模糊查找
-                                            elem.addClass("tree-txt-active");
-                                            console.log('elem:', elem);
-                                            elem.filter(':contains(' + value + ')').css('color', '#FFB800'); //搜索文本并设置标志颜色
-                                        }
-                                    });
-
-                                    $.each($("#projectbyarea").find('.tree-txt-active'), function (index, elem) {
-                                        elem = $(elem);
-                                        // 展开所有父节点
-                                        elem.parents('.layui-tree-set').each(function (i, item) {
-                                            if (!$(item).hasClass('layui-tree-spread')) {
-                                                $(item).find('.layui-tree-iconClick:first').click();
-                                            }
-                                        });
-                                    });
-                                }
-                            }
-
-                        });
-                        //2点击回车树搜索
-                        $('#projectfiltersearch').keydown(function (e) {
-                            if (e.keyCode == 13) {
-
-                                if (lay_id == 'list_year') {
-                                    var value = $("#projectfiltersearch").val();
-                                    if (value) {
-                                        //首选应将文本的颜色恢复正常
-                                        var node = $("#projectbyyear");
-                                        node.find('.layui-tree-txt').css('color', '');
-
-                                        tree.reload('yearprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
-                                        viewer.scene.primitives.remove(curtileset);//删除加载的模型
-
-                                        $.each(node.find('.layui-tree-txt'), function (index, elem) {
-                                            elem = $(elem);
-                                            let textTemp = elem.text();
-                                            if (textTemp.indexOf(value) !== -1) {//查询相当于模糊查找
-                                                elem.addClass("tree-txt-active");
-                                                console.log('elem:', elem);
-                                                elem.filter(':contains(' + value + ')').css('color', '#FFB800'); //搜索文本并设置标志颜色
-                                            }
-                                        });
-
-                                        $.each($("#projectbyyear").find('.tree-txt-active'), function (index, elem) {
-                                            elem = $(elem);
-                                            // 展开所有父节点
-                                            elem.parents('.layui-tree-set').each(function (i, item) {
-                                                if (!$(item).hasClass('layui-tree-spread')) {
-                                                    $(item).find('.layui-tree-iconClick:first').click();
-                                                }
-                                            });
-                                        });
-                                    }
-                                }
-                                else {
-                                    var value = $("#projectfiltersearch").val();
-                                    if (value) {
-                                        //首选应将文本的颜色恢复正常
-                                        var node = $("#projectbyarea");
-                                        node.find('.layui-tree-txt').css('color', '');
-
-                                        tree.reload('areaprojectlistid', {});//重载树，使得之前展开的记录全部折叠起来
-                                        viewer.scene.primitives.remove(curtileset);//删除加载的模型
-
-                                        $.each(node.find('.layui-tree-txt'), function (index, elem) {
-                                            elem = $(elem);
-                                            let textTemp = elem.text();
-                                            if (textTemp.indexOf(value) !== -1) {//查询相当于模糊查找
-                                                elem.addClass("tree-txt-active");
-                                                console.log('elem:', elem);
-                                                elem.filter(':contains(' + value + ')').css('color', '#FFB800'); //搜索文本并设置标志颜色
-                                            }
-                                        });
-
-                                        $.each($("#projectbyarea").find('.tree-txt-active'), function (index, elem) {
-                                            elem = $(elem);
-                                            // 展开所有父节点
-                                            elem.parents('.layui-tree-set').each(function (i, item) {
-                                                if (!$(item).hasClass('layui-tree-spread')) {
-                                                    $(item).find('.layui-tree-iconClick:first').click();
-                                                }
-                                            });
-                                        });
-                                    }
-                                }
-                            }
-
-                        });
-                        //搜索框为空时，将高亮恢复正常
-                        $("#projectfiltersearch").blur(function () {
-                            var search_txt = $(this).val();
-                            if (search_txt == "") {
-                                //将文本的颜色恢复正常
-                                var node_area = $("#projectbyarea");
-                                node_area.find('.layui-tree-txt').css('color', '');
-
-                                var node_year = $("#projectbyyear");
-                                node_year.find('.layui-tree-txt').css('color', '');
-                            }
-                        })
-
-                        ////地图项目点击
-                        //ModelMarkClick();
                     }
                     , min: function (layero, index) {
                         document.getElementById("modelsearchid").style.visibility = "hidden";
@@ -339,7 +180,7 @@ function GetUserAllModelProjectsQuick() {
                         id: "PROJECTCENTER_" + modelprojectdata[i].Project.Id,
                         position: Cesium.Cartesian3.fromDegrees(modelprojectdata[i].Project.ZXJD, modelprojectdata[i].Project.ZXWD),
                         billboard: {
-                            image: '../../Resources/img/mark/p19.png',
+                            image: '../../Resources/img/model/modelprojecticon.png',
                             verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             width: 40,
@@ -476,9 +317,11 @@ function GetUserAllModelProjects() {
                 tree.reload('areaprojectlistid', { data: modelprojectlistarea });
                 tree.reload('yearprojectlistid', { data: modelprojectlistyear });
 
-
                 //每隔5分钟扫描模型生产是否完成并更新模型生产状态
                 setInterval(UpdateModelTask(), 300000);
+
+                //搜索
+                ProjectSearch();
             }
             else {
                 layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });

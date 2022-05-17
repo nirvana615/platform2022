@@ -57,6 +57,8 @@ var curtileset = null;              //当前模型
 
 var isReloadTree = false;//是否tree重载（默认否）用于处理由于tree重载触发的选中事件
 
+var searchresult = [];//搜索结果
+
 //图标
 var MODELICON = '<span style="margin-left:5px;margin-right:5px;"><img src="../../../Resources/img/map/model.png" style="width:14px;height:14px;"/></span>';
 
@@ -73,7 +75,6 @@ viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) 
 });
 
 
-
 //高亮节点
 function MarkNode() {
     //选中节点高亮
@@ -88,6 +89,15 @@ function MarkNode() {
             nodes[i].style.color = "#555555";
             nodes[i].style.fontSize = "14px";
             nodes[i].style.fontWeight = "normal";
+        }
+
+        if (searchresult.length > 0) {
+            if (searchresult.indexOf(nodes[i].innerHTML) != -1) {
+                nodes[i].style.borderBottom = "2px solid #FFB800";
+            }
+            else {
+                nodes[i].style.borderBottom = "0px solid #FFFFFF";
+            }
         }
     }
 };
@@ -194,4 +204,3 @@ function CloseAllLayer() {
 function FlytoExtent(west, south, east, north) {
     viewer.camera.flyTo({ destination: new Cesium.Rectangle.fromDegrees(west, south, east, north) }, { duration: 3 });
 };
-

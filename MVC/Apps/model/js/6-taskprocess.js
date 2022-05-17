@@ -8,7 +8,7 @@ var modeltaskdatatablep = null;
 var modeltaskdatatablev = null;
 
 
-//模型任务处理
+//任务处理
 function LoadTaskProcess() {
     if (modeltaskprocesslayerindex == null) {
         modeltaskprocesslayerindex = layer.open({
@@ -127,6 +127,7 @@ function LoadTaskProcess() {
     }
 };
 
+//查看任务
 function LoadTaskManage() {
     if (modeltaskprocesslayerindex == null) {
         modeltaskprocesslayerindex = layer.open({
@@ -170,9 +171,9 @@ function LoadTaskManage() {
                         , { field: 'yxcjry', title: '采集人', width: 100, align: "center" }
                         , { field: 'yxcjsj', title: '采集时间', width: 120, align: "center" }
                         , { field: 'rwzt', title: '状态', width: 80, align: "center" }
-                        , { fixed: 'right', width: 80, align: "center", toolbar: '#table-toolbar-modeltaskv' }
+                        //, { fixed: 'right', width: 80, align: "center", toolbar: '#table-toolbar-modeltaskv' }
                     ]]
-                    , data: []
+                    , data: modeltaskp
                 });
 
                 $("#btn-task-p").on("click", function () {
@@ -188,11 +189,11 @@ function LoadTaskManage() {
                     modeltaskdatatablev.reload({ id: 'modeltasktablevid', data: modeltaskf });
                 });
 
-                table.on('tool(modeltasktable)', function (obj) {
-                    if (obj.event === 'modeltaskview') {
-                        ViewModelTask(obj.data.data);
-                    }
-                });
+                //table.on('tool(modeltasktable)', function (obj) {
+                //    if (obj.event === 'modeltaskview') {
+                //        ViewModelTask(obj.data.data);
+                //    }
+                //});
             }
             , end: function () {
                 modeltaskprocesslayerindex = null;

@@ -107,7 +107,6 @@ function AddModelTask(projectid) {
 
                                         var newmodeltaskp = [];
                                         modeltaskpcount++;
-                                        document.getElementById('task-p-count').innerText = modeltaskpcount;
                                         var taskinfo = new Object;
                                         taskinfo.id = modeldata.Id;
                                         taskinfo.rwbm = modeldata.RWBM;
@@ -121,8 +120,9 @@ function AddModelTask(projectid) {
                                             newmodeltaskp.push(modeltaskp[i]);
                                         }
                                         modeltaskp = newmodeltaskp;
-                                        if (modeltaskinfoprocesslayerindex != null) {
+                                        if (modeltaskprocesslayerindex != null) {
                                             modeltaskdatatablev.reload({ id: 'modeltasktablevid', data: modeltaskp });
+                                            document.getElementById('task-p-count').innerText = modeltaskpcount;
                                         }
 
                                         for (var i in modelprojectlistarea) {

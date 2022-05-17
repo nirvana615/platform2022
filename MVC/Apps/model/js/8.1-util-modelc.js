@@ -33,6 +33,7 @@ util.fixbar({
                 }
                 else {
                     layer.confirm('<p style="font-size:16px">是否确定新建实景模型项目？</p><br/>', { icon: 3, title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                        CloseAllLayer();
                         AddModelProject();
                         layer.close(index);
                     });
@@ -50,7 +51,6 @@ util.fixbar({
                     && modelprojectinfoeditlayerindex == null
                     && modeltaskinfoviewlayerindex == null
                     && modeltaskinfoeditlayerindex == null
-                    && modeltaskinfoeditlayerindex == null
                     && modelprojectauthlayerindex == null
                     && modeltaskprocesslayerindex == null
                     && modelheaderuserlayerindex == null
@@ -61,6 +61,7 @@ util.fixbar({
                 }
                 else {
                     layer.confirm('<p style="font-size:16px">是否确定新建模型？</p><br/>', { icon: 3, title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                        CloseAllLayer();
                         AddModelTask(currentprojectid);
                         layer.close(index);
                     });
