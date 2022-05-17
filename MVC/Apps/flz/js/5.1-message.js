@@ -37,7 +37,7 @@ function openPouMianLaey() {
         , zIndex: layer.zIndex
         , success: function (layero) {
             //加载杨思
-            addIconforBtn();
+            //addIconforBtn();
             //置顶
             layer.setTop(layero);
             form.render();
@@ -1189,21 +1189,21 @@ function addIconforBtn() {
     btn1.css({
         //css样式
         //"属性名":"属性值",
-        "background-color": "#009688",
+        "background-color": "#dada16",
 
     })
-    btn2.css({
-        //css样式
-        "background-color": "#dada16",
-    })
-    btn3.css({
-        //css样式
-        "background-color": "#16da44",
-    })
-    btn4.css({
-        //css样式
-        "background-color": "#e8b8cd",
-    })
+    //btn2.css({
+    //    //css样式
+    //    "background-color": "#dada16",
+    //})
+    //btn3.css({
+    //    //css样式
+    //    "background-color": "#16da44",
+    //})
+    //btn4.css({
+    //    //css样式
+    //    "background-color": "#e8b8cd",
+    //})
 
 }
 var updateSectionform = "<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='updSectionform'>                                                                         "
