@@ -429,7 +429,7 @@ function LoadSteepHillindex(xiePuoinfo){
             , title: [xiePuoinfo.name + '隐患识别', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
             , area: ['400px', '720px']
             , shade: 0
-            , offset: 'r'
+            , offset: ['68px','75.2%']
             , closeBtn: 1
             , maxmin: true
             , moveOut: true

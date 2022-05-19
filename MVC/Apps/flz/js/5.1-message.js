@@ -9,16 +9,17 @@ var xgline = [];
 var bianjieLayerInfo = null;
 var zheXianTuLayer = null;
 var minValuw = 0;
+var poumianlinedatachart = null;
 //打开弹出框
 function openPouMianLaey() {
     if (currentprojectid == null) {
         layer.msg('请先选择项目', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
     }
-    if (modleInfo == null) {
-        layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-        return;
-    }
+    //if (modleInfo == null) {
+    //    layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+    //    return;
+    //}
     if (addPouMianLaey!=null) {
         layer.msg("已打开剖面窗口", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
@@ -26,7 +27,7 @@ function openPouMianLaey() {
     addPouMianLaey = layer.open({
         type: 1
         , title: ['剖面线', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-        , area: ['350px', '320px']
+        , area: ['650px', '620px']
         , shade: 0
         , offset: ['55px', '260px']
         , closeBtn: 1
@@ -44,7 +45,7 @@ function openPouMianLaey() {
             form.val("updSectionform", {
                 "interval": "2"
             });
-            $("#fuZhuXian").hide(); 
+            //$("#fuZhuXian").hide(); 
             form.on('radio(radioSehngtype)', function (data) {  //radio-type为lay-filter的属性值
                 console.log(data.value)
                 if (data.value === "0") {
@@ -69,10 +70,20 @@ function openPouMianLaey() {
                 }
                 return false;
             });
+            form.on('radio(radioCaiJitype)', function (data) {  //radio-type为lay-filter的属性值
+                console.log(data.value)
+                if (data.value === "0") {//模型
+                    viewer.scene.globe.depthTestAgainstTerrain = false;//模型测量
+                } else if (data.value === "1") {//地形
+                    viewer.scene.globe.depthTestAgainstTerrain = true;//模型测量
+                }
+                return false;
+            });
             //form.on('submit(updSectioninfosubmit)', function (temp) {
             //    console.log(temp);
             //    return false;
             //});
+            poumianlinedatachart = echarts.init(document.getElementById('pouchart'));
         }, btn: ['选点', '定位', '优化', '下载']
         , yes: function (index, layero) {
             ClearTemp();
@@ -95,6 +106,14 @@ function openPouMianLaey() {
             }
 
             if (data.ShengChenType == "0") {
+                
+                
+                if (data.CaiJiType == "0") {//模型测量
+                    if (modleInfo == null) {
+                        layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        return;
+                    }
+                }
                 if (data.interval.length == 0) {
                     layer.msg('请输入采样间隔');
                     return;
@@ -111,7 +130,16 @@ function openPouMianLaey() {
                 pointLBs = [];
                 //左击
                 handler.setInputAction(function (leftclik) {
-                    var pickedOject = scene.pick(leftclik.position);
+                    var pickedOject;
+                    if (data.CaiJiType == "0") {//模型测量
+                        if (modleInfo == null) {
+                            layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            return;
+                        }
+                        pickedOject = viewer.scene.pick(leftclik.position);//模型
+                    } else {
+                        pickedOject = viewer.scene.pickPosition(leftclik.position);//地形
+                    }
                     if (pickedOject != undefined) {
                         var position = scene.pickPosition(leftclik.position);
                         var cartesian3 = Cesium.Cartographic.fromCartesian(position);                        //笛卡尔XYZ
@@ -177,7 +205,12 @@ function openPouMianLaey() {
                                     var startB = pointLBs[0].B;
                                     var endL = pointLBs[1].L;
                                     var endB = pointLBs[1].B;
-                                    ziDongBuZhuo(startL, startB, endL, endB,n, pointpos);
+                                    if (data.CaiJiType == "0") {
+                                        ziDongBuZhuo(startL, startB, endL, endB, n, pointpos);
+                                    } else {
+                                        ziDongBuZhuoDiXing(startL, startB, endL, endB, n, pointpos);
+                                    }
+                                    
                                     
 
 
@@ -200,8 +233,14 @@ function openPouMianLaey() {
                 ysline = [];
                 //左键（开始测量）
                 handler.setInputAction(function (leftclick) {
-                   
-                    var pickedOject = scene.pick(leftclick.position);//模型测量
+                    var pickedOject;
+                    if (data.CaiJiType == "0") {//模型测量
+                       
+                        pickedOject = scene.pick(leftclick.position);//模型
+                    } else {
+                        pickedOject = scene.pickPosition(leftclick.position);//地形
+                    }
+                    
 
                     if (pickedOject != undefined) {
                         var xyz = scene.pickPosition(leftclick.position);
@@ -331,7 +370,14 @@ function openPouMianLaey() {
 
                 //移动（操作提示）
                 handler.setInputAction(function (move) {
-                    var pickedOject = scene.pick(move.endPosition);//模型测量
+                    var pickedOject;
+                    if (data.CaiJiType == "0") {//模型测量
+
+                        pickedOject = scene.pick(move.endPosition);//模型
+                    } else {
+                        pickedOject = scene.pickPosition(move.endPosition);//地形
+                    }
+                 
                     
 
                     if (pickedOject != undefined) {
@@ -370,9 +416,12 @@ function openPouMianLaey() {
         }
         , btn2: function (index, layero) {//修改
             ClearTemp();
-            if (modleInfo == null) {
-                layer.msg('请先选择模型');
-                return false;
+            var data = form.val('updSectionform');
+            if (data.CaiJiType == "0") {//模型测量
+                if (modleInfo == null) {
+                    layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    return false;
+                }
             }
             if (viewer.entities.getById("section123") != null) {
                 viewer.entities.removeById("section123");
@@ -384,7 +433,6 @@ function openPouMianLaey() {
                 viewer.entities.removeById("endPoint111");
             }
             
-            var data = form.val('updSectionform');
             if (data.interval.length == 0) {
                 layer.msg('请输入采样间隔');
                 return false;
@@ -442,56 +490,68 @@ function openPouMianLaey() {
                 return false;
             }
             
-            var startLB = xy2bl(startPintX, startPintY, 3, centralLongitude, false);
-            var postionLB = new Cesium.Cartographic(Math.PI / 180 * startLB.l, Math.PI / 180 * startLB.b);
-            var Heights = scene.sampleHeight(postionLB);
-            var startPosition;
-            if (Heights > 0) {
-                startPosition = new Cesium.Cartesian3.fromDegrees(startLB.l, startLB.b, Heights);
-            } else {
-                layer.msg('起点坐标不在模型上');
-                return false;
-            }
-            pointpos = [];
-            viewer.entities.add({
-                id: "startPoint111",
-                position: startPosition,
-                billboard: {
-                    image: '../../Resources/img/map/startPoint.png',
-                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                    width: 48,
-                    height: 48,
-                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                    scaleByDistance: new Cesium.NearFarScalar(200, 1, 8000, 0),
+                var startLB = xy2bl(startPintX, startPintY, 3, centralLongitude, false);
+                var postionLB = new Cesium.Cartographic(Math.PI / 180 * startLB.l, Math.PI / 180 * startLB.b);
+                var Heights = scene.sampleHeight(postionLB);
+                var startPosition;
+                if (Heights > 0) {
+                    startPosition = new Cesium.Cartesian3.fromDegrees(startLB.l, startLB.b, Heights);
+                } else {
+                    layer.msg('起点坐标不在模型上');
+                    return false;
                 }
-            });
+                pointpos = [];
+                viewer.entities.add({
+                    id: "startPoint111",
+                    position: startPosition,
+                    billboard: {
+                        image: '../../Resources/img/map/startPoint.png',
+                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                        width: 48,
+                        height: 48,
+                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                        scaleByDistance: new Cesium.NearFarScalar(200, 1, 8000, 0),
+                    }
+                });
 
-            pointpos.push(startPosition);
-            var endLB = xy2bl(endPintX, endPintY, 3, centralLongitude, false);
-
+                pointpos.push(startPosition);
+                var endLB = xy2bl(endPintX, endPintY, 3, centralLongitude, false);
+   
+                var HeightsEnd = scene.sampleHeight(new Cesium.Cartographic(Math.PI / 180 * endLB.l, Math.PI / 180 * endLB.b));
+                var endPosition;
+                if (HeightsEnd > 0) {
+                    endPosition = new Cesium.Cartesian3.fromDegrees(endLB.l, endLB.b, HeightsEnd);
+                } else {
+                    layer.msg('终点坐标不在模型上');
+                    return false;
+                }
+                viewer.entities.add({
+                    id: "endPoint111",
+                    position: endPosition,
+                    billboard: {
+                        image: '../../Resources/img/map/endPoint.png',
+                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                        width: 48,
+                        height: 48,
+                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                        scaleByDistance: new Cesium.NearFarScalar(200, 1, 8000, 0),
+                    }
+                });
+                pointpos.push(endPosition);
+            if (data.CaiJiType == "0") {//模型测量
+                ziDongBuZhuo(startLB.l, startLB.b, endLB.l, endLB.b, n, pointpos);
+            } else {
+                ziDongBuZhuoDiXing(startLB.l, startLB.b, endLB.l, endLB.b, n, pointpos);
+            }
+                
+            //} else {
+            //    var startLB = xy2bl(startPintX, startPintY, 3, centralLongitude, false);
+            //    var postionLB = new Cesium.Cartographic(Math.PI / 180 * startLB.l, Math.PI / 180 * startLB.b);
+            //    var endLB = xy2bl(endPintX, endPintY, 3, centralLongitude, false);
+            //    var EndPostion = new Cesium.Cartographic(Math.PI / 180 * endLB.l, Math.PI / 180 * endLB.b);
+            //    ziDongBuZhuoDiXing(startLB.l, startLB.b, endLB.l, endLB.b, n,)
+            //}
            
-            var HeightsEnd = scene.sampleHeight(new Cesium.Cartographic(Math.PI / 180 * endLB.l, Math.PI / 180 * endLB.b));
-            var endPosition;
-            if (HeightsEnd > 0) {
-                endPosition = new Cesium.Cartesian3.fromDegrees(endLB.l, endLB.b, HeightsEnd);
-            } else {
-                layer.msg('终点坐标不在模型上');
-                return false;
-            }
-            viewer.entities.add({
-                id: "endPoint111",
-                position: endPosition,
-                billboard: {
-                    image: '../../Resources/img/map/endPoint.png',
-                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                    width: 48,
-                    height: 48,
-                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                    scaleByDistance: new Cesium.NearFarScalar(200, 1, 8000, 0),
-                }
-            });
-            pointpos.push(endPosition);
-            ziDongBuZhuo(startLB.l, startLB.b, endLB.l, endLB.b, n, pointpos);
            
             
             return false; //开启该代码可禁止点击该按钮关闭
@@ -536,7 +596,7 @@ function openPouMianLaey() {
             pointpos = [];
             pointLBs = [];
             addPouMianLaey = null;
-            
+            viewer.scene.globe.depthTestAgainstTerrain = false;//深部监测打开
             if (viewer.entities.getById("section123") != null) {
                 viewer.entities.removeById("section123");
             };
@@ -873,66 +933,68 @@ function drawZheXianTu() {
 
     }
     minValuw = Math.floor(minValuw / 10) * 10;
-    if (zheXianTuLayer != null) {
-        console.log(gcline);
-        drowPoumianxian(gcline, "");
-    } else {
-        zheXianTuLayer = layer.open({
-            type: 1
-            , title: ['剖面信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-            , area: ['400px', '350px']
-            , shade: 0
-            , offset: ['60px', '1420px']
-            //, offset: 'rt'
-            , closeBtn: 1
-            , maxmin: true
-            , moveOut: true
-            , content: '<div id="pouchart" class="layui-tab-item layui-show" style="width:380px;height:250px;top:10px"></div>'
-            , zIndex: layer.zIndex
-            //, btn: ['修改提交']
-            , yes: function (index, layero) {
-                console.log(lineList);
-                //console.log(moddataGaoCha);
-                console.log(gclinetemp)
-                var sendDate = lineList;
-                sendDate.gcline = JSON.stringify(gclinetemp);
-                sendDate.cookie = document.cookie;
-                console.log(sendDate);
-                var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    
+    drowPoumianxian(gcline, "");
+    //if (zheXianTuLayer != null) {
+    //    console.log(gcline);
+    //    drowPoumianxian(gcline, "");
+    //} else {
+    //    zheXianTuLayer = layer.open({
+    //        type: 1
+    //        , title: ['剖面信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+    //        , area: ['400px', '350px']
+    //        , shade: 0
+    //        , offset: ['60px', '1420px']
+    //        //, offset: 'rt'
+    //        , closeBtn: 1
+    //        , maxmin: true
+    //        , moveOut: true
+    //        , content: '<div id="pouchart2" class="layui-tab-item layui-show" style="width:380px;height:250px;top:10px"></div>'
+    //        , zIndex: layer.zIndex
+    //        //, btn: ['修改提交']
+    //        , yes: function (index, layero) {
+    //            console.log(lineList);
+    //            //console.log(moddataGaoCha);
+    //            console.log(gclinetemp)
+    //            var sendDate = lineList;
+    //            sendDate.gcline = JSON.stringify(gclinetemp);
+    //            sendDate.cookie = document.cookie;
+    //            console.log(sendDate);
+    //            var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
 
-                $.ajax({
-                    url: servicesurl + "/api/RockSelect/AddRockSelectLine", type: "post", data: sendDate,
-                    success: function (result) {
-                        layer.close(loadingceindex);
+    //            $.ajax({
+    //                url: servicesurl + "/api/RockSelect/AddRockSelectLine", type: "post", data: sendDate,
+    //                success: function (result) {
+    //                    layer.close(loadingceindex);
 
-                        if ("新增成功" == result || "更新成功" == result) {
-                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                            layer.close(zheXianTuLayer);
-                        } else {
-                            //创建失败
-                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+    //                    if ("新增成功" == result || "更新成功" == result) {
+    //                        layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+    //                        layer.close(zheXianTuLayer);
+    //                    } else {
+    //                        //创建失败
+    //                        layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
 
-                        }
+    //                    }
 
-                    }, datatype: "json"
-                });
-            }
-            , success: function (layero) {
-                layer.setTop(layero);
-                //setTimeout(() => {
-                poumianlinedatachart = echarts.init(document.getElementById('pouchart'));
-                drowPoumianxian(gcline, "");
-                //}, 500);
+    //                }, datatype: "json"
+    //            });
+    //        }
+    //        , success: function (layero) {
+    //            layer.setTop(layero);
+    //            //setTimeout(() => {
+    //            poumianlinedatachart = echarts.init(document.getElementById('pouchart'));
+    //            drowPoumianxian(gcline, "");
+    //            //}, 500);
 
 
 
-                //展示项目设备总览
+    //            //展示项目设备总览
 
-            }, end: function () {
-                zheXianTuLayer = null;
-            }
-        });
-    }
+    //        }, end: function () {
+    //            zheXianTuLayer = null;
+    //        }
+    //    });
+    //}
   
 };
 
@@ -1133,37 +1195,29 @@ function ziDongBuZhuo(startL, startB, endL, endB, n, pointpos) {
     HeightList = [];
     ysline = [];
     xgline = [];
-
+    var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     var len = Cesium.Cartesian3.distance(pointpos[0], pointpos[1]);
+
     var LengNum = len / n;
-    for (var i = 0; i < LengNum; i++) {
-        var mubiaoL = startL - (startL - endL) * i / LengNum;
-        var mubiaoB = startB - (startB - endB) * i / LengNum;
-        var postionLB = new Cesium.Cartographic(Math.PI / 180 * mubiaoL, Math.PI / 180 * mubiaoB);
-        var Heights = scene.sampleHeight(postionLB);
-        if (Heights > 0) {
-            var postiontemp = new Cesium.Cartesian3.fromDegrees(mubiaoL, mubiaoB, Heights);
-            tempList.push(postiontemp);
-            ysline.push(postiontemp);//原始数据，往后发送
-            HeightList.push({ "B": mubiaoB, "L": mubiaoL, "H": Heights });//
+    var positions = [];
+    for (var i = 0; i <= LengNum; i++) {
+        positions.push(Cesium.Cartesian3.lerp(pointpos[0], pointpos[1], i / LengNum, new Cesium.Cartesian3()));
+    };
+    positions.push(pointpos[1]);
+    scene.clampToHeightMostDetailed(positions).then(function (clampedCartesians) {
+        // 每个点的高度
+        for (var i = 0; i < clampedCartesians.length; i++) {
+            var heights = Cesium.Cartographic.fromCartesian(clampedCartesians[i]).height;
+            if (heights>0) {
+                tempList.push(clampedCartesians[i]);
+                var mubiaoL = startL - (startL - endL) * i / LengNum;
+                var mubiaoB = startB - (startB - endB) * i / LengNum;
+                HeightList.push({ "B": mubiaoB, "L": mubiaoL, "H": heights });
+            }
+            
         }
-
-    }
- 
-    var endHeights = scene.sampleHeight(new Cesium.Cartographic(Math.PI / 180 * endL, Math.PI / 180 * endB));
-    if (endHeights > 0) {
-        var postiontemp = new Cesium.Cartesian3.fromDegrees(endL, endB, endHeights);
-        tempList.push(postiontemp);
-        ysline.push(postiontemp);//原始数据，往后发送
-        HeightList.push({ "B": endB, "L": endL, "H": endHeights });//
-    }
-    xgline = ysline;
-    
-
-    //ysline = tempList;//原始数据，往后发送
-    drawZheXianTu();
-    if (tempList.length > 0) {
-
+        ysline = tempList;
+        xgline = tempList;
         viewer.entities.add({
             id: "section123",
             polyline: {
@@ -1174,10 +1228,117 @@ function ziDongBuZhuo(startL, startB, endL, endB, n, pointpos) {
                 depthFailMaterial: Cesium.Color.YELLOW,
             }
         });
+        drawZheXianTu();
+        layer.close(loadingminindex);
+    });
 
-    } else {
-        layer.msg('该剖面与模型不对应');
-    }
+  
+      
+
+
+    //for (var i = 0; i < LengNum; i++) {
+    //    var mubiaoL = startL - (startL - endL) * i / LengNum;
+    //    var mubiaoB = startB - (startB - endB) * i / LengNum;
+    //    var postionLB = new Cesium.Cartographic(Math.PI / 180 * mubiaoL, Math.PI / 180 * mubiaoB);
+    //    var Heights = scene.clampToHeightMostDetailed(postionLB);
+    //    const promise = scene.clampToHeightMostDetailed(postionLB);
+    //    promise.then(function (rest) {
+    //        console.log(rest[0]);
+    //        console.log(rest[1]);
+
+    //    })
+       
+    //    console.log(Heights);
+    //    if (Heights > 0) {
+    //        var postiontemp = new Cesium.Cartesian3.fromDegrees(mubiaoL, mubiaoB, Heights);
+    //        tempList.push(postiontemp);
+    //        ysline.push(postiontemp);//原始数据，往后发送
+    //        HeightList.push({ "B": mubiaoB, "L": mubiaoL, "H": Heights });//
+    //    }
+
+    //}
+ 
+    //var endHeights = scene.sampleHeight(new Cesium.Cartographic(Math.PI / 180 * endL, Math.PI / 180 * endB));
+    //if (endHeights > 0) {
+    //    var postiontemp = new Cesium.Cartesian3.fromDegrees(endL, endB, endHeights);
+    //    tempList.push(postiontemp);
+    //    ysline.push(postiontemp);//原始数据，往后发送
+    //    HeightList.push({ "B": endB, "L": endL, "H": endHeights });//
+    //}
+    //xgline = ysline;
+    
+
+    //ysline = tempList;//原始数据，往后发送
+   // drawZheXianTu();
+    //if (tempList.length > 0) {
+
+    //    viewer.entities.add({
+    //        id: "section123",
+    //        polyline: {
+    //            positions: tempList,
+    //            width: 1,
+    //            arcType: Cesium.ArcType.RHUMB,
+    //            material: Cesium.Color.YELLOW,
+    //            depthFailMaterial: Cesium.Color.YELLOW,
+    //        }
+    //    });
+
+    //} else {
+    //    layer.msg('该剖面与模型不对应');
+    //}
+}
+function ziDongBuZhuoDiXing(startL, startB, endL, endB, n, pointpos) {
+    tempList = [];
+    HeightList = [];
+    ysline = [];
+    xgline = [];
+    var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    var len = Cesium.Cartesian3.distance(pointpos[0], pointpos[1]);
+
+    var LengNum = len / n;
+    var positions = [];
+
+    var startLon = Cesium.Math.toRadians(startL);
+    var endLon = Cesium.Math.toRadians(endL);
+
+    var startLat = Cesium.Math.toRadians(startB);
+    var endLat = Cesium.Math.toRadians(endB);
+
+    for (var i = 0; i <= LengNum; i++) {
+        var mubiaoL = startLon - (startLon - endLon) * i / LengNum;
+        var mubiaoB = startLat - (startLat - endLat) * i / LengNum;
+        var position = new Cesium.Cartographic(mubiaoL, mubiaoB);
+        positions.push(position);
+    };
+    var promise = Cesium.sampleTerrainMostDetailed(Cesium.createWorldTerrain(), positions);
+    console.log(promise);
+    Cesium.when(promise, function (samples) {
+        // 每个点的高度
+        for (var i = 0; i < samples.length; i++) {
+                var mubiaoL = startL - (startL - endL) * i / LengNum;
+                var mubiaoB = startB - (startB - endB) * i / LengNum;
+                HeightList.push({ "B": mubiaoB, "L": mubiaoL, "H": samples[i].height });
+            
+        }
+        tempList = Cesium.Ellipsoid.WGS84.cartographicArrayToCartesianArray(samples);
+        ysline = tempList;
+        xgline = tempList;
+        viewer.entities.add({
+            id: "section123",
+            polyline: {
+                positions: tempList,
+                width: 1,
+                arcType: Cesium.ArcType.RHUMB,
+                material: Cesium.Color.YELLOW,
+                depthFailMaterial: Cesium.Color.YELLOW,
+            }
+        });
+        drawZheXianTu();
+        layer.close(loadingminindex);
+    });
+
+        
+
 }
 function addIconforBtn() {
     //debugger
@@ -1209,53 +1370,68 @@ function addIconforBtn() {
 var updateSectionform = "<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='updSectionform'>                                                                         "
     + "	<div class='layui-form-item' style='margin-top:15px;margin-right:5px;'>                                                                                               "
     + "		<div class='layui-row'>                                                                                                                                           "
-    + "			<div class='layui-form-item'>                                                                                         "
+    + "			<div class='layui-col-md6'>                                                                                         "
+
     + "				<div class='grid-demo'>                                                                                                                                   "
-    + "					<label class='layui-form-label'>生成方式</label>                                                                                                          "
+    + "					<label class='layui-form-label'>生成方式:</label>                                                                                                          "
     + "					<div class='layui-input-block'>                                                                                                                       "
     + "						<input type='radio' name='ShengChenType'  lay-filter='radioSehngtype' value='0' title='自动' checked=''>           "
     + "						<input type='radio' name='ShengChenType'  lay-filter='radioSehngtype' value='1' title='手动' >           "
     + "					</div>                                                                                                                                                "
     + "				</div>                                                                                                                                                    "
+
     + "			</div>                                                                                                                                                        "
-    + "			<div class='layui-col-md12' id='caiYangJianGe'>                                                                                                                                   "
-    + "				<div class='grid-demo grid-demo-bg1'>                                                                                                                     "
-    + "					<label class='layui-form-label'>采样间隔(米)</label>                                                                                                        "
+    + "			<div class='layui-col-md6'>                                                                                         "
+
+    + "				<div class='grid-demo'>                                                                                                                                   "
+    + "					<label class='layui-form-label'>采集类别:</label>                                                                                                          "
     + "					<div class='layui-input-block'>                                                                                                                       "
-    + "						<input type='text' name='interval'  placeholder='请输入采样间隔' lay-verify='required|number' autocomplete='off'  class='layui-input' style='width:160px;'  />          "
+    + "						<input type='radio' name='CaiJiType'  lay-filter='radioCaiJitype' value='0' title='模型' checked=''>           "
+    + "						<input type='radio' name='CaiJiType'  lay-filter='radioCaiJitype' value='1' title='地形' >           "
+    + "					</div>                                                                                                                                                "
+    + "				</div>                                                                                                                                                    "
+
+    + "			</div>                                                                                                                                                        "
+
+    + "			<div class='layui-col-md4' id='caiYangJianGe'>                                                                                                                                   "
+    + "				<div class='grid-demo grid-demo-bg1'>                                                                                                                     "
+    + "					<label class='layui-form-label'>采样间隔:</label>                                                                                                        "
+    + "					<div class='layui-input-block'>                                                                                                                       "
+    + "						<input type='text' name='interval'  placeholder='请输入采样间隔' lay-verify='required|number' autocomplete='off'  class='layui-input' style='width:60px;'  />          "
     + "					</div>                                                                                                                                                "
     + "				</div>                                                                                                                                                    "
     + "			</div>                                                                                                                                                        "
-    + "			<div class='layui-col-md12' id='fuZhuXian'>                                                                                                                                   "
+    + "			<div class='layui-col-md8' id='startPoint'>                                                                                                                                   "
     + "				<div class='grid-demo grid-demo-bg1'>                                                                                                                     "
-    + "					<label class='layui-form-label'>辅助线</label>                                                                                                        "
+    + "					<label class='layui-form-label'>起点坐标:</label>                                                                                                        "
     + "					<div class='layui-input-block'>                                                                                                                       "
-    + "						<button  onclick='drawFuZhuXian()' type='button' class='layui-btn layui-btn-primary layui-btn-sm'>拾取</button>       "
+    + "						<input type='text' name='startPoint'   autocomplete='off'  class='layui-input' style='width:260px;'  />          "
     + "					</div>                                                                                                                                                "
     + "				</div>                                                                                                                                                    "
     + "			</div>                                                                                                                                                        "
 
-    + "			<div class='layui-col-md12' id='startPoint'>                                                                                                                                   "
+    //+ "			<div class='layui-col-md12' id='fuZhuXian'>                                                                                                                                   "
+    //+ "				<div class='grid-demo grid-demo-bg1'>                                                                                                                     "
+    //+ "					<label class='layui-form-label'>辅助线</label>                                                                                                        "
+    //+ "					<div class='layui-input-block'>                                                                                                                       "
+    //+ "						<button  onclick='drawFuZhuXian()' type='button' class='layui-btn layui-btn-primary layui-btn-sm'>拾取</button>       "
+    //+ "					</div>                                                                                                                                                "
+    //+ "				</div>                                                                                                                                                    "
+    //+ "			</div>                                                                                                                                                        "
+    + "			<div class='layui-col-md4' id='centralLongitude'>                                                                                                                                   "
     + "				<div class='grid-demo grid-demo-bg1'>                                                                                                                     "
-    + "					<label class='layui-form-label'>起点坐标</label>                                                                                                        "
+    + "					<label class='layui-form-label'>中央经度:</label>                                                                                                        "
     + "					<div class='layui-input-block'>                                                                                                                       "
-    + "						<input type='text' name='startPoint'   autocomplete='off'  class='layui-input' style='width:230px;'  />          "
+    + "						<input type='text' name='centralLongitude'   autocomplete='off'  class='layui-input' style='width:60px;'  />          "
     + "					</div>                                                                                                                                                "
     + "				</div>                                                                                                                                                    "
     + "			</div>                                                                                                                                                        "
-    + "			<div class='layui-col-md12' id='endPoint'>                                                                                                                                   "
+
+  + "			<div class='layui-col-md8' id='endPoint'>                                                                                                                                   "
     + "				<div class='grid-demo grid-demo-bg1'>                                                                                                                     "
-    + "					<label class='layui-form-label'>终点坐标</label>                                                                                                        "
+    + "					<label class='layui-form-label'>终点坐标:</label>                                                                                                        "
     + "					<div class='layui-input-block'>                                                                                                                       "
-    + "						<input type='text' name='endPoint'   autocomplete='off'  class='layui-input' style='width:230px;'  />          "
-    + "					</div>                                                                                                                                                "
-    + "				</div>                                                                                                                                                    "
-    + "			</div>                                                                                                                                                        "
-    + "			<div class='layui-col-md12' id='centralLongitude'>                                                                                                                                   "
-    + "				<div class='grid-demo grid-demo-bg1'>                                                                                                                     "
-    + "					<label class='layui-form-label'>中央经度</label>                                                                                                        "
-    + "					<div class='layui-input-block'>                                                                                                                       "
-    + "						<input type='text' name='centralLongitude'   autocomplete='off'  class='layui-input' style='width:210px;'  />          "
+    + "						<input type='text' name='endPoint'   autocomplete='off'  class='layui-input' style='width:260px;'  />          "
     + "					</div>                                                                                                                                                "
     + "				</div>                                                                                                                                                    "
     + "			</div>                                                                                                                                                        "
@@ -1267,7 +1443,7 @@ var updateSectionform = "<form class='layui-form' style='margin-top:5px;margin-r
     //+ "		<button type='submit' class='layui-btn' lay-submit='' lay-filter='updSectioninfosubmit' style='width:100px'>提交</button> "
     //+ "	</div>                                                                                                                        "
     //+ "</div>                                                                                                                            "
-
+    + "<div id = 'pouchart' class='layui-tab-item layui-show' style = 'width:620px;height:380px' ></div > "
     + "</form>     ";
 var updateYouHuaform = "<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='updYouHuaform'>                                                                         "
     + "	<div class='layui-form-item' style='margin-top:15px;margin-right:5px;'>                                                                                               "
