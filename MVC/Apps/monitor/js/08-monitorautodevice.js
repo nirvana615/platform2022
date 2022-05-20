@@ -32,7 +32,7 @@ function LoadAutoDeviceLayer(projectid) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--设备管理--> <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px"> <ul class="layui-tab-title"> <li class="layui-this" style="width:10%;padding-top: 10px;">概况</li> <li style="width:10%;padding-top: 10px;">详情</li> <li style="width:10%;padding-top: 10px;">设备安装进度</li> <li style="width:10%;padding-top: 10px;">临时道路</li> <li style="width:10%;padding-top: 10px;">设备到场</li> <li style="width:10%;padding-top: 10px;">二次搬运</li> <li style="width:10%;padding-top: 10px;">项目检查</li> </ul> <div class="layui-tab-content"> <!--概况--> <div class="layui-tab-item layui-show"> <form class="layui-form" lay-filter="autodevicesform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="autodevicespretimeid" name="autodevicespretime" lay-filter="autodevicespretimefilter" style="visibility:visible;"></select> </div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodevicescustomtimeid" name="autodevicescustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;"> </div> </div> </div> </div> </div> </form> <div class="layui-row" style="border-bottom: 1px solid #e6e6e6;"> <div class="layui-col-xs6"> <div class="grid-demo"> <!--设备离线数量和在线率--> <div id="autodeviceschartbyall" class="layui-tab-item layui-show" style="width:500px;height:310px"></div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <!--按设备类型--> <div id="autodeviceschartbytype" class="layui-tab-item layui-show" style="width:95%;height:310px"></div> </div> </div> </div> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo"> <!--按灾害体类型--> <div id="autodevicechartbydisaster" class="layui-tab-item layui-show" style="width:95%;height:320px"></div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <!--离线设备（离线天数）--> <div id="autodeviceschartbyoffdevice" class="layui-tab-item layui-show" style="width:95%;height:320px"></div> </div> </div> </div> </div> <!--详情--> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:500px;overflow: auto;"> <div id="device-monitor-tree" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="autodeviceform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="autodevicepretimeid" name="autodevicepretime" lay-filter="autodevicepretimefilter" style="visibility:visible;"></select> </div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodevicecustomtimeid" name="autodevicecustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;"> </div> </div> </div> </div> </div> </form> <!--采集数量柱状图--> <div id="autodevicechart" class="layui-tab-item layui-show" style="width:780px;height:600px"></div> <!--设备采集率--> <div style="padding-left:50px;padding-right:10px;padding-top:20px;"> <div class="layui-progress layui-progress" lay-showpercent="true" lay-filter="devicerate"> <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div> </div> </div> </div> </div> </div> </div> <!--施工管理--> <div class="layui-tab-item"> <!--施工设备管理--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <table id="const-device-manage" lay-filter="const-device-manage"></table> <script type="text/html" id="table-toolbar-const"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a> <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="photoDown">下载</a> </script> <!--统计表格--> <div id="autodatastatisticsdiv" style="margin-left:50px;margin-right:50px;margin-top:20px"> <table id="constdeviceTongji" class="layui-hide"></table> </div> </div> </div> </div> </div> <div class="layui-tab-item"> <!--临时道路--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <table id="road-device-manage" lay-filter="road-device-manage"></table> <script type="text/html" id="table-toolbar-road"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a> </script> </div> </div> </div> </div> <div class="layui-tab-item"> <!--设备到场--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <table id="road-arrival-manage" lay-filter="road-arrival-manage"></table> <script type="text/html" id="table-toolbar-road"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a> </script> </div> </div> </div> </div> <div class="layui-tab-item"> <!--材料二次搬运--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <table id="road-carry-manage" lay-filter="road-carry-manage"></table> <script type="text/html" id="table-toolbar-road"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a> </script> </div> </div> </div> </div> <div class="layui-tab-item"> <!--项目检查--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <table id="road-jiancha-manage" lay-filter="road-jiancha-manage"></table> <script type="text/html" id="table-toolbar-road"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a> </script> </div> </div> </div> </div> </div> </div>'
+                , content: '<!--设备管理--> <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px"> <ul class="layui-tab-title"> <li class="layui-this" style="width:10%;padding-top: 10px;">概况</li> <li style="width:10%;padding-top: 10px;">详情</li> <li style="width:10%;padding-top: 10px;">设备安装进度</li> <li style="width:10%;padding-top: 10px;">临时道路</li> <li style="width:10%;padding-top: 10px;">设备到场</li> <li style="width:10%;padding-top: 10px;">二次搬运</li> <li style="width:10%;padding-top: 10px;">项目检查</li> </ul> <div class="layui-tab-content"> <!--概况--> <div class="layui-tab-item layui-show"> <form class="layui-form" lay-filter="autodevicesform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="autodevicespretimeid" name="autodevicespretime" lay-filter="autodevicespretimefilter" style="visibility:visible;"></select> </div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodevicescustomtimeid" name="autodevicescustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;"> </div> </div> </div> </div> </div> </form> <div class="layui-row" style="border-bottom: 1px solid #e6e6e6;"> <div class="layui-col-xs6"> <div class="grid-demo"> <!--设备离线数量和在线率--> <div id="autodeviceschartbyall" class="layui-tab-item layui-show" style="width:500px;height:300px"></div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <!--按设备类型--> <div id="autodeviceschartbytype" class="layui-tab-item layui-show" style="width:95%;height:300px"></div> </div> </div> </div> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo"> <!--按灾害体类型--> <div id="autodevicechartbydisaster" class="layui-tab-item layui-show" style="width:95%;height:320px"></div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <!--离线设备（离线天数）--> <div id="autodeviceschartbyoffdevice" class="layui-tab-item layui-show" style="width:95%;height:320px"></div> </div> </div> </div> </div> <!--详情--> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:500px;overflow: auto;"> <div id="device-monitor-tree" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="autodeviceform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="autodevicepretimeid" name="autodevicepretime" lay-filter="autodevicepretimefilter" style="visibility:visible;"></select> </div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodevicecustomtimeid" name="autodevicecustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;"> </div> </div> </div> </div> </div> </form> <!--采集数量柱状图--> <div id="autodevicechart" class="layui-tab-item layui-show" style="width:780px;height:600px"></div> <!--设备采集率--> <div style="padding-left:50px;padding-right:10px;padding-top:20px;"> <div class="layui-progress layui-progress" lay-showpercent="true" lay-filter="devicerate"> <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div> </div> </div> </div> </div> </div> </div> <!--施工管理--> <div class="layui-tab-item"> <!--施工设备管理--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <table id="const-device-manage" lay-filter="const-device-manage"></table> <script type="text/html" id="table-toolbar-const"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a> <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="photoDown">下载</a> </script> <!--统计表格--> <div id="autodatastatisticsdiv" style="margin-left:50px;margin-right:50px;margin-top:20px"> <table id="constdeviceTongji" class="layui-hide"></table> </div> </div> </div> </div> </div> <div class="layui-tab-item"> <!--临时道路--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <table id="road-device-manage" lay-filter="road-device-manage"></table> <script type="text/html" id="table-toolbar-road"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a> </script> </div> </div> </div> </div> <div class="layui-tab-item"> <!--设备到场--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <table id="road-arrival-manage" lay-filter="road-arrival-manage"></table> <script type="text/html" id="table-toolbar-road"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a> </script> </div> </div> </div> </div> <div class="layui-tab-item"> <!--材料二次搬运--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <table id="road-carry-manage" lay-filter="road-carry-manage"></table> <script type="text/html" id="table-toolbar-road"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a> </script> </div> </div> </div> </div> <div class="layui-tab-item"> <!--项目检查--> <div class="layui-fluid"> <div class="layui-card"> <div class="layui-card-body"> <table id="road-jiancha-manage" lay-filter="road-jiancha-manage"></table> <script type="text/html" id="table-toolbar-road"> <a class="layui-btn layui-btn layui-btn-xs" lay-event="photoview">查看</a> </script> </div> </div> </div> </div> </div> </div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -62,7 +62,7 @@ function LoadAutoDeviceLayer(projectid) {
                     monitordevicechart = null;
 
                     projectDeviceDatas = null;
-                    //projectDeviceDays = null;
+                    projectDeviceDays = null;
 
                 }
             });
@@ -319,12 +319,10 @@ function LoadProjectDeviceOfflineDays(projectid, deviceDatas) {
 //按日设备数量统计
 function DisplayProjectDeviceByCount(myChart, deviceDatas) {
     var devicesum = 0;
-    var GNSSflg = false;
     var deviceTypes = currentprojectmonitors[1].children
     for (var i in deviceTypes) {
         if (deviceTypes[i].title == 'GNSS') {
             devicesum += deviceTypes[i].children.length + 1;
-            GNSSflg = true;
         }
         else {
             devicesum += deviceTypes[i].children.length;
@@ -337,6 +335,7 @@ function DisplayProjectDeviceByCount(myChart, deviceDatas) {
     var ratesData = [];
     for (var i in datetime) {
         var dayOnlineCounts = 0;
+        var dayOfflineCounts = 0;
         for (var j in devicedata) {
             for (var k in devicedata[j]) {
                 if (datetime[i] == devicedata[j][k].GCSJ.substr(0, 10)) {
@@ -344,28 +343,36 @@ function DisplayProjectDeviceByCount(myChart, deviceDatas) {
                 }
             }
         }
-        if (GNSSflg) {
-            dayOnlineCounts += 1;
-        }
+        dayOfflineCounts = devicesum - dayOnlineCounts;
         onlineData.push(dayOnlineCounts);
-        offlineData.push(devicesum - dayOnlineCounts);
+        offlineData.push(dayOfflineCounts);
         var rate = dayOnlineCounts / devicesum * 100;
         ratesData.push(rate.toFixed(2));
     }
-    //预选择时间段（柱状图）
-    var option_bar;
+    //预选择时间段（柱状图配置项）
     const colors = ['#458B00', '#BEBEBE', '#EE3B3B'];
-    option_bar = {
+    var option_bar = {
         color: colors,
         title: {
-            text: "监测设备日离线统计",
+            text: "监测设备日离线统计" + "{a|}",
             left: 'center',
+            triggerEvent: true,
             textStyle: {
                 color: '#4F4F4F',
                 fontStyle: 'normal',
                 fontWeight: 'bold',
-                fontSize: 15
+                fontSize: 15,
+                rich: {
+                    a: {
+                        color: '#FFF',
+                        fontSize: '16',
+                        backgroundColor: {
+                            image: '../../../Resources/img/icon/tip.png',
+                        }
+                    },
+                },
             },
+
         },
         tooltip: {
             trigger: 'axis',
@@ -413,6 +420,7 @@ function DisplayProjectDeviceByCount(myChart, deviceDatas) {
                 alignTicks: true,
                 splitLine: { show: false },
                 max: devicesum,
+                minInterval: 1,
                 axisLine: {
                     show: true,
                 },
@@ -477,13 +485,14 @@ function DisplayProjectDeviceByCount(myChart, deviceDatas) {
                 smooth: true,
                 data: ratesData,
                 markLine: {
+                    symbol: 'none',//去掉箭头
                     data: [{ type: 'average', name: 'Avg' }]
                 }
             }
         ]
     };
 
-    //查询一天（饼状图）
+    //查询一天（饼状图图配置项）
     var onedatas = [];
     var onedata = {};
     onedata.value = onlineData[0];
@@ -493,15 +502,25 @@ function DisplayProjectDeviceByCount(myChart, deviceDatas) {
     onedata.value = offlineData[0];
     onedata.name = "离线设备"
     onedatas.push(onedata);
-    option_pie = {
+    var option_pie = {
         color: ['#458B00', '#BEBEBE'],
         title: {
-            text: "监测设备日离线统计",
+            text: "监测设备日离线统计" + "{a|}",
+            triggerEvent: true,
             textStyle: {
                 color: '#4F4F4F',
                 fontStyle: 'normal',
                 fontWeight: 'bold',
-                fontSize: 15
+                fontSize: 15,
+                rich: {
+                    a: {
+                        color: '#FFF',
+                        fontSize: '16',
+                        backgroundColor: {
+                            image: '../../../Resources/img/icon/tip.png',
+                        }
+                    },
+                },
             },
             subtext: datetime[0],
             subtextStyle: {
@@ -544,6 +563,7 @@ function DisplayProjectDeviceByCount(myChart, deviceDatas) {
         ]
     };
 
+    //判断饼状图或柱状图
     if (datetime.length > 1) {
         myChart.hideLoading();
         myChart.dispose();
@@ -555,7 +575,17 @@ function DisplayProjectDeviceByCount(myChart, deviceDatas) {
         myChart.dispose();
         myChart = echarts.init(document.getElementById('autodeviceschartbyall'));
         option_pie && myChart.setOption(option_pie);
-    }
+    };
+
+    myChart.on('click', params => {
+        console.log(params)
+        // 设置限制条件，确保只有点击的节点为title时才生效
+        if (params.componentType && params.componentType === "title") {
+            layer.confirm('<p style="font-size:16px">统计监测项目每日设备离线数量，在线数量及设备在线率，虚线表示该时间段平均在线率！</p><br/>', { icon: '&#xe60b;', title: ['提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                layer.close(index);
+            });
+        }
+    })
 };
 //按设备类型统计
 function DisplayProjectDeviceByTpye(myChart, deviceDatas) {
@@ -564,17 +594,29 @@ function DisplayProjectDeviceByTpye(myChart, deviceDatas) {
     var legends = [];
     var peidata = null;
     var oneDayDatas = [];
-    //预选时间段（柱状图）
+    var GNSSflg = null;
+    //预选时间段（柱状图配置项）
     var option_bar;
     option_bar = {
         title: {
-            text: "按设备类型统计（离线数量）",
+            text: "按设备类型统计(离线数量)" + "{a|}",
+            triggerEvent: true,
             textStyle: {
                 color: '#4F4F4F',
                 fontStyle: 'normal',
                 fontWeight: 'bold',
-                fontSize: 15
+                fontSize: 15,
+                rich: {
+                    a: {
+                        color: '#FFF',
+                        fontSize: '16',
+                        backgroundColor: {
+                            image: '../../../Resources/img/icon/tip.png',
+                        }
+                    },
+                },
             },
+            
             left: 'center'
         },
         tooltip: {
@@ -623,9 +665,11 @@ function DisplayProjectDeviceByTpye(myChart, deviceDatas) {
     };
 
     for (var i in deviceTypes) {
+        GNSSflg = false;
         var devicedata = null;
         if (deviceTypes[i].title == "GNSS") {
             devicedata = deviceDatas.GNSSDatas;
+            GNSSflg = true;
         }
         else if (deviceTypes[i].title == "裂缝") {
             devicedata = deviceDatas.LFDatas;
@@ -673,10 +717,16 @@ function DisplayProjectDeviceByTpye(myChart, deviceDatas) {
             var dayOfflineCount = 0;
             for (var k in devicedata) {
                 if (datetime[j] == devicedata[k].GCSJ.substr(0, 10)) {
+                    var b = devicedata[k].Code;
                     dayOnlineCount += 1;
                 }
             }
-            dayOfflineCount = deviceTypes[i].children.length - dayOnlineCount;
+            if (GNSSflg) {
+                dayOfflineCount = deviceTypes[i].children.length + 1 - dayOnlineCount;
+            } 
+            else {
+                dayOfflineCount = deviceTypes[i].children.length - dayOnlineCount;
+            }
             serie.data.push(dayOfflineCount);
             if (datetime.length < 2) {
                 peidata = dayOfflineCount;
@@ -696,15 +746,25 @@ function DisplayProjectDeviceByTpye(myChart, deviceDatas) {
     option_bar.legend.data = legends;
     option_bar.xAxis.data = datetime;
 
-    //查询一天（饼状图）
+    //查询一天（饼状图配置项）
     option_pie = {
         title: {
-            text: "按设备类型统计（离线数量）",
+            text: "按设备类型统计(离线数量)" + "{a|}",
+            triggerEvent: true,
             textStyle: {
                 color: '#4F4F4F',
                 fontStyle: 'normal',
                 fontWeight: 'bold',
-                fontSize: 15
+                fontSize: 15,
+                rich: {
+                    a: {
+                        color: '#FFF',
+                        fontSize: '16',
+                        backgroundColor: {
+                            image: '../../../Resources/img/icon/tip.png',
+                        }
+                    },
+                },
             },
             subtext: datetime[0],
             subtextStyle: {
@@ -761,6 +821,15 @@ function DisplayProjectDeviceByTpye(myChart, deviceDatas) {
         myChart = echarts.init(document.getElementById('autodeviceschartbytype'));
         option_bar && myChart.setOption(option_bar);
     }
+    myChart.on('click', params => {
+        console.log(params)
+        // 设置限制条件，确保只有点击的节点为title时才生效
+        if (params.componentType && params.componentType === "title") {
+            layer.confirm('<p style="font-size:16px">按设备类型统计监测项目各设备类型日离线设备数量！</p><br/>', { icon: '&#xe60b;', title: ['提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                layer.close(index);
+            });
+        }
+    })
 };
 //按灾害体统计
 function DisplayProjectDeviceByDisaster(myChart, monitorDevices, deviceDatas) {
@@ -844,7 +913,7 @@ function DisplayProjectDeviceByDisaster(myChart, monitorDevices, deviceDatas) {
             dayOfflineCount = disasterDevices[i].children.length - dayOnlineCount;
             serie.data.push(dayOfflineCount);
             disastersInfo.offdevices.push(offDevices);
-            //查询一天（饼状图）
+            //查询一天（饼状图数据）
             if (datetime.length < 2) {
                 var oneDayData = {};
                 oneDayData.value = dayOfflineCount;
@@ -857,15 +926,25 @@ function DisplayProjectDeviceByDisaster(myChart, monitorDevices, deviceDatas) {
         disasterOffDevices.push(disastersInfo);
     }
 
-    //查询一天（饼状图）
+    //查询一天（饼状图配置项）
     option_pie = {
         title: {
-            text: '按灾害体类型统计（离线数量）',
+            text: "按灾害体类型统计(离线数量)" + "{a|}",
+            triggerEvent: true,
             textStyle: {
                 color: '#4F4F4F',
                 fontStyle: 'normal',
                 fontWeight: 'bold',
-                fontSize: 15
+                fontSize: 15,
+                rich: {
+                    a: {
+                        color: '#FFF',
+                        fontSize: '16',
+                        backgroundColor: {
+                            image: '../../../Resources/img/icon/tip.png',
+                        }
+                    },
+                },
             },
             subtext: datetime[0],
             subtextStyle: {
@@ -919,15 +998,7 @@ function DisplayProjectDeviceByDisaster(myChart, monitorDevices, deviceDatas) {
         }
     }
 
-    //预选时间段（柱状图）
-    function arrayChunk(array, size) {
-        //分割数组
-        let data = []
-        for (let i = 0; i < array.length; i += size) {
-            data.push(array.slice(i, i + size))
-        }
-        return data
-    }
+    //预选时间段（柱状图配置项）
     var obj = {
         "legendData": legends,
         "dataSource": seriesdata
@@ -951,12 +1022,22 @@ function DisplayProjectDeviceByDisaster(myChart, monitorDevices, deviceDatas) {
         let grid = {};
         let xAxis = {};
         if (index == 0) {
-            title.text = "按灾害体统计（离线数量）";
+            title.text = "按灾害体类型统计(离线数量)" + "{a|}";
+            title.triggerEvent= true;
             title.textStyle = {
                 color: '#4F4F4F',
                 fontStyle: 'normal',
                 fontWeight: 'bold',
-                fontSize: 15
+                fontSize: 15,
+                rich: {
+                    a: {
+                        color: '#FFF',
+                        fontSize: '16',
+                        backgroundColor: {
+                            image: '../../../Resources/img/icon/tip.png',
+                        }
+                    },
+                },
             };
             title.left = 'center';
             color = '#CD950C';
@@ -964,7 +1045,7 @@ function DisplayProjectDeviceByDisaster(myChart, monitorDevices, deviceDatas) {
             tooltip.formatter = function (params) {
                 var time = params[0].name;
                 var label = "";
-                var devicelabel = '离线设备:';
+                var devicelabel = '离线设备:' + '<br/>';
                 var Offdevice = [];
                 for (var i in params) {
                     label += params[i].marker + params[i].seriesName + ':' + params[i].value + '台<br/>';
@@ -980,8 +1061,17 @@ function DisplayProjectDeviceByDisaster(myChart, monitorDevices, deviceDatas) {
                         }
                     }
                 }
+                var num=1
                 for (var i in Offdevice) {
-                    devicelabel += ' <br/>'+Offdevice[i] ;
+                    if (num < 2) {
+                        num +=1;
+                        devicelabel += Offdevice[i]+", ";
+                    }
+                    else {
+                        devicelabel += Offdevice[i] + '<br/>';
+                        num =1;
+                    }
+                    
                 } 
                 return time + '<br/>' + label +devicelabel;
             };
@@ -1048,6 +1138,16 @@ function DisplayProjectDeviceByDisaster(myChart, monitorDevices, deviceDatas) {
         },
         options: options,
     };
+    
+    function arrayChunk(array, size) {
+        //分割数组
+        let data = []
+        for (let i = 0; i < array.length; i += size) {
+            data.push(array.slice(i, i + size))
+        }
+        return data
+    };
+
     myChart.hideLoading();
     if (datetime.length < 2) {
         myChart.dispose();
@@ -1059,6 +1159,16 @@ function DisplayProjectDeviceByDisaster(myChart, monitorDevices, deviceDatas) {
         myChart = echarts.init(document.getElementById('autodevicechartbydisaster'));
         option && myChart.setOption(option);
     }
+
+    myChart.on('click', params => {
+        console.log(params)
+        // 设置限制条件，确保只有点击的节点为title时才生效
+        if (params.componentType && params.componentType === "title") {
+            layer.confirm('<p style="font-size:16px">按灾害体分别统计监测项目各灾害体日设备离线数量，每页展示一个灾害体，可点击自动播放按钮自动切换！</p><br/>', { icon: '&#xe60b;', title: ['提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                layer.close(index);
+            });
+        }
+    })
 };
 //连续多天离线设备统计
 function DisplayProjectDeviceByOffline(myChart, deviceDatas) {
@@ -1098,15 +1208,7 @@ function DisplayProjectDeviceByOffline(myChart, deviceDatas) {
             offlineDays.push(deviceDayCounts[i].Days);
         }
     }
-    //连续多天离线设备统计（柱状图）
-    function arrayChunk(array, size) {
-        //分割数组
-        let data = []
-        for (let i = 0; i < array.length; i += size) {
-            data.push(array.slice(i, i + size))
-        }
-        return data
-    }
+    //连续多天离线设备统计（柱状图配置项）
     var obj = {
         "data": deviceNames,
         "dataSource": offlineDays
@@ -1129,12 +1231,22 @@ function DisplayProjectDeviceByOffline(myChart, deviceDatas) {
         let xAxis = {};
         let visualMap = {};
         if (index == 0) {
-            title.text = "设备连续离线时长";
+            title.text = "设备连续离线时长" + "{a|} ";
+            title.triggerEvent = true;
             title.textStyle = {
                 color: '#4F4F4F',
                 fontStyle: 'normal',
                 fontWeight: 'bold',
-                fontSize: 15
+                fontSize: 15,
+                rich: {
+                    a: {
+                        color: '#FFF',
+                        fontSize: '16',
+                        backgroundColor: {
+                            image: '../../../Resources/img/icon/tip.png',
+                        }
+                    },
+                },
             };
             title.left = 'center';
 
@@ -1239,12 +1351,31 @@ function DisplayProjectDeviceByOffline(myChart, deviceDatas) {
         },
         options: options,
     };
+    function arrayChunk(array, size) {
+        //分割数组
+        let data = []
+        for (let i = 0; i < array.length; i += size) {
+            data.push(array.slice(i, i + size))
+        }
+        return data
+    };
+
     myChart.hideLoading();
     if (deviceNames.length >0) {
         myChart.dispose();
         myChart = echarts.init(document.getElementById('autodeviceschartbyoffdevice'));
         option && myChart.setOption(option);
     }
+
+    myChart.on('click', params => {
+        console.log(params)
+        // 设置限制条件，确保只有点击的节点为title时才生效
+        if (params.componentType && params.componentType === "title") {
+            layer.confirm('<p style="font-size:16px">统计监测项目设备连续离线天数，并按照从大到小排列！</p><br/>', { icon: '&#xe60b;', title: ['提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                layer.close(index);
+            });
+        }
+    })
 };
 
 //展示监测设备详情

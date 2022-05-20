@@ -926,7 +926,7 @@ namespace SERVICE.Controllers
                         try
                         {
                             //GNSS
-                            string GNSSs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_gnss WHERE id in(SELECT max(id) FROM monitor_data_gnss WHERE GROUP BY code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM)));
+                            string GNSSs = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM monitor_data_gnss WHERE id in(SELECT max(id) FROM monitor_data_gnss  WHERE bsm={0} GROUP BY code) ORDER BY code ASC,gcsj DESC", SQLHelper.UpdateString(monitorproject.BSM)));
                             if (!string.IsNullOrEmpty(GNSSs))
                             {
                                 string[] datarows = StringHelper.String2Array(GNSSs);
