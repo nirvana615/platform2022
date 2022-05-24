@@ -43,13 +43,14 @@ function AddModelProject() {
 
                 //创建模型项目
                 form.on('submit(addModelprojectsubmit)', function (data) {
-                    loadlayerindex = layer.load(1, { shade: [0.5, '#393D49'] });
+                    loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
                     data.field.cookie = document.cookie;
 
                     $.ajax({
                         url: servicesurl + "/api/ModelProject/AddModelProject", type: "post", data: data.field,
                         success: function (result) {
                             CloseLayer(loadlayerindex);
+
                             var info = JSON.parse(result);
                             if (info.code == 1) {
                                 var modelproject = JSON.parse(info.data);
@@ -336,7 +337,8 @@ function EditModelProject(projectdata) {
 
                 //更新项目
                 form.on('submit(editModelprojectinfosubmit)', function (data) {
-                    loadlayerindex = layer.load(1, { shade: [0.5, '#393D49'] });
+                    loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
+
                     data.field.id = projectdata.Id;
                     data.field.cookie = document.cookie;
 
@@ -344,6 +346,7 @@ function EditModelProject(projectdata) {
                         url: servicesurl + "/api/ModelProject/UpdateModelProject", type: "put", data: data.field,
                         success: function (result) {
                             CloseLayer(loadlayerindex);
+
                             var info = JSON.parse(result);
                             if (info.code == 1) {
                                 var modifymodelproject = JSON.parse(info.data);
@@ -602,6 +605,8 @@ function ClearMapPoint() {
 function ProjectSearch() {
     //搜索
     $('#projectsearch').click(function () {
+        searchresult = [];
+
         var filter = $('#projectfiltersearch').val();
         if (filter == "") {
             layer.msg("请输入搜索关键字！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });

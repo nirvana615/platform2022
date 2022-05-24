@@ -1,5 +1,6 @@
 ﻿$("#task_count").hide();
-loadlayerindex = layer.load(1, { shade: [0.5, '#393D49'] });
+//加载中
+loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
 GetAllModelProjects();
 
 

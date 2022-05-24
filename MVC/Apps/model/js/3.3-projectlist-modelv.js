@@ -1,5 +1,9 @@
-﻿loadlayerindex = layer.load(1, { shade: [0.5, '#393D49'] });
+﻿//加载中
+loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
+
 GetUserAllModelProjectsQuick();
+GetUserAllModelProjects();
+
 //获取用户全部模型项目数据(快速)
 function GetUserAllModelProjectsQuick() {
     $.ajax({
@@ -7,86 +11,82 @@ function GetUserAllModelProjectsQuick() {
         success: function (data) {
             CloseLayer(loadlayerindex);//关闭正在加载
 
+            layer.open({
+                type: 1
+                , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['380px', '60%']
+                , shade: 0
+                , offset: ['60px', '5px']
+                , closeBtn: 0
+                , maxmin: true
+                , moveOut: true
+                , resize: false
+                , content: '<!--项目列表--><div id="modelprojectlisttab" class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;"><!--选项卡--><ul class="layui-tab-title"><li lay-id="list_area" class="layui-this" style="width:40%;">地区</li><li lay-id="list_year" style="width:40%;">时间</li></ul><!--tree--><div class="layui-tab-content" style="padding:0px;"><div class="layui-tab-item layui-show"><div id="projectbyarea"></div></div><div class="layui-tab-item"><div id="projectbyyear"></div></div></div></div>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+
+                    document.getElementById('modelprojectlisttab').parentNode.style.maxHeight = (parseInt(document.getElementById('modelprojectlisttab').parentNode.style.height.replace("px", "")) - 78).toString() + "px";
+                    document.getElementById("modelprojectlisttab").parentNode.parentNode.innerHTML += '<!--搜索--><div id="modelsearchid" class="layui-row" style="margin-left:5px;position:absolute;bottom:10px; "><div class="layui-input-inline" style="border-color:#e6e6e6;"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:50px;border-radius:5px;margin-left:5px;border-color:#e6e6e6;"><i class="layui-icon layui-icon-search"></i></button><button id="projectclear" type="button" class="layui-btn layui-btn-primary" style="width:50px;border-radius:5px;margin-left:5px;border-color:#e6e6e6;"><i class="layui-icon layui-icon-delete"></i></button></div>';
+
+                    //地区树
+                    tree.render({
+                        elem: '#projectbyarea'
+                        , id: 'areaprojectlistid'
+                        , data: []
+                        , accordion: false
+                        , showLine: true
+                        , edit: ['add', 'del']
+                        , showCheckbox: true
+                        , customCheckbox: true
+                        , customSpread: true
+                        , customOperate: true
+                        , cancelNodeFileIcon: true
+                        , click: function (obj) {
+                            ModelProjectNodeClick(obj);//节点点击
+                        }
+                        , operate: function (obj) {
+                            ModelProjectNodeOperate(obj);//节点操作
+                        }
+                        , oncheck: function (obj) {
+                            ModelProjectNodeCheck(obj);//节点选中or取消选中
+                        }
+                    });
+
+                    //时间树
+                    tree.render({
+                        elem: '#projectbyyear'
+                        , id: 'yearprojectlistid'
+                        , data: []
+                        , accordion: false
+                        , showLine: true
+                        , showCheckbox: true
+                        , customCheckbox: true
+                        , edit: ['add', 'del']
+                        , customOperate: true
+                        , customSpread: true
+                        , cancelNodeFileIcon: true
+                        , click: function (obj) {
+                            ModelProjectNodeClick(obj);//节点点击
+                        }
+                        , operate: function (obj) {
+                            ModelProjectNodeOperate(obj);//节点操作
+                        }
+                        , oncheck: function (obj) {
+                            ModelProjectNodeCheck(obj);//节点选中or取消选中
+                        }
+                    });
+                }
+                , min: function (layero, index) {
+                    document.getElementById("modelsearchid").style.visibility = "hidden";
+                }
+                , restore: function (layero, index) {
+                    document.getElementById("modelsearchid").style.visibility = "visible";
+                }
+            });
+
             var result = JSON.parse(data);
             if (result.code == 1) {
-
-                layer.open({
-                    type: 1
-                    , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                    , area: ['380px', '60%']
-                    , shade: 0
-                    , offset: ['60px', '5px']
-                    , closeBtn: 0
-                    , maxmin: true
-                    , moveOut: true
-                    , resize: false
-                    , content: '<!--项目列表--><div id="modelprojectlisttab" class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;"><!--选项卡--><ul class="layui-tab-title"><li lay-id="list_area" class="layui-this" style="width:40%;">地区</li><li lay-id="list_year" style="width:40%;">时间</li></ul><!--tree--><div class="layui-tab-content" style="padding:0px;"><div class="layui-tab-item layui-show"><div id="projectbyarea"></div></div><div class="layui-tab-item"><div id="projectbyyear"></div></div></div></div>'
-                    , zIndex: layer.zIndex
-                    , success: function (layero) {
-                        layer.setTop(layero);
-
-                        document.getElementById('modelprojectlisttab').parentNode.style.maxHeight = (parseInt(document.getElementById('modelprojectlisttab').parentNode.style.height.replace("px", "")) - 78).toString() + "px";
-                        document.getElementById("modelprojectlisttab").parentNode.parentNode.innerHTML += '<!--搜索--><div id="modelsearchid" class="layui-row" style="margin-left:5px;position:absolute;bottom:10px; "><div class="layui-input-inline" style="border-color:#e6e6e6;"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:50px;border-radius:5px;margin-left:5px;border-color:#e6e6e6;"><i class="layui-icon layui-icon-search"></i></button><button id="projectclear" type="button" class="layui-btn layui-btn-primary" style="width:50px;border-radius:5px;margin-left:5px;border-color:#e6e6e6;"><i class="layui-icon layui-icon-delete"></i></button></div>';
-
-                        //获取用户全部模型项目数据
-                        GetUserAllModelProjects();
-
-                        //地区树
-                        tree.render({
-                            elem: '#projectbyarea'
-                            , id: 'areaprojectlistid'
-                            , data: []
-                            , accordion: false
-                            , showLine: true
-                            , edit: ['add', 'del']
-                            , showCheckbox: true
-                            , customCheckbox: true
-                            , customSpread: true
-                            , customOperate: true
-                            , cancelNodeFileIcon: true
-                            , click: function (obj) {
-                                ModelProjectNodeClick(obj);//节点点击
-                            }
-                            , operate: function (obj) {
-                                ModelProjectNodeOperate(obj);//节点操作
-                            }
-                            , oncheck: function (obj) {
-                                ModelProjectNodeCheck(obj);//节点选中or取消选中
-                            }
-                        });
-
-                        //时间树
-                        tree.render({
-                            elem: '#projectbyyear'
-                            , id: 'yearprojectlistid'
-                            , data: []
-                            , accordion: false
-                            , showLine: true
-                            , showCheckbox: true
-                            , customCheckbox: true
-                            , edit: ['add', 'del']
-                            , customOperate: true
-                            , customSpread: true
-                            , cancelNodeFileIcon: true
-                            , click: function (obj) {
-                                ModelProjectNodeClick(obj);//节点点击
-                            }
-                            , operate: function (obj) {
-                                ModelProjectNodeOperate(obj);//节点操作
-                            }
-                            , oncheck: function (obj) {
-                                ModelProjectNodeCheck(obj);//节点选中or取消选中
-                            }
-                        });
-                    }
-                    , min: function (layero, index) {
-                        document.getElementById("modelsearchid").style.visibility = "hidden";
-                    }
-                    , restore: function (layero, index) {
-                        document.getElementById("modelsearchid").style.visibility = "visible";
-                    }
-                });
-
                 //返回项目信息
                 var modelprojectdata = JSON.parse(result.data);
 

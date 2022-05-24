@@ -34,7 +34,7 @@ var modeltaskinfoaddlayerindex = null;          //任务模块（新建）
 var modeltaskinfoeditlayerindex = null;         //任务模块（编辑）
 var modeltaskinfoprocesslayerindex = null;      //任务模块（处理）
 
-var modelprojectauthlayerindex = null;          //模型项目授权模块
+var modelprojectauthlayerindex = null;          //项目授权模块
 
 var modeltaskprocesslayerindex = null;          //处理任务信息
 
@@ -45,11 +45,8 @@ var modelheadersetlayerindex = null;            //设置模块
 
 var modelprojectlistarea = [];      //按地区组织
 var modelprojectlistyear = [];      //按时间组织
-
 var projectentities = [];           //项目位置及标注
 var newprojectentity = null;        //临时项目位置
-
-
 var currentprojectid = null;        //当前项目id
 var currentprojecttitle = null;     //当前项目标题
 var currentmodelid = null;          //当前模型id

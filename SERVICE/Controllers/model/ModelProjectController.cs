@@ -633,6 +633,12 @@ namespace SERVICE.Controllers
                     int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_map_user_project SET ztm={0} WHERE userid={1} AND projectid={2} AND ztm={3}", (int)MODEL.Enum.State.NoUse, user.Id, projectid, (int)MODEL.Enum.State.InUse));
                     if (updatecount == 1)
                     {
+                        int usecount = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM model_map_user_project WHERE projectid={0} AND ztm={1}", projectid, (int)MODEL.Enum.State.InUse));
+                        if (usecount == 0)
+                        {
+                            PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE model_project SET ztm={0} WHERE id={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, projectid, (int)MODEL.Enum.State.InUse));
+                        }
+
                         return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", string.Empty));
                     }
                     else

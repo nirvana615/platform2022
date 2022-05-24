@@ -82,7 +82,8 @@ function AddModelTask(projectid) {
                             layer.msg("3DTiles为必选数据。", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }
                         else {
-                            loadlayerindex = layer.load(1, { shade: [0.5, '#393D49'] });
+                            loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
+
                             data.field.cookie = document.cookie;
                             data.field.projectid = projectid;
                             data.field.model_sxcg_add = modeldatas.toString();
@@ -91,19 +92,10 @@ function AddModelTask(projectid) {
                                 url: servicesurl + "/api/ModelTask/AddTask", type: "post", data: data.field,
                                 success: function (result) {
                                     CloseLayer(loadlayerindex);
+
                                     var info = JSON.parse(result);
                                     if (info.code == 1) {
                                         var modeldata = JSON.parse(info.data);
-                                        var task = new Object;
-                                        task.id = modeldata.Id;
-                                        task.title = modeldata.RWMC;
-                                        task.type = "modeltask";
-                                        task.icon = MODELICON;
-                                        task.data = modeldata;
-                                        task.nodeOperate = true;
-                                        task.showCheckbox = true;
-                                        task.disabled = true;
-                                        task.checked = false;
 
                                         var newmodeltaskp = [];
                                         modeltaskpcount++;
@@ -129,11 +121,23 @@ function AddModelTask(projectid) {
                                             for (var j in modelprojectlistarea[i].children) {
                                                 if (modelprojectlistarea[i].children[j].id == projectid) {
                                                     var projectchild = [];
+                                                    var task = new Object;
+                                                    task.id = modeldata.Id;
+                                                    task.title = modeldata.RWMC;
+                                                    task.type = "modeltask";
+                                                    task.icon = MODELICON;
+                                                    task.data = modeldata;
+                                                    task.nodeOperate = true;
+                                                    task.showCheckbox = true;
+                                                    task.disabled = true;
+                                                    task.checked = false;
                                                     projectchild.push(task);
 
                                                     if (modelprojectlistarea[i].children[j].children != undefined && modelprojectlistarea[i].children[j].children.length > 0) {
                                                         for (var k in modelprojectlistarea[i].children[j].children) {
-                                                            projectchild.push(modelprojectlistarea[i].children[j].children[k]);
+                                                            if (modelprojectlistarea[i].children[j].children[k].id != task.id) {
+                                                                projectchild.push(modelprojectlistarea[i].children[j].children[k]);
+                                                            }
                                                         }
                                                     }
 
@@ -147,11 +151,23 @@ function AddModelTask(projectid) {
                                             for (var j in modelprojectlistyear[i].children) {
                                                 if (modelprojectlistyear[i].children[j].id == projectid) {
                                                     var projectchild = [];
+                                                    var task = new Object;
+                                                    task.id = modeldata.Id;
+                                                    task.title = modeldata.RWMC;
+                                                    task.type = "modeltask";
+                                                    task.icon = MODELICON;
+                                                    task.data = modeldata;
+                                                    task.nodeOperate = true;
+                                                    task.showCheckbox = true;
+                                                    task.disabled = true;
+                                                    task.checked = false;
                                                     projectchild.push(task);
 
                                                     if (modelprojectlistyear[i].children[j].children != undefined && modelprojectlistyear[i].children[j].children.length > 0) {
                                                         for (var k in modelprojectlistyear[i].children[j].children) {
-                                                            projectchild.push(modelprojectlistyear[i].children[j].children[k]);
+                                                            if (modelprojectlistyear[i].children[j].children.id != task.id) {
+                                                                projectchild.push(modelprojectlistyear[i].children[j].children[k]);
+                                                            }
                                                         }
                                                     }
 
@@ -342,7 +358,8 @@ function EditModelTask(taskdata) {
                         layer.msg("3DTiles为必选数据。", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     }
                     else {
-                        loadlayerindex = layer.load(1, { shade: [0.5, '#393D49'] });
+                        loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
+
                         data.field.cookie = document.cookie;
                         data.field.id = taskdata.Id;
                         data.field.model_sxcg_edit = modeldatas.toString();
@@ -351,6 +368,7 @@ function EditModelTask(taskdata) {
                             url: servicesurl + "/api/ModelTask/UpdateTask", type: "put", data: data.field,
                             success: function (result) {
                                 CloseLayer(loadlayerindex);
+
                                 var info = JSON.parse(result);
                                 if (info.code == 1) {
                                     var modeldata = JSON.parse(info.data);
@@ -396,7 +414,8 @@ function EditModelTask(taskdata) {
 
                 //设置视角
                 form.on('submit(setmodelviewsubmit)', function (data) {
-                    loadlayerindex = layer.load(1, { shade: [0.5, '#393D49'] });
+                    loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
+
                     data.field.cookie = document.cookie;
                     data.field.id = taskdata.Id;
                     data.field.mxsj = JSON.stringify(GetView());
@@ -405,6 +424,7 @@ function EditModelTask(taskdata) {
                         url: servicesurl + "/api/ModelTask/UpdateModelView", type: "put", data: data.field,
                         success: function (result) {
                             CloseLayer(loadlayerindex);
+
                             var info = JSON.parse(result);
                             if (info.code == 1) {
                                 var modeldata = JSON.parse(info.data);
@@ -590,6 +610,51 @@ function DeleteModelTask(taskid) {
                         modelprojectlistyear[i].children[j].children = childs;
                     }
                 }
+
+
+                if (modeltaskp.length > 0) {
+                    var newmodeltaskp = [];
+                    for (var i in modeltaskp) {
+                        if (modeltaskp[i].id == taskid) {
+                            modeltaskpcount--;
+                        }
+                        else {
+                            newmodeltaskp.push(modeltaskp[i]);
+                        }
+                    }
+                    modeltaskp = newmodeltaskp;
+                }
+                if (modeltaski.length > 0) {
+                    var newmodeltaski = [];
+                    for (var i in modeltaski) {
+                        if (modeltaski[i].id == taskid) {
+                            modeltaskicount--;
+                        }
+                        else {
+                            newmodeltaski.push(modeltaski[i]);
+                        }
+                    }
+                    modeltaski = newmodeltaski;
+                }
+                if (modeltaskf.length > 0) {
+                    var newmodeltaskf = [];
+                    for (var i in modeltaskf) {
+                        if (modeltaskf[i].id == taskid) {
+                            modeltaskfcount--;
+                        }
+                        else {
+                            newmodeltaskf.push(modeltaskf[i]);
+                        }
+                    }
+                    modeltaskf = newmodeltaskf;
+                }
+
+                if (modeltaskprocesslayerindex != null) {
+                    document.getElementById('task-p-count').innerText = modeltaskpcount;
+                    document.getElementById('task-i-count').innerText = modeltaskicount;
+                    document.getElementById('task-f-count').innerText = modeltaskfcount;
+                    modeltaskdatatablev.reload({ id: 'modeltasktablevid', data: modeltaskp });
+                }
             }
 
             isReloadTree = true;//标记重载
@@ -626,7 +691,8 @@ function ProcessModelTask(taskdata) {
 
                 //处理
                 form.on('submit(processmodeltaskinfosubmit)', function (data) {
-                    loadlayerindex = layer.load(1, { shade: [0.5, '#393D49'] });
+                    loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
+
                     data.field.cookie = document.cookie;
                     data.field.id = taskdata.Id;
 
@@ -634,6 +700,7 @@ function ProcessModelTask(taskdata) {
                         url: servicesurl + "/api/ModelTask/ProcessTask", type: "put", data: data.field,
                         success: function (result) {
                             CloseLayer(loadlayerindex);
+
                             var info = JSON.parse(result);
                             if (info.code == 1) {
                                 modeltaskpcount--;
