@@ -542,11 +542,12 @@ function DrwInfo(data,flag) {
                     var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
                     var data2 = {
                         mxsj: JSON.stringify(home),
-                        id: data.data.id.split("_")[1]//模型id
+                        id: data.data.id.split("_")[1] ,//模型id
+                        cookie: document.cookie
                     }
 
                     $.ajax({
-                        url: servicesurl + "/api/ModelTask/UpdateModelGoodView", type: "put", data: data2,
+                        url: servicesurl + "/api/ModelTask/UpdateModelView", type: "put", data: data2,
                         success: function (result) {
                             layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                             //刷新项目列表

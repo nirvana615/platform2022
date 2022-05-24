@@ -92,7 +92,7 @@ function FlyToChina() {
  */
 function LoadModel(obj) {
     //var modelurl = "../Data/SurModel" + obj.path;
-    var modelurl = datasurl + "/SurModel" + obj.path;
+    var modelurl = datasurl + "/AllModel/" + obj.path;
 
     //删除上一个模型（保证只有一个模型）
     if (curtileset != null) {

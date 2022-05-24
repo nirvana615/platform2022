@@ -648,9 +648,11 @@
     <Content Include="Apps\uav\widget\1.0-uavproject-add.html" />
     <Content Include="Resources\img\icon\datanull.png" />
     <Content Include="Resources\img\icon\tip.png" />
+    <Content Include="Resources\img\map\endPoint.png" />
     <Content Include="Resources\img\map\map.png" />
     <Content Include="Resources\img\map\project.png" />
     <Content Include="Resources\img\map\model.png" />
+    <Content Include="Resources\img\map\startPoint.png" />
     <Content Include="Resources\img\mark\img_mark_A2.png" />
     <Content Include="Resources\img\mark\img_mark_A1.png" />
     <Content Include="Resources\img\mark\img_mark_l4.png" />

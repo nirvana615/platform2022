@@ -12,10 +12,10 @@ var minValuw = 0;
 var poumianlinedatachart = null;
 //打开弹出框
 function openPouMianLaey() {
-    if (currentprojectid == null) {
-        layer.msg('请先选择项目', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-        return;
-    }
+    //if (currentprojectid == null) {
+    //    layer.msg('请先选择项目', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+    //    return;
+    //}
     //if (modleInfo == null) {
     //    layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
     //    return;
@@ -87,6 +87,7 @@ function openPouMianLaey() {
         }, btn: ['选点', '定位', '优化', '下载']
         , yes: function (index, layero) {
             ClearTemp();
+            layer.min(addPouMianLaey);
             if (viewer.entities.getById("section123") != null) {
                 viewer.entities.removeById("section123");
             }
@@ -935,6 +936,7 @@ function drawZheXianTu() {
     minValuw = Math.floor(minValuw / 10) * 10;
     
     drowPoumianxian(gcline, "");
+    layer.restore(addPouMianLaey);
     //if (zheXianTuLayer != null) {
     //    console.log(gcline);
     //    drowPoumianxian(gcline, "");
@@ -1228,8 +1230,9 @@ function ziDongBuZhuo(startL, startB, endL, endB, n, pointpos) {
                 depthFailMaterial: Cesium.Color.YELLOW,
             }
         });
-        drawZheXianTu();
         layer.close(loadingminindex);
+        drawZheXianTu();
+        
     });
 
   

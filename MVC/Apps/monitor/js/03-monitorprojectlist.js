@@ -1,24 +1,31 @@
 ﻿//弹出项目列表widget
-layer.open({
+var projectLieBiaoIndex=layer.open({
     type: 1
-    , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-    , area: ['350px', '700px']
+    , title: ['项目', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+    , area: ['250px', '700px']
     , shade: 0
     , offset: ['60px', '5px']
     , closeBtn: 0
     , maxmin: true
-    , moveOut: true
-    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px"><!--选项卡--><ul class="layui-tab-title"><li class="layui-this" style="width:40%;padding-top: 0px;">地区</li><li style="width:40%;padding-top: 0px;">时间</li></ul><!--tree--><div class="layui-tab-content" style="padding:0px;"><div class="layui-tab-item layui-show" id="monitorprojectbyarea"></div><div class="layui-tab-item" id="monitorprojectbytime"></div></div></div>'
-    , zIndex: layer.zIndex
+    , move: false
+   // , moveOut: true
+    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">    <!--选项卡-->    <ul class="layui-tab-title">        <li lay-id="111" class="layui-this" style="width:30%;padding-top: 10px;">项目列表</li>        <li lay-id="222" style="width:30%;padding-top: 10px;">图层列表</li>    </ul>    <!--tree-->    <div class="layui-tab-content" style="padding:0px;">        <div class="layui-tab-item layui-show" id="monitorprojectbyarea"></div>        <div class="layui-tab-item" id="prjlayerlist"></div>    </div></div>',
+     zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
         GetUserProjects();
     }
 });
 
-var projectdatagrouptime = [];//按时间组织
+//var projectdatagrouptime = [];//按时间组织
 var projectdatagrouparea = [];//按地区组织
 
+elem.on('tab(docDemoTabBrief)', function (data) {
+    if (this.getAttribute('lay-id') == "222" && currentprojectid == null) {
+        layer.msg('请先选择项目');
+        elem.tabChange('docDemoTabBrief', 111); //跳转地址图层列表
+    }
+})
 
 //获取项目列表
 function GetUserProjects() {
@@ -27,66 +34,66 @@ function GetUserProjects() {
         success: function (data) {
             if (data == "") {
                 layer.msg("无项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                document.getElementById("monitorprojectbytime").innerHTML = "无项目信息";
+                //document.getElementById("monitorprojectbytime").innerHTML = "无项目信息";
                 document.getElementById("monitorprojectbyarea").innerHTML = "无项目信息";
             }
             else {
-                document.getElementById("monitorprojectbytime").innerHTML = "";
+                //document.getElementById("monitorprojectbytime").innerHTML = "";
                 document.getElementById("monitorprojectbyarea").innerHTML = "";
                 var projectlist = JSON.parse(data);
 
                 //构造项目列表数据
-                projectdatagrouptime = [];      //按时间组织
+               // projectdatagrouptime = [];      //按时间组织
                 projectdatagrouparea = [];      //按地区组织
 
-                var years = [];                 //所有年份
+                //var years = [];                 //所有年份
                 var areas = [];                 //所有地区
 
                 for (var i in projectlist) {
-                    var year = projectlist[i].XMKSSJ.substr(0, 4);
+                    //var year = projectlist[i].XMKSSJ.substr(0, 4);
                     var area = projectlist[i].XZQBM.substr(0, 6);
-                    if (years.indexOf(year) == -1) {
-                        years.push(year);
-                    }
+                    //if (years.indexOf(year) == -1) {
+                    //    years.push(year);
+                    //}
                     if (areas.indexOf(area) == -1) {
                         areas.push(area);
                     }
                 }
 
                 //升序排序
-                years.sort();
+                //years.sort();
                 areas.sort();
 
-                for (var i in years) {
-                    var father = new Object;
-                    father.title = years[i];
-                    if (i == 0) {
-                        //默认展开第一项
-                        father.spread = true;
-                    }
-                    else {
-                        father.spread = false;
-                    }
-                    var children = [];
-                    for (var j in projectlist) {
-                        if (projectlist[j].XMKSSJ.substr(0, 4) == years[i]) {
-                            var son = new Object;
-                            son.title = projectlist[j].ZHDMC;
-                            son.xmmc = projectlist[j].XMMC;
-                            son.type = projectlist[j].ZHLX;
-                            if (projectlist[j].ZHLX == 0) {
-                                son.icon = ROCKFALLICON;
-                            }
-                            else if (projectlist[j].ZHLX == 1) {
-                                son.icon = LANDSLIDEICON;
-                            }
-                            son.id = projectlist[j].Id;
-                            children.push(son);
-                        }
-                    }
-                    father.children = children;
-                    projectdatagrouptime.push(father);
-                }
+                //for (var i in years) {
+                //    var father = new Object;
+                //    father.title = years[i];
+                //    if (i == 0) {
+                //        //默认展开第一项
+                //        father.spread = true;
+                //    }
+                //    else {
+                //        father.spread = false;
+                //    }
+                //    var children = [];
+                //    for (var j in projectlist) {
+                //        if (projectlist[j].XMKSSJ.substr(0, 4) == years[i]) {
+                //            var son = new Object;
+                //            son.title = projectlist[j].ZHDMC;
+                //            son.xmmc = projectlist[j].XMMC;
+                //            son.type = projectlist[j].ZHLX;
+                //            if (projectlist[j].ZHLX == 0) {
+                //                son.icon = ROCKFALLICON;
+                //            }
+                //            else if (projectlist[j].ZHLX == 1) {
+                //                son.icon = LANDSLIDEICON;
+                //            }
+                //            son.id = projectlist[j].Id;
+                //            children.push(son);
+                //        }
+                //    }
+                //    father.children = children;
+                //    projectdatagrouptime.push(father);
+                //}
 
                 for (var i in areas) {
                     var father = new Object;
@@ -132,19 +139,19 @@ function GetUserProjects() {
                 }
 
                 //按时间渲染
-                tree.render({
-                    elem: '#monitorprojectbytime'
-                    , data: projectdatagrouptime
-                    , edit: ['add', 'update', 'del']
-                    , accordion: true
-                    , cancelNodeFileIcon: true
-                    , click: function (obj) {
-                        ProjectNodeClick(obj);
-                    }
-                    , operate: function (obj) {
-                        ProjectNodeOperate(obj);
-                    }
-                });
+                //tree.render({
+                //    elem: '#monitorprojectbytime'
+                //    , data: projectdatagrouptime
+                //    , edit: ['add', 'update', 'del']
+                //    , accordion: true
+                //    , cancelNodeFileIcon: true
+                //    , click: function (obj) {
+                //        ProjectNodeClick(obj);
+                //    }
+                //    , operate: function (obj) {
+                //        ProjectNodeOperate(obj);
+                //    }
+                //});
 
                 //按地区渲染
                 tree.render({
@@ -184,6 +191,7 @@ function GetUserProjects() {
                                     heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                     width: 40,
                                     height: 40,
+                                    scaleByDistance: new Cesium.NearFarScalar(200, 1, 30000000, 0),
                                 }
                             });
                             projectentities.push(projectentity);
@@ -198,6 +206,7 @@ function GetUserProjects() {
                                     heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                     width: 40,
                                     height: 40,
+                                    scaleByDistance: new Cesium.NearFarScalar(200, 1, 30000000, 0),
                                 }
                             });
                             projectentities.push(projectentity);
@@ -212,6 +221,7 @@ function GetUserProjects() {
                                     heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                     width: 40,
                                     height: 40,
+                                    scaleByDistance: new Cesium.NearFarScalar(200, 1, 30000000, 0),
                                 }
                             });
                             projectentities.push(projectentity);
@@ -227,6 +237,7 @@ function GetUserProjects() {
                                 heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                 verticalOrigin: Cesium.VerticalOrigin.CENTER,
                                 pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                                scaleByDistance: new Cesium.NearFarScalar(200, 1, 200000, 0),
                             }
                         });
 
@@ -261,11 +272,17 @@ function ProjectNodeClick(obj) {
                 currentprojectdisastertype = JSON.stringify(obj.data.type);                         //更新当前项目灾害类型
                 document.getElementById("currentproject").style.visibility = "visible";
                 document.getElementById("currentproject").innerHTML = "<option>" + JSON.stringify(obj.data.xmmc).replace(/\"/g, "") + "</option><option>清除当前项目</option>";
-
+                //最小化项目按钮
+                
                 //TODO请求项目相关信息（图层、监测点）
                 GetProjectMonitor(currentprojectid);
                 //预加载项目设备统计信息
                 GetPreProjectDatas(currentprojectid, 0);
+                //切换项目删除模型
+                if (curtileset != null) {
+                    viewer.scene.primitives.remove(curtileset);
+                    modleInfo = null;
+                }
 
                 //监听清除当前项目操作
                 $(() => {
@@ -278,7 +295,8 @@ function ProjectNodeClick(obj) {
                             CloseAllLayer();                               //关闭弹出图层
                             viewer.entities.removeAll();
                             AddEntitiesInViewer(projectentities);
-
+                            layer.restore(projectLieBiaoIndex);//还原
+                            
                         }
                     });
                 });
@@ -307,6 +325,11 @@ function ProjectNodeClick(obj) {
 
                     viewer.flyTo([projectentity, projectentitylabel], { duration: 5, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-80), 3000) });
                 }
+                //直接请求图层出来了
+                setTimeout(() => {
+                    LoadLayerListLayer(currentprojectid);
+                    elem.tabChange('docDemoTabBrief', 222); //跳转地址图层列表
+                }, 1000);
 
             }
 

@@ -11,7 +11,7 @@ var projectindex=layer.open({
     , offset: ['48px', '0px']//头部，左边
     , closeBtn: 0
     , shift:3
-    //, maxmin: true
+    , maxmin: true
     //, moveOut: true
     , content: projietHtml
     , success: function (layero) {
@@ -149,11 +149,12 @@ function GetUserProjects() {
                         id: "PROJECTCENTER_" + projectlist[i].Id,
                         position: Cesium.Cartesian3.fromDegrees(projectlist[i].ZXJD, projectlist[i].ZXWD),
                         billboard: {
-                            image: '../../Resources/img/map/marker.png',
+                            image: '../../Resources/img/map/project_type_rockfall.png',
                             verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             width: 40,
                             height: 40,
+                            scaleByDistance: new Cesium.NearFarScalar(200, 1, 30000000, 0),
                         }
                     });
                     projectentities.push(projectentity);
@@ -168,6 +169,7 @@ function GetUserProjects() {
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
                             pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                            scaleByDistance: new Cesium.NearFarScalar(200, 1, 200000, 0),
                         }
                     });
 

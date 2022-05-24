@@ -93,36 +93,13 @@ namespace SERVICE.Controllers
                     projectLayer.Models = models;
                 }
 
-                string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT a.* from survey_model a join monitor_map_project_survey b on a.id=b.surveyid where b.projectid={0} and b.type={1}", id, '5'));
-                if (!string.IsNullOrEmpty(data))
-                {
-                    SurModels surModels = new SurModels();
-                    surModels.Title = "三维实景模型";
-
-                    List<SurModel> surModelList = new List<SurModel>();
-                    string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
-                    for (int i = 0; i < rows.Length; i++)
-                    {
-                        SurModel surModel = ParseMonitorHelper.ParseSurModel(rows[i]);
-                        surModelList.Add(surModel);
-                    }
-
-                    if (surModelList.Count > 0)
-                    {
-                        surModels.SurModelList = surModelList;
-                    }
-
-                    projectLayer.SurModels = surModels;
-                }
-
                 layers.ProjectLayer = projectLayer;
                 #endregion
 
                 FlzDataLayer flzDataLayer = new FlzDataLayer();
                 flzDataLayer.Title = "数据采集";
                 #region
-                data = string.Empty;
-                data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM flz_data_point WHERE project_id={0}", id));
+                string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM flz_data_point WHERE project_id={0}", id));
                 if (!string.IsNullOrEmpty(data))
                 {
                     List<FlzData> flzDateList = new List<FlzData>();

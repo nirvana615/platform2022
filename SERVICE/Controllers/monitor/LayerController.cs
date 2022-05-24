@@ -58,35 +58,32 @@ namespace SERVICE.Controllers
                     projectLayer.KJFW = null;
                     projectLayer.YXFW = null;
 
-                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_project_survey WHERE projectid={0} AND type={1} AND role={2} AND ztm={3}", id, (int)MODEL.EnumMonitor.SurveyDataType.Model, 1, (int)MODEL.Enum.State.InUse));
-                    if (!string.IsNullOrEmpty(data))
-                    {
-                        SurModels surModels = new SurModels();
-                        surModels.Title = "三维实景模型";
+                    //查询的时候，显示
+                    List<ModelTask> models = new List<ModelTask>();
 
-                        List<SurModel> surModelList = new List<SurModel>();
-                        string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
-                        for (int i = 0; i < rows.Length; i++)
+                    string modelmaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_use WHERE syscode={0} AND useprojectid={1} AND ztm={2} ORDER BY id DESC", (int)MODEL.Enum.System.Monitor, id, (int)MODEL.Enum.State.InUse));
+                    if (!string.IsNullOrEmpty(modelmaps))
+                    {
+                        string[] modelrows = modelmaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                        for (int j = 0; j < modelrows.Length; j++)
                         {
-                            MapProjectSurvey mapProjectSurvey = ParseMonitorHelper.ParseMapProjectSurvey(rows[i]);
-                            if (mapProjectSurvey != null)
+                            MapModelProjectUse mapModelProjectUse = ParseModelHelper.ParseMapModelProjectUse(modelrows[j]);
+                            if (mapModelProjectUse != null)
                             {
-                                //SurModel surModel = ParseMonitorHelper.ParseSurModel(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM survey_model WHERE id={0} AND bsm{1} AND ztm={2} AND mxjb={3}", mapProjectSurvey.SurveyId, userbsms, (int)MODEL.Enum.State.InUse, (int)MODEL.EnumMonitor.ModelLevel.Whole)));
-                                SurModel surModel = ParseMonitorHelper.ParseSurModel(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM survey_model WHERE id={0} AND ztm={1}", mapProjectSurvey.SurveyId, (int)MODEL.Enum.State.InUse)));
-                                if (surModel != null)
+                                ModelTask model = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjectUse.ModelTaskId, (int)MODEL.Enum.State.InUse)));
+                                if (model != null)
                                 {
-                                    surModelList.Add(surModel);
+                                    models.Add(model);
                                 }
                             }
                         }
-
-                        if (surModelList.Count > 0)
-                        {
-                            surModels.SurModelList = surModelList;
-                        }
-
-                        projectLayer.SurModels = surModels;
                     }
+                    if (models.Count > 0)
+                    {
+                        projectLayer.Models = models;
+                    }
+
+
 
                     layers.ProjectLayer = projectLayer;
                     #endregion
@@ -94,7 +91,7 @@ namespace SERVICE.Controllers
                     DisasterLayers disasterLayers = new DisasterLayers();
                     disasterLayers.Title = "灾害体";
                     #region
-                    data = string.Empty;
+                    string  data = string.Empty;
                     data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_project_disaster WHERE projectid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
                     if (!string.IsNullOrEmpty(data))
                     {
