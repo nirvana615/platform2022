@@ -67,3 +67,8 @@
 .layui-table-main table tbody tr td:last-child {
     display: none !important;
 }
+.shadows {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}

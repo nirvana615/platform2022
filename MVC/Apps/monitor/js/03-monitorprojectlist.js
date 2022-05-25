@@ -1,4 +1,7 @@
 ﻿//弹出项目列表widget
+var layerYouCeTanChuIndex = null;
+var layerZuoCeTanChuIndex = null;
+
 var projectLieBiaoIndex=layer.open({
     type: 1
     , title: ['项目', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
@@ -6,16 +9,32 @@ var projectLieBiaoIndex=layer.open({
     , shade: 0
     , offset: ['60px', '5px']
     , closeBtn: 0
-    , maxmin: true
+    , maxmin: false
     , move: false
+    ,resize:false
    // , moveOut: true
     , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">    <!--选项卡-->    <ul class="layui-tab-title">        <li lay-id="111" class="layui-this" style="width:30%;padding-top: 10px;">项目列表</li>        <li lay-id="222" style="width:30%;padding-top: 10px;">图层列表</li>    </ul>    <!--tree-->    <div class="layui-tab-content" style="padding:0px;">        <div class="layui-tab-item layui-show" id="monitorprojectbyarea"></div>        <div class="layui-tab-item" id="prjlayerlist"></div>    </div></div>',
-     zIndex: layer.zIndex
+      zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
         GetUserProjects();
-    }
+        layerZuoCeTanChuIndex = layer.open({
+            type: 1,
+            title:false,
+            content: '<button type="button" onclick="xianZuoDaKai()" title="隐藏" style="opacity: 0.5"  class="layui-btn layui-btn-primary "><i class="layui-icon layui-icon-prev"></i></button>', 
+            offset: ['62px', '255px'],
+            area: ['60px', '40px'],
+            closeBtn: 0
+            , shade: 0
+            , maxmin: false
+            , skin: 'shadows',
+            zIndex: layer.zIndex
+        });
+    },
+
+
 });
+
 
 //var projectdatagrouptime = [];//按时间组织
 var projectdatagrouparea = [];//按地区组织
@@ -295,8 +314,7 @@ function ProjectNodeClick(obj) {
                             CloseAllLayer();                               //关闭弹出图层
                             viewer.entities.removeAll();
                             AddEntitiesInViewer(projectentities);
-                            layer.restore(projectLieBiaoIndex);//还原
-                            
+                            elem.tabChange('docDemoTabBrief', 111); //跳转地址图层列表
                         }
                     });
                 });
@@ -648,7 +666,7 @@ function GetProjectMonitor(projectid) {
 };
 
 
-//缩放至项目范围
+//缩放至项目范围xianYouDaKai
 function FlytoExtent(west, south, east, north) {
     viewer.camera.flyTo({
         destination: new Cesium.Rectangle.fromDegrees(west, south, east, north)
@@ -660,3 +678,46 @@ function FlytoExtent(west, south, east, north) {
         }, 3000);
     }
 };
+
+//向右打开
+function xianYouDaKai() {
+    //打开的第一个页面id是这个。
+    $("#layui-layer1").show(); 
+    layerZuoCeTanChuIndex = layer.open({
+        type: 1,
+        title: false,
+        content: '<button type="button" onclick="xianZuoDaKai()" title="隐藏" style="opacity: 0.4"  class="layui-btn layui-btn-primary "><i class="layui-icon layui-icon-prev"></i></button>',
+        offset: ['62px', '255px'],
+        area: ['60px', '40px'],
+        closeBtn: 0
+        , shade: 0
+        , maxmin: false
+        , skin: 'shadows',
+        zIndex: layer.zIndex
+    });
+    if (layerYouCeTanChuIndex != null) {
+        layer.close(layerYouCeTanChuIndex);
+        layerYouCeTanChuIndex = null;
+    }
+};
+//向左关闭
+function xianZuoDaKai() {
+    $("#layui-layer1").hide();
+    layerYouCeTanChuIndex = layer.open({
+        type: 1,
+        title: false,
+        content: '<button type="button" onclick="xianYouDaKai()"  title="展开" style="opacity: 0.4" class="layui-btn layui-btn-primary"><i class="layui-icon layui-icon-next"></i></button>',
+        offset: ['62px', '0px'],
+        area: ['60px', '40px'],
+        closeBtn: 0
+        , shade: 0
+        , maxmin: false
+        , skin: 'shadows',
+        zIndex: layer.zIndex
+    });
+
+    if (layerZuoCeTanChuIndex != null) {
+        layer.close(layerZuoCeTanChuIndex);
+        layerZuoCeTanChuIndex = null;
+    }
+}; 
