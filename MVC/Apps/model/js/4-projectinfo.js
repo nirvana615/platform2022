@@ -205,7 +205,6 @@ function AddModelProject() {
                                         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                         width: 40,
                                         height: 40,
-                                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
                                     }
                                 });
                                 projectentities.push(newmodelprojectentity);
@@ -222,7 +221,6 @@ function AddModelProject() {
                                         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                         verticalOrigin: Cesium.VerticalOrigin.CENTER,
                                         pixelOffset: new Cesium.Cartesian2(0.0, -60),
-                                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
                                         scaleByDistance: new Cesium.NearFarScalar(90000, 1, 200000, 0)
                                     }
                                 });

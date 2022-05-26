@@ -12,7 +12,12 @@ util.fixbar({
         }
         else if (type === 'bar2') {
             //测量工具
-            Measurewidget();
+            if (curtileset == null) {
+                Measurewidget("terrain");
+            }
+            else {
+                Measurewidget("model");
+            }
         }
         else if (type === 'bar3') {
             //标注工具

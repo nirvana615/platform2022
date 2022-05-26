@@ -32,7 +32,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             int syscode = 0;
 
-            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie,ref user,ref syscode);
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user, ref syscode);
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
@@ -43,7 +43,7 @@ namespace SERVICE.Controllers
                 if (!string.IsNullOrEmpty(postmarks))
                 {
                     List<MarkData> marks = JsonHelper.ToObject<List<MarkData>>(postmarks);
-                    int num=0;
+                    int num = 0;
                     for (int i = 0; i < marks.Count; i++)
                     {
                         if (!string.IsNullOrEmpty(marks[i].title)
@@ -70,7 +70,7 @@ namespace SERVICE.Controllers
                             if (id != -1)
                             {
 
-                                if (marks[i].projetid==null)
+                                if (marks[i].projetid == null)
                                 {
                                     marks[i].projetid = "null";
                                 }
@@ -89,7 +89,7 @@ namespace SERVICE.Controllers
                             }
                         }
                     }
-                    if (num== marks.Count)
+                    if (num == marks.Count)
                     {
                         return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "保存成功！", JsonHelper.ToJson(marks)));
                     }
@@ -112,11 +112,11 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
-  /// 获取所有项目标注
-  /// </summary>
-  /// <param name="markprojectid"></param>
-  /// <param name="cookie"></param>
-  /// <returns></returns>
+        /// 获取所有项目标注
+        /// </summary>
+        /// <param name="markprojectid"></param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
         [HttpGet]
         public string GetMarkProjectList(string markprojectid, string cookie)
         {
@@ -128,9 +128,9 @@ namespace SERVICE.Controllers
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 string sql = "select b.id,b.text,a.projectid,b.type,b.style, b.color,b.pos,b.info from common_map_project_mark a,common_mark b where a.markid=b.id AND ";
-                if (markprojectid!=null)
+                if (markprojectid != null)
                 {
-                    sql = sql + " a.syscode = '"+ syscode + "' AND ( a.projectid='"+ markprojectid + "'OR a.projectid='null') ";
+                    sql = sql + " a.syscode = '" + syscode + "' AND ( a.projectid='" + markprojectid + "'OR a.projectid='null') ";
                 }
                 else
                 {

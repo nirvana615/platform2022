@@ -66,7 +66,7 @@ util.fixbar({
                         layer.close(index);
                     });
                 }
-            }   
+            }
         }
         else if (type === 'bar4') {
             //任务管理
@@ -74,7 +74,12 @@ util.fixbar({
         }
         else if (type === 'bar5') {
             //测量工具
-            Measurewidget();
+            if (curtileset == null) {
+                Measurewidget("terrain");
+            }
+            else {
+                Measurewidget("model");
+            }
         }
         else if (type === 'bar6') {
             //标注工具

@@ -646,7 +646,6 @@
     <Content Include="Apps\uav\widget\3.1-uavroute-mbtxcj.html" />
     <Content Include="Apps\uav\widget\2.0-uavroutetype.html" />
     <Content Include="Apps\uav\widget\1.0-uavproject-add.html" />
-    <Content Include="Resources\img\icon\datanull.png" />
     <Content Include="Resources\img\icon\tip.png" />
     <Content Include="Resources\img\map\endPoint.png" />
     <Content Include="Resources\img\map\map.png" />

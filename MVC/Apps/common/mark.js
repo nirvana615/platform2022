@@ -2,12 +2,6 @@
  * 必须先引用layui
  * 必须先创建viewer变量
  * 必须先创建handler变量
-
-
-/*
- * 必须先引用layui
- * 必须先创建viewer变量
- * 必须先创建handler变量
  */
 var markwidgetlayerindex = null;//标绘弹出层
 var markpointlayerindex = null;//点标注弹出层 
@@ -92,7 +86,9 @@ function Markwidget(id) {
                 }
             });
             layui.form.render();
-            loadMarkProjectLayersTree();
+            if (markprojectid != null) {
+                loadMarkProjectLayersTree();
+            }
             loadMarkAddLayersTree();
 
 
@@ -320,17 +316,17 @@ function loadMarkProjectLayersTree() {
                     elem: '#marklayerlist'
                     , id: 'markProjectlayerTree'
                     , showCheckbox: true
-                    , customOperate: false
                     , showLine: true
                     , data: markProjectLayer
                     , edit: ['update', 'del']
                     , accordion: true
+                    , customOperate: false
+                    , cancelNodeFileIcon: true
                     , click: function (obj) {
                         projectMarkNodeClick(obj);
                     }
                     , oncheck: function (obj) {
                         projectMarkNodeChecked(obj);
-
                     }
                     , operate: function (obj) {
                         projectMarkNodeOperate(obj);

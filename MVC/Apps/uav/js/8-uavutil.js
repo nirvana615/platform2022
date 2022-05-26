@@ -42,7 +42,12 @@ util.fixbar({
             SelectRouteType();
         } else if (type === 'bar4') {
             //测量工具
-            Measurewidget();
+            if (current_project_tile == null) {
+                Measurewidget("terrain");
+            }
+            else {
+                Measurewidget("model");
+            }
         } else if (type === 'bar5') {
             //标注工具
             Markwidget();

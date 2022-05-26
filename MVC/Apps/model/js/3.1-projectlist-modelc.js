@@ -19,7 +19,7 @@ function GetUserAllModelProjectsQuick() {
                 , offset: ['60px', '5px']
                 , closeBtn: 0
                 , maxmin: true
-                , moveOut: true
+                , moveOut: false
                 , resize: false
                 , content: '<!--项目列表--><div id="modelprojectlisttab" class="layui-tab layui-tab-brief" lay-filter="modelprojectListTab" style="margin:0px;"><!--选项卡--><ul class="layui-tab-title"><li lay-id="list_area" class="layui-this" style="width:40%;">地区</li><li lay-id="list_year" style="width:40%;">时间</li></ul><!--tree--><div class="layui-tab-content" style="padding:0px;"><div class="layui-tab-item layui-show"><div id="projectbyarea"></div></div><div class="layui-tab-item"><div id="projectbyyear"></div></div></div></div>'
                 , zIndex: layer.zIndex
@@ -181,7 +181,6 @@ function GetUserAllModelProjectsQuick() {
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             width: 40,
                             height: 40,
-                            disableDepthTestDistance: Number.POSITIVE_INFINITY, //深度检测，解决图标、标注与模型遮挡冲突
                         }
                     });
                     projectentities.push(modelprojectentity);
@@ -197,7 +196,6 @@ function GetUserAllModelProjectsQuick() {
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             verticalOrigin: Cesium.VerticalOrigin.CENTER,
                             pixelOffset: new Cesium.Cartesian2(0.0, -60),
-                            disableDepthTestDistance: Number.POSITIVE_INFINITY,
                             scaleByDistance: new Cesium.NearFarScalar(90000, 1, 200000, 0)
                         }
                     });
@@ -442,11 +440,51 @@ function ModelProjectNodeClick(obj) {
                     MarkCurrentProject();
                     isReloadTree = false;//重载后还原
 
-                    for (var i in projectentities) {
-                        if (projectentities[i].id == ("PROJECTCENTER_" + currentprojectid)) {
-                            ZoomToEntity(projectentities[i]);
-                            break;
+
+                    RemoveEntitiesInViewer(projectentities);
+                    projectentities = [];
+
+                    for (var i in modelprojectlistarea) {
+                        for (var j in modelprojectlistarea[i].children) {
+                            var modelprojectentity = new Cesium.Entity({
+                                id: "PROJECTCENTER_" + modelprojectlistarea[i].children[j].id,
+                                position: Cesium.Cartesian3.fromDegrees(modelprojectlistarea[i].children[j].data.ZXJD, modelprojectlistarea[i].children[j].data.ZXWD),
+                                billboard: {
+                                    image: '../../Resources/img/model/modelprojecticon.png',
+                                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                    width: 40,
+                                    height: 40,
+                                }
+                            });
+                            projectentities.push(modelprojectentity);
+                            AddEntityInViewer(modelprojectentity);
+
+                            var modelprojectentitylabel = new Cesium.Entity({
+                                id: "PROJECTCENTER_LABEL_" + modelprojectlistarea[i].children[j].id,
+                                position: Cesium.Cartesian3.fromDegrees(modelprojectlistarea[i].children[j].data.ZXJD, modelprojectlistarea[i].children[j].data.ZXWD),
+                                label: {
+                                    text: modelprojectlistarea[i].children[j].data.XMMC,
+                                    font: '20px Times New Roman',
+                                    backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                    pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                                    scaleByDistance: new Cesium.NearFarScalar(90000, 1, 200000, 0)
+                                }
+                            });
+                            projectentities.push(modelprojectentitylabel);
+                            AddEntityInViewer(modelprojectentitylabel);
+
+                            if (modelprojectlistarea[i].children[j].id == currentprojectid) {
+                                ZoomToEntity(modelprojectentity);
+                            }
                         }
+                    }
+
+                    if (measurewidget_layerindex != null) {
+                        layui.element.tabChange('measureway', 'terrainMeasure'); //地形测量
                     }
 
                     layer.close(index);
@@ -455,39 +493,46 @@ function ModelProjectNodeClick(obj) {
                 });
             }
             else {
-                for (var i in modelprojectlistarea) {
-                    for (var j in modelprojectlistarea[i].children) {
-                        if (modelprojectlistarea[i].children[j].id == obj.data.id) {
-                            modelprojectlistarea[i].children[j].spread = !modelprojectlistarea[i].children[j].spread;
-                        }
-                        else {
-                            modelprojectlistarea[i].children[j].spread = false;
-                        }
+                //for (var i in modelprojectlistarea) {
+                //    for (var j in modelprojectlistarea[i].children) {
+                //        if (modelprojectlistarea[i].children[j].id == obj.data.id) {
+                //            modelprojectlistarea[i].children[j].spread = !modelprojectlistarea[i].children[j].spread;
+                //        }
+                //        else {
+                //            modelprojectlistarea[i].children[j].spread = false;
+                //        }
+                //        break;
+                //    }
+                //}
+
+                //for (var i in modelprojectlistyear) {
+                //    for (var j in modelprojectlistyear[i].children) {
+                //        if (modelprojectlistyear[i].children[j].id == obj.data.id) {
+                //            modelprojectlistyear[i].children[j].spread = !modelprojectlistyear[i].children[j].spread;
+                //        }
+                //        else {
+                //            modelprojectlistyear[i].children[j].spread = false;
+                //        }
+                //        break;
+                //    }
+                //}
+
+                //isReloadTree = true;//标记重载
+                //MarkCurrentProject();
+                //isReloadTree = false;//重载后还原
+
+                for (var i in projectentities) {
+                    if (projectentities[i].id == ("PROJECTCENTER_" + currentprojectid)) {
+                        ZoomToEntity(projectentities[i]);
                         break;
                     }
                 }
-
-                for (var i in modelprojectlistyear) {
-                    for (var j in modelprojectlistyear[i].children) {
-                        if (modelprojectlistyear[i].children[j].id == obj.data.id) {
-                            modelprojectlistyear[i].children[j].spread = !modelprojectlistyear[i].children[j].spread;
-                        }
-                        else {
-                            modelprojectlistyear[i].children[j].spread = false;
-                        }
-                        break;
-                    }
-                }
-
-                isReloadTree = true;//标记重载
-                MarkCurrentProject();
-                isReloadTree = false;//重载后还原
             }
         }
     }
     else if (obj.data.type == "modeltask") {
         if (curtileset != null) {
-            if (obj.data.id == ("UAVSURMODEL_" + curtileset.data.Id)) {
+            if (obj.data.id == curtileset.data.Id) {
                 if (curtileset.data.MXSJ != undefined && curtileset.data.MXSJ != "") {
                     viewer.scene.camera.setView(JSON.parse(curtileset.data.MXSJ));
                 }
@@ -575,6 +620,97 @@ function ModelProjectNodeCheck(obj) {
                     isReloadTree = false;//重载后还原
                     currentmodelid = obj.data.id;
                     curtileset = Load3DTiles(obj.data.data);
+
+                    var newprojectentities = [];
+                    for (var i in projectentities) {
+                        if (projectentities[i].id == ("PROJECTCENTER_" + currentprojectid) || projectentities[i].id == ("PROJECTCENTER_LABEL_" + currentprojectid)) {
+                            RemoveEntityInViewer(projectentities[i]);
+                        }
+                        else {
+                            newprojectentities.push(projectentities[i]);
+                        }
+                    }
+                    for (var i in modelprojectlistarea) {
+                        for (var j in modelprojectlistarea[i].children) {
+                            if (modelprojectlistarea[i].children[j].id == currentprojectid) {
+                                var projectlabel = modelprojectlistarea[i].children[j].data.XMMC;
+                                var positions = [];
+                                positions.push(Cesium.Cartesian3.fromDegrees(modelprojectlistarea[i].children[j].data.ZXJD, modelprojectlistarea[i].children[j].data.ZXWD));
+                                viewer.scene.clampToHeightMostDetailed(positions).then(function (clampedCartesians) {
+                                    var heights = Cesium.Cartographic.fromCartesian(clampedCartesians[0]).height;
+                                    if (heights > 0) {
+                                        var modelprojectentity = new Cesium.Entity({
+                                            id: "PROJECTCENTER_" + currentprojectid,
+                                            position: clampedCartesians[0],
+                                            billboard: {
+                                                image: '../../Resources/img/model/modelprojecticon.png',
+                                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                                                heightReference: Cesium.HeightReference.NONE,
+                                                width: 40,
+                                                height: 40,
+                                            }
+                                        });
+                                        newprojectentities.push(modelprojectentity);
+                                        AddEntityInViewer(modelprojectentity);
+
+                                        var modelprojectentitylabel = new Cesium.Entity({
+                                            id: "PROJECTCENTER_LABEL_" + currentprojectid,
+                                            position: clampedCartesians[0],
+                                            label: {
+                                                text: projectlabel,
+                                                font: '20px Times New Roman',
+                                                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                                heightReference: Cesium.HeightReference.NONE,
+                                                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                                pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                                                scaleByDistance: new Cesium.NearFarScalar(90000, 1, 200000, 0)
+                                            }
+                                        });
+                                        newprojectentities.push(modelprojectentitylabel);
+                                        AddEntityInViewer(modelprojectentitylabel);
+                                    }
+                                    else {
+                                        var modelprojectentity = new Cesium.Entity({
+                                            id: "PROJECTCENTER_" + currentprojectid,
+                                            position: Cesium.Cartesian3.fromDegrees(modelprojectlistarea[i].children[j].data.ZXJD, modelprojectlistarea[i].children[j].data.ZXWD),
+                                            billboard: {
+                                                image: '../../Resources/img/model/modelprojecticon.png',
+                                                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                                                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                                width: 40,
+                                                height: 40,
+                                            }
+                                        });
+                                        newprojectentities.push(modelprojectentity);
+                                        AddEntityInViewer(modelprojectentity);
+
+                                        var modelprojectentitylabel = new Cesium.Entity({
+                                            id: "PROJECTCENTER_LABEL_" + currentprojectid,
+                                            position: Cesium.Cartesian3.fromDegrees(modelprojectlistarea[i].children[j].data.ZXJD, modelprojectlistarea[i].children[j].data.ZXWD),
+                                            label: {
+                                                text: modelprojectlistarea[i].children[j].data.XMMC,
+                                                font: '20px Times New Roman',
+                                                backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                                pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                                                scaleByDistance: new Cesium.NearFarScalar(90000, 1, 200000, 0)
+                                            }
+                                        });
+                                        newprojectentities.push(modelprojectentitylabel);
+                                        AddEntityInViewer(modelprojectentitylabel);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    projectentities = newprojectentities;
+
+                    if (measurewidget_layerindex != null) {
+                        layui.element.tabChange('measureway', 'modelMeasure'); //模型测量
+                    }
                 }
             }
             else {
@@ -611,6 +747,97 @@ function ModelProjectNodeCheck(obj) {
                 isReloadTree = true;//标记重载
                 MarkCurrentProject();
                 isReloadTree = false;//重载后还原 
+
+                var newprojectentities = [];
+                for (var i in projectentities) {
+                    if (projectentities[i].id == ("PROJECTCENTER_" + currentprojectid) || projectentities[i].id == ("PROJECTCENTER_LABEL_" + currentprojectid)) {
+                        RemoveEntityInViewer(projectentities[i]);
+                    }
+                    else {
+                        newprojectentities.push(projectentities[i]);
+                    }
+                }
+                for (var i in modelprojectlistarea) {
+                    for (var j in modelprojectlistarea[i].children) {
+                        if (modelprojectlistarea[i].children[j].id == currentprojectid) {
+                            var projectlabel = modelprojectlistarea[i].children[j].data.XMMC;
+                            var positions = [];
+                            positions.push(Cesium.Cartesian3.fromDegrees(modelprojectlistarea[i].children[j].data.ZXJD, modelprojectlistarea[i].children[j].data.ZXWD));
+                            viewer.scene.clampToHeightMostDetailed(positions).then(function (clampedCartesians) {
+                                var heights = Cesium.Cartographic.fromCartesian(clampedCartesians[0]).height;
+                                if (heights > 0) {
+                                    var modelprojectentity = new Cesium.Entity({
+                                        id: "PROJECTCENTER_" + currentprojectid,
+                                        position: clampedCartesians[0],
+                                        billboard: {
+                                            image: '../../Resources/img/model/modelprojecticon.png',
+                                            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                                            heightReference: Cesium.HeightReference.NONE,
+                                            width: 40,
+                                            height: 40,
+                                        }
+                                    });
+                                    newprojectentities.push(modelprojectentity);
+                                    AddEntityInViewer(modelprojectentity);
+
+                                    var modelprojectentitylabel = new Cesium.Entity({
+                                        id: "PROJECTCENTER_LABEL_" + currentprojectid,
+                                        position: clampedCartesians[0],
+                                        label: {
+                                            text: projectlabel,
+                                            font: '20px Times New Roman',
+                                            backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                            heightReference: Cesium.HeightReference.NONE,
+                                            verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                            pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                                            scaleByDistance: new Cesium.NearFarScalar(90000, 1, 200000, 0)
+                                        }
+                                    });
+                                    newprojectentities.push(modelprojectentitylabel);
+                                    AddEntityInViewer(modelprojectentitylabel);
+                                }
+                                else {
+                                    var modelprojectentity = new Cesium.Entity({
+                                        id: "PROJECTCENTER_" + currentprojectid,
+                                        position: Cesium.Cartesian3.fromDegrees(modelprojectlistarea[i].children[j].data.ZXJD, modelprojectlistarea[i].children[j].data.ZXWD),
+                                        billboard: {
+                                            image: '../../Resources/img/model/modelprojecticon.png',
+                                            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                                            heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                            width: 40,
+                                            height: 40,
+                                        }
+                                    });
+                                    newprojectentities.push(modelprojectentity);
+                                    AddEntityInViewer(modelprojectentity);
+
+                                    var modelprojectentitylabel = new Cesium.Entity({
+                                        id: "PROJECTCENTER_LABEL_" + currentprojectid,
+                                        position: Cesium.Cartesian3.fromDegrees(modelprojectlistarea[i].children[j].data.ZXJD, modelprojectlistarea[i].children[j].data.ZXWD),
+                                        label: {
+                                            text: projectlabel,
+                                            font: '20px Times New Roman',
+                                            backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                            heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                            verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                            pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                                            scaleByDistance: new Cesium.NearFarScalar(90000, 1, 200000, 0)
+                                        }
+                                    });
+                                    newprojectentities.push(modelprojectentitylabel);
+                                    AddEntityInViewer(modelprojectentitylabel);
+                                }
+                            });
+                        }
+                    }
+                }
+                projectentities = newprojectentities;
+
+                if (measurewidget_layerindex != null) {
+                    layui.element.tabChange('measureway', 'modelMeasure'); //模型测量
+                }
             }
         }
     }
@@ -655,6 +882,59 @@ function ModelProjectNodeCheck(obj) {
                 isReloadTree = true;//标记重载
                 MarkCurrentProject();
                 isReloadTree = false;//重载后还原
+
+                var newprojectentities = [];
+                for (var i in projectentities) {
+                    if (projectentities[i].id == ("PROJECTCENTER_" + currentprojectid) || projectentities[i].id == ("PROJECTCENTER_LABEL_" + currentprojectid)) {
+                        RemoveEntityInViewer(projectentities[i]);
+                    }
+                    else {
+                        newprojectentities.push(projectentities[i]);
+                    }
+                }
+                for (var i in modelprojectlistarea) {
+                    for (var j in modelprojectlistarea[i].children) {
+                        if (modelprojectlistarea[i].children[j].id == currentprojectid) {
+                            var projectlabel = modelprojectlistarea[i].children[j].data.XMMC;
+
+                            var modelprojectentity = new Cesium.Entity({
+                                id: "PROJECTCENTER_" + currentprojectid,
+                                position: Cesium.Cartesian3.fromDegrees(modelprojectlistarea[i].children[j].data.ZXJD, modelprojectlistarea[i].children[j].data.ZXWD),
+                                billboard: {
+                                    image: '../../Resources/img/model/modelprojecticon.png',
+                                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                    width: 40,
+                                    height: 40,
+                                }
+                            });
+                            newprojectentities.push(modelprojectentity);
+                            AddEntityInViewer(modelprojectentity);
+
+                            var modelprojectentitylabel = new Cesium.Entity({
+                                id: "PROJECTCENTER_LABEL_" + currentprojectid,
+                                position: Cesium.Cartesian3.fromDegrees(modelprojectlistarea[i].children[j].data.ZXJD, modelprojectlistarea[i].children[j].data.ZXWD),
+                                label: {
+                                    text: projectlabel,
+                                    font: '20px Times New Roman',
+                                    backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                    pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                                    scaleByDistance: new Cesium.NearFarScalar(90000, 1, 200000, 0)
+                                }
+                            });
+                            newprojectentities.push(modelprojectentitylabel);
+                            AddEntityInViewer(modelprojectentitylabel);
+                        }
+                    }
+                }
+                projectentities = newprojectentities;
+
+                if (measurewidget_layerindex != null) {
+                    layui.element.tabChange('measureway', 'terrainMeasure'); //地形测量
+                }
             }
         }
     }

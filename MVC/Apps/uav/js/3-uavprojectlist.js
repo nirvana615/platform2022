@@ -8,6 +8,7 @@ layer.open({
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
+    , resize: false
     , content: '<div id="uav-project-list-tree" style="padding:0px"></div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
@@ -241,6 +242,10 @@ function UavProjectNodeClick(obj) {
                     MarkCurrentProject();
                     isReloadTree = false;//重载后还原
 
+                    if (measurewidget_layerindex != null) {
+                        layui.element.tabChange('measureway', 'terrainMeasure'); //地形测量
+                    }
+
                     layer.close(index);
                 }, function (index) {
                     //否
@@ -365,6 +370,10 @@ function UavProjectNodeCheck(obj) {
                     isReloadTree = false;//重载后还原
                     current_model_id = obj.data.id;
                     current_project_tile = Load3DTiles(obj.data.data);
+
+                    if (measurewidget_layerindex != null) {
+                        layui.element.tabChange('measureway', 'modelMeasure'); //模型测量
+                    }
                 }
             }
             else {
@@ -387,6 +396,10 @@ function UavProjectNodeCheck(obj) {
 
                 current_model_id = obj.data.id;
                 current_project_tile = Load3DTiles(obj.data.data);
+
+                if (measurewidget_layerindex != null) {
+                    layui.element.tabChange('measureway', 'modelMeasure'); //模型测量
+                }
             }
         }
         else if (obj.data.type == "uavroute") {
@@ -449,6 +462,10 @@ function UavProjectNodeCheck(obj) {
                     }
                     break;
                 }
+            }
+
+            if (measurewidget_layerindex != null) {
+                layui.element.tabChange('measureway', 'terrainMeasure'); //地形测量
             }
         }
         else if (obj.data.type == "uavroute") {

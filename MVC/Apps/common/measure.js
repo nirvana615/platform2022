@@ -15,7 +15,7 @@ var measurewidget_temppoints = [];
 var measurewidget_tempentities = [];
 
 //测量widget
-function Measurewidget() {
+function Measurewidget(type) {
     if (measurewidget_layerindex != null) {
         layer.setTop(measurewidget_layerindex);
         return;
@@ -57,11 +57,20 @@ function Measurewidget() {
 
             //记录当前深度检测值
             measurewidget_depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
-            if (viewer.scene.globe.depthTestAgainstTerrain) {
+
+            if (type == "model") {
+                layui.element.tabChange('measureway', 'modelMeasure');//模型
+            }
+            else if (type == "terrain") {
                 layui.element.tabChange('measureway', 'terrainMeasure');//地形
             }
             else {
-                layui.element.tabChange('measureway', 'modelMeasure');//模型
+                if (viewer.scene.globe.depthTestAgainstTerrain) {
+                    layui.element.tabChange('measureway', 'terrainMeasure');//地形
+                }
+                else {
+                    layui.element.tabChange('measureway', 'modelMeasure');//模型
+                }
             }
 
             layui.form.render();
