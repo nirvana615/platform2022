@@ -72,3 +72,7 @@
     box-shadow: none !important;
     border: none !important;
 }
+
+#editautodatatoolid .layui-form-select dl {
+    max-height: 120px;
+}

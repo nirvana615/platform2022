@@ -2,8 +2,15 @@
 var autodatachart = null;                       //图表
 var monitorstatisticstable = null;              //监测点统计表
 var monitorstatisticsdata = [];                 //监测点统计数据（最小值、最大值、平均值、标准差）
+var editChart = null;                           //处理监测数据图
 
+var threshold1 = null;                          //定义标示线初值
+var threshold2 = null;
+var threshold3 = null;
+var threshold4 = null;
 
+var orangeData = null;                         //原始数据
+var reviseData = null;                         //修正数据
 //自动化监测数据widget
 function LoadAutoDataLayer(id) {
     if (id == null) {
@@ -23,7 +30,7 @@ function LoadAutoDataLayer(id) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--自动化监测数据可视化--><div class="layui-row"><!--左侧--><div class="layui-col-md3" style="width:20%;height:750px;overflow: auto;"><div id="monitortreebytype" class="grid-demo"></div></div><!--右侧--><div class="layui-col-md9" style="width:80%;height:740px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"><div class="grid-demo grid-demo-bg1"><!--工具栏--><form class="layui-form" lay-filter="autodataform" style="margin-top:5px;"><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><div class="layui-input-block" style="margin-left:10px;margin-right:10px;"><input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div></div></div></div></div></form><!--图形--><div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:540px"></div><!--统计表格--><div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;"><table id="autodatastatistics" class="layui-hide"></table></div></div></div></div>'
+                , content: '<!--自动化监测数据可视化--> <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;"> <ul class="layui-tab-title"> <li class="layui-this" style="width:21%;">数据处理</li> <li style="width:21%;">可视化</li> <li style="width:21%;">综合分析</li> <li style="width:21%;">统计分析</li> </ul> <div class="layui-tab-content" style="margin:0px 0px"> <!--数据处理--> <div class="layui-tab-item layui-show"> <div class="layui-row" style="margin: 0px 10px;"> <!--选择设备及时间范围--> <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <label class="layui-form-label" style="text-align:center;">选择设备：</label> <div class="layui-input-block"> <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;"> <option value="">请选择设备</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;"> <option value="">请选择年限</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div></div> </form> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-col-md10"> <!--图形--> <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;"></div> </div> <div class="layui-col-md2"> <!--数据集--> <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div> </div> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief"> <ul class="layui-tab-title"> <li class="layui-this">异常处理</li> <li>粗差剔除</li> <li>设置初值</li> <li>插补数据</li> <li>监测曲线</li> </ul> <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;"> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs3"> <!--异常处理工具及说明--> <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;"> <!--异常处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:1px;"> <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter"> <option value="0" selected="">手动单点更改</option> <option value="1">按时间范围选择</option> <option value="2">按值域范围选择</option> <option value="3">多条件选择</option> </select> </div> </div> </div> </form> <!--异常处理工具说明--> <div id="editabnormaldatatooldoc" style="height:120px;padding: 5px 5px; border: 1px solid #e6e6e6;overflow-y: auto;"> <p>&ensp;&ensp;说明：可通过点击拖拽更改按钮，逐个拖拽异常点y值更改数据，也可点击删除按钮删除异常数据（删除包括该时间点所有数据）。</p> </div> </div> <!--右侧--> <div class="layui-col-md9" id="editabnormaldatatoolbodyid"> <!--异常处理工具参数--> </div> </div></div> <div class="layui-tab-item">2</div> <div class="layui-tab-item">3</div> <div class="layui-tab-item">4</div> <div class="layui-tab-item">5</div> <div class="layui-tab-item">6</div> </div> </div> </div></div> <!--可视化--> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="monitortreebytype" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> </div> </form> <!--图形--> <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> <!--统计表格--> <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;"> <table id="autodatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> <!--综合分析--> <div class="layui-tab-item">综合分析</div> <!--统计分析--> <div class="layui-tab-item">统计分析</div> </div> </div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -32,6 +39,7 @@ function LoadAutoDataLayer(id) {
 
                     //加载监测点
                     GetMonitors(id, loadinglayerindex);
+
                 }
                 , end: function () {
                     //关闭
@@ -39,6 +47,7 @@ function LoadAutoDataLayer(id) {
 
                     currentmonitor = null;
                     autodatachart = null;
+                    editChart = null;
                     monitorstatisticstable = null;
                     monitorstatisticsdata = [];
                 }
@@ -46,7 +55,6 @@ function LoadAutoDataLayer(id) {
         }
     }
 };
-
 
 //获取项目监测点
 function GetMonitors(projectid, index) {
@@ -317,11 +325,12 @@ function GetMonitors(projectid, index) {
 
                 //加载初始监测点数据
                 LoadMonitorAutoDataPreDateTime(currentmonitor, form.val("autodataform").autodatapretime);
+                //监测数据处理
+                EditProjectDeviceAutoData(projectid);
             }
         }, datatype: "json"
     });
 };
-
 
 function LoadMonitorAutoDataPreDateTime(monitor, datetime) {
     //实例化图表
@@ -337,7 +346,6 @@ function LoadMonitorAutoDataPreDateTime(monitor, datetime) {
     });
 };
 
-
 function LoadMonitorAutoDataCustomDateTime(monitor, datetime) {
     //实例化图表
     autodatachart = echarts.init(document.getElementById('autodatachart'));
@@ -351,8 +359,6 @@ function LoadMonitorAutoDataCustomDateTime(monitor, datetime) {
         }, datatype: "json"
     });
 };
-
-
 //计算数组平均值
 function GetArrayAvg(arr) {
     var sum = 0;
@@ -394,7 +400,6 @@ function DisplayDATA(monitor, data) {
         //TODO
     }
 };
-
 
 //展示无数据
 function DisplayNODATA(monitor) {
@@ -1524,7 +1529,6 @@ function DisplayRAIN(monitor, data) {
     autodatachart.hideLoading();
     autodatachart.setOption(option, true, false);
 };
-
 //自动化监测数据图表可视化
 function LoadAuoData(monitor) {
     if (monitor != null) {
@@ -2089,6 +2093,1819 @@ function LoadAuoData(monitor) {
 
 
 
+
+
+}
+
+
+//监测数据处理
+function EditProjectDeviceAutoData(projectid) {
+    var monitorArr = {};
+    var dataSetid = null;
+    var isReloadTree = false;
+    //渲染工具
+    document.getElementById("editautodatadeviceid").style.visibility = "visible";
+    document.getElementById("editautodatapretimeid").style.visibility = "visible";
+    document.getElementById("editautodatacustomtimeid").style.visibility = "visible";
+    //获取图表
+    editChart = echarts.init(document.getElementById('editautodatachartid'));
+    editChart.showLoading();
+    //加载监测设备
+    if (currentprojectmonitors.length > 0) {
+        var deviceTypes = currentprojectmonitors[1].children;
+        if (deviceTypes.length > 0) {
+            for (var i in deviceTypes) {
+                for (var j in deviceTypes[i].children) {
+                    if (i == 0 && j == 0) {
+                        monitorArr.title = deviceTypes[i].children[j].title;
+                        monitorArr.type = deviceTypes[i].children[j].type;
+                        monitorArr.id = deviceTypes[i].children[j].id;
+                        document.getElementById("editautodatadeviceid").innerHTML += '<option  type="' + deviceTypes[i].children[j].type + '" title="' + deviceTypes[i].children[j].title + '" value="' + deviceTypes[i].children[j].id + '" selected>' + deviceTypes[i].children[j].title + '</option>';
+                    }
+                    else {
+                        document.getElementById("editautodatadeviceid").innerHTML += '<option type="' + deviceTypes[i].children[j].type + '" title="' + deviceTypes[i].children[j].title + '" value="' + deviceTypes[i].children[j].id + '">' + deviceTypes[i].children[j].title + '</option>';
+                    }
+
+                }
+            }
+        }
+    }
+
+    //预设时间范围
+    if (autodatadatetimes.length > 0) {
+        for (var i in autodatadatetimes) {
+            if (autodatadatetimes[i].name == "今年") {
+                document.getElementById("editautodatapretimeid").innerHTML += '<option value="' + autodatadatetimes[i].value + '" selected>' + autodatadatetimes[i].name + '</option>';
+            }
+            else if (autodatadatetimes[i].name == "上一年") {
+                document.getElementById("editautodatapretimeid").innerHTML += '<option value="' + autodatadatetimes[i].value + '">' + autodatadatetimes[i].name + '</option>';
+            }
+            else if (autodatadatetimes[i].name == "全部") {
+                document.getElementById("editautodatapretimeid").innerHTML += '<option value="' + autodatadatetimes[i].value + '">' + autodatadatetimes[i].name + '</option>';
+            }
+        }
+    }
+
+    //切换设备
+    form.on('select(editautodatadevicefilter)', function (data) {
+        if (data.value != "") {
+            monitorArr = {};
+            var indexGID = data.elem.selectedIndex;
+            monitorArr.title = data.elem[indexGID].title;
+            monitorArr.type = $(data.elem).find("option:selected").attr("type");
+            monitorArr.id = data.value;
+            //加载数据
+            LoadEditAutoDataPreDateTime(monitorArr, form.val("editautodataform").editautodatapretime);
+        }
+    });
+
+    //自定义时间范围
+    date.render({
+        elem: '#editautodatacustomtimeid'
+        , type: 'date'
+        , range: true
+        , done: function (value, date, endDate) {
+            if (value != "") {
+                ////按自定义时间范围绘制图表
+                LoadEditAutoDataCustomDateTime(monitorArr, valu);
+            }
+        }
+    });
+    //预设时间范围切换时间
+    form.on('select(editautodatapretimefilter)', function (data) {
+        if (data.value != "") {
+            ////按预设时间范围绘制图表
+            LoadEditAutoDataPreDateTime(monitorArr, data.value);
+        }
+    });
+    //初始加载数据
+    LoadEditAutoDataPreDateTime(monitorArr, form.val("editautodataform").editautodatapretime);
+
+
+    //曲线左侧数据集树（开启复选框）
+    tree.render({
+        elem: '#editautodatasetid'
+        , id: 'editautodatasetid'
+        , data: []
+        , accordion: false
+        , showLine: true
+        , showCheckbox: true
+        , customCheckbox: true
+        , cancelNodeFileIcon: true
+        , oncheck: function (obj) {
+            //节点选中or取消选中
+            if (obj.checked) {
+                //选中
+                if (obj.data.type == "dataset") {
+                    if (dataSetid != null) {
+                        if (!isReloadTree) {
+                            for (var i in dataSet) {
+                                for (var j in dataSet[i].children) {
+                                    if (dataSet[i].children[j].id == dataSetid) {
+                                        dataSet[i].children[j].checked = false;
+                                    }
+                                    if (dataSet[i].children[j].id == obj.data.id) {
+                                        dataSet[i].children[j].checked = true;
+                                    }
+                                }
+                            }
+                            dataSetid = obj.data.id;
+                            isReloadTree = true;//标记重载
+                            tree.reload('editautodatasetid', { data: dataSet });
+                            isReloadTree = false;//重载后还原
+                        }
+                    }
+                    else {
+                        for (var i in dataSet) {
+                            for (var j in dataSet[i].children) {
+                                if (dataSet[i].children[j].id == obj.data.id) {
+                                    dataSet[i].children[j].checked = true;
+                                    break;
+                                }
+                            }
+                        }
+                        dataSetid = obj.data.id;
+                        isReloadTree = true;//标记重载
+                        tree.reload('editautodatasetid', { data: dataSet });
+                        isReloadTree = false;//重载后还原
+                    }
+                }
+
+            }
+            else {
+                //取消选中
+                if (obj.data.type == "dataset") {
+                    if (!isReloadTree) {
+                        for (var i in dataSet) {
+                            for (var j in dataSet[i].children) {
+                                if (dataSet[i].children[j].id == obj.data.id) {
+                                    dataSet[i].children[j].checked = false;
+                                    break;
+                                }
+                            }
+                        }
+                        isReloadTree = true;//标记重载
+                        tree.reload('editautodatasetid', { data: dataSet });
+                        isReloadTree = false;//重载后还原
+                    }
+                }
+            }
+        }
+    });
+    var dataSet = [
+        {
+            title: '目标数据',
+            id: 0,
+            spread: true,
+            children: [
+                {
+                    title: '原始数据',
+                    showCheckbox: true,
+                    checked: false,
+                    type: "dataset",
+                    id: 1
+                },
+                {
+                    title: '修正数据',
+                    type: "dataset",
+                    showCheckbox: true,
+                    checked: false,
+                    id: 2
+                }
+            ]
+        },
+        {
+            title: '历史数据',
+            id: 1,
+            spread: true,
+            children: [
+                {
+                    title: '2022',
+                    type: "dataset",
+                    showCheckbox: true,
+                    checked: false,
+                    id: 3
+                },
+                {
+                    title: '2021',
+                    type: "dataset",
+                    showCheckbox: true,
+                    checked: false,
+                    id: 4
+                }
+            ]
+
+        }
+    ];
+    tree.reload('editautodatasetid', { data: dataSet });
+
+    ////异常处理模块
+
+    //切换异常处理工具模块
+    form.on('select(editabnormaldatatoolfilter)', function (data) {
+        if (data.value == "0") {
+            document.getElementById("editabnormaldatatooldoc").innerHTML = "<p>&ensp;&ensp;说明：可通过点击拖拽更改按钮，逐个拖拽异常点y值更改数据，也可点击剔除按钮剔除异常数据（剔除包括该时间点所有数据）。</p>";
+
+        }
+        else if (data.value == "1") {
+            ///按时间范围选择
+            document.getElementById("editabnormaldatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标选择或手动输入欲选时间段，点击剔除按钮，即可删除该时间段数据。</p>';
+            document.getElementById("editabnormaldatatoolbodyid").innerHTML = '<!--异常处理工具参数--> <form class="layui-form" lay-filter="editabnormaldataform" style="margin-top:50px"> <div class="layui-form-item "style="text-align:center;"> <div class="layui-inline"><label class="layui-form-label">时间范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editabnormalstarttimeid" name="editabnormalstarttime" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editabnormalendtimeid" name="editabnormalendtime" class="layui-input" placeholder="结束时间"> </div> </div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editabnormaldataxxsubmit" style="width:120px;border-radius:5px;">剔除</button> </div> </div> </form>';
+            //x轴游标取值
+            MarkLine();
+            ////editChart.setOption({
+            ////    xAxis: {
+            ////        type: 'time',
+            ////        axisPointer: {
+            ////            value: '2000-01-01',
+            ////            show:true,
+            ////            snap: true,
+            ////            lineStyle: {
+            ////                color: 'red',
+            ////                width: 2
+            ////            },
+            ////            label: {
+            ////                show: true,
+            ////                formatter: function (params) {
+            ////                    $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value));
+            ////                    return echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value);
+            ////                },
+            ////                backgroundColor: '#7581BD'
+            ////            },
+            ////            handle: {
+            ////                show: true,
+            ////                color: '#7581BD',
+            ////                size: 20,
+            ////                margin: 35
+            ////            }
+            ////        },
+            ////        splitLine: {
+            ////            show: false
+            ////        }
+            ////    },
+            ////    yAxis: {
+            ////        type: 'value',
+            ////        axisPointer: {
+            ////            value: '0',
+            ////            show:false,
+            ////            snap: false,
+            ////            lineStyle: {
+            ////                color: 'red',
+            ////                width: 2
+            ////            },
+            ////            label: {
+            ////                show: true,
+            ////                formatter: function (params) {
+            ////                    return params.value;
+            ////                },
+            ////                backgroundColor: '#7581BD'
+            ////            },
+            ////            handle: {
+            ////                show: true,
+            ////                color: '#7581BD',
+            ////                size: 20,
+            ////                margin: 65
+            ////            }
+            ////        },
+            ////        splitLine: {
+            ////            show: false
+            ////        }
+            ////    },
+            ////});
+        }
+        else if (data.value == "2") {
+            ///按值域范围选择
+            document.getElementById("editabnormaldatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过Y轴游标选择或手动输入欲选值域范围，点击剔除按钮，即可剔除该值域范围的数据。</p>';
+            document.getElementById("editabnormaldatatoolbodyid").innerHTML = '<!--异常处理工具参数--> <form class="layui-form" lay-filter="editabnormaldataform" style="margin-top:50px"> <div class="layui-form-item "style="text-align:center;"> <div class="layui-inline"><label class="layui-form-label">值域范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editabnormalstartvalueid" name="editabnormalstartvalue" class="layui-input" placeholder="最小值"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editabnormalendvalueid" name="editabnormalendvalue" class="layui-input" placeholder="最大值"> </div> </div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editabnormaldatayysubmit" style="width:120px;border-radius:5px;">剔除</button> </div> </div> </form>';
+            //y轴游标取值
+
+        }
+        else if (data.value == "3") {
+            ///多条件选择
+            document.getElementById("editabnormaldatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标和Y轴游标选择或手动输入欲选时间段和值域范围的数据，点击剔除按钮，即可剔除所选数据。</p>';
+            document.getElementById("editabnormaldatatoolbodyid").innerHTML = '<!--异常处理工具参数--> <form class="layui-form" lay-filter="editabnormaldataform" style="margin-top:25px"> <div class="layui-form-item "style="text-align:center;"> <div class="layui-inline"><label class="layui-form-label">时间范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editabnormalstarttimeid" name="editabnormalstarttime" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editabnormalendtimeid" name="editabnormalendtime" class="layui-input" placeholder="结束时间"> </div> </div> </div> <div class="layui-form-item "style="text-align:center;"> <div class="layui-inline"><label class="layui-form-label">值域范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editabnormalstartvalueid" name="editabnormalstartvalue" class="layui-input" placeholder="最小值"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editabnormalendvalueid" name="editabnormalendvalue" class="layui-input" placeholder="最大值"> </div> </div> </div> <div class="layui-form-item" style="margin-top:10px"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editabnormaldataxysubmit" style="width:120px;border-radius:5px;">剔除</button> </div> </div> </form>';
+            //xy轴游标取值
+            editChart.setOption({
+                xAxis: {
+                    type: 'time',
+                    axisPointer: {
+                        value: '2000-01-01',
+                        show: true,
+                        snap: true,
+                        lineStyle: {
+                            color: 'red',
+                            width: 2
+                        },
+                        label: {
+                            show: true,
+                            formatter: function (params) {
+                                $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value));
+                                return echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value);
+                            },
+                            backgroundColor: '#7581BD'
+                        },
+                        handle: {
+                            show: true,
+                            color: '#7581BD',
+                            size: 20,
+                            margin: 35
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisPointer: {
+                        value: '-10000',
+                        show: true,
+                        snap: false,
+                        lineStyle: {
+                            color: 'red',
+                            width: 2
+                        },
+                        label: {
+                            show: true,
+                            formatter: function (params) {
+                                var value = Number(params.value).toFixed(2);
+                                $("#editabnormalstartvalueid").val(value);
+                                return value;
+                            },
+                            backgroundColor: '#7581BD'
+                        },
+                        handle: {
+                            show: true,
+                            color: '#7581BD',
+                            size: 20,
+                            margin: 65
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    }
+                },
+            });
+        }
+        //x轴
+        $('#editabnormalstarttimeid').focus(function () {
+            //x轴游标取值
+            editChart.setOption({
+                xAxis: {
+                    type: 'time',
+                    axisPointer: {
+                        value: '2000-01-01',
+                        show: true,
+                        snap: true,
+                        lineStyle: {
+                            color: 'red',
+                            width: 2
+                        },
+                        label: {
+                            show: true,
+                            formatter: function (params) {
+                                $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value));
+                                return echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value);
+                            },
+                            backgroundColor: '#7581BD'
+                        },
+                        handle: {
+                            show: true,
+                            color: '#7581BD',
+                            size: 20,
+                            margin: 35
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    }
+                },
+            });
+
+        });
+    });
+
+
+
+
+    ////粗差剔除模块
+    ////设置初值模块
+    ////插补数据模块
+    ////监测曲线模块
+    form.render();
+    form.render('select');
+}
+
+function LoadEditAutoDataPreDateTime(monitorArr, datetime) {
+    editChart.showLoading();
+    //请求监测点指点时间范围数据
+    $.ajax({
+        url: servicesurl + "/api/Data/GetAutoDatabyPreDateTime", type: "get", data: { "id": monitorArr.id, "type": monitorArr.type, "predatetime": datetime, "cookie": document.cookie },
+        success: function (data) {
+            DisplayEditDATA(monitorArr, data)
+        }, datatype: "json"
+    });
+
+};
+
+function LoadEditAutoDataCustomDateTime(monitorArr, datetime) {
+    editChart.showLoading();
+    //请求监测点指点时间范围数据
+    $.ajax({
+        url: servicesurl + "/api/Data/GetAutoDatabyCustomDateTime", type: "get", data: { "id": monitorArr.id, "type": monitorArr.type, "customdatetime": datetime, "cookie": document.cookie },
+        success: function (data) {
+            DisplayEditDATA(monitorArr, data);
+        }, datatype: "json"
+    });
+};
+
+
+//展示处理数据
+function DisplayEditDATA(monitor, data) {
+    if (data == "") {
+        layer.msg('无监测数据！', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+
+        EditNODATA(monitor);
+    }
+    else {
+        if (monitor.type == "GNSS") {
+            DisplayEditGNSS(monitor, data);
+        }
+        else if (monitor.type == "裂缝") {
+            DisplayEditLF(monitor, data);
+        }
+        else if (monitor.type == "倾角") {
+            DisplayEditQJ(monitor, data);
+        }
+        else if (monitor.type == "应力") {
+            DisplayEditYL(monitor, data);
+        }
+        else if (monitor.type == "深部位移") {
+            DisplayEditSBWY(monitor, data);
+        }
+        else if (monitor.type == "地下水位") {
+            DisplayEditWATER(monitor, data);
+        }
+        else if (monitor.type == "雨量") {
+            DisplayEditRAIN(monitor, data);
+        }
+    }
+
+};
+
+function DisplayEditGNSS(monitor, data) {
+    var gnssmonitors = JSON.parse(data);
+    //统计
+    var values = [];
+    for (var i in gnssmonitors.Statistics) {
+        values.push(parseFloat(gnssmonitors.Statistics[i].Min));
+        values.push(parseFloat(gnssmonitors.Statistics[i].Max));
+    }
+
+    var yaxismax = parseInt(2 * Math.max.apply(null, values) - Math.min.apply(null, values));
+    var yaxismin = parseInt(2 * Math.min.apply(null, values) - Math.max.apply(null, values));
+
+    //图表
+    var xs = [];
+    var ys = [];
+    var xys = [];
+    var hs = [];
+
+    for (var i in gnssmonitors.Datas) {
+        //yyyy-MM-dd HH:mm:ss转UNIX时间戳（毫秒）
+        var time = Math.round(new Date(gnssmonitors.Datas[i].Time) / 1000) * 1000;
+
+        var x = [];
+        var y = [];
+        var xy = [];
+        var h = [];
+
+        x.push(time);
+        x.push(parseInt(parseFloat(gnssmonitors.Datas[i].Dx) * 1000) / 1000);
+        xs.push(x);
+
+        y.push(time);
+        y.push(parseInt(parseFloat(gnssmonitors.Datas[i].Dy) * 1000) / 1000);
+        ys.push(y);
+
+        xy.push(time);
+        xy.push(parseInt(parseFloat(gnssmonitors.Datas[i].Dxy) * 1000) / 1000);
+        xys.push(xy);
+
+        h.push(time);
+        h.push(parseInt(parseFloat(gnssmonitors.Datas[i].Dh) * 1000) / 1000);
+        hs.push(h);
+    }
+    //标示线初值
+    threshold1 = yaxismin;
+    threshold2 = yaxismax;
+    threshold3 = xs[0][0];
+    threshold4 = xs[xs.length - 1][0];
+
+    var option = {
+        title: {
+            text: monitor.title,
+            textStyle: {
+                fontSize: 20,
+                fontFamily: 'sans-serif',
+                fontWeight: 'bold'
+            },
+            left: "center",
+            top: 10
+        },
+        legend: {
+            data: ['X位移', 'Y位移', '水平位移', '垂直位移'],
+            left: 'center',
+            bottom: 2,
+            selectedMode: "single",
+        },
+        tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(105,105,105)',
+            formatter: function (params) {
+                var date = new Date(parseInt(params[0].value[0]));
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                var d = date.getDate();
+                var h = date.getHours();
+                var mm = date.getMinutes();
+                var s = date.getSeconds();
+                var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
+                var label = "";
+                for (var i in params) {
+                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                }
+                return time + '<br/>' + label;
+            },
+            position: function (pos, params, el, elRect, size) {
+                var obj = { top: 15 };
+                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                return obj;
+            },
+            extraCssText: 'width: 170px'
+        },
+        grid: {
+            left: '5%',
+            right: '5%',
+            top: '10%',
+            bottom: '10%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            id: '1',
+            type: 'time',
+            position: 'bottom',
+            splitLine: { show: false },
+            axisLabel: {
+                formatter: function (params, index) {
+                    var time = new Date(params);
+                    var y = time.getFullYear();
+                    var m = time.getMonth() + 1;
+                    var d = time.getDate();
+                    var h = time.getHours();
+                    var mm = time.getMinutes();
+                    var s = time.getSeconds();
+                    //return (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s) + '\n' + y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                }
+            }
+        },
+        yAxis: {
+            id: '1',
+            type: 'value',
+            name: 'mm',
+            max: Math.ceil(yaxismax),
+            min: Math.floor(yaxismin),
+            splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+            //axisLabel: {
+            //    formatter: '{value} mm'
+            //}
+        },
+        dataZoom: [
+            {
+                //x轴滑块
+                type: 'slider',
+                height: 15,
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            },
+            {
+                //y轴滑块
+                type: 'slider',
+                width: 15,
+                yAxisIndex: 0,
+                filterMode: 'empty'
+            },
+            {
+                //x轴缩放
+                type: 'inside',
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            },
+            {
+                //y轴缩放
+                type: 'inside',
+                yAxisIndex: 0,
+                filterMode: 'empty'
+            }
+        ],
+        series: [
+            {
+                id: 'x',
+                name: 'X位移',
+                type: 'line',
+                showSymbol: false,
+                data: xs,
+            },
+            {
+                name: 'Y位移',
+                type: 'line',
+                showSymbol: false,
+                data: ys
+            },
+            {
+                name: '水平位移',
+                type: 'line',
+                showSymbol: false,
+                data: xys
+            },
+            {
+                name: '垂直位移',
+                type: 'line',
+                showSymbol: false,
+                data: hs
+            }
+        ]
+    };
+
+    editChart.hideLoading();
+    editChart.setOption(option, true, false);
+
+}
+
+function DisplayEditLF(monitor, data) {
+    var lfmonitors = JSON.parse(data);
+    //图表
+    var lens = [];
+    for (var i in lfmonitors.Datas) {
+        var len = [];
+
+        len.push(Math.round(new Date(lfmonitors.Datas[i].Time) / 1000) * 1000);
+        len.push(parseFloat(lfmonitors.Datas[i].Dv));
+        lens.push(len);
+    }
+    //标示线初值
+    threshold1 = lens[5][1];
+    threshold2 = lens[lens.length - 5][1];
+    threshold3 = lens[5][0];
+    threshold4 = lens[lens.length - 5][0];
+
+    var option = {
+        title: {
+            text: monitor.title,
+            textStyle: {
+                fontSize: 20,
+                fontFamily: 'sans-serif',
+                fontWeight: 'bold'
+            },
+            left: "center",
+            top: 10
+        },
+        legend: {
+            data: ['变形量'],
+            left: 'center',
+            bottom: 2,
+            selectedMode: "single",
+        },
+        tooltip: {
+            triggerOn: 'none',
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            },
+            backgroundColor: 'rgba(105 105 105)',
+            formatter: function (params) {
+                var date = new Date(parseInt(params[0].value[0]));
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                var d = date.getDate();
+                var h = date.getHours();
+                var mm = date.getMinutes();
+                var s = date.getSeconds();
+                var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
+                var label = "";
+                for (var i in params) {
+                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                }
+                return time + '<br/>' + label;
+            },
+            position: function (pos, params, el, elRect, size) {
+                var obj = { top: 10 };
+                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                return obj;
+            },
+            extraCssText: 'width: 170px'
+        },
+        grid: {
+            left: '5%',
+            right: '5%',
+            top: '10%',
+            bottom: '10%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            id: '1',
+            type: 'time',
+            position: 'bottom',
+            splitLine: { show: false },
+            axisLabel: {
+                formatter: function (params, index) {
+                    var time = new Date(params);
+                    var y = time.getFullYear();
+                    var m = time.getMonth() + 1;
+                    var d = time.getDate();
+                    var h = time.getHours();
+                    var mm = time.getMinutes();
+                    var s = time.getSeconds();
+                    //return (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s) + '\n' + y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                }
+            }
+        },
+        yAxis: {
+            id: '1',
+            type: 'value',
+            splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+            axisLabel: {
+                formatter: '{value} mm'
+            }
+        },
+        dataZoom: [{
+            //x轴滑块
+            type: 'slider',
+            height: 15,
+            xAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //y轴滑块
+            type: 'slider',
+            width: 15,
+            yAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //x轴缩放
+            type: 'inside',
+            xAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //y轴缩放
+            type: 'inside',
+            yAxisIndex: 0,
+            filterMode: 'empty'
+        }
+        ],
+        series: [
+            {
+                id: 'x',
+                name: '变形量',
+                type: 'line',
+                showSymbol: false,
+                data: lens
+            }
+        ]
+    };
+
+    editChart.hideLoading();
+    editChart.setOption(option, true, false);
+
+}
+
+function DisplayEditQJ(monitor, data) {
+    var qjmonitors = JSON.parse(data);
+
+    var values = [];
+    for (var i in qjmonitors.Statistics) {
+        values.push(parseFloat(qjmonitors.Statistics[i].Min));
+        values.push(parseFloat(qjmonitors.Statistics[i].Max));
+    }
+    var yaxismax = 2 * Math.max.apply(null, values) - Math.min.apply(null, values);
+    var yaxismin = 2 * Math.min.apply(null, values) - Math.max.apply(null, values);
+
+    //倾角角度较小
+    if (yaxismax > 0) {
+        if (parseInt(yaxismax) == 0) {
+            yaxismax = 1;
+        }
+    }
+    else {
+        if (parseInt(yaxismax) == 0) {
+            yaxismax = 0;
+        }
+    }
+
+    if (yaxismin > 0) {
+        if (parseInt(yaxismin) == 0) {
+            yaxismin = 0;
+        }
+    }
+    else {
+        if (parseInt(yaxismin) == 0) {
+            yaxismin = -1;
+        }
+    }
+
+    if (yaxismax > 1) {
+        yaxismax = parseInt(yaxismax) + 1;
+    }
+
+    if (yaxismin < -1) {
+        yaxismin = parseInt(yaxismin) - 1;
+    }
+
+
+    //图表
+    var xs = [];
+    var ys = [];
+    var zs = [];
+
+    for (var i in qjmonitors.Datas) {
+        var x = [];
+        var y = [];
+
+        x.push(Math.round(new Date(qjmonitors.Datas[i].Time) / 1000) * 1000);
+        x.push(parseFloat(qjmonitors.Datas[i].Dx));
+        xs.push(x);
+
+        y.push(Math.round(new Date(qjmonitors.Datas[i].Time) / 1000) * 1000);
+        y.push(parseFloat(qjmonitors.Datas[i].Dy));
+        ys.push(y);
+    }
+
+    var option = {
+        title: {
+            text: monitor.title,
+            textStyle: {
+                fontSize: 20,
+                fontFamily: 'sans-serif',
+                fontWeight: 'bold'
+            },
+            left: "center",
+            top: 10
+        },
+        legend: {
+            data: ['X方向角度', 'Y方向角度'],
+            left: 'center',
+            bottom: 2,
+            selectedMode: "single",
+        },
+        tooltip: {
+            triggerOn: 'none',
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            },
+            backgroundColor: 'rgba(105 105 105)',
+            formatter: function (params) {
+                var date = new Date(parseInt(params[0].value[0]));
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                var d = date.getDate();
+                var h = date.getHours();
+                var mm = date.getMinutes();
+                var s = date.getSeconds();
+                var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
+                var label = "";
+                for (var i in params) {
+                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                }
+                return time + '<br/>' + label;
+            },
+            position: function (pos, params, el, elRect, size) {
+                var obj = { top: 10 };
+                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                return obj;
+            },
+            extraCssText: 'width: 170px'
+        },
+        grid: {
+            left: '5%',
+            right: '5%',
+            top: '10%',
+            bottom: '10%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            id: '1',
+            type: 'time',
+            splitLine: { show: false },
+            axisLabel: {
+                formatter: function (params, index) {
+                    var time = new Date(params);
+                    var y = time.getFullYear();
+                    var m = time.getMonth() + 1;
+                    var d = time.getDate();
+                    var h = time.getHours();
+                    var mm = time.getMinutes();
+                    var s = time.getSeconds();
+                    //return (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s) + '\n' + y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                }
+            }
+        },
+        yAxis: {
+            id: '1',
+            type: 'value',
+            min: Math.floor(yaxismin),
+            max: Math.ceil(yaxismax),
+            splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+            axisLabel: {
+                formatter: '{value} °'
+            }
+        },
+        dataZoom: [{
+            //x轴滑块
+            type: 'slider',
+            height: 15,
+            xAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //y轴滑块
+            type: 'slider',
+            width: 15,
+            yAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //x轴缩放
+            type: 'inside',
+            xAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //y轴缩放
+            type: 'inside',
+            yAxisIndex: 0,
+            filterMode: 'empty'
+        }
+        ],
+        series: [
+            {
+                id: 'x',
+                name: 'X方向角度',
+                type: 'line',
+                showSymbol: false,
+                data: xs
+            },
+            {
+                name: 'Y方向角度',
+                type: 'line',
+                showSymbol: false,
+                data: ys
+            }
+        ]
+    };
+    editChart.hideLoading();
+    editChart.setOption(option, true, false);
+};
+
+function DisplayEditYL(monitor, data) {
+    var ylmonitors = JSON.parse(data);
+
+    //统计
+    var avgs = [];
+    var sds = [];
+    for (var i in ylmonitors.Statistics) {
+        avgs.push(parseFloat(ylmonitors.Statistics[i].Avg));
+        sds.push(parseFloat(ylmonitors.Statistics[i].Sd));
+    }
+    var yaxismax = parseInt(GetArrayAvg(avgs) + 12 * GetArrayAvg(sds)) + 1;
+    var yaxismin = parseInt(GetArrayAvg(avgs) - 12 * GetArrayAvg(sds)) - 1;
+
+    //图表
+    var ps = [];
+    for (var i in ylmonitors.Datas) {
+        var p = [];
+
+        p.push(Math.round(new Date(ylmonitors.Datas[i].Time) / 1000) * 1000);
+        p.push(parseFloat(ylmonitors.Datas[i].Dv));
+        ps.push(p);
+    }
+
+    var option = {
+        title: {
+            text: monitor.title,
+            textStyle: {
+                fontSize: 20,
+                fontFamily: 'sans-serif',
+                fontWeight: 'bold'
+            },
+            left: "center",
+            top: 10
+        },
+        legend: {
+            data: ['应力变形量'],
+            left: 'center',
+            bottom: 2,
+            selectedMode: "single",
+        },
+        tooltip: {
+            triggerOn: 'none',
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            },
+            backgroundColor: 'rgba(105 105 105)',
+            formatter: function (params) {
+                var date = new Date(parseInt(params[0].value[0]));
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                var d = date.getDate();
+                var h = date.getHours();
+                var mm = date.getMinutes();
+                var s = date.getSeconds();
+                var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
+                var label = "";
+                for (var i in params) {
+                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                }
+                return time + '<br/>' + label;
+            },
+            position: function (pos, params, el, elRect, size) {
+                var obj = { top: 10 };
+                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                return obj;
+            },
+            extraCssText: 'width: 170px'
+        },
+        grid: {
+            left: '5%',
+            right: '5%',
+            top: '10%',
+            bottom: '10%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            id: '1',
+            type: 'time',
+            splitLine: { show: false },
+            axisLabel: {
+                formatter: function (params, index) {
+                    var time = new Date(params);
+                    var y = time.getFullYear();
+                    var m = time.getMonth() + 1;
+                    var d = time.getDate();
+                    var h = time.getHours();
+                    var mm = time.getMinutes();
+                    var s = time.getSeconds();
+                    //return (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s) + '\n' + y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                }
+            }
+        },
+        yAxis: {
+            id: '1',
+            type: 'value',
+            min: Math.floor(yaxismin),
+            max: Math.ceil(yaxismax),
+            splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+            axisLabel: {
+                formatter: '{value} kN'
+            }
+        },
+        dataZoom: [{
+            //x轴滑块
+            type: 'slider',
+            height: 15,
+            xAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //y轴滑块
+            type: 'slider',
+            width: 15,
+            yAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //x轴缩放
+            type: 'inside',
+            xAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //y轴缩放
+            type: 'inside',
+            yAxisIndex: 0,
+            filterMode: 'empty'
+        }
+        ],
+        series: [
+            {
+                id: 'x',
+                name: '应力变形量',
+                type: 'line',
+                showSymbol: false,
+                data: ps
+            }
+        ]
+    };
+
+    editChart.hideLoading();
+    editChart.setOption(option, true, false);
+
+};
+
+function DisplayEditSBWY(monitor, data) {
+    var sbwymonitors = JSON.parse(data);
+
+    //统计
+    var values = [];
+    for (var i in sbwymonitors.Statistics) {
+        values.push(parseFloat(sbwymonitors.Statistics[i].Min));
+        values.push(parseFloat(sbwymonitors.Statistics[i].Max));
+    }
+    var yaxismax = Math.floor(parseFloat(2 * Math.max.apply(null, values) - Math.min.apply(null, values)) * 100) / 100;
+    var yaxismin = Math.floor(parseFloat(2 * Math.min.apply(null, values) - Math.max.apply(null, values)) * 100) / 100;
+
+    //图表
+    var xs = [];
+    var ys = [];
+    var zs = [];
+
+    for (var i in sbwymonitors.Datas) {
+        var x = [];
+        var y = [];
+
+        x.push(Math.round(new Date(sbwymonitors.Datas[i].Time) / 1000) * 1000);
+        x.push(parseFloat(sbwymonitors.Datas[i].X));
+        xs.push(x);
+
+        y.push(Math.round(new Date(sbwymonitors.Datas[i].Time) / 1000) * 1000);
+        y.push(parseFloat(sbwymonitors.Datas[i].Y));
+        ys.push(y);
+    }
+
+    var option = {
+        title: {
+            text: monitor.title,
+            textStyle: {
+                fontSize: 20,
+                fontFamily: 'sans-serif',
+                fontWeight: 'bold'
+            },
+            left: "center",
+            top: 10
+        },
+        legend: {
+            data: ['X方向位移', 'Y方向位移'],
+            left: 'center',
+            bottom: 2,
+            selectedMode: "single",
+        },
+        tooltip: {
+            triggerOn: 'none',
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            },
+            backgroundColor: 'rgba(105 105 105)',
+            formatter: function (params) {
+                var date = new Date(parseInt(params[0].value[0]));
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                var d = date.getDate();
+                var h = date.getHours();
+                var mm = date.getMinutes();
+                var s = date.getSeconds();
+                var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
+                var label = "";
+                for (var i in params) {
+                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                }
+                return time + '<br/>' + label;
+            },
+            position: function (pos, params, el, elRect, size) {
+                var obj = { top: 10 };
+                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                return obj;
+            },
+            extraCssText: 'width: 170px'
+        },
+        grid: {
+            left: '5%',
+            right: '5%',
+            top: '10%',
+            bottom: '10%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            id: '1',
+            type: 'time',
+            splitLine: { show: false },
+            axisLabel: {
+                formatter: function (params, index) {
+                    var time = new Date(params);
+                    var y = time.getFullYear();
+                    var m = time.getMonth() + 1;
+                    var d = time.getDate();
+                    var h = time.getHours();
+                    var mm = time.getMinutes();
+                    var s = time.getSeconds();
+                    //return (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s) + '\n' + y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                }
+            }
+        },
+        yAxis: {
+            id: '1',
+            type: 'value',
+            min: Math.floor(yaxismin),
+            max: Math.ceil(yaxismax),
+            splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+            axisLabel: {
+                formatter: '{value} mm'
+            }
+        },
+        dataZoom: [{
+            //x轴滑块
+            type: 'slider',
+            height: 15,
+            xAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //y轴滑块
+            type: 'slider',
+            width: 15,
+            yAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //x轴缩放
+            type: 'inside',
+            xAxisIndex: 0,
+            filterMode: 'empty'
+        },
+        {
+            //y轴缩放
+            type: 'inside',
+            yAxisIndex: 0,
+            filterMode: 'empty'
+        }
+        ],
+        series: [
+            {
+                id: 'x',
+                name: 'X方向位移',
+                type: 'line',
+                showSymbol: false,
+                data: xs
+            },
+            {
+                name: 'Y方向位移',
+                type: 'line',
+                showSymbol: false,
+                data: ys
+            }
+        ]
+    };
+
+    editChart.hideLoading();
+    editChart.setOption(option, true, false);
+};
+//地下水位是否需要处理
+function DisplayEditWATER(monitor, data) {
+    var watermonitors = JSON.parse(data);
+
+    var waters = [];
+    for (var i in watermonitors.Datas) {
+        var time = Math.round(new Date(watermonitors.Datas[i].Time) / 1000) * 1000;
+        var water = [];
+
+        water.push(time);
+        water.push(parseFloat(watermonitors.Datas[i].Value));
+        waters.push(water);
+    }
+
+    var top = Math.floor(parseFloat(watermonitors.Height) * 100) / 100;//孔口高程
+    var down = Math.floor((parseFloat(watermonitors.Height) - parseFloat(watermonitors.Deep)) * 100) / 100;//孔底高程
+
+    var option = {
+        title: {
+            text: monitor.title,
+            textStyle: {
+                fontSize: 20,
+                fontFamily: 'sans-serif',
+                fontWeight: 'bold'
+            },
+            left: "center",
+            top: 10
+        },
+        tooltip: {
+            triggerOn: 'none',
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            },
+            backgroundColor: 'rgba(105 105 105)',
+            formatter: function (params) {
+                var date = new Date(parseInt(params[0].value[0]));
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                var d = date.getDate();
+                var h = date.getHours();
+                var mm = date.getMinutes();
+                var s = date.getSeconds();
+                var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
+                var label = "";
+                for (var i in params) {
+                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                }
+                return time + '<br/>' + label;
+            },
+            position: function (pos, params, el, elRect, size) {
+                var obj = { top: 10 };
+                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                return obj;
+            },
+            extraCssText: 'width: 170px'
+        },
+        legend: {
+            data: ['地下水位'],
+            left: 'center',
+            bottom: 2,
+            selectedMode: "single",
+        },
+        dataZoom: [
+            {
+                //x轴滑块
+                type: 'slider',
+                height: 15,
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            },
+            {
+                //y轴滑块
+                type: 'slider',
+                width: 15,
+                yAxisIndex: 0,
+                filterMode: 'empty'
+            },
+            {
+                //x轴缩放
+                type: 'inside',
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            },
+            {
+                //y轴缩放
+                type: 'inside',
+                yAxisIndex: 0,
+                filterMode: 'empty'
+            }
+        ],
+        grid: {
+            left: '5%',
+            right: '5%',
+            top: '10%',
+            bottom: '10%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            id: '1',
+            type: 'time',
+            splitLine: { show: false },
+            axisLabel: {
+                formatter: function (params, index) {
+                    var time = new Date(params);
+                    var y = time.getFullYear();
+                    var m = time.getMonth() + 1;
+                    var d = time.getDate();
+                    var h = time.getHours();
+                    var mm = time.getMinutes();
+                    var s = time.getSeconds();
+                    //return (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s) + '\n' + y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                }
+            }
+        },
+        yAxis: {
+            id: '1',
+            type: 'value',
+            min: Math.floor(down),
+            max: Math.ceil(top),
+            splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+            axisLabel: {
+                formatter: '{value} m'
+            }
+        },
+        series: [
+            {
+                id: 'x',
+                name: '地下水位',
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                itemStyle: {
+                    color: 'rgb(135,206,250)'
+                },
+                sampling: 'average',
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: 'rgb(135,206,250)'
+                    }, {
+                        offset: 1,
+                        color: 'rgb(30,144,255)'
+                    }])
+                },
+                data: waters
+            }
+        ]
+    };
+
+    editChart.hideLoading();
+    editChart.setOption(option, true, false);
+};
+//雨量是否需要处理
+function DisplayEditRAIN(monitor, data) {
+    var rainmonitors = JSON.parse(data);
+    var rains = [];
+    for (var i in rainmonitors) {
+        var time = Math.round(new Date(rainmonitors[i].Time + " 12:00:00") / 1000) * 1000;
+        var rain = [];
+
+        rain.push(time);
+        rain.push(parseFloat(rainmonitors[i].Value));
+        rains.push(rain);
+    }
+
+    var option = {
+        title: {
+            text: monitor.title,
+            textStyle: {
+                fontSize: 20,
+                fontFamily: 'sans-serif',
+                fontWeight: 'bold'
+            },
+            left: "center",
+            top: 10
+        },
+        tooltip: {
+            triggerOn: 'none',
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            },
+            backgroundColor: 'rgba(105 105 105)',
+            formatter: function (params) {
+                var date = new Date(parseInt(params[0].value[0]));
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                var d = date.getDate();
+                var h = date.getHours();
+                var mm = date.getMinutes();
+                var s = date.getSeconds();
+                var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
+                var label = "";
+                for (var i in params) {
+                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                }
+                return time + '<br/>' + label;
+            },
+            position: function (pos, params, el, elRect, size) {
+                var obj = { top: 10 };
+                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                return obj;
+            },
+            extraCssText: 'width: 170px'
+        },
+        legend: {
+            data: ['降雨量(日)'],
+            left: 'center',
+            bottom: 2,
+            selectedMode: "single",
+        },
+        dataZoom: [
+            {
+                //x轴滑块
+                type: 'slider',
+                height: 15,
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            },
+            {
+                //y轴滑块
+                type: 'slider',
+                width: 15,
+                yAxisIndex: 0,
+                filterMode: 'empty'
+            },
+            {
+                //x轴缩放
+                type: 'inside',
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            },
+            {
+                //y轴缩放
+                type: 'inside',
+                yAxisIndex: 0,
+                filterMode: 'empty'
+            }
+        ],
+        grid: {
+            left: '3%',
+            right: '3%',
+            top: '10%',
+            bottom: '15%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            id: '1',
+            type: 'time',
+            splitLine: { show: false },
+            axisLabel: {
+                formatter: function (params, index) {
+                    var time = new Date(params);
+                    var y = time.getFullYear();
+                    var m = time.getMonth() + 1;
+                    var d = time.getDate();
+                    var h = time.getHours();
+                    var mm = time.getMinutes();
+                    var s = time.getSeconds();
+                    //return (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s) + '\n' + y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                }
+            }
+        },
+        yAxis: {
+            id: '1',
+            type: 'value',
+            splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+            axisLabel: {
+                formatter: '{value} mm'
+            }
+        },
+        series: [
+            {
+                id: 'x',
+                name: '降雨量(日)',
+                type: 'bar',
+                itemStyle: {
+                    color: '#4cabce'
+                },
+                showSymbol: false,
+                data: rains
+            }
+        ]
+    };
+
+    editChart.hideLoading();
+    editChart.setOption(option, true, false);
+};
+
+function MarkLine() {
+    UpdataDragging();
+    editChart.on('datazoom', function (params) {
+        threshold1 = editChart.getOption().dataZoom[1].startValue;
+        threshold2 = editChart.getOption().dataZoom[1].endValue;
+        threshold3 = editChart.getOption().dataZoom[0].startValue;
+        threshold4 = editChart.getOption().dataZoom[0].endValue;
+        UpdataDragging();
+    });
+    function UpdataDragging() {
+        editChart.setOption({
+            series: [{
+                id: 'x',
+                markLine: {
+                    itemStyle: {
+                        normal: {
+                            borderWidth: 1,
+                            lineStyle: {
+                                type: 'dash',
+                                color: '#333 ',
+                                width: 1,
+                            },
+                            label: {
+                                position: 'start',
+                                distance: [-100, -100],
+                                backgroundColor: 'rgba(105,105,105)',
+                                textStyle: {
+                                    fontSize: 15,
+                                    color: 'white',
+                                    padding: [4, 4, 4, 4]
+                                },
+                                formatter: function (params, index) {
+                                    if (params.data.yAxis != undefined) {
+                                        return params.data.yAxis.toFixed(2);
+                                    }
+                                    else if (params.data.xAxis != undefined) {
+                                        var date = new Date(params.data.xAxis);
+                                        var y = date.getFullYear();
+                                        var m = date.getMonth() + 1;
+                                        var d = date.getDate();
+                                        var h = date.getHours();
+                                        var mm = date.getMinutes();
+                                        var s = date.getSeconds();
+                                        var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
+                                        return time;
+                                    }
+                                }
+                            }
+                        },
+                    }
+                    ,
+                    data: [
+                        { yAxis: threshold1 },
+                        { yAxis: threshold2 },
+                        { xAxis: threshold3 },
+                        { xAxis: threshold4 },
+                    ],
+                }
+            }],
+            graphic: [{
+                id: '1',
+                type: 'rect',
+                z: 100,
+                shape: {
+                    width: 1000,
+                    height: 2
+                    // r: 10
+                },
+                position: [0, editChart.convertToPixel({ yAxisId: '1' }, threshold1)],
+                draggable: true,
+                style: {
+                    fill: 'rgba(0,0,0,0 )',
+                    stroke: 'rgba(0,0,0,0)',
+                    lineWidth: 10
+                },
+                cursor: 'move',
+                ondrag: onPointDragging1
+            },
+            {
+                id: '2',
+                type: 'rect',
+                z: 100,
+                shape: {
+                    width: 1000,
+                    height: 2
+                    // r: 10
+                },
+                position: [0, editChart.convertToPixel({ yAxisId: '1' }, threshold2)],
+                draggable: true,
+                style: {
+                    fill: 'rgba(0,0,0,0)',
+                    stroke: 'rgba(0,0,0,0)',
+                    lineWidth: 20
+                },
+                cursor: 'move',
+                ondrag: onPointDragging2
+            },
+            {
+                id: '3',
+                type: 'rect',
+                z: 100,
+                shape: {
+                    width: 2,
+                    height: 1000
+                    // r: 10
+                },
+                position: [editChart.convertToPixel({ xAxisId: '1' }, threshold3), 0],
+                draggable: true,
+                style: {
+                    fill: 'rgba(0,0,0,0)',
+                    stroke: 'rgba(0,0,0,0)',
+                    lineWidth: 10
+                },
+                cursor: 'move',
+                ondrag: onPointDragging3
+            },
+            {
+                id: '4',
+                type: 'rect',
+                z: 100,
+                shape: {
+                    width: 2,
+                    height: 1000
+                    // r: 10
+                },
+                position: [editChart.convertToPixel({ xAxisId: '1' }, threshold4), 0],
+                draggable: true,
+                style: {
+                    fill: 'rgba(0,0,0,0)',
+                    stroke: 'rgba(0,0,0,0)',
+                    lineWidth: 10
+                },
+                cursor: 'move',
+                ondrag: onPointDragging4
+            },
+            ],
+        });
+    }
+    function onPointDragging1() {
+        threshold1 = editChart.convertFromPixel({ yAxisId: '1' }, this.position[1]);
+        $("#editabnormalstartvalueid").val(threshold1);
+        editChart.setOption({
+            series: [{
+                markLine: {
+                    data: [
+                        { yAxis: threshold1 },
+                        { yAxis: threshold2 },
+                        { xAxis: threshold3 },
+                        { xAxis: threshold4 },
+                    ],
+                }
+            }]
+        });
+    }
+    function onPointDragging2() {
+        threshold2 = editChart.convertFromPixel({ yAxisId: '1' }, this.position[1]);
+        $("#editabnormalendvalueid").val(threshold2);
+        editChart.setOption({
+            series: [{
+                markLine: {
+                    data: [
+                        { yAxis: threshold1 },
+                        { yAxis: threshold2 },
+                        { xAxis: threshold3 },
+                        { xAxis: threshold4 },
+                    ],
+                }
+            }]
+        });
+    }
+    function onPointDragging3() {
+        threshold3 = editChart.convertFromPixel({ xAxisId: '1' }, this.position[0]);
+        $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', threshold3));
+        editChart.setOption({
+            series: [{
+                markLine: {
+                    data: [
+                        { yAxis: threshold1 },
+                        { yAxis: threshold2 },
+                        { xAxis: threshold3 },
+                        { xAxis: threshold4 },
+                    ],
+                }
+            }]
+        });
+    }
+    function onPointDragging4() {
+        threshold4 = editChart.convertFromPixel({ xAxisId: '1' }, this.position[0]);
+        $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', threshold4));
+        editChart.setOption({
+            series: [{
+                markLine: {
+                    data: [
+                        { yAxis: threshold1 },
+                        { yAxis: threshold2 },
+                        { xAxis: threshold3 },
+                        { xAxis: threshold4 },
+                    ],
+                }
+            }]
+        });
+    }
 
 
 }
