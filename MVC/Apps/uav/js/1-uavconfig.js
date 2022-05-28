@@ -89,7 +89,7 @@ var level = true;              //是否水平
 
 
 
-
+SetDisplayZoom("m");
 
 //HomeButton
 viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) {
