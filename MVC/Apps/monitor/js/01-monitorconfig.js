@@ -85,7 +85,7 @@ function FlyToChina() {
 };
 
 
-SetDisplayZoom("m");
+SetDisplayZoom("m");//设置缩放
 
 /*
  * 加载3d tiles模型

@@ -14,7 +14,7 @@ function GetUserAllModelProjectsQuick() {
             layer.open({
                 type: 1
                 , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['380px', '60%']
+                , area: ['380px', '58%']
                 , shade: 0
                 , offset: ['60px', '5px']
                 , closeBtn: 0
@@ -26,7 +26,7 @@ function GetUserAllModelProjectsQuick() {
                 , success: function (layero) {
                     layer.setTop(layero);
 
-                    document.getElementById('modelprojectlisttab').parentNode.style.maxHeight = (parseInt(document.getElementById('modelprojectlisttab').parentNode.style.height.replace("px", "")) - 78).toString() + "px";
+                    document.getElementById('modelprojectlisttab').parentNode.style.maxHeight = ((parseInt(document.getElementById('modelprojectlisttab').parentNode.style.height.replace("px", "")) * zoomratio + 20)).toString() + "px";
                     document.getElementById("modelprojectlisttab").parentNode.parentNode.innerHTML += '<!--搜索--><div id="modelsearchid" class="layui-row" style="margin-left:5px;position:absolute;bottom:10px; "><div class="layui-input-inline" style="border-color:#e6e6e6;"><input type="text" id="projectfiltersearch" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="padding-left:25px;border-radius:5px;width:260px"></div><button id="projectsearch" type="button" class="layui-btn layui-btn-primary" style="width:50px;border-radius:5px;margin-left:5px;border-color:#e6e6e6;"><i class="layui-icon layui-icon-search"></i></button><button id="projectclear" type="button" class="layui-btn layui-btn-primary" style="width:50px;border-radius:5px;margin-left:5px;border-color:#e6e6e6;"><i class="layui-icon layui-icon-delete"></i></button></div>';
 
                     //地区树

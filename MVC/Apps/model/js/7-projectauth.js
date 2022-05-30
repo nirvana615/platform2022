@@ -22,6 +22,7 @@ function ModelProjectAuth() {
             , success: function (layero) {
                 layer.setTop(layero);
 
+                usermodelprojects = [];
                 if (modelprojectlistarea.length > 0) {
                     for (var i in modelprojectlistarea) {
                         for (var j in modelprojectlistarea[i].children) {

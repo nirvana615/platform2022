@@ -166,7 +166,6 @@ function xy2bl0(x, y, a, f) {
 };
 
 
-
 //生成GUID
 function NewGuid() {
     return ((((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
@@ -191,8 +190,7 @@ function SetDisplayZoom(size) {
     //屏幕显示宽度（像素）：window.screen.width
     //屏幕显示高度（像素）：window.screen.height
     var realwidth = window.screen.width;
-    var browserzoom = BrowserZoomRatio();
-
+    //var browserzoom = BrowserZoomRatio();
     //var zoom = (realwidth * 1.0 / 1920) * 100 / browserzoom;
     var zoom = 1;
 
@@ -237,8 +235,6 @@ function BrowserZoomRatio() {
 
     return ratio;
 };
-
-
 
 
 
@@ -456,10 +452,4 @@ function getChanzhuang(positList) {
     return tenp;
 }
 
-
-
-/*
- * 采样
- * 
- */
 
