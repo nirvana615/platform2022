@@ -4059,7 +4059,12 @@ function getBianXingLiangData(projectid) {
                             }
                             , {
                                 field: 'bianXinLingThree', title: 'z方向', width: 100, align: "center", templet: function (row) {
-                                    return row.bianXinLingThree + row.danWei
+                                    if (row.bianXinLingThree) {
+                                        return row.bianXinLingThree + row.danWei
+                                    } else {
+                                        return '';
+                                    }
+                                    
                                 }
                             }
                             , { field: '', title: '', width: 0, align: "center" }
