@@ -96,6 +96,7 @@
     <Compile Include="data\monitormap\MapProjectWarningInfo.cs" />
     <Compile Include="data\monitormap\MapMonitorThreshold.cs" />
     <Compile Include="data\monitormap\MapUserMonitorProject.cs" />
+    <Compile Include="data\monitor\data\DataBianXinLiang.cs" />
     <Compile Include="data\monitor\device\DeviceCountDay.cs" />
     <Compile Include="data\monitor\device\DeviceOnlineResult.cs" />
     <Compile Include="data\monitor\device\MonitorDeviceMap.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="data\monitor\design\Monitor.cs" />
     <Compile Include="data\monitor\design\MonitorInfo.cs" />
     <Compile Include="data\monitor\design\MonitorString.cs" />
+    <Compile Include="data\monitor\patrol\MonitorAlarmThreshold.cs" />
     <Compile Include="data\monitor\patrol\RoadPhotoInfo.cs" />
     <Compile Include="data\monitor\patrol\ConstPhotoInfo.cs" />
     <Compile Include="data\monitor\patrol\DianYun.cs" />

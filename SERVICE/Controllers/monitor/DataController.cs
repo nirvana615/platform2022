@@ -762,5 +762,299 @@ namespace SERVICE.Controllers
         #endregion
 
 
+        /// <summary>
+        /// 获取项目预设时间范围监测数据
+        /// </summary>
+        /// <param name="id">项目id</param>
+        /// <param name="predatetime">预设时间范围编码</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetBianXinLiangPreDateTime(int id, string predatetime, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                //获取时间范围
+                string datetime = GetDateTimebyPre(Convert.ToInt16(predatetime));
+                if (!string.IsNullOrEmpty(datetime))
+                {
+                    return GetAutoDatabyBianXing(id, datetime, userbsms);
+                }
+            }
+            else
+            {
+                //验权失败
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取项目自定义时间范围监测数据
+        /// </summary>
+        /// <param name="id">项目id</param>
+        /// <param name="customdatetime">自定义时间范围</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetBianXinLiangCustomDateTime(int id,  string customdatetime, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                try
+                {
+                    //获取时间范围
+                    string[] timerange = customdatetime.Replace(" - ", ";").Split(new char[] { ';' });
+                    return GetAutoDatabyBianXing(id, string.Format("(gcsj>='{0}' AND gcsj<'{1}')", timerange[0], timerange[1]), userbsms);
+                }
+                catch
+                { }
+            }
+            else
+            {
+                //验权失败
+            }
+
+            return string.Empty;
+        }
+
+
+
+
+
+
+        #region 方法
+        /// <summary>
+        /// 获取监测点设备指定时间范围数据
+        /// </summary>
+        /// <param name="id"></param>//projectId
+        /// <param name="type"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private string GetAutoDatabyBianXing(int id,  string time, string userbsms)
+        {
+            //查询BSM吗？
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT a.* from monitor_device a,monitor_project  b where a.bsm=b.bsm and b.id={0}  ORDER BY a.sblx", id));
+
+            string gnssCode = "(";//组装code数据
+            string lieFenCode = "(";//组装code数据
+            string qinjiaoCode = "(";//组装code数据
+            string yingLiCode = "(";//组装code数据
+            string sbwyCode = "(";//组装code数据
+            string dxswCode = "(";//组装code数据
+            List<DataBianXinLiang> bianXingList = new List<DataBianXinLiang>();
+            if (!string.IsNullOrEmpty(datas))
+            {
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    Device device = ParseMonitorHelper.ParseDevice(rows[i]);
+                    if (device != null)
+                    {
+                        if (device.SBLX == 0)//GNSS
+                        {
+                            gnssCode += "'"+device.Code + "',";
+                        }
+                        else if (device.SBLX == 1)//裂缝
+                        {
+                            lieFenCode += "'" + device.Code + "',";
+                        }
+                        else if (device.SBLX == 2)//倾角
+                        {
+                            qinjiaoCode += "'" + device.Code + "',";
+                        }
+                        else if (device.SBLX == 3)//应力
+                        {
+                            yingLiCode += "'" + device.Code + "',";
+                        }
+                        else if (device.SBLX == 4)//深部位移
+                        {
+                            sbwyCode += "'" + device.Code + "',";
+                        }
+                        else if (device.SBLX == 5)//地下水位
+                        {
+                            dxswCode += "'" + device.Code + "',";
+                        }
+
+                    }
+                }
+                if (gnssCode.Length>1)
+                {
+                    gnssCode=gnssCode.Substring(0, gnssCode.Length-1)+")";
+                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,cast(SQRT((max(x)-min(x))*(max(x)-min(x))+(max(y)-min(y))*(max(y)-min(y))) as decimal(10, 3)) bxl,cast((max(h)-min(h)) as decimal(10, 3)) blx2 FROM monitor_data_Gnss WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", gnssCode, time, userbsms));
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        string[] rows1 = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                        if (rows1.Length > 0)
+                        {
+                          
+                            for (int i = 0; i < rows1.Length; i++)
+                            {
+                                DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
+                                if (dataBianXinLiang != null)
+                                {
+                                    if (i==0)
+                                    {
+                                        dataBianXinLiang.remark = "GNSS:变形量1:水平位移、变形量2:垂直位移";
+                                    }
+                                    dataBianXinLiang.danWei = "mm";
+
+                                    bianXingList.Add(dataBianXinLiang);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (lieFenCode.Length > 1)
+                {
+                    lieFenCode = lieFenCode.Substring(0, lieFenCode.Length - 1) + ")";
+                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,cast((max(value)-min(value)) as decimal(10, 3)) as bxl FROM monitor_data_lf WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", lieFenCode, time, userbsms));
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        string[] rows1 = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                        if (rows1.Length > 0)
+                        {
+
+                            for (int i = 0; i < rows1.Length; i++)
+                            {
+                                DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
+                                if (dataBianXinLiang != null)
+                                {
+                                    if (i == 0)
+                                    {
+                                        dataBianXinLiang.remark = "裂缝:变形量1:裂缝变化量";
+                                    }
+                                    dataBianXinLiang.danWei = "mm";
+                                    bianXingList.Add(dataBianXinLiang);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (qinjiaoCode.Length > 1)//倾角
+                {
+                    qinjiaoCode = qinjiaoCode.Substring(0, qinjiaoCode.Length - 1) + ")";
+                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,cast((max(x)-min(x))  as decimal(10, 3)) as bxl,cast((max(y)-min(y)) as decimal(10, 3))  as bxl2 FROM monitor_data_qj  WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", qinjiaoCode, time, userbsms));
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        string[] rows1 = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                        if (rows1.Length > 0)
+                        {
+
+                            for (int i = 0; i < rows1.Length; i++)
+                            {
+                                DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
+                                if (dataBianXinLiang != null)
+                                {
+                                    if (i == 0)
+                                    {
+                                        dataBianXinLiang.remark = "倾角:变形量1:X方向、变形量2:Y方向";
+                                    }
+                                    dataBianXinLiang.danWei = "°";
+                                    bianXingList.Add(dataBianXinLiang);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (yingLiCode.Length > 1)//应力
+                {
+                    yingLiCode = yingLiCode.Substring(0, yingLiCode.Length - 1) + ")";
+                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,cast((max(value)-min(value))  as decimal(10, 3)) as bxl FROM monitor_data_yl  WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", yingLiCode, time, userbsms));
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        string[] rows1 = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                        if (rows1.Length > 0)
+                        {
+
+                            for (int i = 0; i < rows1.Length; i++)
+                            {
+                                DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
+                                if (dataBianXinLiang != null)
+                                {
+                                    if (i == 0)
+                                    {
+                                        dataBianXinLiang.remark = "应力:变形量1:应力变化";
+                                    }
+                                    dataBianXinLiang.danWei = "KN";
+                                    bianXingList.Add(dataBianXinLiang);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (sbwyCode.Length > 1)
+                {
+                    sbwyCode = sbwyCode.Substring(0, sbwyCode.Length - 1) + ")";
+                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,cast((max(x)-min(x))  as decimal(10, 3)) as bxl,cast((max(y)-min(y)) as decimal(10, 3))  as bxl2 FROM monitor_data_sbwy  WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", sbwyCode, time, userbsms));
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        string[] rows1 = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                        if (rows1.Length > 0)
+                        {
+
+                            for (int i = 0; i < rows1.Length; i++)
+                            {
+                                DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
+                                if (dataBianXinLiang != null)
+                                {
+                                    if (i == 0)
+                                    {
+                                        dataBianXinLiang.remark = "深部位移:变形量1:X方向、变形量2:Y方向";
+                                    }
+                                    dataBianXinLiang.danWei = "mm";
+                                    bianXingList.Add(dataBianXinLiang);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (dxswCode.Length > 1)
+                {
+                    dxswCode = dxswCode.Substring(0, dxswCode.Length - 1) + ")";
+                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,(max(value)-min(value)) as bxl FROM monitor_data_water WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", dxswCode, time, userbsms));
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        string[] rows1 = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                        if (rows1.Length > 0)
+                        {
+
+                            for (int i = 0; i < rows1.Length; i++)
+                            {
+                                DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
+                                if (dataBianXinLiang != null)
+                                {
+                                    if (i == 0)
+                                    {
+                                        dataBianXinLiang.remark = "地下水位:变形量1:地下水位高程";
+                                    }
+                                    dataBianXinLiang.danWei = "m";
+                                    bianXingList.Add(dataBianXinLiang);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (bianXingList.Count > 0)
+                {
+                    return JsonHelper.ToJson(bianXingList);
+                }
+            }
+
+            else
+            {
+
+                return string.Empty;
+            }
+            return string.Empty;
+        }
+        #endregion
+
     }
 }

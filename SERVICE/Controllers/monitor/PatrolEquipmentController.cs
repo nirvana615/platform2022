@@ -478,6 +478,48 @@ namespace SERVICE.Controllers
             }
         }
         /// <summary>
+        /// 获取巡视的照片信息
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="monitorId">验证信息</param>
+        /// <returns></returns>
+        [HttpGet]
+        public string getMonitorConstPhotoInfo(string monitorId)
+        {
+
+
+            
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("select c.* from common_mark a ,monitor_monitor b,const_photo_info c where  a.id={0}  and a.text=b.jcdbh and b.id=c.monitor_id and c.type='6' ", SQLHelper.UpdateString(monitorId)));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<ConstPhotoInfo> constPhotoInfoList = new List<ConstPhotoInfo>();
+
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    ConstPhotoInfo constPhotoInfo = ParseMonitorHelper.ParseConstPhotoInfo(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+                    if (constPhotoInfo != null)
+                    {
+                        constPhotoInfoList.Add(constPhotoInfo);
+
+                    }
+                }
+
+                if (constPhotoInfoList.Count > 0)
+                {
+                    return JsonHelper.ToJson(constPhotoInfoList);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+        /// <summary>
         /// 1---临时道路插入
         /// </summary>
         [HttpPost]
@@ -672,6 +714,146 @@ namespace SERVICE.Controllers
             }
         }
 
+        /// <summary>
+        /// 插入阈值信息表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string updateMonitorAlarmThreshold()
+        {
+            #region 参数
+            string monitorId = HttpContext.Current.Request.Form["monitorId"];
+            string projectId = HttpContext.Current.Request.Form["projectId"];
+            string monitorType = HttpContext.Current.Request.Form["monitorType"];
+            string backTrack = HttpContext.Current.Request.Form["backTrack"];
+            string yueZhiOne = HttpContext.Current.Request.Form["yueZhiOne"];
+            string yueZhiTwo = HttpContext.Current.Request.Form["yueZhiTwo"];
+
+
+            #endregion
+
+            
+            if (!string.IsNullOrEmpty(projectId)
+                && !string.IsNullOrEmpty(monitorId)
+                && !string.IsNullOrEmpty(monitorType)
+                && !string.IsNullOrEmpty(backTrack)
+                && !string.IsNullOrEmpty(yueZhiOne)
+                )
+            {
+
+   
+                string oldId = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT id FROM monitor_alarm_threshold WHERE project_id ={0} and monitor_id = {1}", SQLHelper.UpdateString(projectId), SQLHelper.UpdateString(monitorId)));
+                if (string.IsNullOrEmpty(oldId))//没得id就是新增
+                {
+                    string value = "("
+                    + SQLHelper.UpdateString(projectId) + ","
+                    + SQLHelper.UpdateString(monitorId) + ","
+                    + SQLHelper.UpdateString(monitorType) + ","
+                    + SQLHelper.UpdateString(backTrack) + ","
+                    + SQLHelper.UpdateString(yueZhiOne) + ","
+                    + SQLHelper.UpdateString(DateTime.Now.ToString("yyyy年MM月dd日"));
+
+                    string sql = "INSERT INTO monitor_alarm_threshold( project_id, monitor_id,monitor_type,back_track,yue_zhi_one,last_update_time ";
+                    if (!string.IsNullOrEmpty(yueZhiTwo))
+                    {
+                        sql = sql + ",yue_zhi_two ";
+                        value = value + "," + SQLHelper.UpdateString(yueZhiTwo);
+                    }
+                
+                    value = value + ")";
+                    sql = sql + ") VALUES ";
+                    int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, sql + value);
+                    if (id != -1)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "新增成功！", id + ""));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "数据库插入失败", ""));
+                    }
+
+                }
+                else//有id就是更新
+                {
+                    string sql = "UPDATE   monitor_alarm_threshold SET back_track={0},yue_zhi_one={1},last_update_time={2} ";
+                    if (string.IsNullOrEmpty(yueZhiTwo)&& yueZhiTwo!=null)
+                    {
+                        sql = sql + ",last_update_time= " + SQLHelper.UpdateString(yueZhiTwo);
+                    }
+
+                      int updateCount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(sql +" WHERE id={3}  ", SQLHelper.UpdateString(backTrack), SQLHelper.UpdateString(yueZhiOne), SQLHelper.UpdateString(DateTime.Now.ToString("yyyy年MM月dd日")), SQLHelper.UpdateString(oldId)));
+                    if (updateCount != -1)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "修改成功！", ""));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "修改失败", ""));
+                        
+                    }
+                }
+                
+
+
+            }
+            else
+            {
+                return "参数不全！";
+            }
+           
+        }
+        /// <summary>
+        /// 获取监测点阈值信息
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="monitorId">验证信息</param>
+        /// <returns></returns>
+        [HttpGet]
+        public string getMonitorAlarmThreshold(string projectId, string monitorId, string id)
+        {
+
+
+            string sql = "SELECT * FROM monitor_alarm_threshold WHERE project_id ={0}";
+            if (!string.IsNullOrEmpty(monitorId))
+            {
+                sql = sql + " and monitor_id = " + SQLHelper.UpdateString(monitorId);
+            }
+            if (!string.IsNullOrEmpty(id))
+            {
+                sql = sql + " and id = " + SQLHelper.UpdateString(id);
+            }
+
+            sql = sql + "ORDER BY last_update_time ";
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(projectId)));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<MonitorAlarmThreshold> monitorAlarmThresholdList = new List<MonitorAlarmThreshold>();
+
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    MonitorAlarmThreshold monitorAlarmThreshold = ParseMonitorHelper.ParseMonitorAlarmThreshold(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+                    if (monitorAlarmThreshold != null)
+                    {
+                        monitorAlarmThresholdList.Add(monitorAlarmThreshold);
+
+                    }
+                }
+
+                if (monitorAlarmThresholdList.Count > 0)
+                {
+                    return JsonHelper.ToJson(monitorAlarmThresholdList);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
 
     }
 }

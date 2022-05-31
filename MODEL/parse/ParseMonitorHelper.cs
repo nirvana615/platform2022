@@ -4872,6 +4872,83 @@ namespace MODEL
                 return null;
             }
         }
+        /// 施工照片表
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static MonitorAlarmThreshold ParseMonitorAlarmThreshold(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析阈值数据为空！");
+                return null;
+            }
 
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("阈值数据不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                MonitorAlarmThreshold monitorAlarmThreshold = new MonitorAlarmThreshold()
+                {
+                    id = Convert.ToInt32(row[0].ToString()),
+                    projectId = row[1].ToString(),
+                    monitorId = row[2].ToString(),
+                    monitorType = row[3].ToString(),
+                    backTrack = row[4].ToString(),
+                    yueZhiOne = row[5].ToString(),
+                    yueZhiTwo = row[6].ToString(),
+                    lastUpdateTime = row[7].ToString(),
+                   
+                };
+                return monitorAlarmThreshold;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("为施工照片信息表解析失败：" + data, ex);
+                return null;
+            }
+        }
+        public static DataBianXinLiang ParseBianXinLiang(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析DataBianXinLiang数据为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("DataBianXinLiang不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                DataBianXinLiang dataBianXinLiang = new DataBianXinLiang()
+                {
+                    code = row[0].ToString(),
+                    bianXinLingOne = row[1].ToString(),
+                };
+                if (row.Length>2)
+                {
+                    dataBianXinLiang.bianXinLingTwo = row[2].ToString();
+                }
+
+                return dataBianXinLiang;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("dataBianXinLiang解析失败：" + data, ex);
+                return null;
+            }
+        }
     }
 }

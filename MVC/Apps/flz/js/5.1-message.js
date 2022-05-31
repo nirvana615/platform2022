@@ -87,7 +87,7 @@ function openPouMianLaey() {
         }, btn: ['选点', '定位', '优化', '下载']
         , yes: function (index, layero) {
             ClearTemp();
-            layer.min(addPouMianLaey);
+            
             if (viewer.entities.getById("section123") != null) {
                 viewer.entities.removeById("section123");
             }
@@ -107,13 +107,12 @@ function openPouMianLaey() {
             }
 
             if (data.ShengChenType == "0") {
-                
-                
                 if (data.CaiJiType == "0") {//模型测量
                     if (modleInfo == null) {
                         layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         return;
                     }
+                    console.log(modleInfo);
                 }
                 if (data.interval.length == 0) {
                     layer.msg('请输入采样间隔');
@@ -129,14 +128,12 @@ function openPouMianLaey() {
                 viewer._container.style.cursor = "crosshair";//修改鼠标样式
                 pointpos = [];
                 pointLBs = [];
+                layer.min(addPouMianLaey);
                 //左击
                 handler.setInputAction(function (leftclik) {
                     var pickedOject;
                     if (data.CaiJiType == "0") {//模型测量
-                        if (modleInfo == null) {
-                            layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                            return;
-                        }
+                       
                         pickedOject = viewer.scene.pick(leftclik.position);//模型
                     } else {
                         pickedOject = viewer.scene.pickPosition(leftclik.position);//地形
@@ -226,6 +223,7 @@ function openPouMianLaey() {
                     }
                 }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
             } else {
+                layer.min(addPouMianLaey);
                 handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
                 viewer._container.style.cursor = "crosshair";//修改鼠标样式
                 pointpos = [];
@@ -490,7 +488,7 @@ function openPouMianLaey() {
                 layer.msg('中央经度应为数字请输入数字');
                 return false;
             }
-            
+                
                 var startLB = xy2bl(startPintX, startPintY, 3, centralLongitude, false);
                 var postionLB = new Cesium.Cartographic(Math.PI / 180 * startLB.l, Math.PI / 180 * startLB.b);
                 var Heights = scene.sampleHeight(postionLB);
@@ -498,8 +496,16 @@ function openPouMianLaey() {
                 if (Heights > 0) {
                     startPosition = new Cesium.Cartesian3.fromDegrees(startLB.l, startLB.b, Heights);
                 } else {
-                    layer.msg('起点坐标不在模型上');
-                    return false;
+                    
+                    
+                    if (data.CaiJiType == "0") {//模型测量
+                        layer.msg('起点坐标不在模型上');
+                        return false;
+                    } else {
+                        layer.msg('起点坐标偏差太大，建议缩小地形图全局查看');
+                        return false;
+                    }
+                    
                 }
                 pointpos = [];
                 viewer.entities.add({
@@ -523,8 +529,14 @@ function openPouMianLaey() {
                 if (HeightsEnd > 0) {
                     endPosition = new Cesium.Cartesian3.fromDegrees(endLB.l, endLB.b, HeightsEnd);
                 } else {
-                    layer.msg('终点坐标不在模型上');
-                    return false;
+                    if (data.CaiJiType == "0") {//模型测量
+                        layer.msg('终点坐标不在模型上');
+                        return false;
+                    } else {
+                        layer.msg('终点坐标偏差太大，建议缩小地形图全局查看');
+                        return false;
+                    }
+                  
                 }
                 viewer.entities.add({
                     id: "endPoint111",
@@ -1220,7 +1232,7 @@ function ziDongBuZhuo(startL, startB, endL, endB, n, pointpos) {
         }
         ysline = tempList;
         xgline = tempList;
-        viewer.entities.add({
+        var entenSection=viewer.entities.add({
             id: "section123",
             polyline: {
                 positions: tempList,
@@ -1230,6 +1242,7 @@ function ziDongBuZhuo(startL, startB, endL, endB, n, pointpos) {
                 depthFailMaterial: Cesium.Color.YELLOW,
             }
         });
+        //viewer.flyTo(entenSection);
         layer.close(loadingminindex);
         drawZheXianTu();
         
@@ -1326,7 +1339,7 @@ function ziDongBuZhuoDiXing(startL, startB, endL, endB, n, pointpos) {
         tempList = Cesium.Ellipsoid.WGS84.cartographicArrayToCartesianArray(samples);
         ysline = tempList;
         xgline = tempList;
-        viewer.entities.add({
+        var entenSection=viewer.entities.add({
             id: "section123",
             polyline: {
                 positions: tempList,
@@ -1336,6 +1349,7 @@ function ziDongBuZhuoDiXing(startL, startB, endL, endB, n, pointpos) {
                 depthFailMaterial: Cesium.Color.YELLOW,
             }
         });
+        viewer.flyTo(entenSection);
         drawZheXianTu();
         layer.close(loadingminindex);
     });
