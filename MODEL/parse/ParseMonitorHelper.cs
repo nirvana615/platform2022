@@ -1908,7 +1908,7 @@ namespace MODEL
                     Flag = row[6].ToString()
                 };
 
-                if (string.IsNullOrEmpty(row[4].ToString()))
+                if (!string.IsNullOrEmpty(row[4].ToString()))
                 {
                     qjdelta.Dz = Convert.ToDouble(row[4].ToString());
                 }
@@ -2311,6 +2311,41 @@ namespace MODEL
                     Id = Convert.ToInt32(row[0].ToString()),
                     Unix = Convert.ToInt32(row[1].ToString()),
                     Value = Convert.ToDouble(row[2].ToString()),
+                    Time = row[3].ToString(),
+                    Flag = row[4].ToString()
+                };
+
+                return waterdelta;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("WATERDelta解析失败：" + data, ex);
+                return null;
+            }
+        }
+        public static WATERDelta ParseWATERDelta(string data, double gc, double? ks)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析WATERDelta数据为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("WATERDelta不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                WATERDelta waterdelta = new WATERDelta()
+                {
+                    Id = Convert.ToInt32(row[0].ToString()),
+                    Unix = Convert.ToInt32(row[1].ToString()),
+                    Value = gc - (Convert.ToDouble(ks) - Convert.ToDouble(row[2].ToString())),
                     Time = row[3].ToString(),
                     Flag = row[4].ToString()
                 };

@@ -85,6 +85,144 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
 
+        /// <summary>
+        /// 获取待处理监测点预设时间范围监测数据
+        /// </summary>
+        /// <param name="id">监测点id</param>
+        /// <param name="type">监测点类型</param>
+        /// <param name="predatetime">预设时间范围编码</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetEditAutoDatabyPreDateTime(int id, string type, string predatetime, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                //获取时间范围
+                string datetime = GetDateTimebyPre(Convert.ToInt16(predatetime));
+                if (!string.IsNullOrEmpty(datetime))
+                {
+                    return GetEditAutoDatabyDateTime(id, type, datetime, userbsms);
+                }
+            }
+            else
+            {
+                //验权失败
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取待处理监测点自定义时间范围监测数据
+        /// </summary>
+        /// <param name="id">监测点id</param>
+        /// <param name="type">监测点类型</param>
+        /// <param name="customdatetime">自定义时间范围</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetEditAutoDatabyCustomDateTime(int id, string type, string customdatetime, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                try
+                {
+                    //获取时间范围
+                    string[] timerange = customdatetime.Replace(" - ", ";").Split(new char[] { ';' });
+                    return GetEditAutoDatabyDateTime(id, type, string.Format("(gcsj>='{0}' AND gcsj<'{1}')", timerange[0], timerange[1]), userbsms);
+                }
+                catch
+                { }
+            }
+            else
+            {
+                //验权失败
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 剔除监测数据
+        /// </summary>
+        /// <param name="id">监测点id</param>
+        /// <param name="type">监测点类型</param>
+        /// <param name="datas">剔除监测数据id</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string DeleteEditAutoData(int id, string type, string deletedata, string cookie)
+        {
+            string[] dataids = deletedata.Split(',');
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                try
+                {
+                    #region 获取数据表及设备类型
+                    string table = string.Empty;
+                    if (type == MODEL.EnumMonitor.AutoDeviceType.GNSS.GetRemark())
+                    {
+                        table = "monitor_data_gnss";
+                    }
+                    else if (type == MODEL.EnumMonitor.AutoDeviceType.LF.GetRemark())
+                    {
+                        table = "monitor_data_lf";
+                    }
+                    else if (type == MODEL.EnumMonitor.AutoDeviceType.QJ.GetRemark())
+                    {
+                        table = "monitor_data_qj";
+                    }
+                    else if (type == MODEL.EnumMonitor.AutoDeviceType.SBWY.GetRemark())
+                    {
+                        table = "monitor_data_sbwy";
+                    }
+                    else if (type == MODEL.EnumMonitor.AutoDeviceType.WATER.GetRemark())
+                    {
+                        table = "monitor_data_water";
+                    }
+                    else if (type == MODEL.EnumMonitor.AutoDeviceType.YL.GetRemark())
+                    {
+                        table = "monitor_data_yl";
+                    }
+                    else if (type == MODEL.EnumMonitor.AutoDeviceType.RAIN.GetRemark())
+                    {
+                        table = "monitor_data_rain";
+                    }
+                    #endregion
+                    if (dataids.Length > 0)
+                    {
+
+                        for (var i = 0; i < dataids.Length; i++)
+                        {
+                            //int count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE {0} SET lb={1} WHERE id={2}", table, MODEL.EnumMonitor.AutoDataFlag.Less.GetRemark(), Convert.ToInt32(dataids[i])));
+                        }
+                    }
+                    else
+                    {
+                        return "删除失败！";
+                    }
+
+                }
+                catch
+                { }
+            }
+            else
+            {
+                return "验权失败！";
+            }
+
+            return string.Empty;
+        }
 
 
 
@@ -493,6 +631,432 @@ namespace SERVICE.Controllers
                         if (!string.IsNullOrEmpty(data))
                         {
                             string[] rows = data.Split(new char[] {COM.ConstHelper.rowSplit});
+                            if (rows.Length > 0)
+                            {
+                                List<RAINDelta> raindeltas = new List<RAINDelta>();
+                                for (int i = 0; i < rows.Length; i++)
+                                {
+                                    RAINDelta raindelta = ParseMonitorHelper.ParseRAINDelta(rows[i], id, 0);
+                                    if (raindelta != null)
+                                    {
+                                        raindeltas.Add(raindelta);
+                                    }
+                                }
+
+                                if (raindeltas.Count > 0)
+                                {
+                                    return JsonHelper.ToJson(raindeltas);
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取监测点设备指定时间范围数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private string GetEditAutoDatabyDateTime(int id, string type, string time, string userbsms)
+        {
+            if (type == MODEL.EnumMonitor.AutoDeviceType.GNSS.GetRemark())
+            {
+                #region GNSS
+                //根据监测点号获取设备
+                MapMonitorDevice mapMonitorDevice = ParseMonitorHelper.ParseMapMonitorDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_monitor_device WHERE monitorid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (mapMonitorDevice != null)
+                {
+                    //获取设备
+                    Device device = ParseMonitorHelper.ParseDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_device WHERE id={0} AND sblx={1} AND bsm{2} AND ztm={3}", mapMonitorDevice.DeviceId, (int)MODEL.EnumMonitor.AutoDeviceType.GNSS, userbsms, (int)MODEL.Enum.State.InUse)));
+                    if (device != null)
+                    {
+                        MapDeviceValue mapDeviceValue = ParseMonitorHelper.ParseMapDeviceValue(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_device_basevalue WHERE deviceid={0} AND ztm={1}", device.Id, (int)MODEL.Enum.State.InUse)));
+
+                        if (mapDeviceValue != null)
+                        {
+                            //获取初始值
+                            Value value = ParseMonitorHelper.ParseValue(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_basevalue WHERE id={0} AND ztm={1} AND bsm{2}", mapDeviceValue.ValueId, (int)MODEL.Enum.State.InUse, userbsms)));
+                            if (value != null)
+                            {
+                                GNSSValue gnssValue = JsonHelper.ToObject<GNSSValue>(value.VALUE);
+                                if (gnssValue != null)
+                                {
+                                    // dx dy dxy dh time type
+                                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT temp.id,0 ,temp.dx,temp.dy,SQRT(temp.dx*temp.dx+temp.dy*temp.dy) dxy,temp.dh,temp.datetime,temp.datatype FROM (SELECT id,(x-CAST((SELECT value->>'X' FROM monitor_basevalue WHERE id={0} AND ztm={1}) as numeric))*1000 dx,(y-CAST((SELECT value->>'Y' FROM monitor_basevalue WHERE id={0} AND ztm={1}) as numeric))*1000 dy,(h-CAST((SELECT value->>'H' FROM monitor_basevalue WHERE id={0} AND ztm={1}) as numeric))*1000 dh,gcsj datetime,lb datatype FROM monitor_data_gnss WHERE code='{2}' AND {3} AND bsm{4} ORDER BY gcsj) temp", value.Id, (int)MODEL.Enum.State.InUse, device.Code, time, userbsms));
+                                    if (!string.IsNullOrEmpty(data))
+                                    {
+                                        string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                                        if (rows.Length > 0)
+                                        {
+                                            GNSSMonitor gnssMonitor = new GNSSMonitor();
+
+                                            #region 监测数据
+                                            List<GNSSDelta> gnssdeltas = new List<GNSSDelta>();
+                                            List<double> xs = new List<double>();//全部δx值
+                                            List<double> ys = new List<double>();//全部δy值
+                                            List<double> xys = new List<double>();//全部δxy值(水平位移)
+                                            List<double> hs = new List<double>();//全部δh值(垂直位移)
+                                            for (int i = 0; i < rows.Length; i++)
+                                            {
+                                                GNSSDelta gnssdelta = ParseMonitorHelper.ParseGNSSDelta(rows[i]);
+                                                if (gnssdelta != null)
+                                                {
+                                                    gnssdeltas.Add(gnssdelta);
+                                                    xs.Add(gnssdelta.Dx);
+                                                    ys.Add(gnssdelta.Dy);
+                                                    xys.Add(gnssdelta.Dxy);
+                                                    hs.Add(gnssdelta.Dh);
+                                                }
+                                            }
+                                            gnssMonitor.Datas = gnssdeltas;
+                                            #endregion
+
+                                            #region 统计量
+                                            List<DataStatistics> dslist = new List<DataStatistics>();
+                                            dslist.Add(GetAutoDataStatistics("X位移", xs));
+                                            dslist.Add(GetAutoDataStatistics("Y位移", ys));
+                                            dslist.Add(GetAutoDataStatistics("水平位移", xys));
+                                            dslist.Add(GetAutoDataStatistics("垂直位移", hs));
+                                            gnssMonitor.Statistics = dslist;
+                                            #endregion
+
+                                            if ((gnssMonitor.Datas != null) && (gnssMonitor.Statistics != null))
+                                            {
+                                                return JsonHelper.ToJson(gnssMonitor);
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            //无初始值，则将第一条数据作为初始值
+                            GNSS gnss = ParseMonitorHelper.ParseGNSS(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_data_gnss WHERE code='{0}' AND bsm{1} ORDER BY gcsj ASC LIMIT 1", device.Code, userbsms)));
+                            if (gnss != null)
+                            {
+                                // dx dy dxy dh time type
+                                string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT temp.id,0,temp.dx,temp.dy,SQRT(temp.dx*temp.dx+temp.dy*temp.dy) dxy,temp.dh,temp.datetime,temp.datatype FROM (SELECT id,(x-({0}))*1000 dx,(y-({1}))*1000 dy,(h-({2}))*1000 dh,gcsj datetime,lb datatype FROM monitor_data_gnss WHERE code='{3}' AND {4} AND bsm{5} ORDER BY gcsj) temp", gnss.X, gnss.Y, gnss.H, device.Code, time, userbsms));
+
+                                if (!string.IsNullOrEmpty(data))
+                                {
+                                    string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                                    if (rows.Length > 0)
+                                    {
+                                        GNSSMonitor gnssMonitor = new GNSSMonitor();
+
+                                        #region 监测数据
+                                        List<GNSSDelta> gnssdeltas = new List<GNSSDelta>();
+                                        List<double> xs = new List<double>();//全部δx值
+                                        List<double> ys = new List<double>();//全部δy值
+                                        List<double> xys = new List<double>();//全部δxy值(水平位移)
+                                        List<double> hs = new List<double>();//全部δh值(垂直位移)
+                                        for (int i = 0; i < rows.Length; i++)
+                                        {
+                                            GNSSDelta gnssdelta = ParseMonitorHelper.ParseGNSSDelta(rows[i]);
+                                            if (gnssdelta != null)
+                                            {
+                                                gnssdeltas.Add(gnssdelta);
+                                                xs.Add(gnssdelta.Dx);
+                                                ys.Add(gnssdelta.Dy);
+                                                xys.Add(gnssdelta.Dxy);
+                                                hs.Add(gnssdelta.Dh);
+                                            }
+                                        }
+                                        gnssMonitor.Datas = gnssdeltas;
+                                        #endregion
+
+                                        #region 统计量
+                                        List<DataStatistics> dslist = new List<DataStatistics>();
+                                        dslist.Add(GetAutoDataStatistics("X位移", xs));
+                                        dslist.Add(GetAutoDataStatistics("Y位移", ys));
+                                        dslist.Add(GetAutoDataStatistics("水平位移", xys));
+                                        dslist.Add(GetAutoDataStatistics("垂直位移", hs));
+                                        gnssMonitor.Statistics = dslist;
+                                        #endregion
+
+                                        if ((gnssMonitor.Datas != null) && (gnssMonitor.Statistics != null))
+                                        {
+                                            return JsonHelper.ToJson(gnssMonitor);
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+                #endregion
+            }
+            else if (type == MODEL.EnumMonitor.AutoDeviceType.LF.GetRemark())
+            {
+                #region 裂缝
+                MapMonitorDevice mapMonitorDevice = ParseMonitorHelper.ParseMapMonitorDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_monitor_device WHERE monitorid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (mapMonitorDevice != null)
+                {
+                    Device device = ParseMonitorHelper.ParseDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_device WHERE id={0} AND sblx={1} AND bsm{2} AND ztm={3}", mapMonitorDevice.DeviceId, (int)MODEL.EnumMonitor.AutoDeviceType.LF, userbsms, (int)MODEL.Enum.State.InUse)));
+                    if (device != null)
+                    {
+                        //TODO获取初始值
+
+                        string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT id,0,value,gcsj,lb FROM monitor_data_lf WHERE code='{0}' AND {1} AND bsm{2} ORDER BY gcsj", device.Code, time, userbsms));
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                            if (rows.Length > 0)
+                            {
+                                LFMonitor lfMonitor = new LFMonitor();
+
+                                List<LFDelta> lfdeltas = new List<LFDelta>();
+                                List<double> lens = new List<double>();//全部变形量
+                                for (int i = 0; i < rows.Length; i++)
+                                {
+                                    LFDelta lfdelta = ParseMonitorHelper.ParseLFDelta(rows[i]);
+                                    if (lfdelta != null)
+                                    {
+                                        lfdeltas.Add(lfdelta);
+                                        lens.Add(lfdelta.Dv);
+                                    }
+                                }
+
+                                lfMonitor.Datas = lfdeltas;
+                                lfMonitor.Statistics = new List<DataStatistics> { GetAutoDataStatistics("变形量", lens) };
+
+                                if ((lfMonitor.Datas != null) && (lfMonitor.Statistics != null))
+                                {
+                                    return JsonHelper.ToJson(lfMonitor);
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
+            }
+            else if (type == MODEL.EnumMonitor.AutoDeviceType.QJ.GetRemark())
+            {
+                #region 倾角
+                MapMonitorDevice mapMonitorDevice = ParseMonitorHelper.ParseMapMonitorDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_monitor_device WHERE monitorid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (mapMonitorDevice != null)
+                {
+                    Device device = ParseMonitorHelper.ParseDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_device WHERE id={0} AND sblx={1} AND bsm{2} AND ztm={3}", mapMonitorDevice.DeviceId, (int)MODEL.EnumMonitor.AutoDeviceType.QJ, userbsms, (int)MODEL.Enum.State.InUse)));
+                    if (device != null)
+                    {
+                        //TODO获取初始值
+
+                        string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT id,0,x,y,z,gcsj,lb FROM monitor_data_qj WHERE code='{0}' AND {1} AND bsm{2} ORDER BY gcsj", device.Code, time, userbsms));
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                            if (rows.Length > 0)
+                            {
+                                QJMonitor qjMonitor = new QJMonitor();
+
+                                List<QJDelta> qjdeltas = new List<QJDelta>();
+                                List<double> xs = new List<double>();
+                                List<double> ys = new List<double>();
+                                List<double> zs = new List<double>();
+
+                                for (int i = 0; i < rows.Length; i++)
+                                {
+                                    QJDelta qjdelta = ParseMonitorHelper.ParseQJDelta(rows[i]);
+                                    if (qjdelta != null)
+                                    {
+                                        qjdeltas.Add(qjdelta);
+                                        xs.Add(qjdelta.Dx);
+                                        ys.Add(qjdelta.Dy);
+                                        if (qjdelta.Dz != null)
+                                        {
+                                            zs.Add(Convert.ToDouble(qjdelta.Dz));
+                                        }
+                                    }
+                                }
+
+                                qjMonitor.Datas = qjdeltas;
+
+                                List<DataStatistics> dslist = new List<DataStatistics>();
+                                dslist.Add(GetAutoDataStatistics("x方向", xs));
+                                dslist.Add(GetAutoDataStatistics("y方向", ys));
+                                if (zs.Count > 0)
+                                {
+                                    dslist.Add(GetAutoDataStatistics("z方向", zs));
+                                }
+                                qjMonitor.Statistics = dslist;
+
+                                if ((qjMonitor.Datas != null) && (qjMonitor.Statistics != null))
+                                {
+                                    return JsonHelper.ToJson(qjMonitor);
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
+            }
+            else if (type == MODEL.EnumMonitor.AutoDeviceType.SBWY.GetRemark())
+            {
+                #region 深部位移
+                //根据监测点号获取设备
+                MapMonitorDevice mapMonitorDevice = ParseMonitorHelper.ParseMapMonitorDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_monitor_device WHERE monitorid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (mapMonitorDevice != null)
+                {
+                    //获取设备
+                    Device device = ParseMonitorHelper.ParseDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_device WHERE id={0} AND sblx={1} AND bsm{2} AND ztm={3}", mapMonitorDevice.DeviceId, (int)MODEL.EnumMonitor.AutoDeviceType.SBWY, userbsms, (int)MODEL.Enum.State.InUse)));
+                    if (device != null)
+                    {
+                        string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT id,0,x,y,z,gcsj,lb FROM monitor_data_sbwy WHERE code='{0}' AND bsm{1} AND {2} ORDER BY gcsj", device.Code, userbsms, time));
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                            if (rows.Length > 0)
+                            {
+                                SBWYMonitor sbwyMonitor = new SBWYMonitor();
+
+                                List<SBWYDelta> sbwydeltas = new List<SBWYDelta>();
+                                List<double> xs = new List<double>();
+                                List<double> ys = new List<double>();
+
+                                for (int i = 0; i < rows.Length; i++)
+                                {
+                                    SBWYDelta sbwydelta = ParseMonitorHelper.ParseSBWYDelta(rows[i]);
+                                    if (sbwydelta != null)
+                                    {
+                                        sbwydeltas.Add(sbwydelta);
+                                        xs.Add(sbwydelta.X);
+                                        ys.Add(sbwydelta.Y);
+                                    }
+                                }
+                                sbwyMonitor.Datas = sbwydeltas;
+                                sbwyMonitor.Statistics = new List<DataStatistics> { GetAutoDataStatistics("x方向位移", xs), GetAutoDataStatistics("y方向位移", ys) };
+
+                                if ((sbwyMonitor.Datas != null) && (sbwyMonitor.Statistics != null))
+                                {
+                                    return JsonHelper.ToJson(sbwyMonitor);
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
+            }
+            else if (type == MODEL.EnumMonitor.AutoDeviceType.WATER.GetRemark())
+            {
+                #region 地下水位
+                /*
+                 * 绝对地下水位=孔口高程-(孔深-相对于孔底的相对水位)
+                 */
+
+                //获取监测点
+                Monitor monitor = ParseMonitorHelper.ParseMonitor(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_monitor WHERE id={0} AND bsm{1} AND ztm={2}", id, userbsms, (int)MODEL.Enum.State.InUse)));
+                if (monitor != null)
+                {
+                    //根据监测点号获取设备
+                    MapMonitorDevice mapMonitorDevice = ParseMonitorHelper.ParseMapMonitorDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_monitor_device WHERE monitorid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                    if (mapMonitorDevice != null)
+                    {
+                        //获取设备
+                        Device device = ParseMonitorHelper.ParseDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_device WHERE id={0} AND sblx={1} AND bsm{2} AND ztm={3}", mapMonitorDevice.DeviceId, (int)MODEL.EnumMonitor.AutoDeviceType.WATER, userbsms, (int)MODEL.Enum.State.InUse)));
+                        if (device != null)
+                        {
+                            string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT id,0,value,gcsj,lb FROM monitor_data_water WHERE code='{0}' AND bsm{1} AND {2} ORDER BY gcsj", device.Code, userbsms, time));
+                            if (!string.IsNullOrEmpty(data))
+                            {
+                                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                                if (rows.Length > 0)
+                                {
+                                    List<WATERDelta> waterdeltas = new List<WATERDelta>();
+
+                                    for (int i = 0; i < rows.Length; i++)
+                                    {
+                                        WATERDelta waterdelta = ParseMonitorHelper.ParseWATERDelta(rows[i], monitor.GC, monitor.KS);
+                                        if (waterdelta != null)
+                                        {
+                                            waterdeltas.Add(waterdelta);
+                                        }
+                                    }
+
+                                    if (waterdeltas.Count > 0)
+                                    {
+                                        WATERMonitor watermonitor = new WATERMonitor();
+                                        watermonitor.Height = monitor.GC;
+                                        watermonitor.Deep = Convert.ToDouble(monitor.KS);
+                                        watermonitor.Datas = waterdeltas;
+
+                                        return JsonHelper.ToJson(watermonitor);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
+            }
+            else if (type == MODEL.EnumMonitor.AutoDeviceType.YL.GetRemark())
+            {
+                #region 应力
+                MapMonitorDevice mapMonitorDevice = ParseMonitorHelper.ParseMapMonitorDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_monitor_device WHERE monitorid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (mapMonitorDevice != null)
+                {
+                    Device device = ParseMonitorHelper.ParseDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_device WHERE id={0} AND sblx={1} AND bsm{2} AND ztm={3}", mapMonitorDevice.DeviceId, (int)MODEL.EnumMonitor.AutoDeviceType.YL, userbsms, (int)MODEL.Enum.State.InUse)));
+                    if (device != null)
+                    {
+                        //TODO获取初始值
+
+                        string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT id,0,value,gcsj,lb FROM monitor_data_yl WHERE code='{0}' AND bsm{1} AND {2} ORDER BY gcsj", device.Code, userbsms, time));
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                            if (rows.Length > 0)
+                            {
+                                YLMonitor ylMonitor = new YLMonitor();
+
+                                List<YLDelta> yldeltas = new List<YLDelta>();
+                                List<double> values = new List<double>();
+                                for (int i = 0; i < rows.Length; i++)
+                                {
+                                    YLDelta yldelta = ParseMonitorHelper.ParseYLDelta(rows[i]);
+                                    if (yldelta != null)
+                                    {
+                                        yldeltas.Add(yldelta);
+                                        values.Add(yldelta.Dv);
+                                    }
+                                }
+
+                                ylMonitor.Datas = yldeltas;
+                                ylMonitor.Statistics = new List<DataStatistics> { GetAutoDataStatistics("变形量", values) };
+
+                                if ((ylMonitor.Datas != null) && (ylMonitor.Statistics != null))
+                                {
+                                    return JsonHelper.ToJson(ylMonitor);
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
+            }
+            else if (type == MODEL.EnumMonitor.AutoDeviceType.RAIN.GetRemark())
+            {
+                #region 雨量
+                //根据监测点号获取设备
+                MapMonitorDevice mapMonitorDevice = ParseMonitorHelper.ParseMapMonitorDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_monitor_device WHERE monitorid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (mapMonitorDevice != null)
+                {
+                    //获取设备
+                    Device device = ParseMonitorHelper.ParseDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_device WHERE id={0} AND sblx={1} AND bsm{2} AND ztm={3}", mapMonitorDevice.DeviceId, (int)MODEL.EnumMonitor.AutoDeviceType.RAIN, userbsms, (int)MODEL.Enum.State.InUse)));
+                    if (device != null)
+                    {
+                        string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT sum(value),substring(gcsj,0,11) FROM monitor_data_rain WHERE code='{0}' AND bsm{1} AND {2} GROUP BY substring(gcsj,0,11) ORDER BY substring(gcsj,0,11)", device.Code, userbsms, time));
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
                             if (rows.Length > 0)
                             {
                                 List<RAINDelta> raindeltas = new List<RAINDelta>();
