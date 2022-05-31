@@ -21,6 +21,10 @@ namespace MODEL
         /// </summary>
         public string bianXinLingTwo { get; set; }
         /// <summary>
+        /// ，GNSS，倾角的z方向
+        /// </summary>
+        public string bianXinLingThree { get; set; }
+        /// <summary>
         /// 单位
         /// </summary>
         public string danWei { get; set; }

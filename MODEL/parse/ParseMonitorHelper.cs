@@ -4941,7 +4941,10 @@ namespace MODEL
                 {
                     dataBianXinLiang.bianXinLingTwo = row[2].ToString();
                 }
-
+                if (row.Length > 3)
+                {
+                    dataBianXinLiang.bianXinLingThree = row[3].ToString();
+                }
                 return dataBianXinLiang;
             }
             catch (Exception ex)

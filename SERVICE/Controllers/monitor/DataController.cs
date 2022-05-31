@@ -899,10 +899,7 @@ namespace SERVICE.Controllers
                                 DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
                                 if (dataBianXinLiang != null)
                                 {
-                                    if (i==0)
-                                    {
-                                        dataBianXinLiang.remark = "GNSS:变形量1:水平位移、变形量2:垂直位移";
-                                    }
+                                    dataBianXinLiang.remark = "GNSS";
                                     dataBianXinLiang.danWei = "mm";
 
                                     bianXingList.Add(dataBianXinLiang);
@@ -926,10 +923,7 @@ namespace SERVICE.Controllers
                                 DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
                                 if (dataBianXinLiang != null)
                                 {
-                                    if (i == 0)
-                                    {
-                                        dataBianXinLiang.remark = "裂缝:变形量1:裂缝变化量";
-                                    }
+                                    dataBianXinLiang.remark = "裂缝";
                                     dataBianXinLiang.danWei = "mm";
                                     bianXingList.Add(dataBianXinLiang);
                                 }
@@ -940,7 +934,7 @@ namespace SERVICE.Controllers
                 if (qinjiaoCode.Length > 1)//倾角
                 {
                     qinjiaoCode = qinjiaoCode.Substring(0, qinjiaoCode.Length - 1) + ")";
-                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,cast((max(x)-min(x))  as decimal(10, 3)) as bxl,cast((max(y)-min(y)) as decimal(10, 3))  as bxl2 FROM monitor_data_qj  WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", qinjiaoCode, time, userbsms));
+                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,cast((max(x)-min(x))  as decimal(10, 3)) as bxl,cast((max(y)-min(y)) as decimal(10, 3))  as bxl2,cast((max(z)-min(z)) as decimal(10, 3))  as bxl3 FROM monitor_data_qj  WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", qinjiaoCode, time, userbsms));
                     if (!string.IsNullOrEmpty(data))
                     {
                         string[] rows1 = data.Split(new char[] { COM.ConstHelper.rowSplit });
@@ -952,10 +946,7 @@ namespace SERVICE.Controllers
                                 DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
                                 if (dataBianXinLiang != null)
                                 {
-                                    if (i == 0)
-                                    {
-                                        dataBianXinLiang.remark = "倾角:变形量1:X方向、变形量2:Y方向";
-                                    }
+                                    dataBianXinLiang.remark = "倾角";
                                     dataBianXinLiang.danWei = "°";
                                     bianXingList.Add(dataBianXinLiang);
                                 }
@@ -978,10 +969,7 @@ namespace SERVICE.Controllers
                                 DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
                                 if (dataBianXinLiang != null)
                                 {
-                                    if (i == 0)
-                                    {
-                                        dataBianXinLiang.remark = "应力:变形量1:应力变化";
-                                    }
+                                    dataBianXinLiang.remark = "应力";
                                     dataBianXinLiang.danWei = "KN";
                                     bianXingList.Add(dataBianXinLiang);
                                 }
@@ -1004,10 +992,7 @@ namespace SERVICE.Controllers
                                 DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
                                 if (dataBianXinLiang != null)
                                 {
-                                    if (i == 0)
-                                    {
-                                        dataBianXinLiang.remark = "深部位移:变形量1:X方向、变形量2:Y方向";
-                                    }
+                                    dataBianXinLiang.remark = "深部位移";
                                     dataBianXinLiang.danWei = "mm";
                                     bianXingList.Add(dataBianXinLiang);
                                 }
@@ -1018,7 +1003,7 @@ namespace SERVICE.Controllers
                 if (dxswCode.Length > 1)
                 {
                     dxswCode = dxswCode.Substring(0, dxswCode.Length - 1) + ")";
-                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,(max(value)-min(value)) as bxl FROM monitor_data_water WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", dxswCode, time, userbsms));
+                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,cast((max(value)-min(value))  as decimal(10, 3)) as bxl FROM monitor_data_water WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", dxswCode, time, userbsms));
                     if (!string.IsNullOrEmpty(data))
                     {
                         string[] rows1 = data.Split(new char[] { COM.ConstHelper.rowSplit });
@@ -1030,10 +1015,7 @@ namespace SERVICE.Controllers
                                 DataBianXinLiang dataBianXinLiang = ParseMonitorHelper.ParseBianXinLiang(rows1[i]);
                                 if (dataBianXinLiang != null)
                                 {
-                                    if (i == 0)
-                                    {
-                                        dataBianXinLiang.remark = "地下水位:变形量1:地下水位高程";
-                                    }
+                                    dataBianXinLiang.remark = "地下水位";
                                     dataBianXinLiang.danWei = "m";
                                     bianXingList.Add(dataBianXinLiang);
                                 }

@@ -11,7 +11,13 @@ var threshold4 = null;
 
 var orangeData = null;                         //原始数据
 var reviseData = null;                         //修正数据
-var bianXingLiangTableData = null;             //变形量的数据
+var LiFengDatastatisticsTable = null;             //变形量的数据lf
+var YingLiDatastatisticsTable = null;             //变形量的数据应力
+var GNSSDatastatisticsTable = null;             //变形量的数据Gnss
+var QinJiaoDatastatisticsTable = null;             //变形量的数据倾角
+var SbwyDatastatisticsTable = null;             //变形量的深部位移
+var DxswDatastatisticsTable = null;             //变形量的数据地下水位
+
 //自动化监测数据widget
 function LoadAutoDataLayer(id) {
     if (id == null) {
@@ -31,7 +37,7 @@ function LoadAutoDataLayer(id) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--自动化监测数据可视化--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;">    <ul class="layui-tab-title">        <li class="layui-this" style="width:21%;">数据处理</li>        <li style="width:21%;">可视化</li>        <li style="width:21%;">综合分析</li>        <li style="width:21%;">统计分析</li>    </ul>    <div class="layui-tab-content" style="margin:0px 0px">        <!--数据处理-->        <div class="layui-tab-item layui-show">            <div class="layui-row" style="margin: 0px 10px;">                <!--选择设备及时间范围-->                <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;">                    <div class="layui-row">                        <div class="layui-col-xs4">                            <div class="grid-demo grid-demo-bg1">                                <div class="layui-form-item">                                    <label class="layui-form-label" style="text-align:center;">选择设备：</label>                                    <div class="layui-input-block">                                        <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;">                                            <option value="">请选择设备</option>                                        </select>                                    </div>                                </div>                            </div>                        </div>                        <div class="layui-col-xs4">                            <div class="grid-demo">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:10px;">                                        <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;">                                            <option value="">请选择年限</option>                                        </select>                                    </div>                                </div>                            </div>                        </div>                        <div class="layui-col-xs4">                            <div class="grid-demo">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:10px;">                                        <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                    </div>                                </div>                            </div>                        </div>                    </div>                </form>            </div>            <div class="layui-row" style="margin: 0px 10px;">                <div class="layui-col-md10">                    <!--图形-->                    <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;"></div>                </div>                <div class="layui-col-md2">                    <!--数据集-->                    <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div>                </div>            </div>            <div class="layui-row" style="margin: 0px 10px;">                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">                    <ul class="layui-tab-title">                        <li class="layui-this">异常处理</li>                        <li>粗差剔除</li>                        <li>设置初值</li>                        <li>插补数据</li>                        <li>监测曲线</li>                    </ul>                    <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;">                        <div class="layui-tab-item layui-show">                            <div class="layui-row">                                <!--左侧-->                                <div class="layui-col-xs3">                                    <!--异常处理工具及说明-->                                    <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;">                                        <!--异常处理工具-->                                        <div class="layui-row">                                            <div class="layui-form-item">                                                <div class="layui-input-block" style="margin-left:1px;">                                                    <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter">                                                        <option value="0">按时间范围选择</option>                                                        <option value="1">按值域范围选择</option>                                                        <option value="2">多条件选择</option>                                                    </select>                                                </div>                                            </div>                                        </div>                                    </form>                                    <!--异常处理工具说明-->                                    <div id="editabnormaldatatooldoc" style="height:120px;padding: 5px 5px; border: 1px solid #e6e6e6;overflow-y: auto;"></div>                                </div>                                <!--右侧-->                                <div class="layui-col-md9" id="editabnormaldatatoolbodyid">                                    <!--异常处理工具参数-->                                </div>                            </div>                        </div>                        <div class="layui-tab-item">2</div>                        <div class="layui-tab-item">3</div>                        <div class="layui-tab-item">4</div>                        <div class="layui-tab-item">5</div>                        <div class="layui-tab-item">6</div>                    </div>                </div>            </div>        </div>        <!--可视化-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;">                    <div id="monitortreebytype" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs6">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs6">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--图形-->                        <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div>                        <!--统计表格-->                        <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;">                            <table id="autodatastatistics" class="layui-hide"></table>                        </div>                    </div>                </div>            </div>        </div>        <!--综合分析-->        <div class="layui-tab-item">综合分析</div>        <!--统计分析-->        <div class="layui-tab-item">            <div class="layui-col-md12" style="height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;overflow-y: auto;">                <div class="grid-demo grid-demo-bg1">                    <!--工具栏-->                    <form class="layui-form" lay-filter="bianXingDataform" style="margin-top:5px;margin-left:20px;margin-right:40px;">                        <div class="layui-row">                            <div class="layui-col-xs6">                                <div class="grid-demo grid-demo-bg1">                                    <div class="layui-form-item">                                        <div class="layui-input-block" style="margin-left:40px;"><select id="bianXingDatapretimeid" name="bianXingDatapretime" lay-filter="bianXingDatapretimefilter" style="visibility:hidden;"></select></div>                                    </div>                                </div>                            </div>                            <div class="layui-col-xs6">                                <div class="grid-demo">                                    <div class="layui-form-item">                                        <div class="layui-input-block" style="margin-left:20px;margin-right:40px;">                                            <input id="bianXingDatacustomtimeid" name="bianXingDatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                        </div>                                    </div>                                </div>                            </div>                        </div>                    </form>                    <!--统计表格-->                    <div  style="margin-left:30px;margin-right:30px;margin-top:15px;margin-bottom:20px;">                        <table id="bianXingDatastatistics" class="layui-hide"></table>                    </div>                </div>            </div>        </div>    </div></div>'
+                , content: '<!--自动化监测数据可视化--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;">    <ul class="layui-tab-title">        <li class="layui-this" style="width:21%;">数据处理</li>        <li style="width:21%;">可视化</li>        <li style="width:21%;">综合分析</li>        <li style="width:21%;">统计分析</li>    </ul>    <div class="layui-tab-content" style="margin:0px 0px">        <!--数据处理-->        <div class="layui-tab-item layui-show">            <div class="layui-row" style="margin: 0px 10px;">                <!--选择设备及时间范围-->                <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;">                    <div class="layui-row">                        <div class="layui-col-xs4">                            <div class="grid-demo grid-demo-bg1">                                <div class="layui-form-item">                                    <label class="layui-form-label" style="text-align:center;">选择设备：</label>                                    <div class="layui-input-block">                                        <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;">                                            <option value="">请选择设备</option>                                        </select>                                    </div>                                </div>                            </div>                        </div>                        <div class="layui-col-xs4">                            <div class="grid-demo">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:10px;">                                        <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;">                                            <option value="">请选择年限</option>                                        </select>                                    </div>                                </div>                            </div>                        </div>                        <div class="layui-col-xs4">                            <div class="grid-demo">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:10px;">                                        <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                    </div>                                </div>                            </div>                        </div>                    </div>                </form>            </div>            <div class="layui-row" style="margin: 0px 10px;">                <div class="layui-col-md10">                    <!--图形-->                    <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;"></div>                </div>                <div class="layui-col-md2">                    <!--数据集-->                    <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div>                </div>            </div>            <div class="layui-row" style="margin: 0px 10px;">                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">                    <ul class="layui-tab-title">                        <li class="layui-this">异常处理</li>                        <li>粗差剔除</li>                        <li>设置初值</li>                        <li>插补数据</li>                        <li>监测曲线</li>                    </ul>                    <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;">                        <div class="layui-tab-item layui-show">                            <div class="layui-row">                                <!--左侧-->                                <div class="layui-col-xs3">                                    <!--异常处理工具及说明-->                                    <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;">                                        <!--异常处理工具-->                                        <div class="layui-row">                                            <div class="layui-form-item">                                                <div class="layui-input-block" style="margin-left:1px;">                                                    <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter">                                                        <option value="0">按时间范围选择</option>                                                        <option value="1">按值域范围选择</option>                                                        <option value="2">多条件选择</option>                                                    </select>                                                </div>                                            </div>                                        </div>                                    </form>                                    <!--异常处理工具说明-->                                    <div id="editabnormaldatatooldoc" style="height:120px;padding: 5px 5px; border: 1px solid #e6e6e6;overflow-y: auto;"></div>                                </div>                                <!--右侧-->                                <div class="layui-col-md9" id="editabnormaldatatoolbodyid">                                    <!--异常处理工具参数-->                                </div>                            </div>                        </div>                        <div class="layui-tab-item">2</div>                        <div class="layui-tab-item">3</div>                        <div class="layui-tab-item">4</div>                        <div class="layui-tab-item">5</div>                        <div class="layui-tab-item">6</div>                    </div>                </div>            </div>        </div>        <!--可视化-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;">                    <div id="monitortreebytype" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs6">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs6">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--图形-->                        <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div>                        <!--统计表格-->                        <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;">                            <table id="autodatastatistics" class="layui-hide"></table>                        </div>                    </div>                </div>            </div>        </div>        <!--综合分析-->        <div class="layui-tab-item">综合分析</div>        <!--统计分析-->        <div class="layui-tab-item">            <div class="layui-col-md12" style="height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;overflow-y: auto;">                <div class="grid-demo grid-demo-bg1">                    <!--工具栏-->                    <form class="layui-form" lay-filter="bianXingDataform" style="margin-top:5px;margin-left:20px;margin-right:40px;">                        <div class="layui-row">                            <div class="layui-col-xs6">                                <div class="grid-demo grid-demo-bg1">                                    <div class="layui-form-item">                                        <div class="layui-input-block" style="margin-left:40px;"><select id="bianXingDatapretimeid" name="bianXingDatapretime" lay-filter="bianXingDatapretimefilter" style="visibility:hidden;"></select></div>                                    </div>                                </div>                            </div>                            <div class="layui-col-xs6">                                <div class="grid-demo">                                    <div class="layui-form-item">                                        <div class="layui-input-block" style="margin-left:20px;margin-right:40px;">                                            <input id="bianXingDatacustomtimeid" name="bianXingDatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                        </div>                                    </div>                                </div>                            </div>                        </div>                    </form>                    <!--统计表格-->                    <div id="LiFengDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block ">                        <table id="LiFengDatastatistics" class="layui-hide"></table>                    </div>                    <div id="YingLiDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block">                        <table id="YingLiDatastatistics" class="layui-hide"></table>                    </div>                    <div id="GNSSDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block">                        <table id="GNSSDatastatistics" class="layui-hide"></table>                    </div>                    <div id="QinJiaoDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block">                        <table id="QinJiaoDatastatistics" class="layui-hide"></table>                    </div>                    <div id="SbwyDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block">                        <table id="SbwyDatastatistics" class="layui-hide"></table>                    </div>                    <div id="DxswDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px  ;vertical-align: top;display:inline-block">                        <table id="DxswDatastatistics" class="layui-hide"></table>                    </div>                </div>            </div>        </div>    </div></div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -53,7 +59,12 @@ function LoadAutoDataLayer(id) {
                     editChart = null;
                     monitorstatisticstable = null;
                     monitorstatisticsdata = [];
-                    bianXingLiangTableData = null;
+                    LiFengDatastatisticsTable = null;             //变形量的数据lf
+                    YingLiDatastatisticsTable = null;             //变形量的数据应力
+                    GNSSDatastatisticsTable = null;             //变形量的数据Gnss
+                    QinJiaoDatastatisticsTable = null;             //变形量的数据倾角
+                    SbwyDatastatisticsTable = null;             //变形量的深部位移
+                    DxswDatastatisticsTable = null;             //变形量的数据地下水位
                 }
             });
         }
@@ -3918,21 +3929,6 @@ function MarkLine() {
 function getBianXingLiangData(projectid) {
 
 
-
-
-
-    //$.ajax({
-    //    url: servicesurl + "/api/Data/GetBianXinLiangPreDateTime", type: "get", data: { "id": id, "predatetime": '3', "cookie": document.cookie },
-    //    success: function (data) {
-    //        if (data == "") {
-
-    //        } else {
-    //            var monitorinfos = JSON.parse(data);
-    //            console.log(monitorinfos);
-    //        }
-
-    //    }, datatype: "json"
-    //});
    
                 //渲染工具栏
                 document.getElementById("bianXingDatapretimeid").style.visibility = "visible";
@@ -3941,7 +3937,7 @@ function getBianXingLiangData(projectid) {
                 //自动化监测数据时间范围（预设）
                 if (autodatadatetimes.length > 0) {
                     for (var i in autodatadatetimes) {
-                        if (autodatadatetimes[i].name == "最近30天") {
+                        if (autodatadatetimes[i].name == "今日") {
                             document.getElementById("bianXingDatapretimeid").innerHTML += '<option value="' + autodatadatetimes[i].value + '" selected>' + autodatadatetimes[i].name + '</option>';
                         }
                         else {
@@ -3975,42 +3971,149 @@ function getBianXingLiangData(projectid) {
                     }
                 });
                 //渲染统计表格
-                 bianXingLiangTableData =  table.render({
-                        elem: '#bianXingDatastatistics'
-                        , id: 'bianXingDatastatisticstableid'
-                        , title: '变形量统计表'
+                    LiFengDatastatisticsTable = table.render({
+                          elem: '#LiFengDatastatistics'
+                         , id: 'LiFengDatastatisticstableid'
+                         , title: '裂缝变形量'
                          , even: false
-                         , page: true
-                         , limit: 10
-                         , toolbar: true
+                        , page: { layout: ['prev', 'page', 'next', 'count'] }
+                        , limit: 5
+                         , toolbar: false
                          , totalRow: false
-                        , cols: [[
-                            { field: 'code', title: '编号', width: 250, align: "center" }
-                            , {
-                                field: 'bianXinLingOne', title: '变形量1', width: 120, align: "center", templet: function (row) {
-                                    if (row.remark) {
-                                        return '<span style="color: red;">' + row.bianXinLingOne+'</span>'
-                                    }  else {
-                                        return row.bianXinLingOne
+                         , cols: [[
+                             { field: 'code', title: '编号', width: 230, align: "center" }
+                             , {
+                                 field: 'bianXinLingOne', title: '裂缝变形量', width: 220, align: "center", templet: function (row) {
+                                     return row.bianXinLingOne + row.danWei
+                                 }
+                             }
+                             , { field: '', title: '', width: 0, align: "center" }
+                         ]]
+                         , data: []
+                     });
+                    YingLiDatastatisticsTable = table.render({
+                        elem: '#YingLiDatastatistics'
+                        , id: 'YingLiDatastatisticstableid'
+                            , title: '应力变形量'
+                            , even: false
+                            , page: { layout: ['prev', 'page', 'next', 'count'] }
+                            , limit: 5
+                            , toolbar: false
+                            , totalRow: false
+                            , cols: [[
+                                { field: 'code', title: '编号', width: 230, align: "center" }
+                                , {
+                                    field: 'bianXinLingOne', title: '应力变形量', width: 220, align: "center", templet: function (row) {
+                                        return row.bianXinLingOne + row.danWei
                                     }
+                                }
+                                , { field: '', title: '', width: 0, align: "center" }
+                            ]]
+                            , data: []
+    });
+                    GNSSDatastatisticsTable = table.render({
+                        elem: '#GNSSDatastatistics'
+                        , id: 'GnssDatastatisticstableid'
+                        , title: 'GNSS变形量'
+                        , even: false
+                        , page: { layout: ['prev', 'page', 'next', 'count'] }
+                        , limit: 5
+                        , toolbar: false
+                        , totalRow: false
+                        , cols: [[
+                            { field: 'code', title: '编号', width: 200, align: "center" }
+                            , {
+                                field: 'bianXinLingOne', title: '水平位移量', width: 125, align: "center", templet: function (row) {
+                                    return row.bianXinLingOne + row.danWei
                                 }
                             }
                             , {
-                                field: 'bianXinLingTwo', title: '变形量2', width: 120, align: "center", templet: function (row) {
-                                    if (row.remark && row.bianXinLingTwo) {
-                                        return '<span style="color: red;">' + row.bianXinLingTwo + '</span>'
-                                    } else {
-                                        return row.bianXinLingTwo != null ? row.bianXinLingTwo:''
-                                    }
-                                } }
-                            , { field: 'danWei', title: '单位', width: 120, align: "center" }
-                            , { field: 'remark', title: '备注', width: 300,  align: "center" }
+                                field: 'bianXinLingTwo', title: '垂直形量', width: 125, align: "center", templet: function (row) {
+                                    return row.bianXinLingTwo + row.danWei
+                                }
+                            }
+                            , { field: '', title: '', width: 0, align: "center" }
+                        ]]
+                        , data: []
+                    });
+                    QinJiaoDatastatisticsTable = table.render({
+                        elem: '#QinJiaoDatastatistics'
+                        , id: 'QinJiaoDatastatisticstableid'
+                        , title: '倾角变形量'
+                        , even: false
+                        , page: { layout: ['prev', 'page', 'next', 'count'] }
+                        , limit: 5
+                        , toolbar: false
+                        , totalRow: false
+                        , cols: [[
+                            { field: 'code', title: '编号', width: 150, align: "center" }
+                            , {
+                                field: 'bianXinLingOne', title: 'X方向', width: 100, align: "center", templet: function (row) {
+                                    return row.bianXinLingOne + row.danWei
+                                }
+                            }
+                            , {
+                                field: 'bianXinLingTwo', title: 'y方向', width: 100, align: "center", templet: function (row) {
+                                    return row.bianXinLingTwo + row.danWei
+                                }
+                            }
+                            , {
+                                field: 'bianXinLingThree', title: 'z方向', width: 100, align: "center", templet: function (row) {
+                                    return row.bianXinLingThree + row.danWei
+                                }
+                            }
+                            , { field: '', title: '', width: 0, align: "center" }
+                        ]]
+                        , data: []
+                    });
+                    SbwyDatastatisticsTable = table.render({
+                        elem: '#SbwyDatastatistics'
+                        , id: 'SbwyDatastatisticstableid'
+                        , title: '深部位移变形量'
+                        , even: false
+                        , page: { layout: ['prev', 'page', 'next', 'count'] }
+                        , limit: 5
+                        , toolbar: false
+                        , totalRow: false
+                        , cols: [[
+                            { field: 'code', title: '编号', width: 200, align: "center" }
+                            , {
+                                field: 'bianXinLingOne', title: 'X方向', width: 130, align: "center", templet: function (row) {
+                                    return row.bianXinLingOne + row.danWei
+                                }
+                            }
+                            , {
+                                field: 'bianXinLingTwo', title: 'Yf方向', width: 130, align: "center", templet: function (row) {
+                                    return row.bianXinLingTwo + row.danWei
+                                }
+                            }
+                            , { field: '', title: '', width: 0, align: "center" }
+                        ]]
+                        , data: []
+                    });
+                    DxswDatastatisticsTable = table.render({
+                        elem: '#DxswDatastatistics'
+                        , id: 'DxswDatastatisticstableid'
+                        , title: '地下水位变形量'
+                        , even: false
+                        , page: { layout: ['prev', 'page', 'next', 'count'] }
+                        , limit: 5
+                        , toolbar: false
+                        , totalRow: false
+                        , cols: [[
+                            { field: 'code', title: '编号', width: 230, align: "center" }
+                            , {
+                                field: 'bianXinLingOne', title: '地下水位变形量', width: 220, align: "center", templet: function (row) {
+                                    return row.bianXinLingOne + row.danWei
+                                }
+                            }
                             , { field: '', title: '', width: 0, align: "center" }
                         ]]
                         , data: []
                     });
 
-                var data1 = form.val("bianXingDataform");
+
+                
 
                 //加载初始监测点数据
          LoadProjectBianXinLiangDataPreDateTime(projectid, form.val("bianXingDataform").bianXingDatapretime);
@@ -4025,13 +4128,7 @@ function LoadProjectBianXinLiangDataPreDateTime(projectid, datetime) {
         url: servicesurl + "/api/Data/GetBianXinLiangPreDateTime", type: "get", data: { "id": projectid, "predatetime": datetime, "cookie": document.cookie },
         success: function (data) {
             layer.close(loadinglayerindex1);
-            if (data == "") {
-                bianXingLiangTableData.reload({ id: 'bianXingDatastatisticstableid', data: [] });
-            } else {
-                var monitorinfos = JSON.parse(data);
-                bianXingLiangTableData.reload({ id: 'bianXingDatastatisticstableid', data: monitorinfos });
-                console.log(monitorinfos);
-            }
+            zhanShiTable(data);
         }, datatype: "json"
     });
 };
@@ -4044,13 +4141,79 @@ function LoadProjectBianXinLiangDataCustomDateTime(projectid, datetime) {
         url: servicesurl + "/api/Data/GetBianXinLiangCustomDateTime", type: "get", data: { "id": projectid, "customdatetime": datetime, "cookie": document.cookie },
         success: function (data) {
             layer.close(loadinglayerindex1);
-            if (data == "") {
-                bianXingLiangTableData.reload({ id: 'bianXingDatastatisticstableid', data: [] });
-            } else {
-                var monitorinfos = JSON.parse(data);
-                bianXingLiangTableData.reload({ id: 'bianXingDatastatisticstableid', data: monitorinfos });
-                console.log(monitorinfos);
-            }
+            zhanShiTable(data);
         }, datatype: "json"
     });
 };
+function zhanShiTable(data){
+    var liefengData = [];
+    var yingLiData = [];
+    var GnssData = [];
+    var qinJiaoData = [];
+    var sbwyData = [];
+    var dxswData = [];
+    if (data == "") {
+        $("#LiFengDatastatisticsDiv").hide();
+        $("#YingLiDatastatisticsDiv").hide();
+        $("#GNSSDatastatisticsDiv").hide();
+        $("#QinJiaoDatastatisticsDiv").hide();
+        $("#SbwyDatastatisticsDiv").hide();
+        $("#DxswDatastatisticsDiv").hide();
+        layer.msg("无该时间端变形量数据！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+    } else {
+        var monitorinfos = JSON.parse(data);
+        for (var i in monitorinfos) {
+            if (monitorinfos[i].remark == "裂缝") {
+                liefengData.push(monitorinfos[i]);
+            } else if (monitorinfos[i].remark == "应力") {
+                yingLiData.push(monitorinfos[i]);
+            } else if (monitorinfos[i].remark == "GNSS") {
+                GnssData.push(monitorinfos[i]);
+            } else if (monitorinfos[i].remark == "倾角") {
+                qinJiaoData.push(monitorinfos[i]);
+            } else if (monitorinfos[i].remark == "深部位移") {
+                sbwyData.push(monitorinfos[i]);
+            } else if (monitorinfos[i].remark == "地下水位") {
+                dxswData.push(monitorinfos[i]);
+            }
+        }
+        if (GnssData.length > 0) {
+            $("#GNSSDatastatisticsDiv").show();
+            GNSSDatastatisticsTable.reload({ id: 'GnssDatastatisticstableid', data: GnssData });
+        } else {
+            $("#GNSSDatastatisticsDiv").hide();
+        }
+        if (qinJiaoData.length > 0) {
+            $("#QinJiaoDatastatisticsDiv").show();
+            QinJiaoDatastatisticsTable.reload({ id: 'QinJiaoDataDatastatisticstableid', data: qinJiaoData });
+        } else {
+            $("#QinJiaoDatastatisticsDiv").hide();
+        }
+        if (sbwyData.length > 0) {
+            $("#SbwyDatastatisticsDiv").show();
+            SbwyDatastatisticsTable.reload({ id: 'SbwyDataDatastatisticstableid', data: sbwyData });
+        } else {
+            $("#SbwyDatastatisticsDiv").hide();
+        }
+
+        if (liefengData.length > 0) {
+            $("#LiFengDatastatisticsDiv").show();
+            LiFengDatastatisticsTable.reload({ id: 'LiFengDatastatisticstableid', data: liefengData });
+        } else {
+            $("#LiFengDatastatisticsDiv").hide();
+        }
+        if (yingLiData.length > 0) {
+            $("#YingLiDatastatisticsDiv").show();
+            YingLiDatastatisticsTable.reload({ id: 'YingLiDatastatisticstableid', data: yingLiData });
+        } else {
+            $("#YingLiDatastatisticsDiv").hide();
+        }
+        if (dxswData.length > 0) {
+            $("#DxswDatastatisticsDiv").show();
+            DxswDatastatisticsTable.reload({ id: 'DxswDatastatisticstableid', data: dxswData });
+        } else {
+            $("#DxswDatastatisticsDiv").hide();
+        }
+
+    }
+}
