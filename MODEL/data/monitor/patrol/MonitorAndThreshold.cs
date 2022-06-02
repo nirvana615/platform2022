@@ -7,26 +7,26 @@ using System.Threading.Tasks;
 namespace MODEL
 {
     /// <summary>
-    /// 监测点阈值信息表
+    /// 监测点联合阈值信息表
     /// </summary>
-    public class MonitorAlarmThreshold
+    public class MonitorAndThreshold
     {
         /// <summary>
-        /// id
+        /// 监测点id
         /// </summary>
         public int id { get; set; }
         /// <summary>
-        /// 项目id
+        /// 监测点编号
         /// </summary>
-        public string projectId { get; set; }
+        public string jcdbh { get; set; }
         /// <summary>
-        ///监测点id
+        ///监测方法
         /// </summary>
-        public string monitorId { get; set; }
+        public string jcff { get; set; }
         /// <summary>
-        /// 照片类型
+        /// 阈值id
         /// </summary>
-        public string monitorType { get; set; }
+        public string yueZhiId { get; set; }
 
         /// <summary>
         /// 回溯时长

@@ -903,7 +903,7 @@ namespace MODEL
                     BZ = row[12].ToString(),
                     sn = row[14].ToString(),
                     sim = row[15].ToString()
-            };
+                };
 
                 if (!string.IsNullOrEmpty(row[6].ToString()))
                 {
@@ -921,7 +921,7 @@ namespace MODEL
                 {
                     device.Mark = Convert.ToInt16(row[13].ToString());
                 }
-               
+
 
                 return device;
             }
@@ -4711,7 +4711,7 @@ namespace MODEL
                     preparer = row[13].ToString(),
                     InstallTime = row[14].ToString(),
                     preparlTime = row[15].ToString(),
-                    smallPhoto= row[16].ToString(),
+                    smallPhoto = row[16].ToString(),
                 };
                 return constPhotoInfo;
             }
@@ -4766,7 +4766,7 @@ namespace MODEL
                 return null;
             }
         }
-           
+
 
 
 
@@ -4907,7 +4907,7 @@ namespace MODEL
                 return null;
             }
         }
-        /// 施工照片表
+        /// 监测阈值信息
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -4939,13 +4939,56 @@ namespace MODEL
                     yueZhiOne = row[5].ToString(),
                     yueZhiTwo = row[6].ToString(),
                     lastUpdateTime = row[7].ToString(),
-                   
+
                 };
                 return monitorAlarmThreshold;
             }
             catch (Exception ex)
             {
                 logger.Error("为施工照片信息表解析失败：" + data, ex);
+                return null;
+            }
+        }
+        /// 监测和阈值信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static MonitorAndThreshold ParseMonitorAndThreshold(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析监测阈值数据为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("阈值数据不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                MonitorAndThreshold monitorAndThreshold = new MonitorAndThreshold()
+                {
+                    id = Convert.ToInt32(row[0].ToString()),
+                    jcdbh = row[1].ToString(),
+                    jcff = row[2].ToString(),
+                    yueZhiId = row[3].ToString(),
+                    backTrack = row[4].ToString(),
+                    yueZhiOne = row[5].ToString(),
+                    yueZhiTwo = row[6].ToString(),
+                    yueZhiThree = row[7].ToString(),
+                    lastUpdateTime = row[8].ToString(),
+
+                };
+                return monitorAndThreshold;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("阈值解析解析失败：" + data, ex);
                 return null;
             }
         }
@@ -4972,7 +5015,7 @@ namespace MODEL
                     code = row[0].ToString(),
                     bianXinLingOne = row[1].ToString(),
                 };
-                if (row.Length>2)
+                if (row.Length > 2)
                 {
                     dataBianXinLiang.bianXinLingTwo = row[2].ToString();
                 }
@@ -4985,6 +5028,104 @@ namespace MODEL
             catch (Exception ex)
             {
                 logger.Error("dataBianXinLiang解析失败：" + data, ex);
+                return null;
+            }
+        }
+
+        /// 监测监测阈值信息获取
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static MonitorAlarmThresholdData ParseMonitorAlarmThresholdData(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析阈值数据为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("阈值数据不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                MonitorAlarmThresholdData monitorAlarmThreshold = new MonitorAlarmThresholdData()
+                {
+                    id = Convert.ToInt32(row[0].ToString()),
+                    projectId = row[1].ToString(),
+                    monitorId = row[2].ToString(),
+                    monitorType = row[3].ToString(),
+                    backTrack = row[4].ToString(),
+                    yueZhiOne = row[5].ToString(),
+                    code = row[6].ToString(),
+                    zhdmc = row[7].ToString(),
+                    jcdbh = row[8].ToString(),
+
+                };
+                if (row.Length > 10)
+                {
+                    monitorAlarmThreshold.yueZhiTwo = row[9].ToString();
+                }
+                if (row.Length > 11)
+                {
+                    monitorAlarmThreshold.yueZhiThree = row[10].ToString();
+                }
+                return monitorAlarmThreshold;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("为施工照片信息表解析失败：" + data, ex);
+                return null;
+            }
+        }
+        /// 告警信息获取
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static MonitorGaoJIngInfo ParseMonitorGaoJIngInfo(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析告警数据为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("告警数据不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                MonitorGaoJIngInfo monitorGaoJIngInfo = new MonitorGaoJIngInfo()
+                {
+                    id = Convert.ToInt32(row[0].ToString()),
+                    projectId = row[1].ToString(),
+                    monitorId = row[2].ToString(),
+                    monitorType = row[3].ToString(),
+                    jcdbh = row[4].ToString(),
+                    zhdmc = row[5].ToString(),
+                    gaojinContext = row[6].ToString(),
+                    gaojinStatus = row[7].ToString(),
+                    gaojinTime = row[8].ToString(),
+                    updateTime = row[9].ToString(),
+                    gaojinResult = row[10].ToString(),
+
+
+                };
+                return monitorGaoJIngInfo;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("为告警数据信息表解析失败：" + data, ex);
                 return null;
             }
         }

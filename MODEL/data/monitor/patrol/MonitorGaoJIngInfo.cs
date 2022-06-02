@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 namespace MODEL
 {
     /// <summary>
-    /// 监测点阈值信息表
+    /// 监测点告警信息表
     /// </summary>
-    public class MonitorAlarmThreshold
+    public class MonitorGaoJIngInfo
     {
         /// <summary>
         /// id
         /// </summary>
         public int id { get; set; }
         /// <summary>
-        /// 项目id
+        /// 项目名称
         /// </summary>
         public string projectId { get; set; }
         /// <summary>
@@ -24,33 +24,39 @@ namespace MODEL
         /// </summary>
         public string monitorId { get; set; }
         /// <summary>
-        /// 照片类型
+        /// 监测类型
         /// </summary>
         public string monitorType { get; set; }
+       
+        /// <summary>
+        /// 监测点编号
+        /// </summary>
+        public string jcdbh { get; set; }
 
         /// <summary>
-        /// 回溯时长
+        /// 监测点名称
         /// </summary>
-        public string backTrack { get; set; }
-
+        public string zhdmc { get; set; }
         /// <summary>
-        /// 阈值1
+        /// 告警内容
         /// </summary>
-        public string yueZhiOne { get; set; }
-
-
+        public string gaojinContext { get; set; }
+        
         /// <summary>
-        /// 阈值2
+        /// 告警状态
         /// </summary>
-        public string yueZhiTwo { get; set; }
+        public string gaojinStatus { get; set; }
         /// <summary>
-        /// 阈值3
+        /// 告警时间
         /// </summary>
-        public string yueZhiThree { get; set; }
-
+        public string gaojinTime { get; set; }
         /// <summary>
-        /// 最后修改时间
+        /// 处理时间
         /// </summary>
-        public string lastUpdateTime { get; set; }
+        public string updateTime { get; set; }
+        /// <summary>
+        /// 告警状态
+        /// </summary>
+        public string gaojinResult { get; set; }
     }
 }

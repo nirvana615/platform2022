@@ -728,11 +728,12 @@ namespace SERVICE.Controllers
             string backTrack = HttpContext.Current.Request.Form["backTrack"];
             string yueZhiOne = HttpContext.Current.Request.Form["yueZhiOne"];
             string yueZhiTwo = HttpContext.Current.Request.Form["yueZhiTwo"];
+            string yueZhiThree = HttpContext.Current.Request.Form["yueZhiThree"];
 
 
             #endregion
 
-            
+
             if (!string.IsNullOrEmpty(projectId)
                 && !string.IsNullOrEmpty(monitorId)
                 && !string.IsNullOrEmpty(monitorType)
@@ -751,7 +752,7 @@ namespace SERVICE.Controllers
                     + SQLHelper.UpdateString(monitorType) + ","
                     + SQLHelper.UpdateString(backTrack) + ","
                     + SQLHelper.UpdateString(yueZhiOne) + ","
-                    + SQLHelper.UpdateString(DateTime.Now.ToString("yyyy年MM月dd日"));
+                    + SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd"));
 
                     string sql = "INSERT INTO monitor_alarm_threshold( project_id, monitor_id,monitor_type,back_track,yue_zhi_one,last_update_time ";
                     if (!string.IsNullOrEmpty(yueZhiTwo))
@@ -759,7 +760,11 @@ namespace SERVICE.Controllers
                         sql = sql + ",yue_zhi_two ";
                         value = value + "," + SQLHelper.UpdateString(yueZhiTwo);
                     }
-                
+                    if (!string.IsNullOrEmpty(yueZhiThree))
+                    {
+                        sql = sql + ",yue_zhi_three ";
+                        value = value + "," + SQLHelper.UpdateString(yueZhiThree);
+                    }
                     value = value + ")";
                     sql = sql + ") VALUES ";
                     int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, sql + value);
@@ -776,12 +781,16 @@ namespace SERVICE.Controllers
                 else//有id就是更新
                 {
                     string sql = "UPDATE   monitor_alarm_threshold SET back_track={0},yue_zhi_one={1},last_update_time={2} ";
-                    if (string.IsNullOrEmpty(yueZhiTwo)&& yueZhiTwo!=null)
+                    if (!string.IsNullOrEmpty(yueZhiTwo)&& yueZhiTwo!=null)
                     {
-                        sql = sql + ",last_update_time= " + SQLHelper.UpdateString(yueZhiTwo);
+                        sql = sql + ",yue_zhi_two= " + SQLHelper.UpdateString(yueZhiTwo);
+                    }
+                    if (!string.IsNullOrEmpty(yueZhiThree) && yueZhiTwo != null)
+                    {
+                        sql = sql + ",yue_zhi_three= " + SQLHelper.UpdateString(yueZhiThree);
                     }
 
-                      int updateCount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(sql +" WHERE id={3}  ", SQLHelper.UpdateString(backTrack), SQLHelper.UpdateString(yueZhiOne), SQLHelper.UpdateString(DateTime.Now.ToString("yyyy年MM月dd日")), SQLHelper.UpdateString(oldId)));
+                    int updateCount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(sql +" WHERE id={3}  ", SQLHelper.UpdateString(backTrack), SQLHelper.UpdateString(yueZhiOne), SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd")), SQLHelper.UpdateString(oldId)));
                     if (updateCount != -1)
                     {
                         return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "修改成功！", ""));
@@ -843,6 +852,77 @@ namespace SERVICE.Controllers
                 if (monitorAlarmThresholdList.Count > 0)
                 {
                     return JsonHelper.ToJson(monitorAlarmThresholdList);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+        /// <summary>
+        /// 删除阈值信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        public string DeleteYuZhiInfo()
+        {
+            string id = HttpContext.Current.Request.Form["id"];
+            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE from monitor_alarm_threshold  WHERE id={0}", id));
+            if (updatecount == 1)
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", ""));
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除失败", ""));
+
+            }
+        }
+        /// <summary>
+        /// 获取告警信息
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="monitorId">验证信息</param>
+        /// <returns></returns>
+        [HttpGet]
+        public string getGaoJingInfo(string projectId, string monitorId, string id)
+        {
+
+
+            string sql = "SELECT * FROM monitor_gaojin_info WHERE project_id ={0}";
+            if (!string.IsNullOrEmpty(monitorId))
+            {
+                sql = sql + " and monitor_id = " + SQLHelper.UpdateString(monitorId);
+            }
+            if (!string.IsNullOrEmpty(id))
+            {
+                sql = sql + " and id = " + SQLHelper.UpdateString(id);
+            }
+
+            sql = sql + "ORDER BY gaojin_time ";
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(projectId)));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<MonitorGaoJIngInfo> monitorGaoJIngInfoList = new List<MonitorGaoJIngInfo>();
+
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    MonitorGaoJIngInfo monitorGaoJIngInfo = ParseMonitorHelper.ParseMonitorGaoJIngInfo(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+                    if (monitorGaoJIngInfo != null)
+                    {
+                        monitorGaoJIngInfoList.Add(monitorGaoJIngInfo);
+
+                    }
+                }
+
+                if (monitorGaoJIngInfoList.Count > 0)
+                {
+                    return JsonHelper.ToJson(monitorGaoJIngInfoList);
                 }
                 else
                 {

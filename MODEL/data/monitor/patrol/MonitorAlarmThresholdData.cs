@@ -9,7 +9,7 @@ namespace MODEL
     /// <summary>
     /// 监测点阈值信息表
     /// </summary>
-    public class MonitorAlarmThreshold
+    public class MonitorAlarmThresholdData
     {
         /// <summary>
         /// id
@@ -49,8 +49,18 @@ namespace MODEL
         public string yueZhiThree { get; set; }
 
         /// <summary>
-        /// 最后修改时间
+        /// 监测点code
         /// </summary>
-        public string lastUpdateTime { get; set; }
+        public string code { get; set; }
+
+
+        /// <summary>
+        /// 债还点名称
+        /// </summary>
+        public string zhdmc { get; set; }
+        /// <summary>
+        /// 监测点编号。
+        /// </summary>
+        public string jcdbh { get; set; }
     }
 }

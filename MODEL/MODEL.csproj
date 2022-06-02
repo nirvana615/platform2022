@@ -149,6 +149,9 @@
     <Compile Include="data\monitor\design\Monitor.cs" />
     <Compile Include="data\monitor\design\MonitorInfo.cs" />
     <Compile Include="data\monitor\design\MonitorString.cs" />
+    <Compile Include="data\monitor\patrol\MonitorGaoJIngInfo.cs" />
+    <Compile Include="data\monitor\patrol\MonitorAlarmThresholdData.cs" />
+    <Compile Include="data\monitor\patrol\MonitorAndThreshold.cs" />
     <Compile Include="data\monitor\patrol\MonitorAlarmThreshold.cs" />
     <Compile Include="data\monitor\patrol\RoadPhotoInfo.cs" />
     <Compile Include="data\monitor\patrol\ConstPhotoInfo.cs" />

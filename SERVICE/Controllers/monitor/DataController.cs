@@ -1601,6 +1601,56 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
         #endregion
+        /// <summary>
+        /// 根据项目id获取监测点数据
+        /// </summary>
+        /// <param name="id">项目id</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetMonitorYueZhi(int id, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("select m.*,c.id as yuZhiId,c.back_track,c.yue_zhi_one,c.yue_zhi_two,c.yue_zhi_three,c.last_update_time  from (SELECT a.id,a.jcdbh,a.jcff from monitor_monitor a,monitor_project b where a.bsm=b.bsm and a.jcff!='6'  and b.id={0}  ) m left join monitor_alarm_threshold c on m.id = c.monitor_id  ORDER BY m.jcff,m.jcdbh", id));
+                if (!string.IsNullOrEmpty(datas))
+                {
+                    List<MonitorAndThreshold> MonitorAndThresholdList = new List<MonitorAndThreshold>();
+
+                    string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        MonitorAndThreshold monitorAndThreshold = ParseMonitorHelper.ParseMonitorAndThreshold(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+                        if (monitorAndThreshold != null)
+                        {
+                            MonitorAndThresholdList.Add(monitorAndThreshold);
+
+                        }
+                    }
+
+                    if (MonitorAndThresholdList.Count > 0)
+                    {
+                        return JsonHelper.ToJson(MonitorAndThresholdList);
+                    }
+                    else
+                    {
+                        return string.Empty;
+                    }
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                //验权失败
+            }
+
+            return string.Empty;
+        }
     }
 }
