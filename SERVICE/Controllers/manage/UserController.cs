@@ -356,7 +356,6 @@ namespace SERVICE.Controllers
             return string.Empty;
         }
 
-
         /// <summary>
         /// 创建用户
         /// </summary>
@@ -444,7 +443,7 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
-        /// 修改用户信息
+        /// 修改用户
         /// </summary>
         /// <returns></returns>
         [HttpPut]
@@ -533,6 +532,141 @@ namespace SERVICE.Controllers
             {
                 return "无此用户！";
             }
+        }
+
+
+        /// <summary>
+        /// 获取用户推送消息设置
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetUserMessageInfo()
+        {
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_user WHERE ztm={0} ORDER BY id ASC", (int)MODEL.Enum.State.InUse));
+            if (!string.IsNullOrEmpty(datas))
+            {
+                List<UserMessage> usermsgs = new List<UserMessage>();
+
+                string[] rows = datas.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    User user = ParseManageHelper.ParseUser(rows[i]);
+                    if (user != null)
+                    {
+                        UserMessage userMessage = new UserMessage();
+                        userMessage.user = user;
+
+                        string usermessagemaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_map_user_message WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                        if (!string.IsNullOrEmpty(usermessagemaps))
+                        {
+                            string[] maprows = usermessagemaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                            if (maprows.Length == 1)
+                            {
+                                MapUserMessage mapUserMessage = ParseManageHelper.ParseMapUserMessage(maprows[0]);
+                                if (mapUserMessage != null)
+                                {
+                                    Message message = ParseManageHelper.ParseMessage(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_message WHERE id={0} AND ztm={1}", mapUserMessage.MessageId, (int)MODEL.Enum.State.InUse)));
+                                    if (message != null)
+                                    {
+                                        userMessage.msg = message;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (userMessage.user != null && userMessage.msg != null)
+                        {
+                            usermsgs.Add(userMessage);
+                        }
+                    }
+                }
+
+                if (usermsgs.Count > 0)
+                {
+                    return JsonHelper.ToJson(usermsgs);
+                }
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 新增用户推送消息设置
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string AddUserMessage()
+        {
+            string userid = HttpContext.Current.Request.Form["userid"];
+            string pushtype = HttpContext.Current.Request.Form["pushtype"];
+            string webhook = HttpContext.Current.Request.Form["webhook"];
+            string phone = HttpContext.Current.Request.Form["phone"];
+            string bz = HttpContext.Current.Request.Form["bz"];
+
+            int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO manage_message (way,webhook,phone,cjsj,ztm,bz) VALUES({0},{1},{2},{3},{4},{5})", pushtype, SQLHelper.UpdateString(webhook), SQLHelper.UpdateString(phone), SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse, SQLHelper.UpdateString(bz)));
+            if (id != -1)
+            {
+                int mapid = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO manage_map_user_message (userid,messageid,cjsj,ztm) VALUES({0},{1},{2},{3})", userid, id, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
+                if (mapid != -1)
+                {
+                    return "成功！";
+                }
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 修改用户消息设置
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public string UpdateUserMessage()
+        {
+            string messageid = HttpContext.Current.Request.Form["messageid"];
+            string webhook = HttpContext.Current.Request.Form["webhook"];
+            string phone = HttpContext.Current.Request.Form["phone"];
+            string bz = HttpContext.Current.Request.Form["bz"];
+
+            int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM manage_message WHERE id={0} AND ztm={1}", messageid, (int)MODEL.Enum.State.InUse));
+            if (count == 1)
+            {
+                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_message SET webhook={0},phone={1},bz={2} WHERE id={3} AND ztm={4}",
+                    SQLHelper.UpdateString(webhook), SQLHelper.UpdateString(phone), SQLHelper.UpdateString(bz), messageid, (int)MODEL.Enum.State.InUse));
+                if (updatecount == 1)
+                {
+                    return "修改成功！";
+                }
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 删除用户消息设置
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        public string DeleteUserMessage()
+        {
+            string userid = HttpContext.Current.Request.Form["userid"];
+            string messageid = HttpContext.Current.Request.Form["messageid"];
+
+            int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM manage_message WHERE id={0} AND ztm={1}", messageid, (int)MODEL.Enum.State.InUse));
+            if (count == 1)
+            {
+                int delcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_message SET ztm={0} WHERE id={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, messageid, (int)MODEL.Enum.State.InUse));
+                if (delcount == 1)
+                {
+                    int delmapcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_map_user_message SET ztm={0} WHERE userid={1} AND messageid={2} AND ztm={3}", (int)MODEL.Enum.State.NoUse, userid, messageid, (int)MODEL.Enum.State.InUse));
+                    if (delmapcount == 1)
+                    {
+                        return "删除成功！";
+                    }
+                }
+            }
+
+            return string.Empty;
         }
 
     }

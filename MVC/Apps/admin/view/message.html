@@ -18,14 +18,14 @@
         <div class="layui-card">
             <div class="layui-card-body">
                 <div style="padding-bottom: 10px;text-align:right;">
-                    <button id="adduser" class="layui-btn layuiadmin-btn-useradmin" data-type="add">创建用户</button>
+                    <button id="addmessage" class="layui-btn layuiadmin-btn-useradmin" data-type="add">创建推送</button>
                 </div>
 
-                <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
+                <table id="LAY-message-manage" lay-filter="LAY-message-manage"></table>
 
-                <script type="text/html" id="table-toolbar-user">
-                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="useredit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="userdel"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                <script type="text/html" id="table-toolbar-message">
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="messageedit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="messagedel"><i class="layui-icon layui-icon-delete"></i>删除</a>
                 </script>
             </div>
         </div>
@@ -36,157 +36,209 @@
         var layer = layui.layer;
         var table = layui.table;
         var form = layui.form;
-        var userinfodatas = [];//用户信息数据
-        var adduserlayerindex = null;
 
-        //请求用户信息
-        GetUserInfo();
+        var usermessagedatas = [];
+        var addmessagelayerindex = null;
 
-        //渲染用户信息表格
-        var usertable = table.render({
-            elem: '#LAY-user-manage'
-            , id: 'usertableid'
-            , title: '用户信息'
+        //渲染用户消息表格
+        var messagetable = table.render({
+            elem: '#LAY-message-manage'
+            , id: 'messagetableid'
+            , title: '推送信息'
             , page: true
             , even: true
             , limit: 20
-            , initSort: { field: 'id', type: 'asc' }
             , toolbar: false
             , totalRow: false
             , cols: [[
-                { field: 'id', title: 'ID', width: 100, fixed: 'left', align: "center" }
-                , { field: 'username', title: '账号', align: "center" }
-                , { field: 'aliasname', title: '用户名称', align: "center" }
-                , { field: 'cjsj', title: '创建时间', align: "center" }
-                , { field: 'dlsj', title: '最新登录时间', align: "center" }
-                , { field: 'ssdw', title: '单位', align: "center" }
-                , { field: 'ssqy', title: '区域', align: "center" }
+                { field: 'userid', align: "center", hide: true }
+                , { type: 'numbers', title: '序号', width: 100, align: "center" },
+                , { field: 'user', title: '账号', width: 150, align: "center" }
+                , { field: 'aliasname', title: '用户名', width: 150, align: "center" }
+                , { field: 'messageid', align: "center", hide: true }
+                , { field: 'way', title: '推送方式', width: 150, align: "center" }
+                , { field: 'webhook', title: '推送地址', align: "center" }
+                , { field: 'phone', title: '电话', width: 150, align: "center" }
                 , { field: 'bz', title: '备注', align: "center" }
-                , { fixed: 'right', width: 200, align: 'center', toolbar: '#table-toolbar-user' }
+                , { fixed: 'right', width: 200, align: 'center', toolbar: '#table-toolbar-message' }
             ]]
-            , data: userinfodatas
+            , data: usermessagedatas
+        });
+
+
+        //请求用户消息
+        GetUserMessage();
+        //获取用户消息
+        function GetUserMessage() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/User/GetUserMessageInfo", type: "get",
+                success: function (data) {
+                    if (data == "") {
+                        layer.msg("无信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        messagetable.reload({ id: 'messagetableid', data: [] });
+                    }
+                    else {
+                        usermessagedatas = [];
+
+                        var usermessages = JSON.parse(data);
+                        for (var i in usermessages) {
+                            var usermsg = new Object;
+                            usermsg.userid = usermessages[i].user.Id;
+                            usermsg.user = usermessages[i].user.UserName;
+                            usermsg.aliasname = usermessages[i].user.AliasName;
+                            usermsg.messageid = usermessages[i].msg.Id;
+                            if (usermessages[i].msg.Way == 1) {
+                                usermsg.way = "企业微信群";
+                            }
+                            else {
+                                usermsg.way = "其他";
+                            }
+                            usermsg.webhook = usermessages[i].msg.Webhook;
+                            usermsg.phone = usermessages[i].msg.Phone;
+                            usermsg.bz = usermessages[i].msg.BZ;
+                            usermessagedatas.push(usermsg);
+                        }
+                        messagetable.reload({ id: 'messagetableid', data: usermessagedatas });
+                    }
+                }, datatype: "json"
+            });
+        }
+
+        //获取用户列表
+        var userlist = [];
+        GetUserInfo();
+        function GetUserInfo() {
+            $.ajax({
+                url: window.parent.servicesurl + "/api/User/GeAlltUser", type: "get",
+                success: function (data) {
+                    userlist = [];
+                    if (data != "") {
+                        var userinfos = JSON.parse(data);
+                        for (var i in userinfos) {
+                            var user = new Object;
+                            user.id = userinfos[i].Id;
+                            user.username = userinfos[i].UserName;
+                            user.aliasname = userinfos[i].AliasName;
+                            userlist.push(user);
+                        }
+                    }
+                }, datatype: "json"
+            });
+        }
+
+        //添加用户消息推送
+        $("#addmessage").on("click", function () {
+            addmessagelayerindex = layer.open({
+                type: 1
+                , title: ['新建用户消息推送', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                , area: ['400px', '400px']
+                , shade: [0.5, '#393D49']
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: false
+                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="addmessageform"><div class="layui-form-item"><label class="layui-form-label">选择用户</label><div class="layui-input-block" style="padding-right:10px"><select id="selectuserid" name="userid" lay-filter="selectuser" lay-verify="required"><option value="">请选择用户</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">推送类型</label><div class="layui-input-block" style="padding-right:10px"><select id="pushtypeid" name="pushtype" lay-filter="typeselect" lay-verify="required"><option value="1" selected="">企业微信</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">webhook</label><div class="layui-input-block" style="padding-right:10px"><textarea name="webhook" class="layui-textarea" rows="5" style="resize:none" autocomplete="off" lay-verify="required"></textarea></div></div><div class="layui-form-item"><label class="layui-form-label">电话号码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="phone" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item" style="margin-top:10px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="addmessagesubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+
+                    if (userlist.length > 0) {
+                        for (var i in userlist) {
+                            var ishas = false;
+                            if (usermessagedatas.length > 0) {
+                                for (var j in usermessagedatas) {
+                                    if (usermessagedatas[j].userid == userlist[i].id) {
+                                        ishas = true;
+                                    }
+                                }
+                            }
+                            if (!ishas) {
+                                document.getElementById("selectuserid").innerHTML += '<option value="' + userlist[i].id + '">' + userlist[i].aliasname + '</option>';
+                            }
+                        }
+                    }
+
+                    form.render('select');
+                    form.render();
+
+                    form.on('submit(addmessagesubmit)', function (data) {
+                        $.ajax({
+                            url: window.parent.servicesurl + "/api/User/AddUserMessage", type: "post", data: data.field,
+                            success: function (result) {
+                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                GetUserMessage();
+                            }, datatype: "json"
+                        });
+
+                        layer.close(addmessagelayerindex);
+                        return false;
+                    });
+                }
+                , end: function () {
+                    addmessagelayerindex = null;
+                }
+            });
         });
 
         //表格操作
-        table.on('tool(LAY-user-manage)', function (obj) {
-            if (obj.event === 'useredit') {
-                //编辑用户
-                adduserlayerindex = layer.open({
+        table.on('tool(LAY-message-manage)', function (obj) {
+            if (obj.event === 'messageedit') {
+                //编辑用户推送消息
+                addmessagelayerindex = layer.open({
                     type: 1
-                    , title: ['编辑用户信息', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-                    , area: ['400px', '500px']
+                    , title: ['编辑用户推送消息设置', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                    , area: ['400px', '400px']
                     , shade: [0.5, '#393D49']
                     , offset: 'auto'
                     , closeBtn: 1
                     , maxmin: false
-                    , content: '<form class="layui-form" style="margin-top:10px" lay-filter="adduserform"><div class="layui-form-item"><label class="layui-form-label">用&emsp;&emsp;户</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="username" autocomplete="off" placeholder="请输入" lay-verify="required" lay-verType="tips" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">别&emsp;&emsp;名</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="aliasname" autocomplete="off" placeholder="请输入" lay-verify="required" lay-verType="tips" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">密&emsp;&emsp;码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="password" autocomplete="off" placeholder="请输入" lay-verify="required" lay-verType="tips" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">所有单位</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="ssdw" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">所属区域</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="ssqy" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="editusersubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
+                    , content: '<form class="layui-form" style="margin-top:10px" lay-filter="editmessageform"><div class="layui-form-item"><label class="layui-form-label">用&emsp;&emsp;户</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="username" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">推送类型</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="pushtype" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">webhook</label><div class="layui-input-block" style="padding-right:10px"><textarea name="webhook" class="layui-textarea" rows="5" style="resize:none" autocomplete="off" lay-verify="required"></textarea></div></div><div class="layui-form-item"><label class="layui-form-label">电话号码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="phone" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item" style="margin-top:10px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="editmessagesubmit" style="width:80px">修改</button></div></div></form>'
                     , zIndex: layer.zIndex
                     , success: function (layero) {
                         layer.setTop(layero);
 
-                        form.val("adduserform", {
-                            "username": obj.data.username
-                            , "aliasname": obj.data.aliasname
-                            , "password": ""
-                            , "ssdw": obj.data.ssdw
-                            , "ssqy": obj.data.ssqy
+                        form.val("editmessageform", {
+                            "username": obj.data.aliasname
+                            , "pushtype": "企业微信"
+                            , "webhook": obj.data.webhook
+                            , "phone": obj.data.phone
                             , "bz": obj.data.bz
                         });
 
-                        form.on('submit(editusersubmit)', function (data) {
-                            data.field.id = obj.data.id;
+                        form.on('submit(editmessagesubmit)', function (data) {
+                            data.field.messageid = obj.data.messageid;
+
                             $.ajax({
-                                url: window.parent.servicesurl + "/api/User/UpdateUser", type: "put", data: data.field,
+                                url: window.parent.servicesurl + "/api/User/UpdateUserMessage", type: "put", data: data.field,
                                 success: function (result) {
                                     layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                                    GetUserInfo();//刷新用户信息
+                                    GetUserMessage();
                                 }, datatype: "json"
                             });
 
-                            layer.close(adduserlayerindex);
+                            layer.close(addmessagelayerindex);
                             return false;
                         });
                     }
-                    , end: function () { }
+                    , end: function () {
+                        addmessagelayerindex = null;
+                    }
                 });
-            } else if (obj.event === 'userdel') {
-                //删除用户
+            } else if (obj.event === 'messagedel') {
+                //删除用户推送消息设置
                 layer.confirm('是否删除？', function (index) {
                     obj.del();
                     layer.close(index);
-                    //向服务端发送删除指令
+
                     $.ajax({
-                        url: window.parent.servicesurl + "/api/User/DeleteUser", type: "delete", data: { "id": obj.data.id },
+                        url: window.parent.servicesurl + "/api/User/DeleteUserMessage", type: "delete", data: { "userid": obj.data.userid, "messageid": obj.data.messageid },
                         success: function (result) {
                             layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            GetUserMessage();
                         }, datatype: "json"
                     });
                 });
             }
         });
-
-        //添加用户
-        $("#adduser").on("click", function () {
-            adduserlayerindex = layer.open({
-                type: 1
-                , title: ['创建用户', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-                , area: ['400px', '500px']
-                , shade: [0.5, '#393D49']
-                , offset: 'auto'
-                , closeBtn: 1
-                , maxmin: false
-                , content: '<form class="layui-form" style="margin-top:10px" lay-filter="adduserform"><div class="layui-form-item"><label class="layui-form-label">用&emsp;&emsp;户</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="username" autocomplete="off" placeholder="请输入" lay-verify="required" lay-verType="tips" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">别&emsp;&emsp;名</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="aliasname" autocomplete="off" placeholder="请输入" lay-verify="required" lay-verType="tips" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">密&emsp;&emsp;码</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="password" autocomplete="off" placeholder="请输入" lay-verify="required" lay-verType="tips" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">所有单位</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="ssdw" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">所属区域</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="ssqy" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">备&emsp;&emsp;注</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" /></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="addusersubmit" style="width:80px">提交</button><button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button></div></div></form>'
-                , zIndex: layer.zIndex
-                , success: function (layero) {
-                    layer.setTop(layero);
-
-                    form.on('submit(addusersubmit)', function (data) {
-                        $.ajax({
-                            url: window.parent.servicesurl + "/api/User/AddUser", type: "post", data: data.field,
-                            success: function (result) {
-                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                                GetUserInfo();
-                            }, datatype: "json"
-                        });
-
-                        layer.close(adduserlayerindex);
-                        return false;
-                    });
-                }
-                , end: function () { }
-            });
-        });
-
-        //获取用户信息
-        function GetUserInfo() {
-            //请求用户数据
-            $.ajax({
-                url: window.parent.servicesurl + "/api/User/GeAlltUser", type: "get",
-                success: function (data) {
-                    if (data == "") {
-                        layer.msg("无用户信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                        usertable.reload({ id: 'usertableid', data: [] });
-                    }
-                    else {
-                        var userinfos = JSON.parse(data);
-                        userinfodatas = [];
-                        for (var i in userinfos) {
-                            var userinfodata = new Object;
-                            userinfodata.id = userinfos[i].Id;
-                            userinfodata.username = userinfos[i].UserName;
-                            userinfodata.aliasname = userinfos[i].AliasName;
-                            userinfodata.cjsj = userinfos[i].CJSJ;
-                            userinfodata.dlsj = userinfos[i].DLSJ;
-                            userinfodata.ssdw = userinfos[i].SSDW;
-                            userinfodata.ssqy = userinfos[i].SSQY;
-                            userinfodata.bz = userinfos[i].BZ;
-                            userinfodatas.push(userinfodata);
-                        }
-                        usertable.reload({ id: 'usertableid', data: userinfodatas });
-                    }
-                }, datatype: "json"
-            });
-        }
 
     </script>
 </body>

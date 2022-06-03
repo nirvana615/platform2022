@@ -88,9 +88,6 @@ var directmodify = false;       //方向修正（计算第二次自定义平面�
 var level = true;              //是否水平
 
 
-
-SetDisplayZoom("m");
-
 //HomeButton
 viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) {
     e.cancel = true;
@@ -205,3 +202,24 @@ function CloseAllLayer() {
 
     //TODO
 };
+
+
+//万盛
+viewer.entities.add(new Cesium.Entity({
+    id: "temp2rf",
+    polyline: {
+        positions: Cesium.Cartesian3.fromDegreesArray([
+            106.86684645, 28.95672323,
+            106.86684696, 28.94813039,
+            106.87472686, 28.94813976,
+            106.87472635, 28.95673260,
+            106.86684645, 28.95672323,
+        ]),
+        width: 2,
+        arcType: Cesium.ArcType.RHUMB,
+        material: Cesium.Color.AQUA,
+        show: true,
+        clampToGround: true,
+        classificationType: Cesium.ClassificationType.BOTH,
+    },
+}));

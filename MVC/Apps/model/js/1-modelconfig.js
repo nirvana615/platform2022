@@ -8,9 +8,6 @@ function FlyToChina() {
     viewer.camera.flyTo({ destination: new Cesium.Rectangle.fromDegrees(73.66, 3.86, 135.05, 53.55) }, { duration: 3 });//定位中国
 };
 
-SetDisplayZoom("m");//设置缩放
-var zoomratio = 0.9;
-
 /*
  * 全局对象
  */

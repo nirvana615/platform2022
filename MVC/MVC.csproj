@@ -461,6 +461,8 @@
     <Content Include="Apps\admin\widget\database-add.html" />
     <Content Include="Apps\admin\widget\device-view.html" />
     <Content Include="Apps\admin\widget\devices-add.html" />
+    <Content Include="Apps\admin\widget\message-add.html" />
+    <Content Include="Apps\admin\widget\message-edit.html" />
     <Content Include="Apps\admin\widget\sale-add.html" />
     <Content Include="Apps\admin\widget\device-add.html" />
     <Content Include="Apps\admin\widget\sql-add.html" />

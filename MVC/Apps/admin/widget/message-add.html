@@ -1,0 +1,47 @@
+﻿<form class="layui-form" style="margin-top:10px" lay-filter="addmessageform">
+    <div class="layui-form-item">
+        <label class="layui-form-label">选择用户</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <select id="selectuserid" name="userid" lay-filter="selectuser" lay-verify="required">
+                <option value="">请选择用户</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">推送类型</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <select id="pushtypeid" name="pushtype" lay-filter="typeselect" lay-verify="required">
+                <option value="1" selected="">企业微信</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">webhook</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <textarea name="webhook" class="layui-textarea" rows="5" style="resize:none" autocomplete="off" lay-verify="required"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">电话号码</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="phone" autocomplete="off" placeholder="请输入" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备&emsp;&emsp;注</label>
+        <div class="layui-input-block" style="padding-right:10px">
+            <input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:10px">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="addmessagesubmit" style="width:80px">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" style="width:80px">重置</button>
+        </div>
+    </div>
+</form>

@@ -79,6 +79,7 @@
     <Compile Include="data\manage\Systems.cs" />
     <Compile Include="data\manage\Role.cs" />
     <Compile Include="data\manage\LoginUser.cs" />
+    <Compile Include="data\manage\UserMessage.cs" />
     <Compile Include="data\modelmap\MapModelProjecTask.cs" />
     <Compile Include="data\modelmap\MapModelProjectUse.cs" />
     <Compile Include="data\modelmap\MapUserModelProject.cs" />

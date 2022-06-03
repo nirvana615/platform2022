@@ -185,65 +185,6 @@ function ClearHtml(str) {
         replace('</p>', '').replace(/<br\/>/g, '\n').replace(/<.+?>/g, '');
 };
 
-//设置显示缩放
-function SetDisplayZoom(size) {
-    //屏幕显示宽度（像素）：window.screen.width
-    //屏幕显示高度（像素）：window.screen.height
-    var realwidth = window.screen.width;
-    //var browserzoom = BrowserZoomRatio();
-    //var zoom = (realwidth * 1.0 / 1920) * 100 / browserzoom;
-    var zoom = 1;
-
-    if (size == "l") {
-        zoom = realwidth * 1.0 / 1920 * 1;
-    }
-    else if (size == "m") {
-        zoom = realwidth * 1.0 / 1920 * 0.9;
-    }
-    else if (size == "s") {
-        zoom = realwidth * 1.0 / 1920 * 0.8;
-    }
-
-    if (zoom > 1) {
-        document.body.style.zoom = 1;
-    }
-    else {
-        document.body.style.zoom = zoom;
-    }
-};
-//浏览器缩放比例百分制（0-100）
-function BrowserZoomRatio() {
-    var ratio = 0,
-        screen = window.screen,
-        ua = navigator.userAgent.toLowerCase();
-
-    if (window.devicePixelRatio !== undefined) {
-        ratio = window.devicePixelRatio;
-    }
-    else if (~ua.indexOf('msie')) {
-        if (screen.deviceXDPI && screen.logicalXDPI) {
-            ratio = screen.deviceXDPI / screen.logicalXDPI;
-        }
-    }
-    else if (window.outerWidth !== undefined && window.innerWidth !== undefined) {
-        ratio = window.outerWidth / window.innerWidth;
-    }
-
-    if (ratio) {
-        ratio = Math.round(ratio * 100);
-    }
-
-    return ratio;
-};
-
-
-
-
-
-
-
-
-
 
 /*
  *获取加密点 
