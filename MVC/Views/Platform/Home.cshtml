@@ -1,4 +1,6 @@
 ﻿@{
+    /**/
+
     Layout = null;
 }
 
@@ -13,7 +15,6 @@
     <!--Layui-->
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/layui/layui.all.js"></script>
-
     <style>
         .gbGlassmorphism {
             backdrop-filter: blur(5px) saturate(180%);
@@ -124,139 +125,98 @@
         <!--功能区-->
         <div style="position:absolute;width:100%;height:200px;bottom:0px;">
             <div style="margin:15px;margin-top:30px;border-radius: 15px;border: 2px solid rgba(255, 255, 255, 0.25);">
+
                 <div class="layui-row">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-md6">
                         <div class="grid-demo grid-demo-bg1">
+
                             <div class="layui-row">
-                                <div class="layui-col-xs6">
+                                <div class="layui-col-md4">
                                     <div class="grid-demo grid-demo-bg1">
-                                        <div class="layui-row">
-                                            <div class="layui-col-xs6">
-                                                <div class="grid-demo grid-demo-bg1">
-                                                    <!--后台管理系统-->
-                                                    <div class="sysDiv">
-                                                        <img id="sys-admin-img" src="~/Resources/pic/sys/admin.png" class="sysIcon" />
-                                                        <br />
-                                                        <p class="sysTitle">后台管理系统</p>
-                                                        <br />
-                                                        <button type="button" id="sys-admin-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="layui-col-xs6">
-                                                <div class="grid-demo">
-                                                    <!--航线任务规划系统-->
-                                                    <div class="sysDiv">
-                                                        <img id="sys-uav-img" src="~/Resources/pic/sys/uav.png" class="sysIcon" />
-                                                        <br />
-                                                        <p class="sysTitle">航线任务规划系统</p>
-                                                        <br />
-                                                        <button type="button" id="sys-uav-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <!--航线任务规划系统-->
+                                        <div class="sysDiv">
+                                            <img id="sys-uav-img" src="~/Resources/pic/sys/uav.png" class="sysIcon" />
+                                            <br />
+                                            <p class="sysTitle">无人机航线任务规划</p>
+                                            <br />
+                                            <button type="button" id="sys-uav-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">点击进入</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="layui-col-xs6">
+                                <div class="layui-col-md4">
                                     <div class="grid-demo">
-                                        <div class="layui-row">
-                                            <div class="layui-col-xs6">
-                                                <div class="grid-demo grid-demo-bg1">
-                                                    <!--实景模型管理系统-->
-                                                    <div class="sysDiv">
-                                                        <img id="sys-model-img" src="~/Resources/pic/sys/model.png" class="sysIcon" />
-                                                        <br />
-                                                        <p class="sysTitle">实景模型管理系统</p>
-                                                        <br />
-                                                        <button type="button" id="sys-model-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="layui-col-xs6">
-                                                <div class="grid-demo">
-                                                    <!--地质灾害监测系统-->
-                                                    <div class="sysDiv">
-                                                        <img id="sys-monitor-img" src="~/Resources/pic/sys/monitor.png" class="sysIcon" />
-                                                        <br />
-                                                        <p class="sysTitle">地质灾害监测系统</p>
-                                                        <br />
-                                                        <button type="button" id="sys-monitor-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <!--实景模型管理系统-->
+                                        <div class="sysDiv">
+                                            <img id="sys-model-img" src="~/Resources/pic/sys/model.png" class="sysIcon" />
+                                            <br />
+                                            <p class="sysTitle">三维实景模型管理</p>
+                                            <br />
+                                            <button type="button" id="sys-model-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">点击进入</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <!--地质灾害监测系统-->
+                                        <div class="sysDiv">
+                                            <img id="sys-monitor-img" src="~/Resources/pic/sys/monitor.png" class="sysIcon" />
+                                            <br />
+                                            <p class="sysTitle">地质灾害监测预警</p>
+                                            <br />
+                                            <button type="button" id="sys-monitor-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">点击进入</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-md6">
                         <div class="grid-demo">
+
                             <div class="layui-row">
-                                <div class="layui-col-xs6">
+                                <div class="layui-col-md4">
                                     <div class="grid-demo grid-demo-bg1">
-                                        <div class="layui-row">
-                                            <div class="layui-col-xs6">
-                                                <div class="grid-demo grid-demo-bg1">
-                                                    <!--地质要素采集系统-->
-                                                    <div class="sysDiv">
-                                                        <img id="sys-geology-img" src="~/Resources/pic/sys/geology.png" class="sysIcon" />
-                                                        <br />
-                                                        <p class="sysTitle">地质要素采集系统</p>
-                                                        <br />
-                                                        <button type="button" id="sys-geology-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="layui-col-xs6">
-                                                <div class="grid-demo">
-                                                    <!--影像对比分析系统-->
-                                                    <div class="sysDiv">
-                                                        <img id="sys-image-img" src="~/Resources/pic/sys/image.png" class="sysIcon" />
-                                                        <br />
-                                                        <p class="sysTitle">影像对比分析系统</p>
-                                                        <br />
-                                                        <button type="button" id="sys-image-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <!--地质要素采集系统-->
+                                        <div class="sysDiv">
+                                            <img id="sys-geology-img" src="~/Resources/pic/sys/geology.png" class="sysIcon" />
+                                            <br />
+                                            <p class="sysTitle">地质要素信息采集</p>
+                                            <br />
+                                            <button type="button" id="sys-geology-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">点击进入</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="layui-col-xs6">
+                                <div class="layui-col-md4">
                                     <div class="grid-demo">
-                                        <div class="layui-row">
-                                            <div class="layui-col-xs6">
-                                                <div class="grid-demo grid-demo-bg1">
-                                                    <!--点云对比分析系统-->
-                                                    <div class="sysDiv">
-                                                        <img id="sys-pts-img" src="~/Resources/pic/sys/pts.png" class="sysIcon" />
-                                                        <br />
-                                                        <p class="sysTitle">点云对比分析系统</p>
-                                                        <br />
-                                                        <button type="button" id="sys-pts-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">进入系统</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="layui-col-xs6">
-                                                <div class="grid-demo">
-                                                    <!--MORE-->
-                                                    <div class="sysDiv">
-                                                        <img src="~/Resources/pic/sys/more.png" class="sysIcon" />
-                                                        <br />
-                                                        <p class="sysTitle">更多</p>
-                                                        <br />
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <!--无人机巡查系统-->
+                                        <div class="sysDiv">
+                                            <img id="sys-uavfind-img" src="~/Resources/pic/sys/uavfind.png" class="sysIcon" />
+                                            <br />
+                                            <p class="sysTitle">无人机宏观巡查</p>
+                                            <br />
+                                            <button type="button" id="sys-uavfind-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">点击进入</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <!--点云对比分析系统-->
+                                        <div class="sysDiv">
+                                            <img id="sys-pts-img" src="~/Resources/pic/sys/pts.png" class="sysIcon" />
+                                            <br />
+                                            <p class="sysTitle">点云对比分析</p>
+                                            <br />
+                                            <button type="button" id="sys-pts-btn" class="layui-btn layui-btn-primary" style="background-color:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0);font-size:16px;">点击进入</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -275,13 +235,6 @@
         });
 
 
-        //后台管理系统
-        $("#sys-admin-img").on("click", function () {
-            window.location.href = "LoginAdmin";
-        });
-        $("#sys-admin-btn").on("click", function () {
-            window.location.href = "LoginAdmin";
-        });
         //航线任务规划系统
         $("#sys-uav-img").on("click", function () {
             window.location.href = "LoginUav";
@@ -310,12 +263,12 @@
         $("#sys-geology-btn").on("click", function () {
             window.location.href = "LoginGeology";
         });
-        //影像对比分析系统（结束）
-        $("#sys-image-img").on("click", function () {
-            window.location.href = "LoginImage";
+        //无人机宏观巡查系统
+        $("#sys-uavfind-img").on("click", function () {
+            window.location.href = "LoginUavFind";
         });
-        $("#sys-image-btn").on("click", function () {
-            window.location.href = "LoginImage";
+        $("#sys-uavfind-btn").on("click", function () {
+            window.location.href = "LoginUavFind";
         });
         //点云对比分析系统
         $("#sys-pts-img").on("click", function () {

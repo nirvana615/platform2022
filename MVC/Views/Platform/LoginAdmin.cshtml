@@ -3,7 +3,6 @@
 
     Layout = null;
 }
-
 <!DOCTYPE html>
 
 <html>
@@ -27,32 +26,14 @@
             background-color: rgba(17, 25, 40, 0.5);
         }
 
-        .cardGlassmorphism {
-            backdrop-filter: blur(10px) saturate(100%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            background-color: rgba(17, 25, 40, 0.25);
-            border-radius: 15px;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            margin-left: -250px;
-            margin-top: -250px;
-            text-align: center;
-            width: 520px;
-            height: 420px;
-        }
-
         .cardGlassmorphism1 {
-            background-color: rgba(17, 25, 40, 0.1);
+            background-color: rgba(80, 113, 175, 0.1);
             border-radius: 15px;
             position: absolute;
-            left: 50%;
-            top: 50%;
-            margin-left: -250px;
-            margin-top: -250px;
+            left: 0px;
+            bottom: 0px;
             text-align: center;
-            width: 520px;
-            height: 420px;
+            width: 100%;
         }
 
         .bgpic {
@@ -63,61 +44,107 @@
         }
 
         .chinaTitle {
-            color: white;
-            font-size: 40px;
+            color: #c2c2c2;
+            font-size: 28px;
             font-family: 'Microsoft YaHei';
-            letter-spacing: 5px;
+            letter-spacing: 10px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div id="bg" style="position:absolute;width:100%;height:100%;">
-        <!--背景-->
-        <!--<img class="bgpic" src="~/Resources/pic/bg/bg_admin.jpg" alt="" />-->
-        <!--背景模糊-->
-        <!--<div class="gbGlassmorphism" style="position:absolute;width:100%;height:100%;"></div>-->
         <!--窗体模糊-->
         <div class="cardGlassmorphism1">
-            <div style="margin-top:30px;margin-bottom:50px;">
-                <p class="chinaTitle">后台管理系统</p>
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <div class="grid-demo">
+                        <div>
+                            <p class="chinaTitle">后台管理系统</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md6">
+                    <div class="grid-demo grid-demo-bg1">
+
+                        <div style="margin:10px 50px 10px 50px;">
+                            <form class="layui-form" action="~/Platform/LoginAdmin" method="post">
+                                <div class="layui-row">
+                                    <div class="layui-col-md6">
+                                        <div class="grid-demo grid-demo-bg1">
+
+                                            <div class="layui-row">
+                                                <div class="layui-col-md4">
+                                                    <div class="grid-demo grid-demo-bg1">
+                                                        <div class="layui-form-item" style="margin-bottom:0px;">
+                                                            <div class="layui-input-block" style="margin-left:0px;display:flex;align-items:center;">
+                                                                <p style="color:#c2c2c2;display:flex;height:40px;align-items:center;margin: 0 auto;font-size:16px;font-family: 'Microsoft YaHei';letter-spacing:1px;">
+                                                                    @Html.ValidationMessage("failed")
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-col-md4">
+                                                    <div class="grid-demo">
+                                                        <div class="layui-form-item" style="margin-bottom:0px;">
+                                                            <label class="layui-form-label" style="color:#c2c2c2;padding-left:0px;font-size:20px;text-align:right;"><i class="layui-icon layui-icon-username" style="font-size:20px;"></i>&nbsp;&nbsp;用&nbsp;&nbsp;户&nbsp;&nbsp;username</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-col-md4">
+                                                    <div class="grid-demo grid-demo-bg1">
+                                                        <div class="layui-form-item" style="margin-bottom:0px;">
+                                                            <div class="layui-input-block" style="margin-left:0px;">
+                                                                <input type="text" name="username" lay-verify="required" lay-reqtext="用户不能为空！" placeholder="请输入用户" autocomplete="off" class="layui-input" style="background-color:rgba(255, 255, 255, 0.9);height:40px;font-size:16px;font-family: 'Microsoft YaHei';letter-spacing:1px;">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md6">
+                                        <div class="grid-demo">
+
+                                            <div class="layui-row">
+                                                <div class="layui-col-md4">
+                                                    <div class="grid-demo grid-demo-bg1">
+                                                        <div class="layui-form-item" style="margin-bottom:0px;">
+                                                            <label class="layui-form-label" style="color:#c2c2c2;padding-left:0px;font-size:20px;text-align:right;"><i class="layui-icon layui-icon-password" style="font-size:20px;"></i>&nbsp;&nbsp;密&nbsp;&nbsp;码&nbsp;&nbsp;password</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-col-md4">
+                                                    <div class="grid-demo">
+                                                        <div class="layui-form-item" style="margin-bottom:0px;">
+                                                            <div class="layui-input-block" style="margin-left:0px;">
+                                                                <input type="password" name="password" lay-verify="required" lay-reqtext="密码不能为空！" placeholder="请输入密码" autocomplete="off" class="layui-input" style="background-color:rgba(255, 255, 255, 0.9);height:40px;font-size:16px;font-family: 'Microsoft YaHei';letter-spacing:1px;">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-col-md4">
+                                                    <div class="grid-demo grid-demo-bg1">
+                                                        <div class="layui-form-item" style="margin-bottom:0px;">
+                                                            <button type="submit" class="layui-bg-blue" lay-submit="" style="width:100%;height:40px;font-size:20px;margin-left:20px;color:#c2c2c2!important;">登&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
             </div>
 
-            <div style="margin:10px 50px 10px 50px;">
-                <form class="layui-form" action="~/Platform/LoginAdmin" method="post">
-
-                    <div class="layui-form-item">
-                        <label class="layui-form-label" style="color:white;padding-left:0px;font-size:20px;text-align:left;width:200px;"><i class="layui-icon layui-icon-username" style="font-size:20px;"></i>&nbsp;&nbsp;用&nbsp;&nbsp;户&nbsp;&nbsp;username</label>
-                    </div>
-                    <div class="layui-form-item" style="margin-bottom:10px;">
-                        <div class="layui-input-block" style="margin-left:0px;">
-                            <input type="text" name="username" lay-verify="required" lay-reqtext="用户不能为空！" placeholder="请输入用户" autocomplete="off" class="layui-input" style="background-color:rgba(255, 255, 255, 0.9);height:40px;font-size:16px;font-family: 'Microsoft YaHei';letter-spacing:1px;">
-                        </div>
-                    </div>
-
-
-                    <div class="layui-form-item">
-                        <label class="layui-form-label" style="color:white;padding-left:0px;font-size:20px;text-align:left;width:200px;"><i class="layui-icon layui-icon-password" style="font-size:20px;"></i>&nbsp;&nbsp;密&nbsp;&nbsp;码&nbsp;&nbsp;password</label>
-                    </div>
-                    <div class="layui-form-item" style="margin-bottom:0px;">
-                        <div class="layui-input-block" style="margin-left:0px;">
-                            <input type="password" name="password" lay-verify="required" lay-reqtext="密码不能为空！" placeholder="请输入密码" autocomplete="off" class="layui-input" style="background-color:rgba(255, 255, 255, 0.9);height:40px;font-size:16px;font-family: 'Microsoft YaHei';letter-spacing:1px;">
-                        </div>
-                    </div>
-
-
-                    <div class="layui-form-item">
-                        <div class="layui-input-block" style="margin-left:0px;display:flex;align-items:center;">
-                            <p style="color:white;display:flex;height:40px;align-items:center;margin: 0 auto;font-size:16px;font-family: 'Microsoft YaHei';letter-spacing:1px;">
-                                @Html.ValidationMessage("failed")
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="layui-form-item">
-                        <button type="submit" class="layui-btn" lay-submit="" style="width:100%;height:40px;font-size:20px;">登&nbsp;&nbsp;&nbsp;&nbsp;录</button>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
 

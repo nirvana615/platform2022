@@ -131,18 +131,7 @@ namespace MVC.Controllers
             return View();
         }
 
-        /// <summary>
-        /// 影像对比分析系统(END)
-        /// </summary>
-        /// <returns></returns>
-        [AuthorityFilter]
-        public ActionResult Image()
-        {
-            List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
-            ViewBag.User = userinfo[1];
-            logger.Info("【" + ViewBag.User + "】登录影像分析系统");
-            return View();
-        }
+
         /// <summary>
         /// 无人机巡查系统
         /// </summary>
@@ -156,6 +145,7 @@ namespace MVC.Controllers
             return View();
         }
 
+
         /// <summary>
         /// 点云对比分析系统
         /// </summary>
@@ -166,6 +156,20 @@ namespace MVC.Controllers
             List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
             ViewBag.User = userinfo[1];
             logger.Info("【" + ViewBag.User + "】登录点云分析系统");
+            return View();
+        }
+
+
+        /// <summary>
+        /// 影像对比分析系统（过时）
+        /// </summary>
+        /// <returns></returns>
+        [AuthorityFilter]
+        public ActionResult Image()
+        {
+            List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
+            ViewBag.User = userinfo[1];
+            logger.Info("【" + ViewBag.User + "】登录影像分析系统");
             return View();
         }
 

@@ -13,9 +13,7 @@ namespace MODEL
         /// <summary>
         /// 解析标注类
         /// </summary>
-        /// 
-
-        private static Logger logger = Logger.CreateLogger(typeof(ParseModelHelper));
+        private static Logger logger = Logger.CreateLogger(typeof(ParseMarkHelper));
 
        
         /// <summary>

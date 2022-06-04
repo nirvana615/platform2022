@@ -630,6 +630,15 @@
     <Content Include="Apps\rock\js\6.8-localtool.js" />
     <Content Include="Apps\rock\js\6.9-report.js" />
     <Content Include="Apps\rock\js\html.js" />
+    <Content Include="Apps\uavfind\css\main.css" />
+    <Content Include="Apps\uavfind\js\1-findconfig.js" />
+    <Content Include="Apps\uavfind\js\2-findpara.js" />
+    <Content Include="Apps\uavfind\js\3-findprojectlist.js" />
+    <Content Include="Apps\uavfind\js\4-findproject.js" />
+    <Content Include="Apps\uavfind\js\5-findprojectauth.js" />
+    <Content Include="Apps\uavfind\js\6-findroute.js" />
+    <Content Include="Apps\uavfind\js\7-findheader.js" />
+    <Content Include="Apps\uavfind\js\8-findvutil.js" />
     <Content Include="Apps\uav\css\main.css" />
     <Content Include="Apps\uav\js\1-uavconfig.js" />
     <Content Include="Apps\uav\js\2-uavpara.js" />
@@ -784,6 +793,7 @@
     <Content Include="Resources\pic\bg_model\1.jpg" />
     <Content Include="Resources\pic\bg_model\2.png" />
     <Content Include="Resources\pic\bg_model\3.jpg" />
+    <Content Include="Resources\pic\bg_uavfind\1.jpg" />
     <Content Include="Resources\pic\bg_uav\1.gif" />
     <Content Include="Resources\pic\bg_uav\2.gif" />
     <Content Include="Resources\pic\bg_uav\3.gif" />
@@ -806,6 +816,7 @@
     <Content Include="Resources\img\uav\takeoff.png" />
     <Content Include="Resources\img\uav\target.png" />
     <Content Include="Resources\img\uav\targetarea.png" />
+    <Content Include="Resources\pic\sys\uavfind.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Config\log4net.config">
@@ -1400,7 +1411,7 @@
     <Content Include="Views\Platform\LoginUavFind.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Apps\uavfind\" />
+    <Folder Include="Apps\uavfind\widget\" />
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Log\" />

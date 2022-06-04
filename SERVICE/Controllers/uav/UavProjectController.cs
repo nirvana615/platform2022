@@ -439,9 +439,15 @@ namespace SERVICE.Controllers
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 //删除用户与项目映射
-                int updatemapcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_map_user_project SET ztm={0} WHERE userid={1} AND projectid={2} AND ztm={2}", (int)MODEL.Enum.State.NoUse, user.Id, id, (int)MODEL.Enum.State.InUse));
+                int updatemapcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_map_user_project SET ztm={0} WHERE userid={1} AND projectid={2} AND ztm={3}", (int)MODEL.Enum.State.NoUse, user.Id, id, (int)MODEL.Enum.State.InUse));
                 if (updatemapcount == 1)
                 {
+                    int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM uav_map_user_project WHERE projectid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
+                    if (count==0)
+                    {
+                        PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_project SET ztm={0} AND id={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, id, (int)MODEL.Enum.State.InUse));
+                    }
+
                     return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", string.Empty));
                 }
                 else

@@ -141,6 +141,9 @@ namespace SERVICE
                     }
                     #endregion
 
+                    #region 无人机巡查项目
+                    #endregion
+
                     #region *无人机影像项目
                     string imagemaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM image_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
                     if (!string.IsNullOrEmpty(imagemaps))

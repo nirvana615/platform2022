@@ -9,7 +9,7 @@ namespace MODEL
 {
     public class ParseUavFindHelper
     {
-        private static Logger logger = Logger.CreateLogger(typeof(ParseUavHelper));
+        private static Logger logger = Logger.CreateLogger(typeof(ParseUavFindHelper));
 
 
 

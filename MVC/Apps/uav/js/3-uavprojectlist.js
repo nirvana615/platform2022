@@ -15,7 +15,7 @@ layer.open({
         layer.setTop(layero);
 
         //加载中
-        loadlayerindex = layer.load(1, { shade: [0.1, '#fff'], offset: ['218px', '190px'] });
+        loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
 
         //渲染航线任务项目列表树
         tree.render({
@@ -312,18 +312,16 @@ function UavProjectNodeOperate(obj) {
     if (obj.data.type == "uavproject") {
         //项目
         if (obj.type === 'add') {
-            //查看项目
-            ViewUavProject(obj.data.data);
+            ViewUavProject(obj.data.data);//查看项目
         } else if (obj.type === 'update') {
             EditUavProject(obj.data.data);//编辑项目
         } else if (obj.type === 'del') {
             DeleteUavProject(obj.data.id);//删除项目
         };
     } else if (obj.data.type == "uavroute") {
-        //路径
+        //航线
         if (obj.type === 'add') {
-            //查看航线
-            ViewUavRoute(obj.data.class, obj.data.id);
+            ViewUavRoute(obj.data.class, obj.data.id); //查看航线
         } else if (obj.type === 'update') {
             //编辑航线
             EditUavRoute(obj.data.class, obj.data.id);
