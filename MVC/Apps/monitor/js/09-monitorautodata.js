@@ -2441,8 +2441,11 @@ function editAbnormaldata() {
             if (curveType.length > 0) {
                 for (var i in curveType) {
                     if (curveType[i][0] == params.name) {
+                        //清空Graphic
+                        clearGraphic();
                         //轴游标取值
                         DragMarkLine(curveType[i][1], axisType);
+
                         document.getElementById("editcurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '" selected>' + curveType[i][0] + '</option>';
 
                     }
@@ -2459,6 +2462,8 @@ function editAbnormaldata() {
             if (curveType.length > 0) {
                 for (var i in curveType) {
                     if (curveType[i][0] == params.name) {
+                        //清空Graphic
+                        clearGraphic();
                         //轴游标取值
                         DragMarkLine(curveType[i][1], axisType);
                     }
@@ -2480,6 +2485,8 @@ function editAbnormaldata() {
                     if (curveType.length > 0) {
                         for (var i in curveType) {
                             if (curveType[i][0] == key) {
+                                //清空Graphic
+                                clearGraphic();
                                 //轴游标取值
                                 DragMarkLine(curveType[i][1], axisType);
                             }
@@ -2505,6 +2512,8 @@ function editAbnormaldata() {
                         for (var i in curveType) {
                             if (curveType[i][0] == key) {
                                 document.getElementById("editcurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '" selected>' + curveType[i][0] + '</option>';
+                                //清空Graphic
+                                clearGraphic();
                                 //轴游标取值
                                 DragMarkLine(curveType[i][1], axisType);
                             }
@@ -2532,6 +2541,8 @@ function editAbnormaldata() {
                 for (var i in curveType) {
                     if (curveType[i][0] == title) {
                         selectedsCurve[curveType[i][0]] = true;
+                        //清空Graphic
+                        clearGraphic();
                         //轴游标取值
                         DragMarkLine(curveType[i][1], axisType);
                     }
@@ -2611,7 +2622,6 @@ function editAbnormaldata() {
             var minValue = result.editabnormalminvalue;
             var maxValue = result.editabnormalmaxvalue;
             var key = result.editcurve;
-
             for (var i in autoorangeData.Datas) {
                 var time = Math.round(new Date(autoorangeData.Datas[i].Time) / 1000) * 1000;
                 var value = autoorangeData.Datas[i][key];
@@ -2620,6 +2630,7 @@ function editAbnormaldata() {
                     deletData += autoorangeData.Datas[i].Id.toString() + ",";
                 }
             }
+      
             var reviseData = autoorangeData;
             for (var i in reviseData.Datas) {
                 if (reviseData.Datas[i].Flag == '300') {
@@ -2645,6 +2656,8 @@ function editAbnormaldata() {
                     selected: selectedsCurve,
                 }
             });
+            //清空Graphic
+            clearGraphic();
             DragMarkLine(key, axisType);
             //删除数据
             DeleteEditAutoData(monitorArr, deletData);
@@ -2661,7 +2674,7 @@ function editAbnormaldata() {
 //粗差处理
 function editGrosserrordata() {
     //粗差剔除参数页
-    document.getElementById("editgrosserrordatatoolbodyid").innerHTML = '<!--粗差剔除工具参数--> <form class="layui-form" lay-filter="editgrosserrordataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs5"> <div class="layui-form-item "> <label class="layui-form-label" style="width: 80px;padding:9px 0px;">时间范围：</label> <div class="layui-input-inline" style="width: 150px;margin-right:0;"> <input type="text" autocomplete="off" id="editgrosserrorstarttimeid" name="editgrosserrorstarttime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid" style="width: 10px;margin-right:0;"> - </div> <div class="layui-input-inline" style="width: 150px;margin-right:0;"> <input type="text" autocomplete="off" id="editgrosserrorendtimeid" name="editgrosserrorendtime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="结束时间"> </div></div> </div> <div class="layui-col-xs3"> <div class="layui-form-item"> <label class="layui-form-label" style="width: 80px;padding:9px 0px;">剔除方法：</label> <div class="layui-input-inline selectUp" style="width: 150px;"> <select id="editCullingmethodid" name="editCullingmethod" lay-verify="required" lay-filter="editCullingmethodfilter"> <option value="">请选择剔除方法</option> <option value="1δ">剔除大于1δ</option> <option value="2δ">剔除大于2δ</option> <option value="3δ">剔除大于3δ</option> </select> </div> </div> </div> <div class="layui-col-xs3"> <div class="layui-form-item"> <label class="layui-form-label" style="width: 80px;padding:9px 0px;">选择曲线：</label> <div class="layui-input-inline selectUp" style="width: 150px;"> <select id="editcurveid" name="editcurve" lay-verify="required" lay-filter="editcurvefilter"> <option value="">请选择曲线</option> </select> </div></div> </div> <div class="layui-col-xs1"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatasubmit" style="width:80px;border-radius:5px;">剔除</button> </div> </div> </div> </div> </form>';
+    document.getElementById("editgrosserrordatatoolbodyid").innerHTML = '<!--粗差剔除工具参数--> <form class="layui-form" lay-filter="editgrosserrordataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs8"> <div class="layui-form-item "> <label class="layui-form-label">时间范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorstarttimeid" name="editgrosserrorstarttime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorendtimeid" name="editgrosserrorendtime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="结束时间"> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatapreview" style="width:120px;border-radius:5px;">预览</button> </div> </div> </div> </div> <div class="layui-row"> <div class="layui-col-xs4"> <div class="layui-form-item"> <label class="layui-form-label">剔除方法：</label> <div class="layui-input-inline selectUp" > <select id="editCullingmethodid" name="editCullingmethod" lay-verify="required" lay-filter="editCullingmethodfilter"> <option value="">请选择剔除方法</option> <option value="1">剔除大于1δ</option> <option value="2">剔除大于2δ</option> <option value="3">剔除大于3δ</option> </select> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <label class="layui-form-label">选择曲线：</label> <div class="layui-input-inline selectUp"> <select id="editcurveid" name="editcurve" lay-verify="required" lay-filter="editcurvefilter"> <option value="">请选择曲线</option> </select> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatasubmit" style="width:120px;border-radius:5px;">剔除</button> </div> </div> </div> </div> </form>';
     document.getElementById("editgrosserrordatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标选择或手动输入欲选时间段，选择剔除方法，点击剔除按钮，即可删除所选数据数据。</p>';
     //
     elem.on('tab(EditAutoDataTabBrief)', function (elem) {
@@ -2675,6 +2688,8 @@ function editGrosserrordata() {
                         for (var i in curveType) {
                             if (curveType[i][0] == key) {
                                 document.getElementById("editcurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '" selected>' + curveType[i][0] + '</option>';
+                                //清空Graphic
+                                clearGraphic();
                                 DragMarkLine(curveType[i][1], axisType);
                             }
                             else {
@@ -2692,12 +2707,13 @@ function editGrosserrordata() {
     
     //切换图例联动选择曲线
     editChart.on('legendselectchanged', function (params) {
-        try {
             document.getElementById("editcurveid").innerHTML = null;
             //加载曲线类型
             if (curveType.length > 0) {
                 for (var i in curveType) {
                     if (curveType[i][0] == params.name) {
+                        //清空Graphic
+                        clearGraphic();
                         //轴游标取值
                         DragMarkLine(curveType[i][1], axisType);
                         document.getElementById("editcurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '" selected>' + curveType[i][0] + '</option>';
@@ -2711,17 +2727,7 @@ function editGrosserrordata() {
             form.render();
             form.render('select');
 
-        } catch (error) {
-            //加载曲线类型
-            if (curveType.length > 0) {
-                for (var i in curveType) {
-                    if (curveType[i][0] == params.name) {
-                        //轴游标取值
-                        DragMarkLine(curveType[i][1], axisType);
-                    }
-                }
-            }
-        }
+        
 
     });
     //切换曲线类型图形联动
@@ -2733,6 +2739,8 @@ function editGrosserrordata() {
             for (var i in curveType) {
                 if (curveType[i][0] == title) {
                     selectedsCurve[curveType[i][0]] = true;
+                    //清空Graphic
+                    clearGraphic();
                     //轴游标取值
                     DragMarkLine(curveType[i][1], axisType);
                 }
@@ -2747,42 +2755,95 @@ function editGrosserrordata() {
             }
         });
     });
-    //粗差剔除
-    //按值域范围剔除
-    form.on('submit(editgrosserrordatasubmit)', function (data) {
-        layer.confirm('<p style="font-size:16px">是否剔除满足当前所选条件的数据？</p><br/>', {
-            icon: 3,
-            title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'],
-            shade: 0.5,
-            zIndex: layer.zIndex,
-            cancel: function () { },
-            success: function (layero) { layer.setTop(layero); },
-            btnAlign: 'c',
-            btn: ['是', '否']
-        }, function (index, layero) {
-            //var deletData = "";//剔除数据id
-            //var result = data.field;
-            //var key = result.editcurve;
+    //粗差预览
+    form.on('submit(editgrosserrordatapreview)', function (data) {
+        var deletData = "";//剔除数据id
+        var result = data.field;
+        var starTime = Math.round(new Date(result.editgrosserrorstarttime) / 1000) * 1000;
+        var endTime = Math.round(new Date(result.editgrosserrorendtime) / 1000) * 1000;
+        var key = result.editcurve;
+        var heightlight = [];
+        var stdData = [];
+        for (var i in autoorangeData.Datas) {
+            var time = Math.round(new Date(autoorangeData.Datas[i].Time) / 1000) * 1000;
+            if (time > starTime && time < endTime && autoorangeData.Datas[i].Flag != '300') {
+                stdData.push(autoorangeData.Datas[i][key]);
+            }
+        }
+        var Std = result.editCullingmethod * standardDeviation(stdData);
+        for (var i in autoorangeData.Datas) {
+            var time = Math.round(new Date(autoorangeData.Datas[i].Time) / 1000) * 1000;
+            var value = autoorangeData.Datas[i][key];
+            if (time > starTime && time < endTime && Math.abs(value) > Std && autoorangeData.Datas[i].Flag != '300') {
+                var preselect = [];
+                preselect.push(Math.round(new Date(autoorangeData.Datas[i].Time) / 1000) * 1000);
+                preselect.push(autoorangeData.Datas[i][key]);
+                heightlight.push(preselect);
+            }
+        }
+        SelectedHighlight(heightlight);   
+        DragMarkLine(key, axisType);
+        //粗差剔除
+        form.on('submit(editgrosserrordatasubmit)', function (data) {
+            layer.confirm('<p style="font-size:16px">是否剔除满足当前所选条件的数据？</p><br/>', {
+                icon: 3,
+                title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'],
+                shade: 0.5,
+                zIndex: layer.zIndex,
+                cancel: function () { },
+                success: function (layero) { layer.setTop(layero); },
+                btnAlign: 'c',
+                btn: ['是', '否']
+            }, function (index, layero) {
+                for (var i in autoorangeData.Datas) {
+                    var time = Math.round(new Date(autoorangeData.Datas[i].Time) / 1000) * 1000;
+                    var value = autoorangeData.Datas[i][key];
+                    if (time > starTime && time < endTime &&  Math.abs(value) > Std && autoorangeData.Datas[i].Flag != '300') {
+                        autoorangeData.Datas[i].Flag = '300';
+                        deletData += autoorangeData.Datas[i].Id.toString() + ",";
+                    }
+                }
 
-            //var reviseData = autoorangeData;
-            //var heightlight = []
-            //for (var i in reviseData.Datas) {
-            //    if (reviseData.Datas[i].Flag == '300') {
-            //        var dd = [];
-            //        dd.push(Math.round(new Date(reviseData.Datas[i].Time) / 1000) * 1000);
-            //        dd.push(reviseData.Datas[i][key]);
-            //        heightlight.push(dd);
-            //    }
-            //};
+                var reviseData = autoorangeData;
+                for (var i in reviseData.Datas) {
+                    if (reviseData.Datas[i].Flag == '300') {
+                        delete reviseData.Datas[i];
+                    }
+                }
+                //加载修正后数据
+                DisplayEditDATA(monitorArr, reviseData);
+                //显示当前曲线和游标
+                selectedsCurve = {};
+                if (curveType.length > 0) {
+                    for (var i in curveType) {
+                        if (curveType[i][1] == key) {
+                            selectedsCurve[curveType[i][0]] = true;
+                        }
+                        else {
+                            selectedsCurve[curveType[i][0]] = false;
+                        }
+                    }
+                }
+                editChart.setOption({
+                    legend: {
+                        selected: selectedsCurve,
+                    }
+                });
+                //清空Graphic
+                clearGraphic();
+                DragMarkLine(key, axisType);
+                //删除数据
+                DeleteEditAutoData(monitorArr, deletData);
+                layer.close(index);
+            }, function (index) {
+                layer.close(index);
+            });
 
-            //SelectedHighlight(heightlight);
-            layer.close(index);
-        }, function (index) {
-            layer.close(index);
+            return false;
         });
-
         return false;
     });
+    
 
 
     form.render();
@@ -4063,6 +4124,7 @@ function DisplayEditRAIN(monitor, data) {
     editChart.hideLoading();
     editChart.setOption(option, true, false);
 };
+
 //绘制拖动标示线
 function DragMarkLine(curveid, axisType) {
 
@@ -4181,41 +4243,7 @@ function DragMarkLine(curveid, axisType) {
                     },
                     cursor: 'move',
                     ondrag: onPointDraggingYmax
-                },
-                {
-                    id: '3',
-                    type: 'rect',
-                    z: 0,
-                    shape: {
-                        width: 0,
-                        height: 0
-                        // r: 10
-                    },
-                    style: {
-                        fill: 'rgba(0,0,0,0)',
-                        stroke: 'rgba(0,0,0,0)',
-                        lineWidth: 20
-                    },
-                    position: [editChart.convertToPixel({ xAxisId: '1' }, thresholdXmin), 0],
-                    draggable: false
-                },
-                {
-                    id: '4',
-                    type: 'rect',
-                    z: 0,
-                    shape: {
-                        width: 0,
-                        height: 0
-                        // r: 10
-                    },
-                    style: {
-                        fill: 'rgba(0,0,0,0)',
-                        stroke: 'rgba(0,0,0,0)',
-                        lineWidth: 20
-                    },
-                    position: [editChart.convertToPixel({ xAxisId: '1' }, thresholdXmax),0],
-                    draggable: false
-                },
+                }
             ],
         });
         function onPointDraggingYmin() {
@@ -4346,41 +4374,7 @@ function DragMarkLine(curveid, axisType) {
                     },
                     cursor: 'move',
                     ondrag: onPointDraggingXmax
-                },
-                {
-                    id: '1',
-                    type: 'rect',
-                    z: 0,
-                    shape: {
-                        width: 0,
-                        height: 0
-                        // r: 10
-                    },
-                    style: {
-                        fill: 'rgba(0,0,0,0)',
-                        stroke: 'rgba(0,0,0,0)',
-                        lineWidth: 20
-                    },
-                    position: [0, editChart.convertToPixel({ yAxisId: '1' }, thresholdYmax)],
-                    draggable: false
-                },
-                {
-                    id: '2',
-                    type: 'rect',
-                    z: 0,
-                    shape: {
-                        width: 0,
-                        height: 0
-                        // r: 10
-                    },
-                    style: {
-                        fill: 'rgba(0,0,0,0)',
-                        stroke: 'rgba(0,0,0,0)',
-                        lineWidth: 20
-                    },
-                    position: [0, editChart.convertToPixel({ yAxisId: '1' }, thresholdYmax)],
-                    draggable: false
-                },
+                }
             ],
         });
 
@@ -4431,8 +4425,11 @@ function DragMarkLine(curveid, axisType) {
     }
 
 }
-//高亮显示选中数据
+//高亮选中数据
 function SelectedHighlight(data) {
+    //清空Graphic
+    clearGraphic();
+
     editChart.setOption({
         graphic: data.map(function (item, dataIndex) {
             return {
@@ -4441,23 +4438,32 @@ function SelectedHighlight(data) {
                 shape: {
                     cx: 0,
                     cy: 0,
-                    r: 5
+                    r: 3
                 },
                 style: {
                     fill: '#01FF70',
                     stroke: '#01FF70',
-                    lineWidth: 2,
+                    lineWidth: 1,
                 },
                 invisible: false,
-                z: 1000
+                bouding:'raw',
+                z: 100
             };
         })
     });
     window.addEventListener('resize', updatePosition);
     editChart.on('dataZoom', updatePosition);
     function updatePosition() {
+        let Gdata = [];
+        Gdata = JSON.parse(JSON.stringify(data));;
+        for (var i in Gdata) {
+            if (Gdata[i][0] > thresholdXmax || Gdata[i][1] > thresholdYmax || Gdata[i][0] < thresholdXmin || Gdata[i][1] < thresholdYmin) {
+                Gdata[i][0] = -9999999;
+                Gdata[i][1] = -9999999;
+            }
+        }    
         editChart.setOption({
-            graphic: data.map(function (item, dataIndex) {
+            graphic: Gdata.map(function (item, dataIndex) {
                 return {
                     position: editChart.convertToPixel('grid', item)
                 };
@@ -4465,6 +4471,30 @@ function SelectedHighlight(data) {
         })
     };
 }
+//清空Graphic
+function clearGraphic() {
+    var chartOption = editChart.getOption();
+    chartOption.graphic = [];
+    editChart.setOption(chartOption, true);
+}
+//计算标准差
+function standardDeviation(data) {
+    let std,
+        ave,
+        sum = 0,
+        sums = 0,
+        len = data.length;
+    for (let i = 0; i < len; i++) {
+        sum += Number(data[i]);
+    }
+    ave = sum / len;
+    for (let i = 0; i < len; i++) {
+        sums += (Number(data[i]) - ave) * (Number(data[i]) - ave)
+    }
+    std = (Math.sqrt(sums / len)).toFixed(4);
+    return std;
+}
+
 
 //获取项目监测点
 function getBianXingLiangData(projectid) {
