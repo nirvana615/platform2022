@@ -2556,7 +2556,7 @@ function gaoJinManagLayer(projectid) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: gaoJinHtml
+                , content:gaoJinHtml
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -2568,6 +2568,7 @@ function gaoJinManagLayer(projectid) {
                 , end: function () {
                     gaoJinManaglayerindex = null;
                     yueZhitable = null;
+                    GaoJingtable = null;
                 }
             });
             //设备巡查
@@ -2776,7 +2777,7 @@ function GetLaryMonitorYueZhi(id) {
                     var res = JSON.parse(result);
                     if (res.code == 1) {//成功
                         layer.msg("更新成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                        GetMonitorYueZhi(id);
+                        GetMonitorGaoJing(id);
                     } else {
                         layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     }
@@ -2816,194 +2817,43 @@ function GetLaryMonitorGaoJing(id) {
         , initSort: { field: 'id', type: 'desc' }
         , cols: [[
             { field: 'id', title: 'ID', hide: true }
-            , { field: 'jcdbh', title: '监测点编号', width: 120, align: "center", }
-            //, {
-            //    field: 'jcff', title: '监测方法', width: 120, align: "center", templet: function (row) {
-            //        if (row.jcff == '0') {
-            //            return 'GNSS';
-            //        } else if (row.jcff == '1') {
-            //            return '裂缝';
-            //        } else if (row.jcff == '2') {
-            //            return '倾斜';
-            //        } else if (row.jcff == '3') {
-            //            return '应力';
-            //        } else if (row.jcff == '4') {
-            //            return '深部位移';
-            //        } else if (row.jcff == '5') {
-            //            return '地下水位';
-            //        } else if (row.jcff == '6') {
-            //            return '雨量';
-            //        }
-            //    }
-            //}
-            , { field: 'gaojinTime', title: '告警时间', width: 160, align: "center" }
-            , { field: 'gaojinContext', title: '告警内容', width: 200, edit: 'text', align: "center" }
+            , { field: 'jcdbh', title: '监测点编号', width: 100, align: "center", }
+            , { field: 'gaojinTime', title: '告警时间', width: 150, align: "center" }
+            , { field: 'gaojinContext', title: '告警内容', width: 160, edit: 'text', align: "center" }
             , {
-                field: 'jcff', title: '监测方法', width: 120, align: "center", templet: function (row) {
-                    if (row.jcff == '0') {
-                        return 'GNSS';
-                    } else if (row.jcff == '1') {
-                        return '裂缝';
-                    } else if (row.jcff == '2') {
-                        return '倾斜';
-                    } else if (row.jcff == '3') {
-                        return '应力';
-                    } else if (row.jcff == '4') {
-                        return '深部位移';
-                    } else if (row.jcff == '5') {
-                        return '地下水位';
-                    } else if (row.jcff == '6') {
-                        return '雨量';
+                field: 'gaojinStatus', title: '告警状态', width: 80, align: "center", templet: function (row) {
+                    if (row.gaojinStatus == '0') {
+                        return '<span style="color: red;">未处理</span>'
+                    } else if (row.gaojinStatus == '1') {
+                        return '<span style="color: green;">已处理</span>'
                     }
                 }
             }
-            , { field: 'GaoJingTwo', title: '阈值2', width: 90, edit: 'text', align: "center" }
-            , { field: 'GaoJingThree', title: '阈值3', width: 90, edit: 'text', align: "center" }
+            , { field: 'gaojinResult', title: '处理结果', width: 120, edit: 'text', align: "center" }
+            , { field: 'updateTime', title: '处理时间', width: 160, align: "center" }
 
-            , { fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#yuZhiChuButon' }
+            , { fixed: 'right', title: '操作', width: 80, align: 'center', toolbar: '#GaoJingChuButon' }
         ]]
         , data: []
     });
 
     table.on('tool(GaoJingtable-view)', function (obj) {
         console.log(obj);
-        if (obj.event === 'detail') {
-        } else if (obj.event === 'delete') {
-            layer.confirm('确认删除' + obj.data.jcdbh + '的阈值信息?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
-                var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
-                $.ajax({
-                    url: servicesurl + "/api/PatrolEquipment/DeleteYuZhiInfo", type: "delete", data: { "id": obj.data.GaoJingId },
-                    success: function (result) {
-                        layer.close(loadingminindex);
-                        var res = JSON.parse(result);
-                        if (res.code == 1) {//成功
-                            layer.msg("删除成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                            GetMonitorGaoJing(id);
-                        } else {
-                            layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                        }
-                    }, datatype: "json"
-                });
-            });
-        } else if (obj.event === 'add') {
+        if (obj.event === 'add') {//处理
             var data = obj.data;
 
-            if (data.backTrack.length == 0) {
-                layer.msg('请输入' + data.jcdbh + "的回溯时长！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            if (data.gaojinResult.length == 0) {
+                layer.msg('请输入' + data.jcdbh + "的处理结果！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 return;
             }
-            if (isNaN(data.backTrack) || parseInt(data.backTrack) <= 0) {
-                layer.msg(data.jcdbh + '的回溯时长应该为正整数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                return;
-            }
+            
             var sendData = {
-                monitorId: data.id,//监测点id
-                projectId: id,//羡慕id
-                backTrack: parseInt(data.backTrack),//
-                monitorType: data.jcff,
-
+                id: data.id,//g告警信息的id
+                gaojinResult: data.gaojinResult,//
             };
-            if (data.jcff == '0') {
-                if (data.GaoJingOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的水平位移(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (isNaN(data.GaoJingOne) || parseFloat(data.GaoJingOne) <= 0) {
-                    layer.msg(data.jcdbh + '的水平位移(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (data.GaoJingTwo.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的垂直位移（阈值2）！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (isNaN(data.GaoJingTwo) || parseFloat(data.GaoJingTwo) <= 0) {
-                    layer.msg(data.jcdbh + '的垂直位移（阈值2）应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                sendData.GaoJingOne = parseFloat(data.GaoJingOne);
-                sendData.GaoJingTwo = parseFloat(data.GaoJingTwo);
-
-            } else if (data.jcff == '1') {//裂缝
-                if (data.GaoJingOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的裂缝阈值(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (isNaN(data.GaoJingOne) || parseFloat(data.GaoJingOne) <= 0) {
-                    layer.msg(data.jcdbh + '的裂缝阈值(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                sendData.GaoJingOne = parseFloat(data.GaoJingOne);
-            } else if (data.jcff == '2') {//倾斜
-                if (data.GaoJingOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的X方向(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (isNaN(data.GaoJingOne) || parseFloat(data.GaoJingOne) <= 0) {
-                    layer.msg(data.jcdbh + '的X方向(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (data.GaoJingTwo.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的Y方向（阈值2）！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (isNaN(data.GaoJingTwo) || parseFloat(data.GaoJingTwo) <= 0) {
-                    layer.msg(data.jcdbh + '的Y方向（阈值2）应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                //阈值三可设置，也可以不设置
-                if (data.GaoJingThree.length > 0 && (isNaN(data.GaoJingThree) || parseFloat(data.GaoJingThree) <= 0)) {
-                    layer.msg(data.jcdbh + '的Z方向（阈值3）应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                sendData.GaoJingOne = parseFloat(data.GaoJingOne);
-                sendData.GaoJingTwo = parseFloat(data.GaoJingTwo);
-                if (data.GaoJingThree.length > 0) {
-                    sendData.GaoJingThree = parseFloat(data.GaoJingThree);
-                }
-            } else if (data.jcff == '3') {//应力
-                if (data.GaoJingOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的应力阈值(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (isNaN(data.GaoJingOne) || parseFloat(data.GaoJingOne) <= 0) {
-                    layer.msg(data.jcdbh + '的应力阈值(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                sendData.GaoJingOne = parseFloat(data.GaoJingOne);
-            } else if (data.jcff == '4') {
-                if (data.GaoJingOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的X方向(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (isNaN(data.GaoJingOne) || parseFloat(data.GaoJingOne) <= 0) {
-                    layer.msg(data.jcdbh + '的X方向(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (data.GaoJingTwo.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的Y方向（阈值2）！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (isNaN(data.GaoJingTwo) || parseFloat(data.GaoJingTwo) <= 0) {
-                    layer.msg(data.jcdbh + '的Y方向（阈值2）应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                sendData.GaoJingOne = parseFloat(data.GaoJingOne);
-                sendData.GaoJingTwo = parseFloat(data.GaoJingTwo);
-            } else if (data.jcff == '5') {
-                if (data.GaoJingOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的地下水位阈值(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                if (isNaN(data.GaoJingOne) || parseFloat(data.GaoJingOne) <= 0) {
-                    layer.msg(data.jcdbh + '的地下水位阈值(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    return;
-                }
-                sendData.GaoJingOne = parseFloat(data.GaoJingOne);
-            }
-
             var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
             $.ajax({
-                url: servicesurl + "/api/PatrolEquipment/updateMonitorAlarmThreshold", type: "post", data: sendData,
+                url: servicesurl + "/api/PatrolEquipment/updategaoJinInfo", type: "post", data: sendData,
                 success: function (result) {
                     layer.close(loadinglayerindex);
                     console.log(result);
@@ -3096,78 +2946,11 @@ function openLayerAddYuZhi(data) {
 }
 
 
-var addYuZhihtmlLieFeng = "<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='addYuZhiform'>                                                                          "
-    + "	<div class='layui-form-item' style='margin-top:15px;margin-right:5px;'><div class='layui-row'>                                                                           "
-    + "		<div class='layui-col-md6'>                                                                                                                                          "
-    + "			<div class='grid-demo grid-demo-bg1'>                                                                                                                            "
-    + "				<label class='layui-form-label'>回溯时长</label>                                                                                                               "
-    + "				<div class='layui-input-block'>                                                                                                                              "
-    + "					<input type='text' name='name'  autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;'  />                "
-    + "				</div>                                                                                                                                                       "
-    + "			</div>                                                                                                                                                           "
-    + "		</div>                                                                                                                                                               "
-    + "		<div class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>                                                                                                "
-    + "			<div class='grid-demo'><label class='layui-form-label' id='labenameid'></label>                                                                                              "
-    + "				<div class='layui-input-block'>                                                                                                                              "
-    + "					<input type='text' name='yueZhiOne'  autocomplete='off' placeholder='请输入'  class='layui-input' style='width:160px;'  />            "
-    + "				</div>                                                                                                                                                       "
-    + "			</div>                                                                                                                                                           "
-    + "		</div>                                                                                                                                                               "
-    + "	 </div>                                                                                                                                                                    "
-    + "	</div>                                                                                                                                                                     "
-    + "	<div class='layui-form-item' style='margin-top:15px'>                                                                                                                      "
-    + "		<div style='position:absolute;right:25px;'>                                                                                                                            "
-    + "			<button type='submit' class='layui-btn' lay-submit='' lay-filter='addYuZhisubmit' style='width:100px'>提交</button>                                            "
-    + "		</div>                                                                                                                                                                 "
-    + "	</div>                                                                                                                                                                     "
-    + "</form>                                                                                                                                                                      ";
-var addYuZhihtmlGnss = "<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='addYuZhiform'>                                                                          "
-    + "	<div class='layui-form-item' style='margin-top:15px;margin-right:5px;'><div class='layui-row'>                                                                           "
-    + "		<div class='layui-col-md6'>                                                                                                                                          "
-    + "			<div class='grid-demo grid-demo-bg1'>                                                                                                                            "
-    + "				<label class='layui-form-label'>回溯时长</label>                                                                                                               "
-    + "				<div class='layui-input-block'>                                                                                                                              "
-    + "					<input type='text' name='name'  autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;'  />                "
-    + "				</div>                                                                                                                                                       "
-    + "			</div>                                                                                                                                                           "
-    + "		</div>                                                                                                                                                               "
-    + "		<div class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>                                                                                                "
-    + "			<div class='grid-demo'><label class='layui-form-label' id='labenameid'></label>                                                                                              "
-    + "				<div class='layui-input-block'>                                                                                                                              "
-    + "					<input type='text' name='yueZhiOne'  autocomplete='off' placeholder='请输入'  class='layui-input' style='width:160px;'  />            "
-    + "				</div>                                                                                                                                                       "
-    + "			</div>                                                                                                                                                           "
-    + "		</div>                                                                                                                                                               "
-    + "		<div class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>                                                                                                "
-    + "			<div class='grid-demo'><label class='layui-form-label' id='labenameidTwo'></label>                                                                                              "
-    + "				<div class='layui-input-block'>                                                                                                                              "
-    + "					<input type='text' name='yueZhiTwo'  ' autocomplete='off' placeholder='请输入'  class='layui-input' style='width:160px;'  /> "
-    + "				</div>                                                                                                                                                         "
-    + "			</div>                                                                                                                                                             "
-    + "		</div>                                                                                                                                                                 "
-    + "		<div id='yueZhiThreeDiv' class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>                                                                                                "
-    + "			<div class='grid-demo'><label class='layui-form-label' >z方向</label>                                                                                              "
-    + "				<div class='layui-input-block'>                                                                                                                              "
-    + "					<input type='text' name='yueZhiThree'  ' autocomplete='off' placeholder='请输入'  class='layui-input' style='width:160px;'  /> "
-    + "				</div>                                                                                                                                                         "
-    + "			</div>                                                                                                                                                             "
-    + "		</div>                                                                                                                                                                 "
-    + "	 </div>                                                                                                                                                                    "
-    + "	</div>                                                                                                                                                                     "
-    + "	<div class='layui-form-item' style='margin-top:15px'>                                                                                                                      "
-    + "		<div style='position:absolute;right:25px;'>                                                                                                                            "
-    + "			<button type='submit' class='layui-btn' lay-submit='' lay-filter='addYuZhisubmit' style='width:100px'>提交</button>                                            "
-    + "		</div>                                                                                                                                                                 "
-    + "	</div>                                                                                                                                                                     "
-    + "</form>                                                                                                                                                                      ";
 
 var gaoJinHtml = "    <div class='layui-tab layui-tab-brief' lay-filter='docDemoTabBriefitem' style='margin:0px;'>                                                             "
     + "        <ul class='layui-tab-title' style='float: left;width:120px;border-color:white;'>                                                                     "
     + "            <li lay-id='111' class='layui-this' style='display: block;'>阈值设置</li>                                                                                     "
     + "            <li lay-id='222' style='display: block;'>告警处理</li>                                                                                                        "
-    + "            <li lay-id='333' style='display: block;'>基座巡查</li>                                                                                                        "
-    + "            <li lay-id='444' style='display: block;'>报告下载</li>                                                                                                        "
-    + "            <li lay-id='555' style='display: block;'>人工巡视</li>                                                                                                        "
     + "        </ul>                                                                                                                                                "
     + "                                                                                                                                                             "
     + "        <div class='layui-tab-content' id='xunShiDiv' style='margin-left:120px;height:600px;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;'>      "
@@ -3190,461 +2973,15 @@ var gaoJinHtml = "    <div class='layui-tab layui-tab-brief' lay-filter='docDemo
     + "            <!--裂缝巡查-->                                                                                                                                   "
     + "						<table class='layui-hide' id='GaoJingtable-view' style='margin-top:25px' lay-filter='GaoJingtable-view'></table>	"
     + "						<script type='text/html' id='GaoJingChuButon'>                                                      "
-    + "                        {{#  if(d.yueZhiId != ''){ }}"
-    + "							    <a class='layui-btn layui-btn-xs' lay-event='add'>修改</a>                       "
+    + "                        {{#  if(d.gaojinStatus == 0){ }}"
+    + "							    <a class='layui-btn layui-btn-xs' lay-event='add'>处理</a>                       "
     //+ "							    <a class='layui-btn layui-btn-primary layui-btn-xs' lay-event='detail'>查看</a>  "
-    + "							    <a class='layui-btn layui-btn-danger layui-btn-xs' lay-event='delete'>删除</a>       "
     + "                        {{#  } }} "
-    + "                        {{#  if(d.yueZhiId == ''){ }}"
-    + "							    <a class='layui-btn layui-btn-xs' lay-event='add'>保存</a>                       "
+    + "                        {{#  if(d.gaojinStatus == 1){ }}"
+    + "							    <a class='layui-btn layui-btn-xs' lay-event='add'>修改</a>                       "
     + "                        {{#  } }} "
     + "						</script>                                                                             "
-    + "             </div>                                                                                                                                           "
-    + "                                                                                                                                                              "
-    + "            <div class='layui-tab-item' >                                                                                                                      "
-    + "                <!--基座巡查-->                                                                                                                               "
-    + "					<form class='layui-form' style='margin-bottom:15px;margin-right:5px;' lay-filter='queryjiZuoinfoform'>	"
-    + "						    <div class='layui-form-item'>	"
-    + "						        <div class='layui-row'>	"
-    + "						            <div class='layui-col-md3'>	"
-    + "						                <div class='grid-demo grid-demo-bg1'>	"
-    + "						                    <label class='layui-form-label'>项目名称</label>	"
-    + "						                    <div class='layui-input-block'>	"
-    + "						                        <input type='text' name='xmmc' autocomplete='off' placeholder='请输入' class='layui-input' />	"
-    + "						                    </div>	"
-    + "						                </div>	"
-    + "						            </div>	"
-    + "						            <div class='layui-col-md3'>	"
-    + "						                <div class='grid-demo'>	"
-    + "						                    <label class='layui-form-label'>分析区域</label>	"
-    + "						                    <div class='layui-input-block'>	"
-    + "						                        <input type='text' name='regionname' autocomplete='off' placeholder='请输入' class='layui-input' />	"
-    + "						                    </div>	"
-    + "						                </div>	"
-    + "						            </div>	"
-    + "						            <div class='layui-col-md3'>	"
-    + "						                <div class='grid-demo grid-demo-bg1'>	"
-    + "						                    <label class='layui-form-label'>巡查状态</label>	"
-    + "						                    <div class='layui-input-block'>	"
-    + "						                        <select id='xsztSelect' name='xszt'>	"
-    + "						                            <option value=''>全部</option>	"
-    + "						                            <option value='0'>未处理</option>	"
-    + "						                            <option value='1'>已处理</option>	"
-    + "						                        </select>	"
-    + "						                    </div>	"
-    + "						                </div>	"
-    + "						            </div>	"
-    + "						            <div class='layui-col-md3'>	"
-    + "						                <div class='grid-demo grid-demo-bg1'>	"
-    + "						        <div style='position:absolute;right:25px;'>	"
-    + "						            <button type='submit' class='layui-btn' lay-submit='' lay-filter='queryjiZuosubmit' style='width:100px'>查询</button>	"
-    + "						        </div>	"
-    + "						                </div>	"
-    + "						            </div>	"
-    + "						        </div>	"
-    + "						    </div>	"
-    + "						</form>	"
-    + "						<table class='layui-hide' id='jiZuotable-view' style='margin-top:20px' lay-filter='jiZuotable-view'></table>	"
-    + "						<script type='text/html' id='jiZuoButon'>                                                      "
-    + "							<a class='layui-btn layui-btn-xs' lay-event='edit'>处理</a>                       "
-    + "						</script>                                                                             "
-    //  + "                 <div  id='jiZuoXunShiTree'></div>                                                                                                                                             "
-    + "            </div>                                                                                                                                            "
-    + "            <div class='layui-tab-item' >                                                                                                                      "
-    + "                <!--报告下载-->                                                                                                                               "
-    + "					<form class='layui-form' style='margin-bottom:15px;margin-right:5px;' lay-filter='downWordinfoform'>	"
-    + "						    <div class='layui-form-item'>	"
-    + "						        <div class='layui-row'>	"
-    + "						            <div class='layui-col-md6'>	"
-    + "						                <div class='grid-demo grid-demo-bg1'>	"
-    + "						                     <div style='position:absolute;right:25px;'>	"
-    + "						                        <button type='submit' class='layui-btn' lay-submit='' lay-filter='downWord' style='width:100px'>旬报下载</button>	"
-    + "	                                            <button type='Button' onclick='getYueBao()' class='layui-btn layui-btn-primary' style='width:100px'>月报下载</button>	"
-    + "						                     </div>	"
-    + "						                </div>	"
-    + "						            </div>	"
-    + "						        </div>	"
-    + "						    </div>	"
-    + "						</form>	"
-    //  + "                 <div  id='jiZuoXunShiTree'></div>                                                                                                                                             "
-    + "            </div>                                                                                                                                            "
-    + "            <div class='layui-tab-item'>                                                                                                                      "
-    + "						<table class='layui-hide' id='renXuntable-view' style='margin-top:20px' lay-filter='renXuntable-view'></table>	"
-    + "						<script type='text/html' id='renXunButon'>                                                      "
-    + "							<a class='layui-btn layui-btn-danger layui-btn-xs' lay-event='del'>删除</a>                       "
-    + "						</script>                                                                             "
-    + "                       <style type='text/css'> .layui-table-cell{text-align:center;height:auto;white-space:normal; } .layui-table img{width:100px;height:100px;max-width: 100px;} </style>  "
     + "             </div>                                                                                                                                           "
     + "        </div>                                                                                                                                                "
     //   + "    </div>                                                                                                                                                    "
     + "</div>";
-//lay-verify='required|number'
-var chuLiXunShiHtml = "	<form class='layui-form' style='margin-top:5px;margin-right:5px;' lay-filter='chuLiXunShiform'>	"
-    + "	    <div class='layui-form-item'>	"
-    + "<ul id='dowebok'> "
-
-    + "         <li style='display: inline-block'><img id ='chuLiXunShi'   style='width:819px; height:646px;margin-left: 40px' alt='图片1' /></li>"
-    + "         <li style='display: inline-block'><img id ='duiBitui' onload='loadImage()'  style='width:410px; height:323px;margin-left: 10px' alt='图片2' /></li>"
-    + "</ul> "
-    + "	    </div>	"
-    + "	    <div class='layui-form-item'>	"
-    + "	        <div class='layui-row'>	"
-    + "	            <div class='layui-col-md6'>	"
-    + "	                <div class='grid-demo grid-demo-bg1'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>是否比对</label><div class='layui-input-inline' style='width:250px;'>	"
-    + "	                            <input type='checkbox' name='close' lay-filter='switch-type' lay-skin='switch' lay-text='是|否'>	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	            <div id='selectNumDiv' class='layui-col-md6'>	"
-    + "	                <div class='grid-demo'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>选择期数</label>	"
-    + "	                        <div class='layui-input-inline' style='width:250px;'>	"
-    + "						                        <select id='duiBiSelect' style='width:150px'  name='duiBiSelectname' lay-filter='duiBiSelectname'>	"
-
-    + "						                        </select>	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    //+ "	    <div class='layui-form-item'>	"
-    //+ "	        <div class='layui-row'>	"
-    //+ "	            <div class='layui-col-md3'>	"
-    //+ "	                <div class='grid-demo grid-demo-bg1'>	"
-    //+ "	                    <div class='layui-inline'>	"
-    //+ "	                        <label class='layui-form-label'>防雷装置</label><div class='layui-input-inline' style='width:80px;'>	"
-    //+ "	                            <input type='checkbox' name='flzz' value='1' lay-skin='switch' lay-text='正常|破坏'> "
-    //+ "	                        </div>	"
-    //+ "	                    </div>	"
-    //+ "	                </div>	"
-    //+ "	            </div>	"
-    //+ "	            <div class='layui-col-md3'>	"
-    //+ "	                <div class='grid-demo'>	"
-    //+ "	                    <div class='layui-inline'>	"
-    //+ "	                        <label class='layui-form-label'>太阳能板</label>	"
-    //+ "	                        <div class='layui-input-inline' style='width:80px;'>	"
-    //+ "	                            <input type='checkbox' name='tynzd' value='1'  lay-skin='switch' lay-text='正常|破坏'>	"
-    //+ "	                        </div>	"
-    //+ "	                    </div>	"
-    //+ "	                </div>	"
-    //+ "	            </div>	"
-    //+ "	            <div class='layui-col-md3'>	"
-    //+ "	                <div class='grid-demo grid-demo-bg1'>	"
-    //+ "	                    <div class='layui-inline'>	"
-    //+ "	                        <label class='layui-form-label'>采集箱</label><div class='layui-input-inline' style='width:80px;'>	"
-    //+ "	                             <input type='checkbox' name='patrolDesc' value='1'  lay-skin='switch' lay-text='正常|破坏'>	"
-    //+ "	                        </div>	"
-    //+ "	                    </div>	"
-    //+ "	                </div>	"
-    //+ "	            </div>	"
-    //+ "	            <div class='layui-col-md3'>	"
-    //+ "	                <div class='grid-demo'>	"
-    //+ "	                    <div class='layui-inline'>	"
-    //+ "	                        <label class='layui-form-label'>标志标牌</label>	"
-    //+ "	                        <div class='layui-input-inline' style='width:80px;'>	"
-    //+ "	                            <input type='checkbox' name='bzwh' lay-verify='required' value='1'  lay-skin='switch' lay-text='正常|破坏' />	"
-    //+ "	                        </div>	"
-    //+ "	                    </div>	"
-    //+ "	                </div>	"
-    //+ "	            </div>	"
-    //+ "	        </div>	"
-    //+ "	    </div>	"
-    //+ "	    <div class='layui-form-item'>	"
-    //+ "	        <div class='layui-row'>	"
-    //+ "	            <div class='layui-col-md3'>	"
-    //+ "	                <div class='grid-demo grid-demo-bg1'>	"
-    //+ "	                    <div class='layui-inline'>	"
-    //+ "	                        <label class='layui-form-label'>监测立柱</label><div class='layui-input-inline' style='width:80px;'>	"
-    //+ "	                            <input type='checkbox' name='jclz'  lay-skin='switch' value='1' lay-text='正常|破坏'> "
-    //+ "	                        </div>	"
-    //+ "	                    </div>	"
-    //+ "	                </div>	"
-    //+ "	            </div>	"
-    //+ "	            <div class='layui-col-md3'>	"
-    //+ "	                <div class='grid-demo'>	"
-    //+ "	                    <div class='layui-inline'>	"
-    //+ "	                        <label class='layui-form-label'>立柱基础</label>	"
-    //+ "	                        <div class='layui-input-inline' style='width:80px;'>	"
-    //+ "	                            <input type='checkbox' name='equipmentDesc'  value='1' lay-skin='switch' lay-text='正常|破坏'>	"
-    //+ "	                        </div>	"
-    //+ "	                    </div>	"
-    //+ "	                </div>	"
-    //+ "	            </div>	"
-    //+ "	            <div class='layui-col-md3'>	"
-    //+ "	                <div class='grid-demo grid-demo-bg1'>	"
-    //+ "	                    <div class='layui-inline'>	"
-    //+ "	                        <label class='layui-form-label'>通信线缆</label><div class='layui-input-inline' style='width:80px;'>	"
-    //+ "	                             <input type='checkbox' name='txxlph'  value='1' lay-skin='switch' lay-text='正常|破坏'>	"
-    //+ "	                        </div>	"
-    //+ "	                    </div>	"
-    //+ "	                </div>	"
-    //+ "	            </div>	"
-    //+ "	            <div class='layui-col-md3'>	"
-    //+ "	                <div class='grid-demo'>	"
-    //+ "	                    <div class='layui-inline'>	"
-    //+ "	                        <label class='layui-form-label'>传感器</label>	"
-    //+ "	                        <div class='layui-input-inline' style='width:80px;'>	"
-    //+ "	                            <input type='checkbox' name='cgqgr' value='1' lay-verify='required'  lay-skin='switch' lay-text='正常|破坏' />	"
-    //+ "	                        </div>	"
-    //+ "	                    </div>	"
-    //+ "	                </div>	"
-    //+ "	            </div>	"
-    //+ "	        </div>	"
-    //+ "	    </div>	"
-    + "	    <div class='layui-form-item'>	"
-    + "	        <div class='layui-row'>	"
-    + "	            <div class='layui-col-md4'>	"
-    + "	                <div class='grid-demo grid-demo-bg1'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>防雷装置</label><div class='layui-input-inline' style='width:80px;'>	"
-    + "	                            <input type='checkbox' name='flzz' value='1' lay-skin='switch' lay-text='正常|破坏'> "
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	            <div class='layui-col-md4'>	"
-    + "	                <div class='grid-demo'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>太阳能板</label>	"
-    + "	                        <div class='layui-input-inline' style='width:80px;'>	"
-    + "	                            <input type='checkbox' name='tynzd' value='1'  lay-skin='switch' lay-text='正常|破坏'>	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	            <div class='layui-col-md4'>	"
-    + "	                <div class='grid-demo grid-demo-bg1'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>采集箱</label><div class='layui-input-inline' style='width:80px;'>	"
-    + "	                             <input type='checkbox' name='patrolDesc' value='1'  lay-skin='switch' lay-text='正常|破坏'>	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "	    <div class='layui-form-item'>	"
-    + "	        <div class='layui-row'>	"
-    + "	            <div class='layui-col-md4'>	"
-    + "	                <div class='grid-demo'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>标志标牌</label>	"
-    + "	                        <div class='layui-input-inline' style='width:80px;'>	"
-    + "	                            <input type='checkbox' name='bzwh' lay-verify='required' value='1'  lay-skin='switch' lay-text='正常|破坏' />	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	            <div class='layui-col-md4'>	"
-    + "	                <div class='grid-demo grid-demo-bg1'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>监测立柱</label><div class='layui-input-inline' style='width:80px;'>	"
-    + "	                            <input type='checkbox' name='jclz'  lay-skin='switch' value='1' lay-text='正常|破坏'> "
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	            <div class='layui-col-md4'>	"
-    + "	                <div class='grid-demo'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>立柱基础</label>	"
-    + "	                        <div class='layui-input-inline' style='width:80px;'>	"
-    + "	                            <input type='checkbox' name='equipmentDesc'  value='1' lay-skin='switch' lay-text='正常|破坏'>	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "	    <div class='layui-form-item'>	"
-    + "	        <div class='layui-row'>	"
-    + "	            <div class='layui-col-md4'>	"
-    + "	                <div class='grid-demo grid-demo-bg1'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>通信线缆</label><div class='layui-input-inline' style='width:80px;'>	"
-    + "	                             <input type='checkbox' name='txxlph'  value='1' lay-skin='switch' lay-text='正常|破坏'>	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	            <div class='layui-col-md4'>	"
-    + "	                <div class='grid-demo'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>传感器</label>	"
-    + "	                        <div class='layui-input-inline' style='width:80px;'>	"
-    + "	                            <input type='checkbox' name='cgqgr' value='1' lay-verify='required'  lay-skin='switch' lay-text='正常|破坏' />	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	            <div class='layui-col-md4'>	"
-    + "	                <div class='grid-demo'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>异物入侵</label>	"
-    + "	                        <div class='layui-input-inline' style='width:80px;'>	"
-    + "	                            <input type='checkbox' name='photoName' value='1' lay-verify='required'  lay-skin='switch' lay-text='正常|破坏' />	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "	    <div class='layui-form-item'>	"
-    + "	        <label class='layui-form-label'>巡查结果</label>	"
-    + "	        <div class='layui-input-block'>	"
-    + "	            <textarea type='text' name='patrolResult' autocomplete='off' placeholder='请输入' style='width:690px'  class='layui-textarea' ></textarea>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "	    <div class='layui-form-item' style='margin:10px 0px 0px 0px;'>	"
-    + "	        <div style='position:absolute;right:360px;height: 60px;'>	"
-    //+ "	            <button type='reset' class='layui-btn layui-btn-primary' style='width:100px'>重置</button>	"
-    + "	            <button type='submit' class='layui-btn' lay-submit='' lay-filter='chuLiXunShisubmit' style='width:100px'>提交</button>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "	</form>	";
-
-
-var lieFengHtml = "	<form class='layui-form' style='margin-top:5px;margin-right:5px;' lay-filter='lieFengform'>	"
-    + "	<div class='layui-tab layui-tab-brief' >								"
-    + "		<ul class='layui-tab-title'>							"
-    + "			<li lay-id='111111' class='layui-this' style='width:30%;padding-top: 10px;'>裂缝数据可视化</li>						"
-    + "			<li lay-id='222222' style='width:30%;padding-top: 10px;'>照片查看</li>						"
-    + "		</ul>							"
-    + "		<div class='layui-tab-content'>							"
-    + "			<div class='layui-tab-item layui-show'>						"
-    + "       	   <div id = 'imagedatachart'  style = 'width:790px;height:540px'></div> "
-    + "			</div>						"
-    + "			<div class='layui-tab-item'>						"
-    + "	    <div class='layui-form-item'>	"
-    + "<ul id='dowebok'> "
-    + "                  <li style='display: inline-block'><img id ='lieFengChuli'  style='width:819px; height:646px;margin-left: 40px'  alt='图片1' /></li>"
-    + "                  <li style='display: inline-block'><img id ='lieFengduiBitui' onload='loadLieImage()' style='width:410px; height:323px;margin-left: 10px'  alt='图片2' /></li>"
-    + "</ul> "
-    + "	    </div>	"
-    + "	    <div class='layui-form-item'>	"
-    + "	        <div class='layui-row'>	"
-    + "	            <div class='layui-col-md6'>	"
-    + "	                <div class='grid-demo grid-demo-bg1'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>是否比对</label><div class='layui-input-inline' style='width:250px;'>	"
-    + "	                            <input type='checkbox' name='close' lay-filter='lieFengswitch-type' lay-skin='switch' lay-text='是|否'>	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	            <div id='lieFengselectNumDiv' class='layui-col-md6'>	"
-    + "	                <div class='grid-demo'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	                        <label class='layui-form-label'>选择期数</label>	"
-    + "	                        <div class='layui-input-inline' style='width:250px;'>	"
-    + "						                        <select id='lieFengduiBiSelect' style='width:150px'  name='duiBiSelectname' lay-filter='lieFengduiBiSelectname'>	"
-
-    + "						                        </select>	"
-    + "	                        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "			</div>						"
-    + "		</div>							"
-    + "	</div>								"
-    + "	    <div class='layui-form-item'>	"
-    + "	        <label class='layui-form-label'>巡查结果</label>	"
-    + "	        <div class='layui-input-block'>	"
-    + "	            <input type='text' name='xsjg' autocomplete='off' lay-verify='required' placeholder='请输入' style='width:690px'  class='layui-input' />	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "	    <div class='layui-form-item' style='margin:10px 0px 0px 0px;'>	"
-    + "	        <div style='position:absolute;right:360px;height: 60px;'>	"
-    + "	            <button type='submit' class='layui-btn' lay-submit='' lay-filter='lieFengsubmit' style='width:100px'>提交</button>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "	</form>	";
-var jiZuoHtml = "	<form class='layui-form' style='margin-top:5px;margin-right:5px;' lay-filter='jiZuoform'>	"
-    + "	<div class='layui-tab layui-tab-brief' >	"
-    + "		<ul class='layui-tab-title'>							"
-    + "			<li lay-id='333' class='layui-this' style='width:30%;padding-top: 10px;'>点云数据</li>						"
-    + "			<li lay-id='444' style='width:30%;padding-top: 10px;'>重点掉块显示</li>						"
-    + "		</ul>							"
-    + "		<div class='layui-tab-content'>	"
-    + "			<div class='layui-tab-item layui-show'>						"
-    + "	            <div class='layui-form-item' id='dianYunShuJu' style='height: 500px;'>	"
-    + "	            </div>	"
-    + "	    <div class='layui-form-item'>	"
-    + "	        <div class='layui-row'>	"
-    + "	            <div class='layui-col-md6' id='dianYunSelectNumDivShuJu'>	"
-    + "	                <div class='grid-demo grid-demo-bg1'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	        <label class='layui-form-label'>点云</label>	"
-    + "	        <div class='layui-input-block'>	"
-    + "				<select id='dianYunShuJuXssj'   name='dianYunXssj'  lay-filter='dianYunXssjSelect'>	"
-    + "				</select>	"
-    + "	        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	            <div class='layui-col-md6' id='dianYunDescDivShuJu'>	"
-    + "	                <div class='grid-demo grid-demo-bg1'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	        <label class='layui-form-label'>备注</label>	"
-    + "	        <div class='layui-input-block'>	"
-    + "	            <input type='text' name='dianYunShujuDesc'   style='width: 250px'   class='layui-input' />	"
-    + "	        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "	       </div>	"
-    + "			<div class='layui-tab-item'>						"
-    + "	    <div class='layui-form-item' id='dianYunModel' style='height: 500px;'>	"
-    + "	    </div>	"
-    + "	    <div class='layui-form-item'>	"
-    + "	        <div class='layui-row'>	"
-    + "	            <div class='layui-col-md6' id='dianYunSelectNumDiv'>	"
-    + "	                <div class='grid-demo grid-demo-bg1'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	        <label class='layui-form-label'>点云对比期</label>	"
-    + "	        <div class='layui-input-block'>	"
-    + "				<select id='dianYunSourceXssj'   name='sourceXssj'  lay-filter='dianYunduiBiSelectname'>	"
-    + "				</select>	"
-    + "	        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	            <div class='layui-col-md6' id='dianYunDescDiv'>	"
-    + "	                <div class='grid-demo grid-demo-bg1'>	"
-    + "	                    <div class='layui-inline'>	"
-    + "	        <label class='layui-form-label'>备注</label>	"
-    + "	        <div class='layui-input-block'>	"
-    + "	            <input type='text' name='dianYunDesc' autocomplete='off' placeholder='请输入'  style='width: 250px'   class='layui-input' />	"
-    + "	        </div>	"
-    + "	                    </div>	"
-    + "	                </div>	"
-    + "	            </div>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "	       </div>	"
-    + "	    </div>	"
-    + "	    </div>	"
-    + "	    <div class='layui-form-item'>	"
-    + "	        <label class='layui-form-label'>巡查结果</label>	"
-    + "	        <div class='layui-input-block'>	"
-    + "	            <input type='text' name='xsjg' autocomplete='off' lay-verify='required' placeholder='请输入' style='width:690px'  class='layui-input' />	"
-    + "	        </div>	"
-    + "	    </div>	"
-
-
-
-    + "	    <div class='layui-form-item' style='margin:10px 0px 0px 0px;'>	"
-    + "	        <div style='position:absolute;right:360px;height: 60px;'>	"
-    + "	            <button type='submit' class='layui-btn' lay-submit='' lay-filter='jiZuosubmit' style='width:100px'>提交</button>	"
-    + "	        </div>	"
-    + "	    </div>	"
-    + "	</form>	";

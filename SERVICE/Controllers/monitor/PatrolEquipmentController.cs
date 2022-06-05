@@ -935,5 +935,33 @@ namespace SERVICE.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 插入阈值信息表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string updategaoJinInfo()
+        {
+            #region 参数
+            string id = HttpContext.Current.Request.Form["id"];
+            string gaojinResult = HttpContext.Current.Request.Form["gaojinResult"];
+
+
+            #endregion
+            string sql = "UPDATE   monitor_gaojin_info SET gaojin_status='1',result={0},update_time={1} WHERE id={2} ";
+        
+            int updateCount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(gaojinResult), SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), SQLHelper.UpdateString(id)));
+            if (updateCount != -1)
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "修改成功！", ""));
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "修改失败", ""));
+
+            }
+        }
+
     }
 }
