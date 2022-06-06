@@ -2,6 +2,7 @@
 var autodatachart = null;                       //图表
 var monitorstatisticstable = null;              //监测点统计表
 var monitorstatisticsdata = [];                 //监测点统计数据（最小值、最大值、平均值、标准差）
+
 var editChart = null;                           //当前处理监测数据图
 var monitorArr = null;                          //当前处理监测设备属性
 var thresholdYmin = null;                       //定义标示线初值
@@ -13,6 +14,7 @@ var selectedsCurve = null;                      //选中曲线
 var axisType = null;                            //轴类型
 var autoorangeData = null;                      //原始数据分类
 var autoallData = null;                         //待处理设备所有数据
+
 var LiFengDatastatisticsTable = null;           //变形量的数据lf
 var YingLiDatastatisticsTable = null;           //变形量的数据应力
 var GNSSDatastatisticsTable = null;             //变形量的数据Gnss
@@ -39,7 +41,7 @@ function LoadAutoDataLayer(id) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--自动化监测数据可视化--> <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;"> <ul class="layui-tab-title"> <li class="layui-this" style="width:21%;">数据处理</li> <li style="width:21%;">可视化</li> <li style="width:21%;">综合分析</li> <li style="width:21%;">统计分析</li> </ul> <div class="layui-tab-content" style="margin:0px 0px"> <!--数据处理--> <div class="layui-tab-item layui-show"> <div class="layui-row" style="margin: 0px 10px;"> <!--选择设备及时间范围--> <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <label class="layui-form-label" style="text-align:center;">选择设备：</label> <div class="layui-input-block"> <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;"> <option value="">请选择设备</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;"> <option value="">请选择年限</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div></div> </form> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-col-md10"> <!--图形--> <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;"></div> </div> <div class="layui-col-md2"> <!--数据集--> <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div> </div> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-tab layui-tab-brief" lay-filter="EditAutoDataTabBrief"> <ul class="layui-tab-title"> <li lay-id="abnormal" class="layui-this">异常处理</li> <li lay-id="grosserror">粗差剔除</li> <li lay-id="initialvalue">设置初值</li> <li lay-id="interpolation">插补数据</li> <li lay-id="fittingcurve">拟合曲线</li> </ul> <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;"> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--异常处理工具及说明--> <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;"> <!--异常处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter"> <option value="0">按时间范围选择</option> <option value="1">按值域范围选择</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editabnormaldatatoolbodyid"> <!--异常处理工具参数--> </div> </div> <!--异常处理工具说明--> <div id="editabnormaldatatooldoc"></div> </div> <div class="layui-tab-item"> <div id="editgrosserrordatatoolbodyid"> </div> <!--粗差剔除工具说明--> <div id="editgrosserrordatatooldoc"></div> </div> <div class="layui-tab-item">3</div> <div class="layui-tab-item">4</div> <div class="layui-tab-item">5</div> <div class="layui-tab-item">6</div> </div> </div> </div></div> <!--可视化--> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="monitortreebytype" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> </div> </form> <!--图形--> <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> <!--统计表格--> <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;"> <table id="autodatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> <!--综合分析--> <div class="layui-tab-item">综合分析</div> <!--统计分析--> <div class="layui-tab-item"> <div class="layui-col-md12" style="height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;overflow-y: auto;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="bianXingDataform" style="margin-top:5px;margin-left:20px;margin-right:40px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:40px;"><select id="bianXingDatapretimeid" name="bianXingDatapretime" lay-filter="bianXingDatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:20px;margin-right:40px;"> <input id="bianXingDatacustomtimeid" name="bianXingDatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div> </div> </form> <!--统计表格--> <div id="LiFengDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block "> <table id="LiFengDatastatistics" class="layui-hide"></table> </div> <div id="YingLiDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="YingLiDatastatistics" class="layui-hide"></table> </div> <div id="GNSSDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="GNSSDatastatistics" class="layui-hide"></table> </div> <div id="QinJiaoDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="QinJiaoDatastatistics" class="layui-hide"></table> </div> <div id="SbwyDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="SbwyDatastatistics" class="layui-hide"></table> </div> <div id="DxswDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px;vertical-align: top;display:inline-block"> <table id="DxswDatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> </div>'
+                , content: '<!--自动化监测数据可视化--> <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;"> <ul class="layui-tab-title"> <li class="layui-this" style="width:21%;">可视化</li> <li style="width:21%;">数据处理</li> <li style="width:21%;">综合分析</li> <li style="width:21%;">统计分析</li> </ul> <div class="layui-tab-content" style="margin:0px 0px"> <!--可视化--> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="monitortreebytype" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> </div> </form> <!--图形--> <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> <!--统计表格--> <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;"> <table id="autodatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div><!--数据处理--><div class="layui-tab-item"> <div class="layui-row" style="margin: 0px 10px;"> <!--选择设备及时间范围--> <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <label class="layui-form-label" style="text-align:center;">选择设备：</label> <div class="layui-input-block"> <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;"> <option value="">请选择设备</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;"> <option value="">请选择年限</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div></div> </form> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-col-md10"> <!--图形--> <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:790px;height:400px;border: 1px solid #e6e6e6;visibility:hidden；"></div> </div> <div class="layui-col-md2"> <!--数据集--> <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div> </div> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-tab layui-tab-brief" lay-filter="EditAutoDataTabBrief"> <ul class="layui-tab-title"> <li lay-id="abnormal" class="layui-this">异常处理</li> <li lay-id="grosserror">粗差剔除</li> <li lay-id="initialvalue">设置初值</li> <li lay-id="interpolation">插补数据</li> <li lay-id="fittingcurve">拟合曲线</li> </ul> <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;"> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--异常处理工具及说明--> <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;"> <!--异常处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter"> <option value="0">按时间范围选择</option> <option value="1">按值域范围选择</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editabnormaldatatoolbodyid"> <!--异常处理工具参数--> </div> </div> <!--异常处理工具说明--> <div id="editabnormaldatatooldoc"></div> </div> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--粗差处理工具及说明--> <form class="layui-form" lay-filter="editgrosserrordatatoolform" style="margin-top:5px;"> <!--粗差处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editgrosserrordatatoolid" name="editgrosserrordatatool" lay-filter="editgrosserrordatatoolfilter"> <option value="0">按标准差σ剔除</option> <option value="1">按残差δ剔除</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editgrosserrordatatoolbodyid"> <!--粗差处理工具参数--> </div> </div> <!--粗差剔除工具说明--> <div id="editgrosserrordatatooldoc"></div> </div> <div class="layui-tab-item">3</div> <div class="layui-tab-item">4</div> <div class="layui-tab-item">5</div> <div class="layui-tab-item">6</div> </div> </div> </div></div> <!--综合分析--> <div class="layui-tab-item">综合分析</div> <!--统计分析--> <div class="layui-tab-item"> <div class="layui-col-md12" style="height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;overflow-y: auto;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="bianXingDataform" style="margin-top:5px;margin-left:20px;margin-right:40px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:40px;"><select id="bianXingDatapretimeid" name="bianXingDatapretime" lay-filter="bianXingDatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:20px;margin-right:40px;"> <input id="bianXingDatacustomtimeid" name="bianXingDatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div> </div> </form> <!--统计表格--> <div id="LiFengDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block "> <table id="LiFengDatastatistics" class="layui-hide"></table> </div> <div id="YingLiDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="YingLiDatastatistics" class="layui-hide"></table> </div> <div id="GNSSDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="GNSSDatastatistics" class="layui-hide"></table> </div> <div id="QinJiaoDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="QinJiaoDatastatistics" class="layui-hide"></table> </div> <div id="SbwyDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="SbwyDatastatistics" class="layui-hide"></table> </div> <div id="DxswDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px;vertical-align: top;display:inline-block"> <table id="DxswDatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> </div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -2079,40 +2081,15 @@ function LoadAuoData(monitor) {
                             ]
                         };
                     }
-
-
-
-
-
-
-
-
-
-
+                    
                     chart.hideLoading();
                     chart.setOption(option, true, false);
                 }
 
             }, datatype: "json"
         });
-
-
+        
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 
@@ -2265,6 +2242,7 @@ function EditProjectDeviceAutoData(projectid) {
     ////设置初值模块
     ////插补数据模块
     ////监测曲线模块
+    
 }
 
 function LoadEditAutoDataPreDateTime(monitorArr, datetime) {
@@ -2430,9 +2408,9 @@ function DataSetNodeCheck(obj) {
 };
 //异常处理
 function editAbnormaldata() {
-
     document.getElementById("editabnormaldatatoolbodyid").innerHTML = '<!--异常处理工具参数--> <form class="layui-form" lay-filter="editabnormaldataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs10"> <div class="layui-form-item "> <label class="layui-form-label" style="width: 80px;padding:9px 0px;">时间范围：</label> <div class="layui-input-inline" style="width: 150px;"> <input type="text" autocomplete="off" id="editabnormalstarttimeid" name="editabnormalstarttime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid" style="width: 10px;"> - </div> <div class="layui-input-inline" style="width: 150px;"> <input type="text" autocomplete="off" id="editabnormalendtimeid" name="editabnormalendtime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="结束时间"> </div></div> </div> <div class="layui-col-xs2"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editabnormaldataXsubmit" style="width:80px;border-radius:5px;">剔除</button> </div> </div> </div> </div> </form>';
     document.getElementById("editabnormaldatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标选择或手动输入欲选时间段，点击剔除按钮，即可删除该时间段数据。</p>';
+    
     //切换图例联动选择曲线
     editChart.on('legendselectchanged', function (params) {
         try {
@@ -2584,7 +2562,7 @@ function editAbnormaldata() {
                     deletData += autoorangeData.Datas[i].Id.toString() + ",";
                 }
             }
-            var reviseData = autoorangeData;
+            var reviseData = JSON.parse(JSON.stringify(autoorangeData));;
             for (var i in reviseData.Datas) {
                 if (reviseData.Datas[i].Flag == '300') {
                     delete reviseData.Datas[i];
@@ -2630,8 +2608,8 @@ function editAbnormaldata() {
                     deletData += autoorangeData.Datas[i].Id.toString() + ",";
                 }
             }
-      
-            var reviseData = autoorangeData;
+
+            var reviseData = JSON.parse(JSON.stringify(autoorangeData));;
             for (var i in reviseData.Datas) {
                 if (reviseData.Datas[i].Flag == '300') {
                     delete reviseData.Datas[i];
@@ -2673,27 +2651,30 @@ function editAbnormaldata() {
 }
 //粗差处理
 function editGrosserrordata() {
-    //粗差剔除参数页
-    document.getElementById("editgrosserrordatatoolbodyid").innerHTML = '<!--粗差剔除工具参数--> <form class="layui-form" lay-filter="editgrosserrordataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs8"> <div class="layui-form-item "> <label class="layui-form-label">时间范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorstarttimeid" name="editgrosserrorstarttime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorendtimeid" name="editgrosserrorendtime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="结束时间"> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatapreview" style="width:120px;border-radius:5px;">预览</button> </div> </div> </div> </div> <div class="layui-row"> <div class="layui-col-xs4"> <div class="layui-form-item"> <label class="layui-form-label">剔除方法：</label> <div class="layui-input-inline selectUp" > <select id="editCullingmethodid" name="editCullingmethod" lay-verify="required" lay-filter="editCullingmethodfilter"> <option value="">请选择剔除方法</option> <option value="1">剔除大于1δ</option> <option value="2">剔除大于2δ</option> <option value="3">剔除大于3δ</option> </select> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <label class="layui-form-label">选择曲线：</label> <div class="layui-input-inline selectUp"> <select id="editcurveid" name="editcurve" lay-verify="required" lay-filter="editcurvefilter"> <option value="">请选择曲线</option> </select> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatasubmit" style="width:120px;border-radius:5px;">剔除</button> </div> </div> </div> </div> </form>';
-    document.getElementById("editgrosserrordatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标选择或手动输入欲选时间段，选择剔除方法，点击剔除按钮，即可删除所选数据数据。</p>';
-    //
     elem.on('tab(EditAutoDataTabBrief)', function (elem) {
         axisType = "X";
+        //粗差剔除参数页
+        document.getElementById("editgrosserrordatatoolbodyid").innerHTML = '<!--粗差剔除工具参数--> <form class="layui-form" lay-filter="editgrosserrordataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs8"> <div class="layui-form-item "> <label class="layui-form-label">时间范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorstarttimeid" name="editgrosserrorstarttime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorendtimeid" name="editgrosserrorendtime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="结束时间"> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatapreview" style="width:120px;border-radius:5px;">预览</button> </div> </div> </div> </div> <div class="layui-row"> <div class="layui-col-xs3"> <div class="layui-form-item"> <label class="layui-form-label" style="width:90px;padding:9px 10px;">标准差倍数：</label> <div class="layui-input-inline selectUp" style="width:80px;"> <input type="text" autocomplete="off" id="editCullingmethodid" name="editCullingmethod" lay-verify="required|number" class="layui-input"> </div> </div> </div><div class="layui-col-xs5"> <div class="layui-form-item"> <label class="layui-form-label">选择曲线：</label> <div class="layui-input-inline selectUp" style="width:205px;"> <select id="editgrosscurveid" name="editgrosscurve" lay-verify="required" lay-filter="editgrosscurvefilter"> <option value="">请选择曲线</option> </select> </div></div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatasubmit" style="width:120px;border-radius:5px;">剔除</button> </div> </div> </div> </div></form>';
+        document.getElementById("editgrosserrordatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标选择或手动输入欲选时间段，选择剔除方法，先预览在剔除。</p>';
+        //获取时间范围
+        $("#editgrosserrorstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+        $("#editgrosserrorendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
+        //
         if ($(this).attr('lay-id') == "grosserror") {
             var selectedType = editChart.getOption().legend[0].selected;//获取图例选中曲线
-            document.getElementById("editcurveid").innerHTML = null;
+            document.getElementById("editgrosscurveid").innerHTML = null;
             for (var key in selectedType) {
                 if (selectedType[key] == true) {
                     if (curveType.length > 0) {
                         for (var i in curveType) {
                             if (curveType[i][0] == key) {
-                                document.getElementById("editcurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '" selected>' + curveType[i][0] + '</option>';
+                                document.getElementById("editgrosscurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '" selected>' + curveType[i][0] + '</option>';
                                 //清空Graphic
                                 clearGraphic();
                                 DragMarkLine(curveType[i][1], axisType);
                             }
                             else {
-                                document.getElementById("editcurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '">' + curveType[i][0] + '</option>';
+                                document.getElementById("editgrosscurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '">' + curveType[i][0] + '</option>';
                             }
                         }
                     }
@@ -2704,34 +2685,30 @@ function editGrosserrordata() {
             form.render('select');
         }
     });
-    
     //切换图例联动选择曲线
     editChart.on('legendselectchanged', function (params) {
-            document.getElementById("editcurveid").innerHTML = null;
-            //加载曲线类型
-            if (curveType.length > 0) {
-                for (var i in curveType) {
-                    if (curveType[i][0] == params.name) {
-                        //清空Graphic
-                        clearGraphic();
-                        //轴游标取值
-                        DragMarkLine(curveType[i][1], axisType);
-                        document.getElementById("editcurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '" selected>' + curveType[i][0] + '</option>';
+        document.getElementById("editgrosscurveid").innerHTML = null;
+        //加载曲线类型
+        if (curveType.length > 0) {
+            for (var i in curveType) {
+                if (curveType[i][0] == params.name) {
+                    //清空Graphic
+                    clearGraphic();
+                    //轴游标取值
+                    DragMarkLine(curveType[i][1], axisType);
+                    document.getElementById("editgrosscurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '" selected>' + curveType[i][0] + '</option>';
 
-                    }
-                    else {
-                        document.getElementById("editcurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '">' + curveType[i][0] + '</option>';
-                    }
+                }
+                else {
+                    document.getElementById("editgrosscurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '">' + curveType[i][0] + '</option>';
                 }
             }
-            form.render();
-            form.render('select');
-
-        
-
+        }
+        form.render();
+        form.render('select');
     });
     //切换曲线类型图形联动
-    form.on('select(editcurvefilter)', function (data) {
+    form.on('select(editgrosscurvefilter)', function (data) {
         var indexGID = data.elem.selectedIndex;
         var title = data.elem[indexGID].title;
         selectedsCurve = {};
@@ -2755,13 +2732,80 @@ function editGrosserrordata() {
             }
         });
     });
-    //粗差预览
+
+    //切换粗差处理工具模块
+    form.on('select(editgrosserrordatatoolfilter)', function (data) {
+        if (data.value == "0") {
+            ///按标准差剔除
+            document.getElementById("editgrosserrordatatoolbodyid").innerHTML = '<!--粗差剔除工具参数--> <form class="layui-form" lay-filter="editgrosserrordataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs8"> <div class="layui-form-item "> <label class="layui-form-label">时间范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorstarttimeid" name="editgrosserrorstarttime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorendtimeid" name="editgrosserrorendtime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="结束时间"> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatapreview" style="width:120px;border-radius:5px;">预览</button> </div> </div> </div> </div> <div class="layui-row"> <div class="layui-col-xs3"> <div class="layui-form-item"> <label class="layui-form-label" style="width:90px;padding:9px 10px;">标准差倍数：</label> <div class="layui-input-inline selectUp" style="width:80px;"> <input type="text" autocomplete="off" id="editCullingmethodid" name="editCullingmethod" lay-verify="required|number" class="layui-input"> </div> </div> </div><div class="layui-col-xs5"> <div class="layui-form-item"> <label class="layui-form-label">选择曲线：</label> <div class="layui-input-inline selectUp" style="width:205px;"> <select id="editgrosscurveid" name="editgrosscurve" lay-verify="required" lay-filter="editgrosscurvefilter"> <option value="">请选择曲线</option> </select> </div></div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatasubmit" style="width:120px;border-radius:5px;">剔除</button> </div> </div> </div> </div></form>';
+            document.getElementById("editgrosserrordatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标选择或手动输入欲选时间段，选择剔除方法，先预览在剔除。</p>';
+            //加载曲线类型
+            document.getElementById("editgrosscurveid").innerHTML = null;
+            var selectedType = editChart.getOption().legend[0].selected;//获取图例选中曲线
+            for (var key in selectedType) {
+                if (selectedType[key] == true) {
+                    if (curveType.length > 0) {
+                        for (var i in curveType) {
+                            if (curveType[i][0] == key) {
+                                document.getElementById("editgrosscurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '" selected>' + curveType[i][0] + '</option>';
+                                //清空Graphic
+                                clearGraphic();
+                                //轴游标取值
+                                DragMarkLine(curveType[i][1], axisType);
+                            }
+                            else {
+                                document.getElementById("editgrosscurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '">' + curveType[i][0] + '</option>';
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+            $("#editgrosserrorstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+            $("#editgrosserrorendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
+        }
+        else if (data.value == "1") {
+            ///按残差剔除
+            document.getElementById("editgrosserrordatatoolbodyid").innerHTML = '<!--粗差剔除工具参数--> <form class="layui-form" lay-filter="editgrosserrordataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs8"> <div class="layui-form-item "> <label class="layui-form-label">时间范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorstarttimeid" name="editgrosserrorstarttime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorendtimeid" name="editgrosserrorendtime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="结束时间"> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editresidualpreview" style="width:120px;border-radius:5px;">预览</button> </div> </div> </div> </div> <div class="layui-row"> <div class="layui-col-xs4"> <div class="layui-form-item"> <label class="layui-form-label">拟合方法：</label> <div class="layui-input-inline selectUp" style="width:140px;"> <select id="editFittingmethodid" name="editFittingmethod" lay-verify="required" lay-filter="editFittingmethodfilter"> <option value="">请选择拟合方法</option> <option value="linear">线性回归</option> <option value="exponential">指数回归</option> <option value="logarithmic">对数回归</option> <option value="polynomial">多项式回归</option> </select> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <label class="layui-form-label">选择曲线：</label> <div class="layui-input-inline selectUp" style="width:135px;"> <select id="editgrosscurveid" name="editgrosscurve" lay-verify="required" lay-filter="editgrosscurvefilter"> <option value="">请选择曲线</option> </select> </div></div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editresidualsubmit" style="width:120px;border-radius:5px;">剔除</button> </div> </div> </div> </div></form>';
+            document.getElementById("editgrosserrordatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标选择或手动输入欲选时间段，选择剔除方法，先预览在剔除。</p>';
+            //加载曲线类型
+            document.getElementById("editgrosscurveid").innerHTML = null;
+            var selectedType = editChart.getOption().legend[0].selected;//获取图例选中曲线
+            for (var key in selectedType) {
+                if (selectedType[key] == true) {
+                    if (curveType.length > 0) {
+                        for (var i in curveType) {
+                            if (curveType[i][0] == key) {
+                                document.getElementById("editgrosscurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '" selected>' + curveType[i][0] + '</option>';
+                                //清空Graphic
+                                clearGraphic();
+                                //轴游标取值
+                                DragMarkLine(curveType[i][1], axisType);
+                            }
+                            else {
+                                document.getElementById("editgrosscurveid").innerHTML += '<option title="' + curveType[i][0] + '" value="' + curveType[i][1] + '">' + curveType[i][0] + '</option>';
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+            $("#editgrosserrorstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+            $("#editgrosserrorendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
+
+        }
+        form.render();
+        form.render('select');
+        
+    });
+
+    //粗差--按标准差剔除
     form.on('submit(editgrosserrordatapreview)', function (data) {
         var deletData = "";//剔除数据id
         var result = data.field;
         var starTime = Math.round(new Date(result.editgrosserrorstarttime) / 1000) * 1000;
         var endTime = Math.round(new Date(result.editgrosserrorendtime) / 1000) * 1000;
-        var key = result.editcurve;
+        var key = result.editgrosscurve;
         var heightlight = [];
         var stdData = [];
         for (var i in autoorangeData.Datas) {
@@ -2781,7 +2825,8 @@ function editGrosserrordata() {
                 heightlight.push(preselect);
             }
         }
-        SelectedHighlight(heightlight);   
+        SelectedHighlight(heightlight);
+        //轴游标取值
         DragMarkLine(key, axisType);
         //粗差剔除
         form.on('submit(editgrosserrordatasubmit)', function (data) {
@@ -2798,13 +2843,13 @@ function editGrosserrordata() {
                 for (var i in autoorangeData.Datas) {
                     var time = Math.round(new Date(autoorangeData.Datas[i].Time) / 1000) * 1000;
                     var value = autoorangeData.Datas[i][key];
-                    if (time > starTime && time < endTime &&  Math.abs(value) > Std && autoorangeData.Datas[i].Flag != '300') {
+                    if (time > starTime && time < endTime && Math.abs(value) > Std && autoorangeData.Datas[i].Flag != '300') {
                         autoorangeData.Datas[i].Flag = '300';
                         deletData += autoorangeData.Datas[i].Id.toString() + ",";
                     }
                 }
 
-                var reviseData = autoorangeData;
+                var reviseData = JSON.parse(JSON.stringify(autoorangeData));
                 for (var i in reviseData.Datas) {
                     if (reviseData.Datas[i].Flag == '300') {
                         delete reviseData.Datas[i];
@@ -2843,8 +2888,34 @@ function editGrosserrordata() {
         });
         return false;
     });
-    
 
+    //粗差--残差剔除
+    form.on('submit(editresidualpreview)', function (data) {
+        var deletData = "";//剔除数据id
+        var result = data.field;
+        var starTime = Math.round(new Date(result.editgrosserrorstarttime) / 1000) * 1000;
+        var endTime = Math.round(new Date(result.editgrosserrorendtime) / 1000) * 1000;
+        var key = result.editgrosscurve;
+        var fittingmethod = result.editFittingmethod;
+        var heightlight = [];
+        var resData = [];
+        for (var i in autoorangeData.Datas) {
+            var time = Math.round(new Date(autoorangeData.Datas[i].Time) / 1000) * 1000;
+            if (time > starTime && time < endTime && autoorangeData.Datas[i].Flag != '300') {
+                var preselect = [];
+                preselect.push(Math.round(new Date(autoorangeData.Datas[i].Time) / 1000) * 1000);
+                preselect.push(autoorangeData.Datas[i][key]);
+                resData.push(preselect);
+            }
+        }
+
+        //console.log(resData);
+        //拟合曲线计算残差
+        Fittingmethod(fittingmethod, resData,12,2);
+        
+       
+        return false;
+    });
 
     form.render();
     form.render('select');
@@ -2912,7 +2983,8 @@ function DisplayEditNODATA(monitor) {
     };
 
     editChart.hideLoading();
-    editChart.setOption(option, true, false);
+    editChart.dispose();
+    editChart = echarts.init(document.getElementById('editautodatachartid'));
 };
 function DisplayEditGNSS(monitor, data) {
     var gnssmonitors = data;
@@ -2965,7 +3037,7 @@ function DisplayEditGNSS(monitor, data) {
     //曲线类型
     curveType = [];
     curveType.push(['X位移', 'Dx'], ['Y位移', 'Dy'], ['水平位移', 'Dxy'], ['垂直位移', 'Dh']);
-
+    document.getElementById("editautodatachartid").style.visibility = "visible";
     var option = {
         title: {
             text: monitor.title,
@@ -3114,6 +3186,10 @@ function DisplayEditGNSS(monitor, data) {
     editChart.setOption(option, true, false);
     //轴游标取值
     DragMarkLine(curveType[0][1], axisType);
+    //初始化异常处理时间范围
+    $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+    $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
+   
 }
 function DisplayEditLF(monitor, data) {
     var lfmonitors = data;
@@ -3144,6 +3220,7 @@ function DisplayEditLF(monitor, data) {
     //曲线类型
     curveType = [];
     curveType.push(['变形量', 'Dv']);
+    document.getElementById("editautodatachartid").style.visibility = "visible";
     var option = {
         title: {
             text: monitor.title,
@@ -3271,6 +3348,9 @@ function DisplayEditLF(monitor, data) {
     editChart.setOption(option, true, false);
     //轴游标取值
     DragMarkLine(curveType[0][1], axisType);
+    //初始化异常处理时间范围
+    $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+    $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
 }
 function DisplayEditQJ(monitor, data) {
     var qjmonitors = data;
@@ -3341,7 +3421,7 @@ function DisplayEditQJ(monitor, data) {
     //曲线类型
     curveType = [];
     curveType.push(['X方向角度', 'Dx'], ['Y方向角度', 'Dy']);
-
+    document.getElementById("editautodatachartid").style.visibility = "visible";
     var option = {
         title: {
             text: monitor.title,
@@ -3474,6 +3554,9 @@ function DisplayEditQJ(monitor, data) {
     editChart.setOption(option, true, false);
     //轴游标取值
     DragMarkLine(curveType[0][1], axisType);
+    //初始化异常处理时间范围
+    $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+    $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
 };
 function DisplayEditYL(monitor, data) {
     var ylmonitors = data;
@@ -3506,7 +3589,7 @@ function DisplayEditYL(monitor, data) {
     //曲线类型
     curveType = [];
     curveType.push(['应力变形量', 'Dv']);
-
+    document.getElementById("editautodatachartid").style.visibility = "visible";
     var option = {
         title: {
             text: monitor.title,
@@ -3633,6 +3716,9 @@ function DisplayEditYL(monitor, data) {
     editChart.setOption(option, true, false);
     //轴游标取值
     DragMarkLine(curveType[0][1], axisType);
+    //初始化异常处理时间范围
+    $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+    $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
 };
 function DisplayEditSBWY(monitor, data) {
     var sbwymonitors = data;
@@ -3672,7 +3758,7 @@ function DisplayEditSBWY(monitor, data) {
     //曲线类型
     curveType = [];
     curveType.push(['X方向位移', 'X'], ['Y方向位移', 'Y']);
-
+    document.getElementById("editautodatachartid").style.visibility = "visible";
     var option = {
         title: {
             text: monitor.title,
@@ -3806,6 +3892,9 @@ function DisplayEditSBWY(monitor, data) {
     editChart.setOption(option, true, false);
     //轴游标取值
     DragMarkLine(curveType[0][1], axisType);
+    //初始化异常处理时间范围
+    $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+    $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
 };
 function DisplayEditWATER(monitor, data) {
     var watermonitors = data;
@@ -3831,7 +3920,7 @@ function DisplayEditWATER(monitor, data) {
     //曲线类型
     curveType = [];
     curveType.push(['地下水位', 'Value']);
-
+    document.getElementById("editautodatachartid").style.visibility = "visible";
     var option = {
         title: {
             text: monitor.title,
@@ -3973,6 +4062,9 @@ function DisplayEditWATER(monitor, data) {
     editChart.setOption(option, true, false);
     //轴游标取值
     DragMarkLine(curveType[0][1], axisType);
+    //初始化异常处理时间范围
+    $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+    $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
 };
 function DisplayEditRAIN(monitor, data) {
     var rainmonitors = data;
@@ -3995,7 +4087,7 @@ function DisplayEditRAIN(monitor, data) {
     thresholdYmax = yaxismax;
     thresholdXmin = rains[0][0];
     thresholdXmax = rains[rains.length - 1][0];
-
+    document.getElementById("editautodatachartid").style.visibility = "visible";
     var option = {
         title: {
             text: monitor.title,
@@ -4123,6 +4215,9 @@ function DisplayEditRAIN(monitor, data) {
 
     editChart.hideLoading();
     editChart.setOption(option, true, false);
+    //初始化异常处理时间范围
+    $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+    $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
 };
 
 //绘制拖动标示线
@@ -4134,6 +4229,7 @@ function DragMarkLine(curveid, axisType) {
     else if (axisType == "Y") {
         UpdataDraggingY();
     }
+    
     //缩放时调整标示线初始位置
     editChart.on('datazoom', function (params) {
         thresholdYmin = editChart.getOption().dataZoom[1].startValue;
@@ -4141,19 +4237,34 @@ function DragMarkLine(curveid, axisType) {
         thresholdXmin = editChart.getOption().dataZoom[0].startValue;
         thresholdXmax = editChart.getOption().dataZoom[0].endValue;
         //异常值
-        $("#editabnormalminvalueid").val(thresholdYmin.toFixed(2));
-        $("#editabnormalmaxvalueid").val(thresholdYmax.toFixed(2));
-        $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
-        $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
+        try {
+            $("#editabnormalminvalueid").val(thresholdYmin.toFixed(2));
+            $("#editabnormalmaxvalueid").val(thresholdYmax.toFixed(2));
+            $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+            $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
+        }
+        catch{
+            //
+        }
         //粗差
-        $("#editgrosserrorstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
-        $("#editgrosserrorendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
-        if (axisType == "X") {
-            UpdataDraggingX();
+        try {
+            $("#editgrosserrorstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+            $("#editgrosserrorendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
         }
-        else if (axisType == "Y") {
-            UpdataDraggingY();
+        catch{
+            //
         }
+        setTimeout(function () {
+            if (axisType == "X") {
+                UpdataDraggingX();
+            }
+            else if (axisType == "Y") {
+               
+                UpdataDraggingY();
+            };
+           
+        }, 1000);
+        
     });
     function UpdataDraggingY() {
         editChart.setOption({
@@ -4209,6 +4320,7 @@ function DragMarkLine(curveid, axisType) {
                 {
                     id: '1',
                     type: 'rect',
+                    animation: false,
                     z: 10000,
                     shape: {
                         width: 750,
@@ -4228,6 +4340,7 @@ function DragMarkLine(curveid, axisType) {
                 {
                     id: '2',
                     type: 'rect',
+                    animation: false,
                     z: 10000,
                     shape: {
                         width: 750,
@@ -4246,44 +4359,7 @@ function DragMarkLine(curveid, axisType) {
                 }
             ],
         });
-        function onPointDraggingYmin() {
-            thresholdYmin = editChart.convertFromPixel({ yAxisId: '1' }, this.position[1]);
-            $("#editabnormalminvalueid").val(thresholdYmin.toFixed(2));
-            editChart.setOption({
-                series: [{
-                    id: curveid,
-                    markLine: {
-                        data: [
-                            { yAxis: thresholdYmin, lineStyle: { color: '#1E90FF' }, label: { color: '#1E90FF' } },
-                            { yAxis: thresholdYmax, lineStyle: { color: '#FF7F00' }, label: { color: '#FF7F00' } },
-                        ],
-                    }
-                }],
-                graphic: {
-                    id: '1',
-                    position: [0, editChart.convertToPixel({ yAxisId: '1' }, thresholdYmin)],
-                }
-            });
-        }
-        function onPointDraggingYmax() {
-            thresholdYmax = editChart.convertFromPixel({ yAxisId: '1' }, this.position[1]);
-            $("#editabnormalmaxvalueid").val(thresholdYmax.toFixed(2));
-            editChart.setOption({
-                series: [{
-                    id: curveid,
-                    markLine: {
-                        data: [
-                            { yAxis: thresholdYmin, lineStyle: { color: '#1E90FF' }, label: { color: '#1E90FF' } },
-                            { yAxis: thresholdYmax, lineStyle: { color: '#FF7F00' }, label: { color: '#FF7F00' } },
-                        ],
-                    }
-                }],
-                graphic: {
-                    id: '2',
-                    position: [0, editChart.convertToPixel({ yAxisId: '1' }, thresholdYmax)],
-                }
-            });
-        }
+        
     }
     function UpdataDraggingX() {
         editChart.setOption({
@@ -4336,10 +4412,11 @@ function DragMarkLine(curveid, axisType) {
                 }
             }],
             graphic: [
-               
+
                 {
                     id: '3',
                     type: 'rect',
+                    animation: false,
                     z: 100,
                     shape: {
                         width: 2,
@@ -4359,6 +4436,7 @@ function DragMarkLine(curveid, axisType) {
                 {
                     id: '4',
                     type: 'rect',
+                    animation: false,
                     z: 10000,
                     shape: {
                         width: 2,
@@ -4377,59 +4455,95 @@ function DragMarkLine(curveid, axisType) {
                 }
             ],
         });
-
-        function onPointDraggingXmin() {
-            thresholdXmin = editChart.convertFromPixel({ xAxisId: '1' }, this.position[0]);
-            //异常
-            $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
-            //粗差
-            $("#editgrosserrorstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
-            editChart.setOption({
-                series: [{
-                    id: curveid,
-                    markLine: {
-                        data: [
-                            { xAxis: thresholdXmin, lineStyle: { color: '#1E90FF' }, label: { color: '#1E90FF' } },
-                            { xAxis: thresholdXmax, lineStyle: { color: '#FF7F00' }, label: { color: '#FF7F00' } },
-                        ],
-                    }
-                }],
-                graphic: {
-                    id: '3',
-                    position: [editChart.convertToPixel({ xAxisId: '1' }, thresholdXmin), 0],
-                }
-            });
-        }
-        function onPointDraggingXmax() {
-            thresholdXmax = editChart.convertFromPixel({ xAxisId: '1' }, this.position[0]);
-            //异常
-            $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
-            //粗差
-            $("#editgrosserrorendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
-            editChart.setOption({
-                series: [{
-                    id: curveid,
-                    markLine: {
-                        data: [
-                            { xAxis: thresholdXmin, lineStyle: { color: '#1E90FF' }, label: { color: '#1E90FF' } },
-                            { xAxis: thresholdXmax, lineStyle: { color: '#FF7F00' }, label: { color: '#FF7F00' } },
-                        ],
-                    }
-                }],
-                graphic: {
-                    id: '4',
-                    position: [editChart.convertToPixel({ xAxisId: '1' }, thresholdXmax), 0],
-                }
-            });
-        }
+        
     }
-
+    function onPointDraggingYmin() {
+        thresholdYmin = editChart.convertFromPixel({ yAxisId: '1' }, this.position[1]);
+        $("#editabnormalminvalueid").val(thresholdYmin.toFixed(2));
+        editChart.setOption({
+            series: [{
+                id: curveid,
+                markLine: {
+                    data: [
+                        { yAxis: thresholdYmin, lineStyle: { color: '#1E90FF' }, label: { color: '#1E90FF' } },
+                        { yAxis: thresholdYmax, lineStyle: { color: '#FF7F00' }, label: { color: '#FF7F00' } },
+                    ],
+                }
+            }],
+            graphic: {
+                id: '1',
+                position: [0, editChart.convertToPixel({ yAxisId: '1' }, thresholdYmin)],
+            }
+        });
+    }
+    function onPointDraggingYmax() {
+        thresholdYmax = editChart.convertFromPixel({ yAxisId: '1' }, this.position[1]);
+        $("#editabnormalmaxvalueid").val(thresholdYmax.toFixed(2));
+        editChart.setOption({
+            series: [{
+                id: curveid,
+                markLine: {
+                    data: [
+                        { yAxis: thresholdYmin, lineStyle: { color: '#1E90FF' }, label: { color: '#1E90FF' } },
+                        { yAxis: thresholdYmax, lineStyle: { color: '#FF7F00' }, label: { color: '#FF7F00' } },
+                    ],
+                }
+            }],
+            graphic: {
+                id: '2',
+                position: [0, editChart.convertToPixel({ yAxisId: '1' }, thresholdYmax)],
+            }
+        });
+    }
+    function onPointDraggingXmin() {
+        thresholdXmin = editChart.convertFromPixel({ xAxisId: '1' }, this.position[0]);
+        //异常
+        $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+        //粗差
+        $("#editgrosserrorstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+        editChart.setOption({
+            series: [{
+                id: curveid,
+                markLine: {
+                    data: [
+                        { xAxis: thresholdXmin, lineStyle: { color: '#1E90FF' }, label: { color: '#1E90FF' } },
+                        { xAxis: thresholdXmax, lineStyle: { color: '#FF7F00' }, label: { color: '#FF7F00' } },
+                    ],
+                }
+            }],
+            graphic: {
+                id: '3',
+                position: [editChart.convertToPixel({ xAxisId: '1' }, thresholdXmin), 0],
+            }
+        });
+    }
+    function onPointDraggingXmax() {
+        thresholdXmax = editChart.convertFromPixel({ xAxisId: '1' }, this.position[0]);
+        //异常
+        $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
+        //粗差
+        $("#editgrosserrorendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
+        editChart.setOption({
+            series: [{
+                id: curveid,
+                markLine: {
+                    data: [
+                        { xAxis: thresholdXmin, lineStyle: { color: '#1E90FF' }, label: { color: '#1E90FF' } },
+                        { xAxis: thresholdXmax, lineStyle: { color: '#FF7F00' }, label: { color: '#FF7F00' } },
+                    ],
+                }
+            }],
+            graphic: {
+                id: '4',
+                position: [editChart.convertToPixel({ xAxisId: '1' }, thresholdXmax), 0],
+            }
+        });
+    }
 }
 //高亮选中数据
 function SelectedHighlight(data) {
     //清空Graphic
     clearGraphic();
-
     editChart.setOption({
         graphic: data.map(function (item, dataIndex) {
             return {
@@ -4446,7 +4560,7 @@ function SelectedHighlight(data) {
                     lineWidth: 1,
                 },
                 invisible: false,
-                bouding:'raw',
+                bouding: 'raw',
                 z: 100
             };
         })
@@ -4455,13 +4569,13 @@ function SelectedHighlight(data) {
     editChart.on('dataZoom', updatePosition);
     function updatePosition() {
         let Gdata = [];
-        Gdata = JSON.parse(JSON.stringify(data));;
+        Gdata = JSON.parse(JSON.stringify(data));
         for (var i in Gdata) {
             if (Gdata[i][0] > thresholdXmax || Gdata[i][1] > thresholdYmax || Gdata[i][0] < thresholdXmin || Gdata[i][1] < thresholdYmin) {
                 Gdata[i][0] = -9999999;
                 Gdata[i][1] = -9999999;
             }
-        }    
+        }
         editChart.setOption({
             graphic: Gdata.map(function (item, dataIndex) {
                 return {
@@ -4494,7 +4608,127 @@ function standardDeviation(data) {
     std = (Math.sqrt(sums / len)).toFixed(4);
     return std;
 }
+//拟合曲线计算残差
+function Fittingmethod(type, data, opt,threshold) {
+    var delData = [];
+    layer.open({
+        type: 1
+        , title: ['预览', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+        , area: ['900px', '500px']
+        , shade: 0
+        , offset: 'auto'
+        , closeBtn: 1
+        , maxmin: true
+        , moveOut: true
+        , content: '<div id="regressionpreviewChartid" style="width:96%;height:98%;"></div>'
+        , zIndex: layer.zIndex
+        , success: function (layero) {
+            layer.setTop(layero);
+            var chartDom = document.getElementById('regressionpreviewChartid');
+            var myChart = echarts.init(chartDom);
+            var option;
+            const tt = data[0][0];
+            for (var i in data) {
+                data[i][0] = data[i][0] - tt;
+            }
+            var myRegression;
+            if (type == "polynomial") {
+                myRegression = ecStat.regression(type, data, opt);
+            }
+            else {
+                myRegression = ecStat.regression(type, data);
+            }
+            
+            var regressData = myRegression.points;
+            option = {
+                tooltip: {
+                    trigger: 'axis',
+                },
+                xAxis: {
+                    type: 'time',
+                    position: 'bottom',
+                    splitLine: { show: false },
+                    axisLabel: {
+                        formatter: function (params, index) {
+                            var time = new Date(params+tt);
+                            var y = time.getFullYear();
+                            var m = time.getMonth() + 1;
+                            var d = time.getDate();
+                            var h = time.getHours();
+                            var mm = time.getMinutes();
+                            var s = time.getSeconds();
+                            //return (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s) + '\n' + y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                            return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisTick: {
+                        show: false
+                    },
+                    axisLine: {
+                        show: false
+                    }
+                },
+                series: [
+                    {
+                        name: 'scatter',
+                        type: 'scatter',
+                        symbol: 'circle',
+                        symbolSize: 5,
+                        data: data
+                    },
+                    {
+                        name: 'line',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        data: regressData
+                    }
+                ]
+            };
 
+            option && myChart.setOption(option);
+
+            for (var i in data) {
+                for (var j in regressData) {
+                    if (data[i][0] == regressData[j][0]) {
+                        var val = Math.abs(data[i][1] - regressData[j][1]);
+                        if (val > threshold) {
+                            delData.push(data[i]);
+                        }
+                    }
+                }
+            }
+            if (delData != "" || delData != null || delData != undefined) {
+                myChart.setOption({
+                    graphic: delData.map(function (item, dataIndex) {
+                        return {
+                            type: 'circle',
+                            position: myChart.convertToPixel('grid', item),
+                            shape: {
+                                cx: 0,
+                                cy: 0,
+                                r: 3
+                            },
+                            style: {
+                                fill: '#01FF70',
+                                stroke: '#01FF70',
+                                lineWidth: 1,
+                            },
+                            invisible: false,
+                            bouding: 'raw',
+                            z: 100
+                        };
+                    })
+                });
+            }
+        }
+    });
+    
+
+}
 
 //获取项目监测点
 function getBianXingLiangData(projectid) {

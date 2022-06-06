@@ -1201,6 +1201,7 @@
     <Content Include="Scripts\Cesium\Workers\when-0488ac89.js" />
     <Content Include="Scripts\ECharts\echarts.js" />
     <Content Include="Scripts\ECharts\echarts.min.js" />
+    <Content Include="Scripts\ECharts\ecStat.min.js" />
     <Content Include="Scripts\ECharts\turf.min.js" />
     <Content Include="Scripts\exif.js" />
     <Content Include="Scripts\FileSaver.js" />
