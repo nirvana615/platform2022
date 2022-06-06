@@ -2535,6 +2535,7 @@ var gaoJinManaglayerindex = null;
 var addyuZhilayerindex = null;
 var yueZhitable = null;
 var GaoJingtable = null;
+var monitorYuZhiTableData = [];//装数据
 function gaoJinManagLayer(projectid) {
     if (projectid == null) {
         layer.msg("请先选择当前项目！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -2625,13 +2626,67 @@ function GetLaryMonitorYueZhi(id) {
         ]]
         , data: []
     });
-    //table.on('edit(yueZhitable-view)', function (obj) {
-    //    var value = obj.value //得到修改后的值
-    //        , data = obj.data //得到所在行所有键值
-    //        , field = obj.field; //得到字段
-    //    console.log(obj);
-    //    layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改值为：' + util.escape(value));
-    //});
+    //预警信息分类展示
+    $("#btn-wi-all").on("click", function () {
+        DisplayWarningInfo("", warninginfotabledata);
+    });
+    $("#btn-wi-blue").on("click", function () {
+        DisplayWarningInfo("蓝色预警", warninginfotabledata);
+    });
+    $("#btn-wi-yellow").on("click", function () {
+        DisplayWarningInfo("黄色预警", warninginfotabledata);
+    });
+    $("#btn-wi-orange").on("click", function () {
+        DisplayWarningInfo("橙色预警", warninginfotabledata);
+    });
+    $("#btn-wi-red").on("click", function () {
+        DisplayWarningInfo("红色预警", warninginfotabledata);
+    });
+    function DisplayWarningInfo(type, wis) {
+        if (wis.length > 0) {
+            if (type == "") {
+                warninginfotable.reload({ id: 'warninginfotableid', data: wis });
+            }
+            else if (type == "蓝色预警") {
+                var blues = [];
+                for (var i in wis) {
+                    if (wis[i].yjjb == type) {
+                        blues.push(wis[i]);
+                    }
+                }
+                warninginfotable.reload({ id: 'warninginfotableid', data: blues });
+            }
+            else if (type == "黄色预警") {
+                var yellows = [];
+                for (var i in wis) {
+                    if (wis[i].yjjb == type) {
+                        yellows.push(wis[i]);
+                    }
+                }
+                warninginfotable.reload({ id: 'warninginfotableid', data: yellows });
+            }
+            else if (type == "橙色预警") {
+                var oranges = [];
+                for (var i in wis) {
+                    if (wis[i].yjjb == type) {
+                        oranges.push(wis[i]);
+                    }
+                }
+                warninginfotable.reload({ id: 'warninginfotableid', data: oranges });
+            }
+            else if (type == "红色预警") {
+                var reds = [];
+                for (var i in wis) {
+                    if (wis[i].yjjb == type) {
+                        reds.push(wis[i]);
+                    }
+                }
+                warninginfotable.reload({ id: 'warninginfotableid', data: reds });
+            }
+        }
+    };
+
+
     table.on('tool(yueZhitable-view)', function (obj) {
         console.log(obj);
         if (obj.event === 'detail') {
@@ -2796,9 +2851,67 @@ function GetMonitorYueZhi(id) {
         url: servicesurl + "/api/Data/GetMonitorYueZhi", type: "get", data: { "id": id ,"cookie": document.cookie },
         success: function (data) {
             layer.close(loadinglayerindex1);
-            var monitorinfos = JSON.parse(data);
-            console.log(monitorinfos);
-            yueZhitable.reload({ id: 'yueZhitableviewid', data: monitorinfos });
+            monitorYuZhiTableData = JSON.parse(data);
+            var allcount = monitorYuZhiTableData.length;
+            var gnsscount = 0;
+            var lfcount = 0;
+            var sbwycount = 0;
+            var yilicount = 0;
+            var qjcount = 0;
+            var dxswcount = 0;
+
+            for (var i in monitorYuZhiTableData) {
+                if (monitorYuZhiTableData[i].jcff == "0") {
+                    gnsscount++;
+                }
+                else if (monitorYuZhiTableData[i].jcff == "1") {
+                    lfcount++;
+                }
+                else if (monitorYuZhiTableData[i].jcff == "4") {
+                    sbwycount++;
+                }
+                else if (monitorYuZhiTableData[i].jcff == "3") {
+                    yilicount++;
+                }
+                else if (monitorYuZhiTableData[i].jcff == "2") {
+                    qjcount++;
+                }
+                else if (monitorYuZhiTableData[i].jcff == "5") {
+                    dxswcount++;
+                }
+            }
+            if (gnsscount > 0) {
+                document.getElementById('warning-gnss-count').innerText = gnsscount;
+            } else {
+                $("#btn-wi-gnss").hide();
+            }
+            if (lfcount > 0) {
+                document.getElementById('warning-lf-count').innerText = lfcount;
+            } else {
+                $("#btn-wi-lf").hide();
+            }
+            if (sbwycount > 0) {
+                document.getElementById('warning-sbwy-count').innerText = sbwycount;
+            } else {
+                $("#btn-wi-sbwy").hide();
+            }
+            if (yilicount > 0) {
+                document.getElementById('warning-yili-count').innerText = yilicount;
+            } else {
+                $("#btn-wi-yili").hide();
+            }
+            if (qjcount > 0) {
+                document.getElementById('warning-qj-count').innerText = qjcount;
+            } else {
+                $("#btn-wi-qj").hide();
+            }
+            if (dxswcount > 0) {
+                document.getElementById('warning-dxsw-count').innerText = dxswcount;
+            } else {
+                $("#btn-wi-dxsw").hide();
+            }
+            document.getElementById('warning-all-count').innerText = allcount;
+            yueZhitable.reload({ id: 'yueZhitableviewid', data: monitorYuZhiTableData });
         }, datatype: "json"
     });
 }
@@ -2876,12 +2989,12 @@ function GetMonitorGaoJing(id) {
     var loadinglayerindex1 = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     //请求监测点指点时间范围数据
     $.ajax({//string projectId, string monitorId,
-        url: servicesurl + "/api/PatrolEquipment/getGaoJingInfo", type: "get", data: { "projectId":id,"monitorId":"","id": "" },
+        url: servicesurl + "/api/PatrolEquipment/getGaoJingInfo", type: "get", data: { "projectId": id, "monitorId": "", "id": "", gaoJinStatus:"" },
         success: function (data) {
             layer.close(loadinglayerindex1);
-            var monitorinfos = JSON.parse(data);
-            console.log(monitorinfos);
-            GaoJingtable.reload({ id: 'GaoJingtableviewid', data: monitorinfos });
+           var  monitorGaoJinTableData = JSON.parse(data);
+            
+            GaoJingtable.reload({ id: 'GaoJingtableviewid', data: monitorGaoJinTableData });
         }, datatype: "json"
     });
 }
@@ -2955,6 +3068,16 @@ var gaoJinHtml = "    <div class='layui-tab layui-tab-brief' lay-filter='docDemo
     + "                                                                                                                                                             "
     + "        <div class='layui-tab-content' id='xunShiDiv' style='margin-left:120px;height:600px;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;'>      "
     + "            <div class='layui-tab-item layui-show'>                                                                                                           "
+    + "			<div style='margin-top: 15px;margin-bottom:15px'>                                                                                                                              "
+    + "				<button id='btn-wi-all' type='button' class='layui-btn layui-btn-primary' style='height:50px;'>监测总数  <span id='warning-all-count'></span></button>      "
+    + "				<button id='btn-wi-gnss' type='button' class='layui-btn layui-btn-blue' style='height:50px;'>GNSS总数  <span id='warning-gnss-count'></span></button>       "
+    + "				<button id='btn-wi-lf' type='button' class='layui-btn layui-btn-yellow' style='height:50px;'>裂缝总数  <span id='warning-lf-count'></span></button> "
+    + "				<button id='btn-wi-sbwy' type='button' class='layui-btn layui-btn-orange' style='height:50px;'>深部位移  <span id='warning-sbwy-count'></span></button> "
+    + "				<button id='btn-wi-yili' type='button' class='layui-btn layui-btn-red' style='height:50px;'>应力总数  <span id='warning-yili-count'></span></button>          "
+    + "				<button id='btn-wi-qj' type='button' class='layui-btn layui-btn-green' style='height:50px;'>倾斜总数  <span id='warning-qj-count'></span></button>          "
+    + "				<button id='btn-wi-dxsw' type='button' class='layui-btn layui-btn-primary' style='height:50px;'>地下水位  <span id='warning-disw-count'></span></button>          "
+    + "			</div>                                                                                                                                                       "
+
     + "						<table class='layui-hide' id='yueZhitable-view' style='margin-top:25px' lay-filter='yueZhitable-view'></table>	"
     + "						<script type='text/html' id='yuZhiChuButon'>                                                      "
     + "                        {{#  if(d.yueZhiId != ''){ }}"

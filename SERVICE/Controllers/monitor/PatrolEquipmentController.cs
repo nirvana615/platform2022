@@ -889,7 +889,7 @@ namespace SERVICE.Controllers
         /// <param name="monitorId">验证信息</param>
         /// <returns></returns>
         [HttpGet]
-        public string getGaoJingInfo(string projectId, string monitorId, string id)
+        public string getGaoJingInfo(string projectId, string monitorId, string id,string gaoJinStatus)
         {
 
 
@@ -902,6 +902,11 @@ namespace SERVICE.Controllers
             {
                 sql = sql + " and id = " + SQLHelper.UpdateString(id);
             }
+            if (!string.IsNullOrEmpty(gaoJinStatus))
+            {
+                sql = sql + " and gaojin_status = " + SQLHelper.UpdateString(gaoJinStatus);
+            }
+
 
             sql = sql + "ORDER BY gaojin_time ";
             string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(projectId)));
@@ -937,7 +942,7 @@ namespace SERVICE.Controllers
 
 
         /// <summary>
-        /// 插入阈值信息表
+        /// 修改告警信息表
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -962,6 +967,55 @@ namespace SERVICE.Controllers
 
             }
         }
+        /// <summary>
+        /// 获取当前用户所有告警
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetUserGaoJinList(string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                //有效cookie
+                string sql = string.Format("SELECT a.* FROM monitor_gaojin_info a left join monitor_project b on a.project_id=b.id and b.bsm{0} AND b.ztm={1} ORDER by a.gaojin_time DESC", userbsms, (int)MODEL.Enum.State.InUse);
+                string data = PostgresqlHelper.QueryData(pgsqlConnection, sql);
+                if (string.IsNullOrEmpty(data))
+                {
+                    //无项目信息
+                    return string.Empty;
+                }
+
+                List<MonitorGaoJIngInfo> monitorGaoJIngInfoList = new List<MonitorGaoJIngInfo>();
+
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    MonitorGaoJIngInfo monitorGaoJIngInfo = ParseMonitorHelper.ParseMonitorGaoJIngInfo(rows[i]);       //ParseMapProjectWarningInfo(rows[i]);
+                    if (monitorGaoJIngInfo != null)
+                    {
+                        monitorGaoJIngInfoList.Add(monitorGaoJIngInfo);
+
+                    }
+                }
+
+                if (monitorGaoJIngInfoList.Count > 0)
+                {
+                    return JsonHelper.ToJson(monitorGaoJIngInfoList);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                //无效cookie
+                return string.Empty;
+            }
+        }
     }
 }
