@@ -2536,6 +2536,7 @@ var addyuZhilayerindex = null;
 var yueZhitable = null;
 var GaoJingtable = null;
 var monitorYuZhiTableData = [];//装数据
+var monitorGaoJinTableData = [];//装告警数据
 function gaoJinManagLayer(projectid) {
     if (projectid == null) {
         layer.msg("请先选择当前项目！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -2626,62 +2627,84 @@ function GetLaryMonitorYueZhi(id) {
         ]]
         , data: []
     });
-    //预警信息分类展示
+    //阈值信息分类展示
     $("#btn-wi-all").on("click", function () {
-        DisplayWarningInfo("", warninginfotabledata);
+        DisplayYuZhiInfo("", monitorYuZhiTableData);
     });
-    $("#btn-wi-blue").on("click", function () {
-        DisplayWarningInfo("蓝色预警", warninginfotabledata);
+    $("#btn-wi-gnss").on("click", function () {
+        DisplayYuZhiInfo("0", monitorYuZhiTableData);
     });
-    $("#btn-wi-yellow").on("click", function () {
-        DisplayWarningInfo("黄色预警", warninginfotabledata);
+    $("#btn-wi-lf").on("click", function () {
+        DisplayYuZhiInfo("1", monitorYuZhiTableData);
     });
-    $("#btn-wi-orange").on("click", function () {
-        DisplayWarningInfo("橙色预警", warninginfotabledata);
+    $("#btn-wi-sbwy").on("click", function () {
+        DisplayYuZhiInfo("4", monitorYuZhiTableData);
     });
-    $("#btn-wi-red").on("click", function () {
-        DisplayWarningInfo("红色预警", warninginfotabledata);
+    $("#btn-wi-yili").on("click", function () {
+        DisplayYuZhiInfo("3", monitorYuZhiTableData);
     });
-    function DisplayWarningInfo(type, wis) {
+    $("#btn-wi-qj").on("click", function () {
+        DisplayYuZhiInfo("2", monitorYuZhiTableData);
+    });
+    $("#btn-wi-dxsw").on("click", function () {
+        DisplayYuZhiInfo("5", monitorYuZhiTableData);
+    });
+    function DisplayYuZhiInfo(type, wis) {
         if (wis.length > 0) {
             if (type == "") {
-                warninginfotable.reload({ id: 'warninginfotableid', data: wis });
+                yueZhitable.reload({ id: 'yueZhitableviewid', data: wis });
             }
-            else if (type == "蓝色预警") {
+            else if (type == "0") {//gnss
                 var blues = [];
                 for (var i in wis) {
-                    if (wis[i].yjjb == type) {
+                    if (wis[i].jcff == type) {
                         blues.push(wis[i]);
                     }
                 }
-                warninginfotable.reload({ id: 'warninginfotableid', data: blues });
+                yueZhitable.reload({ id: 'yueZhitableviewid', data: blues });
             }
-            else if (type == "黄色预警") {
+            else if (type == "1") {//裂缝
                 var yellows = [];
                 for (var i in wis) {
-                    if (wis[i].yjjb == type) {
+                    if (wis[i].jcff == type) {
                         yellows.push(wis[i]);
                     }
                 }
-                warninginfotable.reload({ id: 'warninginfotableid', data: yellows });
+                yueZhitable.reload({ id: 'yueZhitableviewid', data: yellows });
             }
-            else if (type == "橙色预警") {
+            else if (type == "2") {//倾角
                 var oranges = [];
                 for (var i in wis) {
-                    if (wis[i].yjjb == type) {
+                    if (wis[i].jcff == type) {
                         oranges.push(wis[i]);
                     }
                 }
-                warninginfotable.reload({ id: 'warninginfotableid', data: oranges });
+                yueZhitable.reload({ id: 'yueZhitableviewid', data: oranges });
             }
-            else if (type == "红色预警") {
+            else if (type == "3") {//应力
                 var reds = [];
                 for (var i in wis) {
-                    if (wis[i].yjjb == type) {
+                    if (wis[i].jcff == type) {
                         reds.push(wis[i]);
                     }
                 }
-                warninginfotable.reload({ id: 'warninginfotableid', data: reds });
+                yueZhitable.reload({ id: 'yueZhitableviewid', data: reds });
+            } else if (type == "4") {//深部位移
+                var reds = [];
+                for (var i in wis) {
+                    if (wis[i].jcff == type) {
+                        reds.push(wis[i]);
+                    }
+                }
+                yueZhitable.reload({ id: 'yueZhitableviewid', data: reds });
+            } else if (type == "5") {//地下水位
+                var reds = [];
+                for (var i in wis) {
+                    if (wis[i].jcff == type) {
+                        reds.push(wis[i]);
+                    }
+                }
+                yueZhitable.reload({ id: 'yueZhitableviewid', data: reds });
             }
         }
     };
@@ -2832,7 +2855,7 @@ function GetLaryMonitorYueZhi(id) {
                     var res = JSON.parse(result);
                     if (res.code == 1) {//成功
                         layer.msg("更新成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                        GetMonitorGaoJing(id);
+                        GetMonitorYueZhi(id);
                     } else {
                         layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     }
@@ -2982,6 +3005,40 @@ function GetLaryMonitorGaoJing(id) {
 
         }
     });
+    $("#btn-gaojin-sum").on("click", function () {
+        DisplayGaoJinInfo("", monitorGaoJinTableData);
+    });
+    $("#btn-gaojin-wei").on("click", function () {
+        DisplayGaoJinInfo("0", monitorGaoJinTableData);
+    });
+    $("#btn-gaojin-yi").on("click", function () {
+        DisplayGaoJinInfo("1", monitorGaoJinTableData);
+    });
+    function DisplayGaoJinInfo(type, wis) {
+        if (wis.length > 0) {
+            if (type == "") {
+                GaoJingtable.reload({ id: 'GaoJingtableviewid', data: wis });
+            }
+            else if (type == "0") {//gnss
+                var blues = [];
+                for (var i in wis) {
+                    if (wis[i].gaojinStatus == type) {
+                        blues.push(wis[i]);
+                    }
+                }
+                GaoJingtable.reload({ id: 'GaoJingtableviewid', data: blues });
+            }
+            else if (type == "1") {//裂缝
+                var yellows = [];
+                for (var i in wis) {
+                    if (wis[i].gaojinStatus == type) {
+                        yellows.push(wis[i]);
+                    }
+                }
+                GaoJingtable.reload({ id: 'GaoJingtableviewid', data: yellows });
+            }
+        }
+    };
 
     GetMonitorGaoJing(id)
 }
@@ -2992,8 +3049,22 @@ function GetMonitorGaoJing(id) {
         url: servicesurl + "/api/PatrolEquipment/getGaoJingInfo", type: "get", data: { "projectId": id, "monitorId": "", "id": "", gaoJinStatus:"" },
         success: function (data) {
             layer.close(loadinglayerindex1);
-           var  monitorGaoJinTableData = JSON.parse(data);
-            
+            monitorGaoJinTableData = JSON.parse(data);
+            var allcount = monitorGaoJinTableData.length;
+            var gnsscount = 0;
+            var lfcount = 0;
+            for (var i in monitorGaoJinTableData) {
+                if (monitorGaoJinTableData[i].gaojinStatus == "0") {
+                    gnsscount++;
+                }
+                else {
+                    lfcount++;
+                }
+
+            }
+            document.getElementById('gaojin-wei-count').innerText = gnsscount;
+            document.getElementById('gaojin-yi-count').innerText = lfcount;
+            document.getElementById('gaojin-sum-count').innerText = allcount;
             GaoJingtable.reload({ id: 'GaoJingtableviewid', data: monitorGaoJinTableData });
         }, datatype: "json"
     });
@@ -3075,7 +3146,7 @@ var gaoJinHtml = "    <div class='layui-tab layui-tab-brief' lay-filter='docDemo
     + "				<button id='btn-wi-sbwy' type='button' class='layui-btn layui-btn-orange' style='height:50px;'>深部位移  <span id='warning-sbwy-count'></span></button> "
     + "				<button id='btn-wi-yili' type='button' class='layui-btn layui-btn-red' style='height:50px;'>应力总数  <span id='warning-yili-count'></span></button>          "
     + "				<button id='btn-wi-qj' type='button' class='layui-btn layui-btn-green' style='height:50px;'>倾斜总数  <span id='warning-qj-count'></span></button>          "
-    + "				<button id='btn-wi-dxsw' type='button' class='layui-btn layui-btn-primary' style='height:50px;'>地下水位  <span id='warning-disw-count'></span></button>          "
+    + "				<button id='btn-wi-dxsw' type='button' class='layui-btn layui-btn-primary' style='height:50px;'>地下水位  <span id='warning-dxsw-count'></span></button>          "
     + "			</div>                                                                                                                                                       "
 
     + "						<table class='layui-hide' id='yueZhitable-view' style='margin-top:25px' lay-filter='yueZhitable-view'></table>	"
@@ -3094,6 +3165,12 @@ var gaoJinHtml = "    <div class='layui-tab layui-tab-brief' lay-filter='docDemo
     + "                                                                                                                                                              "
     + "            <div class='layui-tab-item'>                                                                                                                      "
     + "            <!--裂缝巡查-->                                                                                                                                   "
+    + "			  <div style='margin-top: 15px;margin-bottom:15px'>                                                                                                                              "
+    + "				    <button id='btn-gaojin-sum' type='button' class='layui-btn layui-btn-primary' style='height:50px;'>总告警量  <span id='gaojin-sum-count'></span></button>      "
+    + "				    <button id='btn-gaojin-wei' type='button' class='layui-btn layui-btn-blue' style='height:50px;'>未处理  <span id='gaojin-wei-count'></span></button>       "
+    + "				    <button id='btn-gaojin-yi' type='button' class='layui-btn layui-btn-yellow' style='height:50px;'>已处理  <span id='gaojin-yi-count'></span></button> "
+    + "			    </div>                                                                                                                                                       "
+
     + "						<table class='layui-hide' id='GaoJingtable-view' style='margin-top:25px' lay-filter='GaoJingtable-view'></table>	"
     + "						<script type='text/html' id='GaoJingChuButon'>                                                      "
     + "                        {{#  if(d.gaojinStatus == 0){ }}"

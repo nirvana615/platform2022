@@ -4939,6 +4939,7 @@ namespace MODEL
                     yueZhiOne = row[5].ToString(),
                     yueZhiTwo = row[6].ToString(),
                     lastUpdateTime = row[7].ToString(),
+                    yueZhiThree = row[8].ToString(),
 
                 };
                 return monitorAlarmThreshold;

@@ -787,14 +787,23 @@ function LoadLayerListLayer(id) {
                                                                     classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
                                                                 },
                                                             });
-                                                            viewer.entities.add({
-                                                                id: data.children[i].id + "_LABEL",
-                                                                position: new Cesium.Cartesian3(data.children[i].Centerx, data.children[i].Centery, data.children[i].Centerz),
-                                                                point: {
-                                                                    pixelSize: 1,
-                                                                    color: Cesium.Color.ORANGE
-                                                                }
-                                                            });
+                                                            var entitylabel = viewer.entities.getById(data.children[i].id+ "_LABEL");
+                                                            if (entitylabel == undefined) {
+                                                                viewer.entities.add({
+                                                                    id: data.children[i].id + "_LABEL",
+                                                                    position: new Cesium.Cartesian3(data.children[i].Centerx, data.children[i].Centery, data.children[i].Centerz),
+                                                                    label: {
+                                                                        text: '倾向:' + data.children[i].datas.inclination + '°\n走向:' + data.children[i].datas.trend + '°\n倾角:  ' + data.children[i].datas.dipAngle + '°',
+                                                                        showBackground: true,
+                                                                        backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                                                        font: '14px Times New Roman',
+                                                                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                                                        verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                                                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                                                        scaleByDistance: new Cesium.NearFarScalar(200, 1, 2000, 0),
+                                                                    }
+                                                                });
+                                                            }
                                                         }
                                                         data.children[i].checked = true;
                                                     }
@@ -1003,9 +1012,8 @@ function LoadLayerListLayer(id) {
                                                 } else if (data.type == "YOUSHIMIAN") {
                                                     //优势结构面
                                                     var entity = viewer.entities.getById(data.id);
+                                                    var points = data.pointList;
                                                     if (entity == undefined) {
-                                                        var points = data.pointList;
-                                                        var sum = 0;
                                                         points.push(points[0]);
                                                         viewer.entities.add({
                                                             id: data.id,
@@ -1023,15 +1031,23 @@ function LoadLayerListLayer(id) {
                                                             },
 
                                                         });
-
-                                                        viewer.entities.add({
-                                                            id: data.id + "_LABEL",
-                                                            position: new Cesium.Cartesian3(data.Centerx, data.Centery, data.Centerz),
-                                                            point: {
-                                                                pixelSize: 1,
-                                                                color: Cesium.Color.ORANGE
-                                                            }
-                                                        });
+                                                        var entitylabel = viewer.entities.getById(data.id + "_LABEL");
+                                                        if (entitylabel == undefined) {
+                                                            viewer.entities.add({
+                                                                id: data.id + "_LABEL",
+                                                                position: new Cesium.Cartesian3(data.Centerx, data.Centery, data.Centerz),
+                                                                label: {
+                                                                    text: '倾向:' + data.datas.inclination + '°\n走向:' + data.datas.trend + '°\n倾角:  ' + data.datas.dipAngle + '°',
+                                                                    showBackground: true,
+                                                                    backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                                                    font: '14px Times New Roman',
+                                                                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                                                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                                                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                                                    scaleByDistance: new Cesium.NearFarScalar(200, 1, 2000, 0),
+                                                                }
+                                                            });
+                                                        }
                                                     }
                                                     data.checked = true;
                                                     //看看把父亲也选中

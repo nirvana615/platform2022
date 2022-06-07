@@ -908,7 +908,7 @@ namespace SERVICE.Controllers
             }
 
 
-            sql = sql + "ORDER BY gaojin_time ";
+            sql = sql + "ORDER BY gaojin_time desc";
             string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(projectId)));
             if (!string.IsNullOrEmpty(datas))
             {
