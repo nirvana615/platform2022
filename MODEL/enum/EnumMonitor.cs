@@ -91,28 +91,22 @@ namespace MODEL
         public enum AutoDataFlag
         {
             /// <summary>
-            /// 自动化监测原始数据（直接从自动化监测数据库迁移的）
+            /// 自动化监测未分类数据（直接从自动化监测数据库迁移的）
             /// </summary>
             [RemarkAttribute("100")]
             Source = 0,
-
-            /// <summary>
-            /// 标记保存的数据
-            /// </summary>
-            [RemarkAttribute("200")]
-            Hold = 1,
-
+            
             /// <summary>
             /// 标记删除的数据（异常值）
             /// </summary>
-            [RemarkAttribute("300")]
-            Less = 2,
+            [RemarkAttribute("200")]
+            Less = 1,
 
             /// <summary>
             /// 插补数据（保证数据采集的连续性）
             /// </summary>
-            [RemarkAttribute("400")]
-            Plus = 3
+            [RemarkAttribute("300")]
+            Plus =2
         }
 
         /// <summary>

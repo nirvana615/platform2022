@@ -166,6 +166,7 @@ namespace SERVICE.Controllers
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
+                int Counts = 0;
                 try
                 {
                     #region 获取数据表及设备类型
@@ -204,17 +205,33 @@ namespace SERVICE.Controllers
 
                         for (var i = 0; i < dataids.Length; i++)
                         {
-                            //int count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE {0} SET lb={1} WHERE id={2}", table, MODEL.EnumMonitor.AutoDataFlag.Less.GetRemark(), Convert.ToInt32(dataids[i])));
+                            int count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE {0} SET lb={1} WHERE id={2}", table, MODEL.EnumMonitor.AutoDataFlag.Less.GetRemark(), Convert.ToInt32(dataids[i])));
+                            if(count>0)
+                            {
+                                Counts+=1;
+                            }
+                            
                         }
                     }
                     else
                     {
-                        return "删除失败！";
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "已删除数据", string.Empty));
                     }
 
                 }
                 catch
-                { }
+                {
+                    //
+                }
+
+                if (Counts>0)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "已删除数据", string.Empty));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除失败", string.Empty));
+                }
             }
             else
             {
@@ -223,13 +240,7 @@ namespace SERVICE.Controllers
 
             return string.Empty;
         }
-
-
-
-
-
-
-
+        
         #region 方法
         /// <summary>
         /// 获取监测点设备指定时间范围数据
@@ -658,7 +669,7 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
-        /// 获取监测点设备指定时间范围数据
+        /// 获取编辑监测点设备指定时间范围数据
         /// </summary>
         /// <param name="id"></param>
         /// <param name="type"></param>
@@ -1324,8 +1335,7 @@ namespace SERVICE.Controllers
             return ds;
         }
         #endregion
-
-
+        
         /// <summary>
         /// 获取项目预设时间范围监测数据
         /// </summary>
@@ -1387,12 +1397,7 @@ namespace SERVICE.Controllers
 
             return string.Empty;
         }
-
-
-
-
-
-
+        
         #region 方法
         /// <summary>
         /// 获取监测点设备指定时间范围数据
