@@ -2629,7 +2629,8 @@ function GetLaryMonitorYueZhi(id) {
     });
     //阈值信息分类展示
     $("#btn-wi-all").on("click", function () {
-        DisplayYuZhiInfo("", monitorYuZhiTableData);
+        //DisplayYuZhiInfo("", monitorYuZhiTableData);
+        GetMonitorYueZhi(id);//查总的就去阈值
     });
     $("#btn-wi-gnss").on("click", function () {
         DisplayYuZhiInfo("0", monitorYuZhiTableData);
@@ -2953,11 +2954,18 @@ function GetLaryMonitorGaoJing(id) {
         , initSort: { field: 'id', type: 'desc' }
         , cols: [[
             { field: 'id', title: 'ID', hide: true }
-            , { field: 'jcdbh', title: '监测点编号', width: 100, align: "center", }
-            , { field: 'gaojinTime', title: '告警时间', width: 150, align: "center" }
-            , { field: 'gaojinContext', title: '告警内容', width: 160, edit: 'text', align: "center" }
+            , { field: 'jcdbh', title: '监测点编号', width: 90, align: "center", }
+            
             , {
-                field: 'gaojinStatus', title: '告警状态', width: 80, align: "center", templet: function (row) {
+                field: 'gaojinStatus', title: '告警内容', width: 340,  align: "center", templet: function (row) {
+                    var x = row.gaojinContext.replace(/\<font\s*color=(.*?)\s*>/ig, "<font style=\"color:red\">");
+                    var y = x.replace(/font/ig, "span")
+                    console.log(y);
+                    return y;
+                }
+            }
+            , {
+                field: 'gaojinStatus', title: '状态', width: 80, align: "center", templet: function (row) {
                     if (row.gaojinStatus == '0') {
                         return '<span style="color: red;">未处理</span>'
                     } else if (row.gaojinStatus == '1') {
@@ -2966,7 +2974,9 @@ function GetLaryMonitorGaoJing(id) {
                 }
             }
             , { field: 'gaojinResult', title: '处理结果', width: 120, edit: 'text', align: "center" }
+            , { field: 'gaojinTime', title: '告警时间', width: 150, align: "center" }
             , { field: 'updateTime', title: '处理时间', width: 160, align: "center" }
+            , { field: 'gaojinTime', title: '占位', width: 80, align: "center" }
 
             , { fixed: 'right', title: '操作', width: 80, align: 'center', toolbar: '#GaoJingChuButon' }
         ]]
@@ -3006,7 +3016,8 @@ function GetLaryMonitorGaoJing(id) {
         }
     });
     $("#btn-gaojin-sum").on("click", function () {
-        DisplayGaoJinInfo("", monitorGaoJinTableData);
+        //DisplayGaoJinInfo("", monitorGaoJinTableData);
+        GetMonitorGaoJing(id);//查总的就去数据库？
     });
     $("#btn-gaojin-wei").on("click", function () {
         DisplayGaoJinInfo("0", monitorGaoJinTableData);

@@ -2,36 +2,31 @@
 var layerYouCeTanChuIndex = null;
 var layerZuoCeTanChuIndex = null;
 
-var projectLieBiaoIndex=layer.open({
+var projectLieBiaoIndex = layer.open({
     type: 1
     , title: ['项目', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
     , area: ['250px', '700px']
     , shade: 0
     , offset: ['60px', '5px']
     , closeBtn: 0
-    , maxmin: false
+    , maxmin: true
     , move: false
     ,resize:false
    // , moveOut: true
-    , content: '<!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">    <!--选项卡-->    <ul class="layui-tab-title">        <li lay-id="111" class="layui-this" style="width:30%;padding-top: 10px;">项目列表</li>        <li lay-id="222" style="width:30%;padding-top: 10px;">图层列表</li>    </ul>    <!--tree-->    <div class="layui-tab-content" style="padding:0px;">        <div class="layui-tab-item layui-show" id="monitorprojectbyarea"></div>        <div class="layui-tab-item" id="prjlayerlist"></div>    </div></div>',
-      zIndex: layer.zIndex
+    , content: '<!--项目列表--><div  class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">    <!--选项卡-->    <ul class="layui-tab-title">        <li lay-id="111" class="layui-this" style="width:30%;padding-top: 10px;">项目列表</li>        <li lay-id="222" style="width:30%;padding-top: 10px;">图层列表</li>    </ul>    <!--tree-->    <div class="layui-tab-content" style="padding:0px;">        <div class="layui-tab-item layui-show" id="monitorprojectbyarea"></div>        <div class="layui-tab-item" id="prjlayerlist"></div>    </div></div>',
+     zIndex: 2
     , success: function (layero) {
         layer.setTop(layero);
         GetUserProjects();
-        layerZuoCeTanChuIndex = layer.open({
-            type: 1,
-            title:false,
-            content: '<button type="button" onclick="xianZuoDaKai()" title="隐藏" style="opacity: 0.5"  class="layui-btn layui-btn-primary "><i class="layui-icon layui-icon-prev"></i></button>', 
-            offset: ['62px', '255px'],
-            area: ['60px', '40px'],
-            closeBtn: 0
-            , shade: 0
-            , maxmin: false
-            , skin: 'shadows',
-            zIndex: layer.zIndex
-        });
+     
     },
-
+    min: function () { //点击最小化后的回调函数
+        xianZuoDaKai();
+        return;
+    },
+    restore: function () { //监听还原窗口restore方法
+        
+    }
 
 });
 
@@ -682,19 +677,12 @@ function FlytoExtent(west, south, east, north) {
 //向右打开
 function xianYouDaKai() {
     //打开的第一个页面id是这个。
+    layer.restore(projectLieBiaoIndex);
     $("#layui-layer1").show(); 
-    layerZuoCeTanChuIndex = layer.open({
-        type: 1,
-        title: false,
-        content: '<button type="button" onclick="xianZuoDaKai()" title="隐藏" style="opacity: 0.4"  class="layui-btn layui-btn-primary "><i class="layui-icon layui-icon-prev"></i></button>',
-        offset: ['62px', '255px'],
-        area: ['60px', '40px'],
-        closeBtn: 0
-        , shade: 0
-        , maxmin: false
-        , skin: 'shadows',
-        zIndex: layer.zIndex
-    });
+    $("#layui-layer1").css({
+        'top': '60px',
+        'left': '5px'
+    })
     if (layerYouCeTanChuIndex != null) {
         layer.close(layerYouCeTanChuIndex);
         layerYouCeTanChuIndex = null;
