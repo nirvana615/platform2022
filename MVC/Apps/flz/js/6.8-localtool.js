@@ -306,40 +306,47 @@ function windowTongji() {
         layer.msg('请先选择项目');
         return;
     }
-    cequ = layer.open({
-        type: 1
-        , title: ['测窗信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-        , area: ['500px', '400px']
-        , shade: 0
-        
-        , closeBtn: 1
-        , anim: 0
-        , maxmin: true
-        , moveOut: true
-        , offset: ['60px', '1340px']
-        , content: '<table class="layui-hide" id="windowtable-view" lay-filter="windowtable-view"></table><script type="text/html" id="flz-window-add"><div class="layui-btn-container"><button class="layui-btn layui-btn-sm" style="font-size:14px;width:120px" lay-event="flzwindow-add">绘制测窗</button><button class="layui-btn layui-btn-sm" style="font-size:14px;width:120px;" lay-event="flzwindow-pdf">测窗成图</button></div></script><script type="text/html" id="table-toolbar-model"><a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:20px;font-size:20px!important;color:#666!important;"></i></a></script>'
-        , zIndex: layer.zIndex
-        , success: function (layero) {
-            layer.setTop(layero);
-            form.render();
-            //监测剖面信息
-            //测窗信息
-           
-            //获取测窗列表。
-            getWindowList();
-        }
-        , end: function () {
-            cequ = null;
-            windowtabledata = [];
-            windowtableview = null;
-            viewer._container.style.cursor = "default";//还原鼠标样式
-            ClearTemp();
-            //取消画的图和点
-            if (handler != undefined) {
-                handler.destroy();
+    if (cequ != null) {
+        layer.msg('已打开测窗管理页面');
+        layer.restore(cequ);
+        return;
+    } else {
+        cequ = layer.open({
+            type: 1
+            , title: ['测窗信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+            , area: ['500px', '400px']
+            , shade: 0
+
+            , closeBtn: 1
+            , anim: 0
+            , maxmin: true
+            , moveOut: true
+            , offset: ['60px', '1340px']
+            , content: '<table class="layui-hide" id="windowtable-view" lay-filter="windowtable-view"></table><script type="text/html" id="flz-window-add"><div class="layui-btn-container"><button class="layui-btn layui-btn-sm" style="font-size:14px;width:120px" lay-event="flzwindow-add">绘制测窗</button><button class="layui-btn layui-btn-sm" style="font-size:14px;width:120px;" lay-event="flzwindow-pdf">测窗成图</button></div></script><script type="text/html" id="table-toolbar-model"><a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:20px;font-size:20px!important;color:#666!important;"></i></a></script>'
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                layer.setTop(layero);
+                form.render();
+                //监测剖面信息
+                //测窗信息
+
+                //获取测窗列表。
+                getWindowList();
             }
-        }
-    });
+            , end: function () {
+                cequ = null;
+                windowtabledata = [];
+                windowtableview = null;
+                viewer._container.style.cursor = "default";//还原鼠标样式
+                ClearTemp();
+                //取消画的图和点
+                if (handler != undefined) {
+                    handler.destroy();
+                }
+            }
+        });
+    }
+   
    
 }
 // 获取测窗列表
@@ -425,6 +432,7 @@ function jieLiTongji() {
     }
     if (jieLiTongjilayer!=null) {
         layer.msg('已打开节理统计窗口');
+        layer.restore(jieLiTongjilayer);
         return;
     }
     jieLiTongjilayer = layer.open({
@@ -1352,92 +1360,100 @@ function jieGouTongji() {
         layer.msg('请先选择项目');
         return;
     }
-    jieGouTongjilayer = layer.open({
-        type: 1
-        , title: ['优势结构面', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-        , area: ['1000px', '750px']
-        , shade: 0
-        , offset: 'auto'
-        , closeBtn: 1
-        , anim: 0
-        , maxmin: true
-        , moveOut: true
-        , content: jiegouTable
-        , zIndex: layer.zIndex
-        , success: function (layero) {
-            layer.setTop(layero);
-            if (modleInfoList.length > 0) {//模型id
-                for (var i in modleInfoList) {
-                    document.getElementById("modleIdJieGouSelect").innerHTML += '<option value="' + modleInfoList[i].Id + '">' + modleInfoList[i].RWMC + '_' + modleInfoList[i].YXCJSJ + '</option>';
-                }
-            };
-            form.render();
-            form.render('select');
-            form.on('submit(queryJiegousubmit)', function (data) {
-                data.field.cookie = document.cookie;
-                data.field.id = currentprojectid;
-                data.field.type = "4";
-                data.field.windowId = "";
-                data.field.collector = "";
-                getJieGouList(data.field);
-                return false;
-            });
-            jieGoutableview = table.render({
-                elem: '#jiegoutable-view'
-                , id: 'jiegoutableviewid'
-                , title: '结构面信息'
-                , skin: 'line'
-                , even: false
-                , page: true
-                , limit: 10
-                , toolbar: '#flz-jieGou-add'
-                , totalRow: true
-                , initSort: { field: 'id', type: 'asc' }
-                , cols: [[
-                    { field: 'id', title: 'ID', hide: true }
-                    , { field: 'name', title: '结构面编号', align: "center", totalRowText: '合计' }
-                    , { field: 'inclination', title: '倾向', sort: true, align: "center" }
-                    , { field: 'dipAngle', title: '倾角', sort: true, align: "center" }
-                    , { field: 'trend', title: '走向', align: "center" }
-                    , { field: 'modleTime', title: '采集时间', sort: true, align: "center", hide: true  }
-                    , { field: 'creatTime', title: '素描时间', sort: true,  align: "center" }
-                    , { field: 'remarks', title: '备注', align: "center", hide: true  }
-                    , { fixed: 'right', width: 120, align: 'center', toolbar: '#jiGouButon' }
-                ]]
-                , data: []
-            });
-            //素描jiegou
-            table.on('toolbar(jiegoutable-view)', function (obj) {
-                console.log(obj);
-               
-                //gotoJieli();
-                if (obj.event == "flzJieGou-add") {
-                    drwjiegou();//画
-                } else if (obj.event == "flzJieGou-pdf") {
-                    jieLiMeiguihua();//节理玫瑰花
+    if (jieGouTongjilayer != null) {
+        layer.msg('已打开结构管理页面');
+        layer.restore(jieGouTongjilayer);
+        return;
+    } else {
+        jieGouTongjilayer = layer.open({
+            type: 1
+            , title: ['优势结构面', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+            , area: ['1000px', '750px']
+            , shade: 0
+            , offset: 'auto'
+            , closeBtn: 1
+            , anim: 0
+            , id: "jieGouTongjilayerId"
+            , maxmin: true
+            , moveOut: true
+            , content: jiegouTable
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                layer.setTop(layero);
+                if (modleInfoList.length > 0) {//模型id
+                    for (var i in modleInfoList) {
+                        document.getElementById("modleIdJieGouSelect").innerHTML += '<option value="' + modleInfoList[i].Id + '">' + modleInfoList[i].RWMC + '_' + modleInfoList[i].YXCJSJ + '</option>';
+                    }
                 };
-            });
+                form.render();
+                form.render('select');
+                form.on('submit(queryJiegousubmit)', function (data) {
+                    data.field.cookie = document.cookie;
+                    data.field.id = currentprojectid;
+                    data.field.type = "4";
+                    data.field.windowId = "";
+                    data.field.collector = "";
+                    getJieGouList(data.field);
+                    return false;
+                });
+                jieGoutableview = table.render({
+                    elem: '#jiegoutable-view'
+                    , id: 'jiegoutableviewid'
+                    , title: '结构面信息'
+                    , skin: 'line'
+                    , even: false
+                    , page: true
+                    , limit: 10
+                    , toolbar: '#flz-jieGou-add'
+                    , totalRow: true
+                    , initSort: { field: 'id', type: 'asc' }
+                    , cols: [[
+                        { field: 'id', title: 'ID', hide: true }
+                        , { field: 'name', title: '结构面编号', align: "center", totalRowText: '合计' }
+                        , { field: 'inclination', title: '倾向', sort: true, align: "center" }
+                        , { field: 'dipAngle', title: '倾角', sort: true, align: "center" }
+                        , { field: 'trend', title: '走向', align: "center" }
+                        , { field: 'modleTime', title: '采集时间', sort: true, align: "center", hide: true }
+                        , { field: 'creatTime', title: '素描时间', sort: true, align: "center" }
+                        , { field: 'remarks', title: '备注', align: "center", hide: true }
+                        , { fixed: 'right', width: 120, align: 'center', toolbar: '#jiGouButon' }
+                    ]]
+                    , data: []
+                });
+                //素描jiegou
+                table.on('toolbar(jiegoutable-view)', function (obj) {
+                    console.log(obj);
 
-            //删除节理
-            table.on('tool(jiegoutable-view)', function (obj) {
-                console.log(obj);
-                if (obj.event == "delete") {
-                    layer.confirm('是否删除?', { icon: 3, title: '消息', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
-                        deleteJieGou(obj.data);
-                    });
-                } else if (obj.event == "update") {
-                    
-                    updateJieGou(obj.data);
-                }
+                    //gotoJieli();
+                    if (obj.event == "flzJieGou-add") {
+                        drwjiegou();//画
+                    } else if (obj.event == "flzJieGou-pdf") {
+                        jieLiMeiguihua();//节理玫瑰花
+                    };
+                });
 
-            });
-        }
-        , end: function () {
-            jieGouTongjilayer = null;
-            jieGoutabledata = [];//节狗表数据
-            jieGoutableview = null;//节狗表
-        }
-    });
+                //删除节理
+                table.on('tool(jiegoutable-view)', function (obj) {
+                    console.log(obj);
+                    if (obj.event == "delete") {
+                        layer.confirm('是否删除?', { icon: 3, title: '消息', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                            deleteJieGou(obj.data);
+                        });
+                    } else if (obj.event == "update") {
+
+                        updateJieGou(obj.data);
+                    }
+
+                });
+            }
+            , end: function () {
+                jieGouTongjilayer = null;
+                jieGoutabledata = [];//节狗表数据
+                jieGoutableview = null;//节狗表
+            }
+        });
+    }
+    
    
     var data= {
         "id": currentprojectid,
