@@ -98,6 +98,13 @@
     <Compile Include="data\monitormap\MapMonitorThreshold.cs" />
     <Compile Include="data\monitormap\MapUserMonitorProject.cs" />
     <Compile Include="data\monitor\data\DataBianXinLiang.cs" />
+    <Compile Include="data\monitor\data\SBWYAnalysis.cs" />
+    <Compile Include="data\monitor\data\WATERAnalysis.cs" />
+    <Compile Include="data\monitor\data\YLAnalysis.cs" />
+    <Compile Include="data\monitor\data\QJAnalysis.cs" />
+    <Compile Include="data\monitor\data\LFAnalysis.cs" />
+    <Compile Include="data\monitor\data\MonitorDataAnalysis.cs" />
+    <Compile Include="data\monitor\data\GNSSAnalysis.cs" />
     <Compile Include="data\monitor\device\DeviceCountDay.cs" />
     <Compile Include="data\monitor\device\DeviceOnlineResult.cs" />
     <Compile Include="data\monitor\device\MonitorDeviceMap.cs" />
