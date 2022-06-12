@@ -38,7 +38,7 @@ var markEditObject = new Object;
 //标绘widget
 function Markwidget(id) {
     if (markwidgetlayerindex != null) {
-        layer.restore(markwidgetlayerindex);
+        LayerSetTop(markwidgetlayerindex);
         return;
     }
     markwidgetlayerindex = layer.open({

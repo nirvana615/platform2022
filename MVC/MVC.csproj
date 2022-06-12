@@ -475,6 +475,7 @@
     <Content Include="Apps\common\mark.js" />
     <Content Include="Apps\common\measure.js" />
     <Content Include="Apps\common\model.js" />
+    <Content Include="Apps\common\widget\localdatawidget.html" />
     <Content Include="Apps\flz\css\main.css" />
     <Content Include="Apps\flz\js\1.1-all.js" />
     <Content Include="Apps\flz\js\1.2-para.js" />
@@ -607,7 +608,7 @@
     <Content Include="Apps\pointcloud\widget\2.4 pointcloud_util_tool.html" />
     <Content Include="Apps\pointcloud\widget\2.5 pointcloud_util_changelayer.html" />
     <Content Include="Apps\pointcloud\widget\6.51 pointcloud_pointdisplystyle.html" />
-    <Content Include="Apps\pointcloud\widget\measure.html" />
+    <Content Include="Apps\common\widget\measurewidget.html" />
     <Content Include="Apps\pointcloud\widget\mark.html" />
     <Content Include="Apps\pointcloud\widget\markPoint.html" />
     <Content Include="Apps\rock\css\main.css" />

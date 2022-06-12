@@ -15,7 +15,7 @@ util.fixbar({
         } else if (type === 'bar2') {
             //新建项目
             if (modelprojectinfoaddlayerindex != null) {
-                layer.setTop(modelprojectinfoaddlayerindex);
+                LayerSetTop(modelprojectinfoaddlayerindex);
             }
             else {
                 if (modelprojectinfoviewlayerindex == null
@@ -43,7 +43,7 @@ util.fixbar({
         else if (type === 'bar3') {
             //新建模型
             if (modeltaskinfoaddlayerindex != null) {
-                layer.setTop(modeltaskinfoaddlayerindex);
+                LayerSetTop(modeltaskinfoaddlayerindex);
             }
             else {
                 if (modelprojectinfoviewlayerindex == null

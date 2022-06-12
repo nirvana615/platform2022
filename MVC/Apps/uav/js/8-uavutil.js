@@ -18,7 +18,7 @@ util.fixbar({
         } else if (type === 'bar2') {
             //新建项目
             if (uavprojectaddlayerindex != null) {
-                layer.setTop(uavprojectaddlayerindex);
+                LayerSetTop(uavprojectaddlayerindex);
             } else {
                 if (uavprojectauthlayerindex == null
                     && uavprojecteditlayerindex == null
@@ -53,7 +53,7 @@ util.fixbar({
             Markwidget();
         } else if (type === 'bar6') {
             //加载数据
-
+            AddLocalData();
         } else if (type === 'bar7') {
         } else if (type === 'bar8') {
         } else if (type === 'bar9') {

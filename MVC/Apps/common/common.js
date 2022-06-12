@@ -394,3 +394,22 @@ function getChanzhuang(positList) {
 }
 
 
+//layer置顶
+function LayerSetTop(layerindex) {
+    var zindexs = [];
+    var openlayers = document.getElementsByClassName('layui-layer layui-layer-page');
+    if (openlayers.length > 0) {
+        for (var i = 0; i < openlayers.length; i++) {
+            zindexs.push(parseInt(openlayers[i].style.zIndex));
+        }
+
+        var max = 0;
+        for (var i in zindexs) {
+            if (zindexs[i] > max) {
+                max = zindexs[i];
+            }
+        }
+
+        document.getElementById("layui-layer" + layerindex).style.zIndex = max + 1;
+    }
+};

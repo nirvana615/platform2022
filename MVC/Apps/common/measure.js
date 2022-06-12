@@ -17,7 +17,7 @@ var measurewidget_tempentities = [];
 //测量widget
 function Measurewidget(type) {
     if (measurewidget_layerindex != null) {
-        layer.setTop(measurewidget_layerindex);
+        LayerSetTop(measurewidget_layerindex);
         return;
     }
 
