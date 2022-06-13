@@ -892,8 +892,8 @@ namespace SERVICE.Controllers
         public string getGaoJingInfo(string projectId, string monitorId, string id,string gaoJinStatus)
         {
 
-
-            string sql = "SELECT * FROM monitor_gaojin_info WHERE project_id ={0}";
+            string gcsj = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd HH:mm:ss");
+            string sql = "SELECT * FROM monitor_gaojin_info WHERE project_id ={0} and gcsj>{1}";
             if (!string.IsNullOrEmpty(monitorId))
             {
                 sql = sql + " and monitor_id = " + SQLHelper.UpdateString(monitorId);
@@ -909,7 +909,7 @@ namespace SERVICE.Controllers
 
 
             sql = sql + "ORDER BY gaojin_time desc";
-            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(projectId)));
+            string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(projectId), SQLHelper.UpdateString(gcsj)));
             if (!string.IsNullOrEmpty(datas))
             {
                 List<MonitorGaoJIngInfo> monitorGaoJIngInfoList = new List<MonitorGaoJIngInfo>();
@@ -981,7 +981,8 @@ namespace SERVICE.Controllers
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
                 //有效cookie
-                string sql = string.Format("SELECT a.* FROM monitor_gaojin_info a left join monitor_project b on a.project_id=b.id and b.bsm{0} AND b.ztm={1} ORDER by a.gaojin_time DESC", userbsms, (int)MODEL.Enum.State.InUse);
+                string gcsj = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd HH:mm:ss");
+                string sql = string.Format("SELECT a.* FROM monitor_gaojin_info a left join monitor_project b on a.project_id=b.id and b.bsm{0} AND b.ztm={1} and gcsj>{2} ORDER by a.gaojin_time DESC", userbsms, (int)MODEL.Enum.State.InUse, SQLHelper.UpdateString(gcsj));
                 string data = PostgresqlHelper.QueryData(pgsqlConnection, sql);
                 if (string.IsNullOrEmpty(data))
                 {
