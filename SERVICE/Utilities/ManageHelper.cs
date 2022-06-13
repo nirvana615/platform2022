@@ -142,6 +142,23 @@ namespace SERVICE
                     #endregion
 
                     #region 无人机巡查项目
+                    string findmaps = PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM uavfind_map_user_project WHERE userid={0} AND ztm={1}", user.Id, (int)MODEL.Enum.State.InUse));
+                    if (!string.IsNullOrEmpty(findmaps))
+                    {
+                        string[] rows = findmaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                        for (int i = 0; i < rows.Length; i++)
+                        {
+                            MapUserFindProject mapUserFindProject = ParseUavFindHelper.ParseMapUserFindProject(rows[i]);
+                            if (mapUserFindProject != null)
+                            {
+                                FindProject findProject = ParseUavFindHelper.ParseFindProject(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM uavfind_project WHERE id={0} AND ztm={1}", mapUserFindProject.FindProjectId, (int)MODEL.Enum.State.InUse)));
+                                if (findProject != null)
+                                {
+                                    bsminfo += findProject.BSM + ",";
+                                }
+                            }
+                        }
+                    }
                     #endregion
 
                     #region *无人机影像项目

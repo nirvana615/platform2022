@@ -221,6 +221,7 @@
     <Compile Include="Controllers\monitor\SqlController.cs" />
     <Compile Include="Controllers\manage\SridController.cs" />
     <Compile Include="Controllers\tool\ParameterController.cs" />
+    <Compile Include="Controllers\uavfind\FindProjectController.cs" />
     <Compile Include="Controllers\uav\UavDroneController.cs" />
     <Compile Include="Controllers\uav\UavMissionController.cs" />
     <Compile Include="Controllers\uav\UavProjectController.cs" />
@@ -269,7 +270,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\uavfind\" />
     <Folder Include="Log\" />
     <Folder Include="Models\" />
   </ItemGroup>

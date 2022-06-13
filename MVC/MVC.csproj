@@ -640,6 +640,9 @@
     <Content Include="Apps\uavfind\js\6-findroute.js" />
     <Content Include="Apps\uavfind\js\7-findheader.js" />
     <Content Include="Apps\uavfind\js\8-findvutil.js" />
+    <Content Include="Apps\uavfind\widget\1.0-projectlist.html" />
+    <Content Include="Apps\uavfind\widget\1.1 projectadd.html" />
+    <Content Include="Apps\uavfind\widget\1.3 projectedit.html" />
     <Content Include="Apps\uav\css\main.css" />
     <Content Include="Apps\uav\js\1-uavconfig.js" />
     <Content Include="Apps\uav\js\2-uavpara.js" />
@@ -795,6 +798,11 @@
     <Content Include="Resources\pic\bg_model\2.png" />
     <Content Include="Resources\pic\bg_model\3.jpg" />
     <Content Include="Resources\pic\bg_uavfind\1.jpg" />
+    <Content Include="Resources\pic\bg_uavfind\2.jpg" />
+    <Content Include="Resources\pic\bg_uavfind\3.jpg" />
+    <Content Include="Resources\pic\bg_uavfind\4.jpg" />
+    <Content Include="Resources\pic\bg_uavfind\5.jpg" />
+    <Content Include="Resources\pic\bg_uavfind\6.jpg" />
     <Content Include="Resources\pic\bg_uav\1.gif" />
     <Content Include="Resources\pic\bg_uav\2.gif" />
     <Content Include="Resources\pic\bg_uav\3.gif" />
@@ -1413,7 +1421,6 @@
     <Content Include="Views\Platform\LoginUavFind.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Apps\uavfind\widget\" />
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Log\" />

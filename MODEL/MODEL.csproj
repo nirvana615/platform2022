@@ -230,6 +230,11 @@
     <Compile Include="data\rock\RockProject.cs" />
     <Compile Include="data\rock\RockSelectLine.cs" />
     <Compile Include="data\rock\RockWindowInfo.cs" />
+    <Compile Include="data\uavfindmap\MapUserFindProject.cs" />
+    <Compile Include="data\uavfind\FindProject.cs" />
+    <Compile Include="data\uavfind\FindProjectData.cs" />
+    <Compile Include="data\uavfind\FindRoute.cs" />
+    <Compile Include="data\uavfind\FindTask.cs" />
     <Compile Include="data\uavmap\MapCameraPhotoRatio.cs" />
     <Compile Include="data\uavmap\MapRouteWayarea.cs" />
     <Compile Include="data\uavmap\MapWaypointAction.cs" />
@@ -321,9 +326,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="data\uavfindmap\" />
-    <Folder Include="data\uavfind\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

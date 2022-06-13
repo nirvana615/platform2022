@@ -14,32 +14,29 @@ util.fixbar({
     , click: function (type) {
         if (type === 'bar1') {
             //授权管理
-            UavProjectAuth();
+            FindlProjectAuth();
         } else if (type === 'bar2') {
             //新建项目
-            if (uavprojectaddlayerindex != null) {
-                layer.setTop(uavprojectaddlayerindex);
+            if (findprojectinfoaddlayerindex != null) {
+                layer.setTop(findprojectinfoaddlayerindex);
             } else {
-                if (uavprojectauthlayerindex == null
-                    && uavprojecteditlayerindex == null
-                    && uavprojectviewlayerindex == null
-                    && selectroutetypelayerindex == null
-                    && uavrouteaddlayerindex == null
-                    && uavrouteviewlayerindex == null
-                    && uavrouteeditlayerindex == null
+                if (findprojectauthlayerindex == null
+                    && findprojectinfoeditlayerindex == null
+                    && findprojectinfoviewlayerindex == null                   
                     && headeruserlayerindex == null
                     && headerselayerindex == null) {
-                    AddUavProject();
+                    //ing...待添加其余Layer
+                    AddFindProject();
                 } else {
-                    layer.confirm('<p style="font-size:16px">是否确定新建航线任务规划项目？</p><br/>', { icon: 3, title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
-                        AddUavProject();
+                    layer.confirm('<p style="font-size:16px">是否确定新建巡查项目？</p><br/>', { icon: 3, title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                        AddFindProject();
                         layer.close(index);
                     });
                 }
             }
         } else if (type === 'bar3') {
             //新建航线
-            SelectRouteType();
+            AddRoute();
         } else if (type === 'bar4') {
             //测量工具
             if (current_project_tile == null) {
