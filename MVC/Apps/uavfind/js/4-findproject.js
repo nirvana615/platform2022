@@ -177,53 +177,46 @@ function EditFindProject(findprojectdata) {
         findprojectinfoeditlayerindex = layer.open({
             type: 1
             , title: ['编辑项目', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-            , area: ['500px', '490px']
+            , area: ['500px', '543px']
             , shade: 0
             , offset: 'auto'
             , closeBtn: 1
             , maxmin: true
             , moveOut: true
             , resize: false
-            , content: '<!--编辑项目--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px"><ul class="layui-tab-title"><li class="layui-this" style="width:44%;">项目信息</li><li style="width:44%;">实景模型</li></ul><div class="layui-tab-content" style="margin:0px;padding-left:0px;"><!--项目信息--><div class="layui-tab-item layui-show"><form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="editFindprojectinfoform"><div class="layui-form-item"><label class="layui-form-label">项目名称</label><div class="layui-input-block"><input type="text" name="find_xmmc_edit" autocomplete="off" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目简称</label><div class="layui-input-block"><input type="text" name="find_xmjc_edit" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目编码</label><div class="layui-input-block"><input type="text" name="find_xmbm_edit" readonly="readonly" class="layui-input" /></div></div><!--<div class="layui-form-item"><label class="layui-form-label">行政区划</label><div class="layui-input-block"><select id="province1id" name="find_province_edit" disabled="disabled" lay-verify="required"><option value="">省/市</option><option value="0" selected>重庆市</option></select></div></div><div class="layui-form-item"><label class="layui-form-label"></label><div class="layui-input-block"><select id="district1id" name="find_district_edit" disabled="disabled" lay-verify="required"><option value="">区/县</option></select></div></div>--><div class="layui-row"><div class="layui-col-md6"><div class="layui-form-item"><label class="layui-form-label">行政区划</label><div class="layui-input-block"><select id="province1id" name="find_province_edit" disabled="disabled" lay-verify="required"><option value="">省/市</option><option value="0" selected>重庆市</option></select></div></div></div><div class="layui-col-md6"><div class="layui-form-item"><label class="layui-form-label"></label><div class="layui-input-block"><select id="district1id" name="find_district_edit" disabled="disabled" lay-verify="required"><option value="">区/县</option></select></div></div></div></div><div class="layui-form-item"><div class="grid-demo"><label class="layui-form-label">项目位置</label><div class="layui-input-block"><input type="text" name="find_xmwz_edit" autocomplete="off" class="layui-input" /></div></div></div><div class="layui-form-item"><div class="layui-row"><div class="layui-col-md9"><div class="layui-form-item"><div class="grid-demo"><label class="layui-form-label">中心经度</label><div class="layui-input-block"><input type="text" name="find_zxjd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div></div></div><div class="layui-form-item"><div class="grid-demo"><label class="layui-form-label">中心纬度</label><div class="layui-input-block"><input type="text" name="find_zxwd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div></div></div></div><div class="layui-col-md3"><div class="grid-demo" style="width:90%;height:90%;margin-left:10px;"><div class="layui-input-inline" style="width:90%;height:90%;"><button type="button" id="map_position_edit" class="layui-btn layui-btn-primary" title="地图选点" style="width:90%;height:90%;border-radius:10px;"><svg t="1641451887073" class="icon" style="position:relative;top:8px;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7602" width="100%" height="100%"><path d="M512 621.696l-150.848-150.826667 30.165333-30.186666L512 561.365333l120.682667-120.682666 30.165333 30.165333L512 621.696z m150.848-150.826667l-30.165333-30.186666a170.666667 170.666667 0 1 0-241.365334 0L361.173333 470.826667c-83.306667-83.306667-83.306667-218.389333 0-301.696 83.306667-83.306667 218.389333-83.306667 301.696 0 83.306667 83.306667 83.306667 218.389333 0 301.696zM512 362.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z m-134.186667 365.290666a21.333333 21.333333 0 1 1 30.144-30.165333l110.634667 110.613333L857.664 469.333333H768v-42.666666h106.538667A63.936 63.936 0 0 1 938.666667 490.474667V874.88A64 64 0 0 1 874.602667 938.666667H149.397333A63.914667 63.914667 0 0 1 85.333333 874.858667V490.453333A63.808 63.808 0 0 1 149.461333 426.666667H256v42.666666H149.461333A21.141333 21.141333 0 0 0 128 490.474667v302.208l200.042667-200.042667a21.205333 21.205333 0 0 1 30.058666 0.128c8.32 8.32 8.192 21.973333 0.106667 30.037333L130.474667 850.56a21.333333 21.333333 0 0 1-2.474667 2.133333v22.186667c0 11.669333 9.536 21.141333 21.397333 21.141333h396.437334l-168.042667-168.042666zM874.581333 896A21.333333 21.333333 0 0 0 896 874.858667V491.050667a21.973333 21.973333 0 0 1-1.984 2.261333L548.757333 838.592l54.186667 54.186667c1.002667 1.002667 1.898667 2.090667 2.666667 3.221333h269.013333z" fill="#8a8a8a" p-id="7603"></path></svg></button></div></div></div></div></div><div class="layui-form-item"><div class="grid-demo"><label class="layui-form-label">项目时间</label><div class="layui-input-block"><input type="text" id="xmsjid" name="find_xmsj_edit" lay-verify="date" placeholder="YYYY-MM-DD" class="layui-input" /></div></div></div><div class="layui-form-item"><label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label><div class="layui-input-block"><input type="text" name="find_bz_edit" class="layui-input"></div></div><div class="layui-form-item" style="margin-top:10px"><div style="text-align:center"><button type="submit" class="layui-btn" lay-submit="" lay-filter="editFindprojectinfosubmit" style="width:100px;border-radius:5px;">保存</button></div></div></form></div><!--实景模型--><div class="layui-tab-item"><div class="layui-card-body" style="padding:0px 0px;"><table id="find-project-find" lay-filter="find-project-find"></table><script type="text/html" id="find-project-find-add"><div class="layui-btn-container"><button class="layui-btn layui-btn-sm" style="font-size:14px;width:150px" lay-event="find-project-find-add">添加实景模型</button></div></script><script type="text/html" id="table-toolbar-find"><a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div>'
+            , content: '<!--编辑项目--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px"><ul class="layui-tab-title"><li class="layui-this" style="width:44%;">项目信息</li><li style="width:44%;">实景模型</li></ul><div class="layui-tab-content" style="margin:0px;padding-left:0px;"><!--项目信息--><div class="layui-tab-item layui-show"><form class="layui-form" style="margin-top:5px;margin-right:20px;" lay-filter="editFindprojectinfoform"><div class="layui-form-item"><label class="layui-form-label">项目名称</label><div class="layui-input-block"><input type="text" name="find_xmmc_edit" autocomplete="off" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目简称</label><div class="layui-input-block"><input type="text" name="find_xmjc_edit" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目编码</label><div class="layui-input-block"><input type="text" name="find_xmbm_edit" readonly="readonly" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">行政区划</label><div class="layui-input-block"><input type="text" name="find_xzqh_edit" readonly="readonly" class="layui-input" /></div></div><div class="layui-form-item"><div class="grid-demo"><label class="layui-form-label">项目位置</label><div class="layui-input-block"><input type="text" name="find_xmwz_edit" autocomplete="off" class="layui-input" /></div></div></div><div class="layui-form-item"><div class="layui-row"><div class="layui-col-md9"><div class="layui-form-item"><div class="grid-demo"><label class="layui-form-label">中心经度</label><div class="layui-input-block"><input type="text" name="find_zxjd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div></div></div><div class="layui-form-item"><div class="grid-demo"><label class="layui-form-label">中心纬度</label><div class="layui-input-block"><input type="text" name="find_zxwd_edit" autocomplete="off" lay-verify="required|number" class="layui-input" /></div></div></div></div><div class="layui-col-md3"><div class="grid-demo" style="width:100%;height:100%;margin-left:10px;"><div class="layui-input-inline" style="width:100%;height:100%;"><button type="button" id="map_position_edit" class="layui-btn layui-btn-primary" title="地图选点" style="width:90%;height:90%;border-radius:10px;"><svg t="1641451887073" class="icon" style="position:relative;top:8px;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7602" width="100%" height="100%"><path d="M512 621.696l-150.848-150.826667 30.165333-30.186666L512 561.365333l120.682667-120.682666 30.165333 30.165333L512 621.696z m150.848-150.826667l-30.165333-30.186666a170.666667 170.666667 0 1 0-241.365334 0L361.173333 470.826667c-83.306667-83.306667-83.306667-218.389333 0-301.696 83.306667-83.306667 218.389333-83.306667 301.696 0 83.306667 83.306667 83.306667 218.389333 0 301.696zM512 362.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z m-134.186667 365.290666a21.333333 21.333333 0 1 1 30.144-30.165333l110.634667 110.613333L857.664 469.333333H768v-42.666666h106.538667A63.936 63.936 0 0 1 938.666667 490.474667V874.88A64 64 0 0 1 874.602667 938.666667H149.397333A63.914667 63.914667 0 0 1 85.333333 874.858667V490.453333A63.808 63.808 0 0 1 149.461333 426.666667H256v42.666666H149.461333A21.141333 21.141333 0 0 0 128 490.474667v302.208l200.042667-200.042667a21.205333 21.205333 0 0 1 30.058666 0.128c8.32 8.32 8.192 21.973333 0.106667 30.037333L130.474667 850.56a21.333333 21.333333 0 0 1-2.474667 2.133333v22.186667c0 11.669333 9.536 21.141333 21.397333 21.141333h396.437334l-168.042667-168.042666zM874.581333 896A21.333333 21.333333 0 0 0 896 874.858667V491.050667a21.973333 21.973333 0 0 1-1.984 2.261333L548.757333 838.592l54.186667 54.186667c1.002667 1.002667 1.898667 2.090667 2.666667 3.221333h269.013333z" fill="#8a8a8a" p-id="7603"></path></svg></button></div></div></div></div></div><div class="layui-form-item"><div class="grid-demo"><label class="layui-form-label">项目时间</label><div class="layui-input-block"><input type="text" id="xmsjid" name="find_xmsj_edit" lay-verify="date" placeholder="YYYY-MM-DD" class="layui-input" /></div></div></div><div class="layui-form-item"><label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label><div class="layui-input-block"><input type="text" name="find_bz_edit" class="layui-input"></div></div><div class="layui-form-item" style="margin-top:10px"><div style="text-align:center"><button type="submit" class="layui-btn" lay-submit="" lay-filter="editFindprojectinfosubmit" style="width:100px;border-radius:5px;">保存</button></div></div></form></div><!--实景模型--><div class="layui-tab-item"><div class="layui-card-body" style="padding:0px 0px;"><table id="find-project-model" lay-filter="find-project-model"></table><script type="text/html" id="find-project-model-add"><div class="layui-btn-container"><button class="layui-btn layui-btn-sm" style="font-size:14px;width:150px" lay-event="find-project-model-add">添加实景模型</button></div></script><script type="text/html" id="table-toolbar-find"><a class="layui-btn layui-bg-red layui-btn-xs" style="background-color:rgba(255, 255, 255, 0)!important;margin-left:0px;" lay-event="modeldel"><i class="layui-icon layui-icon-delete" style="margin-right:0px;font-size:20px!important;color:#666!important;"></i></a></script></div></div></div></div>'
             , success: function (layero) {
                 layer.setTop(layero);
-
                 //监听事件
                 $("#map_position_edit").on("click", function () {
                     mapPosition("edit");//地图选点
                 });
 
                 EditFindProjectHelper();
-
                 //更新项目
-                form.on('submit(editFindprojectinfoform)', function (data) {
+                form.on('submit(editFindprojectinfosubmit)', function (data) {
                     loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
-
                     data.field.id = findprojectdata.Id;
                     data.field.cookie = document.cookie;
 
                     $.ajax({
-                        url: servicesurl + "/api/FindProject/UpdateFindProject", type: "put", data: data,
+                        url: servicesurl + "/api/FindProject/UpdateFindProject", type: "put", data: data.field,
                         success: function (result) {
                             CloseLayer(loadlayerindex);
-
                             var info = JSON.parse(result);
                             if (info.code == 1) {
                                 var modifyfindproject = JSON.parse(info.data);
-
                                 if (modifyfindproject.Id == currentprojectid) {
                                     currentprojecttitle = modifyfindproject.XMMC;
                                 }
 
-                                for (var i in findprojectdata) {
-                                    if (findprojectdata[i].id == modifyfindproject.Id) {
-                                        findprojectdata[i].title = modifyfindproject.XMMC;
-                                        findprojectdata[i].data = modifyfindproject;
+                                for (var i in findprojectlist) {
+                                    if (findprojectlist[i].id == modifyfindproject.Id) {
+                                        findprojectlist[i].title = modifyfindproject.XMMC;
+                                        findprojectlist[i].data = modifyfindproject;
                                         break;
                                     }
-
                                 }
-
 
                                 isReloadTree = true;//标记重载
                                 MarkCurrentProject();
@@ -233,7 +226,6 @@ function EditFindProject(findprojectdata) {
                                     if (projectentities[i].id == ("PROJECTCENTER_" + modifyfindproject.Id)) {
                                         projectentities[i].position = Cesium.Cartesian3.fromDegrees(modifyfindproject.ZXJD, modifyfindproject.ZXWD);
                                     }
-
                                     if (projectentities[i].id == ("PROJECTCENTER_LABEL_" + modifyfindproject.Id)) {
                                         projectentities[i].label.text = modifyfindproject.XMMC;
                                         projectentities[i].position = Cesium.Cartesian3.fromDegrees(modifyfindproject.ZXJD, modifyfindproject.ZXWD);
@@ -242,10 +234,10 @@ function EditFindProject(findprojectdata) {
 
                                 layer.close(findprojectinfoeditlayerindex);  //关闭模块
                             }
-
                             layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }, datatype: "json"
                     });
+
                     return false;
                 });
 
@@ -270,7 +262,6 @@ function EditFindProject(findprojectdata) {
                                 }
                             }
                         }
-
                         break;
                     }
                 }
@@ -291,8 +282,8 @@ function EditFindProject(findprojectdata) {
                         , { field: 'mxmc', title: '模型名称', align: "center" }
                         , { field: 'mxbm', title: '模型编码', align: "center" }
                         , { field: 'mxsj', title: '生产时间', align: "center" }
-                        , { field: 'bz', title: '备注', align: "center" }
-                        , { fixed: 'right', width: 100, align: 'center', toolbar: '#table-toolbar-model' }
+                        , { field: 'bz', title: '备注', hide: true, align: "center" }
+                        , { fixed: 'right', width: 60, align: 'center', toolbar: '#table-toolbar-find' }
                     ]]
                     , data: modeltabledata
                 });
@@ -318,7 +309,7 @@ function EditFindProject(findprojectdata) {
                                     loadlayerindex = layer.load(1, { shade: [0.1, '#fff'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
 
                                     var nousemodeltreedata = [];
-                                    var uavprojectaddmodels = [];//选中模型
+                                    var findprojectaddmodels = [];//选中模型
                                     //渲染模型树
                                     tree.render({
                                         elem: '#usemodeltree'
@@ -338,7 +329,7 @@ function EditFindProject(findprojectdata) {
                                                         var model = new Object;
                                                         model.projectid = obj.data.id;
                                                         model.modelid = obj.data.children[i].id;
-                                                        uavprojectaddmodels.push(model);
+                                                        findprojectaddmodels.push(model);
                                                     }
                                                 }
                                                 else {
@@ -353,34 +344,34 @@ function EditFindProject(findprojectdata) {
                                                         }
                                                     }
                                                     model.modelid = obj.data.id;
-                                                    uavprojectaddmodels.push(model);
+                                                    findprojectaddmodels.push(model);
                                                 }
                                             }
                                             else {
                                                 //取消选中
                                                 if (obj.data.type == "projectnode") {
                                                     //项目节点
-                                                    var newuavprojectaddmodels = [];
+                                                    var newfindprojectaddmodels = [];
 
-                                                    for (var i in uavprojectaddmodels) {
-                                                        if (uavprojectaddmodels[i].projectid != obj.data.id) {
-                                                            newuavprojectaddmodels.push(uavprojectaddmodels[i]);
+                                                    for (var i in findprojectaddmodels) {
+                                                        if (findprojectaddmodels[i].projectid != obj.data.id) {
+                                                            newfindprojectaddmodels.push(findprojectaddmodels[i]);
                                                         }
                                                     }
 
-                                                    uavprojectaddmodels = newuavprojectaddmodels;
+                                                    findprojectaddmodels = newfindprojectaddmodels;
                                                 }
                                                 else {
                                                     //模型节点
-                                                    var newuavprojectaddmodels = [];
+                                                    var newfindprojectaddmodels = [];
 
-                                                    for (var i in uavprojectaddmodels) {
-                                                        if (uavprojectaddmodels[i].modelid != obj.data.id) {
-                                                            newuavprojectaddmodels.push(uavprojectaddmodels[i]);
+                                                    for (var i in findprojectaddmodels) {
+                                                        if (findprojectaddmodels[i].modelid != obj.data.id) {
+                                                            newfindprojectaddmodels.push(findprojectaddmodels[i]);
                                                         }
                                                     }
 
-                                                    uavprojectaddmodels = newuavprojectaddmodels;
+                                                    findprojectaddmodels = newfindprojectaddmodels;
                                                 }
                                             }
                                         }
@@ -427,11 +418,11 @@ function EditFindProject(findprojectdata) {
                                     form.render('select');
 
                                     form.on('submit(addmodelusesubmit)', function (data) {
-                                        if (uavprojectaddmodels.length > 0) {
-                                            data.field.useprojectid = uavprojectdata.Id;
+                                        if (findprojectaddmodels.length > 0) {
+                                            data.field.useprojectid = findprojectdata.Id;
                                             data.field.cookie = document.cookie;
-                                            data.field.syscode = 3;
-                                            data.field.modelinfo = JSON.stringify(uavprojectaddmodels);
+                                            data.field.syscode = 7;
+                                            data.field.modelinfo = JSON.stringify(findprojectaddmodels);
 
                                             $.ajax({
                                                 url: servicesurl + "/api/ModelProject/AddUserModelProjectUse", type: "post", data: data.field,
@@ -458,29 +449,29 @@ function EditFindProject(findprojectdata) {
                                                                 }
                                                             }
                                                         }
-                                                        modeledittable.reload({ id: 'uavprojectmodeltableid', data: modeltabledata });
+                                                        modeledittable.reload({ id: 'findprojectmodeltableid', data: modeltabledata });
 
-                                                        for (var i in uav_project_list_all) {
-                                                            if (uav_project_list_all[i].id == uavprojectdata.Id) {
-                                                                for (var j in uav_project_list_all[i].children) {
-                                                                    if (uav_project_list_all[i].children[j].title == "实景模型") {
+                                                        for (var i in findprojectlist) {
+                                                            if (findprojectlist[i].id == findprojectdata.Id) {
+                                                                for (var j in findprojectlist[i].children) {
+                                                                    if (findprojectlist[i].children[j].title == "实景模型") {
                                                                         iscontainmodel = true;
                                                                         var child = [];
                                                                         for (var k in newmodels) {
                                                                             var model = new Object;
-                                                                            model.id = "UAVSURMODEL_" + newmodels[k].Id;
+                                                                            model.id = "FINDSURMODEL_" + newmodels[k].Id;
                                                                             model.icon = MODELICON;
-                                                                            model.type = "uavsurmodel";
+                                                                            model.type = "findsurmodel";
                                                                             model.title = newmodels[k].RWMC;
                                                                             model.data = newmodels[k];
                                                                             model.showCheckbox = true;
                                                                             model.checked = false;
                                                                             child.push(model);
                                                                         }
-                                                                        for (var k in uav_project_list_all[i].children[j].children) {
-                                                                            child.push(uav_project_list_all[i].children[j].children[k]);
+                                                                        for (var k in findprojectlist[i].children[j].children) {
+                                                                            child.push(findprojectlist[i].children[j].children[k]);
                                                                         }
-                                                                        uav_project_list_all[i].children[j].children = child;
+                                                                        findprojectlist[i].children[j].children = child;
                                                                         break;
                                                                     }
                                                                 }
@@ -515,7 +506,7 @@ function EditFindProject(findprojectdata) {
                     if (obj.event === 'modeldel') {
                         layer.confirm('是否删除?', { icon: 3, title: '消息', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
                             $.ajax({
-                                url: servicesurl + "/api/ModelProject/CancelUserModelProjectUse", type: "delete", data: { "syscode": 3, "useprojectid": uavprojectdata.Id, "modelid": obj.data.id, "cookie": document.cookie },
+                                url: servicesurl + "/api/ModelProject/CancelUserModelProjectUse", type: "delete", data: { "syscode": 3, "useprojectid": findprojectdata.Id, "modelid": obj.data.id, "cookie": document.cookie },
                                 success: function (result) {
                                     var info = JSON.parse(result);
                                     if (info.code == 1) {
@@ -528,22 +519,22 @@ function EditFindProject(findprojectdata) {
                                             }
                                         }
                                         modeltabledata = newmodeltabledata;
-                                        modeledittable.reload({ id: 'uavprojectmodeltableid', data: modeltabledata });
+                                        modeledittable.reload({ id: 'findprojectmodeltableid', data: modeltabledata });
 
                                         //TODO删除的为选中加载的模型时需从地图的删除
 
-                                        for (var i in uav_project_list_all) {
-                                            if (uav_project_list_all[i].id == uavprojectdata.Id) {
-                                                for (var j in uav_project_list_all[i].children) {
-                                                    if (uav_project_list_all[i].children[j].title == "实景模型") {
+                                        for (var i in findprojectlist) {
+                                            if (findprojectlist[i].id == findprojectdata.Id) {
+                                                for (var j in findprojectlist[i].children) {
+                                                    if (findprojectlist[i].children[j].title == "实景模型") {
                                                         var child = [];
 
-                                                        for (var k in uav_project_list_all[i].children[j].children) {
-                                                            if (uav_project_list_all[i].children[j].children[k].id.toString() != ("UAVSURMODEL_" + info.data)) {
-                                                                child.push(uav_project_list_all[i].children[j].children[k]);
+                                                        for (var k in findprojectlist[i].children[j].children) {
+                                                            if (findprojectlist[i].children[j].children[k].id.toString() != ("FINDSURMODEL_" + info.data)) {
+                                                                child.push(findprojectlist[i].children[j].children[k]);
                                                             }
                                                         }
-                                                        uav_project_list_all[i].children[j].children = child;
+                                                        findprojectlist[i].children[j].children = child;
                                                         break;
                                                     }
                                                 }
@@ -561,9 +552,6 @@ function EditFindProject(findprojectdata) {
                         });
                     }
                 });
-
-
-
 
             }
             , end: function () {
@@ -584,18 +572,18 @@ function EditFindProject(findprojectdata) {
             , "find_xmsj_edit": findprojectdata.XMSJ
             , "find_bz_edit": findprojectdata.BZ
         })
-
+        //翻译项目位置
         if (xjxzqs.length > 0) {
             for (var i in xjxzqs) {
                 if (xjxzqs[i].value == findprojectdata.XZQBM) {
-                    document.getElementById("district1id").innerHTML += '<option value="' + xjxzqs[i].value + '" selected>' + xjxzqs[i].name + '</option>';
-                }
-                else {
-                    document.getElementById("district1id").innerHTML += '<option value="' + xjxzqs[i].value + '">' + xjxzqs[i].name + '</option>';
+                    var xzqh = "重庆市" + xjxzqs[i].name;
+                    form.val("editFindprojectinfoform", {
+                        "find_xzqh_edit": xzqh
+                    });
+                    break;
                 }
             }
         }
-
         date.render({
             elem: '#xmsjid'
         });
@@ -605,8 +593,58 @@ function EditFindProject(findprojectdata) {
     };
 };
 
-//TODO查看巡查项目
-function ViewFindProject() {
+//查看巡查项目
+function ViewFindProject(findprojectdata) {
+    if (findprojectinfoviewlayerindex != null) {
+        ViewFindProjectHelper();
+    }
+    else {
+        findprojectinfoviewlayerindex = layer.open({
+            type: 1
+            , title: ['查看项目', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+            , area: ['460px', '440px']
+            , shade: 0
+            , offset: 'auto'
+            , closeBtn: 1
+            , anim: 0
+            , maxmin: true
+            , moveOut: true
+            , resize: false
+            , content: '<!--查看项目信息--><form class="layui-form" style="margin-top:5px;margin-right:10px;" lay-filter="viewFindprojectinfoform"><div class="layui-form-item"><label class="layui-form-label">项目名称</label><div class="layui-input-block"><input type="text" name="find_xmmc_view" readonly="readonly" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目简称</label><div class="layui-input-block"><input type="text" name="find_xmjc_view" readonly="readonly" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目编码</label><div class="layui-input-block"><input type="text" name="find_xmbm_view" readonly="readonly" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">行政区划</label><div class="layui-input-block"><input type="text" name="find_xzqh_view" readonly="readonly" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目位置</label><div class="layui-input-block"><input type="text" name="find_xmwz_view" readonly="readonly" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">中心经度</label><div class="layui-input-block"><input type="text" name="find_zxjd_view" readonly="readonly" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">中心纬度</label><div class="layui-input-block"><input type="text" name="find_zxwd_view" readonly="readonly" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">项目时间</label><div class="layui-input-block"><input type="text" name="find_xmsj_view" readonly="readonly" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label><div class="layui-input-block"><input type="text" name="find_bz_view" readonly="readonly" class="layui-input"></div></div></form>'
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                layer.setTop(layero);
+                ViewFindProjectHelper();
+            }
+            , end: function () {
+                findprojectinfoviewlayerindex = null;
+            }
+        });
+    }
+
+    function ViewFindProjectHelper() {
+        form.val("viewFindprojectinfoform", {
+            "find_xmmc_view": findprojectdata.XMMC
+            , "find_xmjc_view": findprojectdata.XMJC
+            , "find_xmbm_view": findprojectdata.XMBM
+            , "find_zxjd_view": findprojectdata.ZXJD
+            , "find_zxwd_view": findprojectdata.ZXWD
+            , "find_xmsj_view": findprojectdata.XMSJ
+            , "find_xmwz_view": findprojectdata.XMWZ
+            , "find_bz_view": findprojectdata.BZ
+        });
+        //翻译项目位置
+        if (xjxzqs.length > 0) {
+            for (var i in xjxzqs) {
+                if (xjxzqs[i].value == findprojectdata.XZQBM) {
+                    var xzqh = "重庆市" + xjxzqs[i].name;
+                    form.val("viewFindprojectinfoform", {
+                        "find_xzqh_view": xzqh
+                    });
+                }
+            }
+        }
+    };
 };
 
 //删除巡查项目
@@ -641,23 +679,22 @@ function DeleteFindProject(projectid) {
                 }
                 projectentities = newprojectentities;
 
-                var newfindprojectlistarea = [];
-                for (var i in findprojectlistarea) {
+                var newfindprojectlist = [];
+                for (var i in findprojectlist) {
                     var projects = [];
-                    for (var j in findprojectlistarea[i].children) {
-                        if (findprojectlistarea[i].children[j].id != projectid) {
-                            projects.push(findprojectlistarea[i].children[j]);
+                    for (var j in findprojectlist[i].children) {
+                        if (findprojectlist[i].children[j].id != projectid) {
+                            projects.push(findprojectlist[i].children[j]);
                         }
                     }
 
                     if (projects.length > 0) {
-                        findprojectlistarea[i].children = projects;
-                        newfindprojectlistarea.push(findprojectlistarea[i]);
+                        findprojectlist[i].children = projects;
+                        newfindprojectlist.push(findprojectlist[i]);
                     }
                 }
-                findprojectlistarea = newfindprojectlistarea;
+                findprojectlist = newfindprojectlist;
             }
-
             isReloadTree = true;//标记重载
             MarkCurrentProject();
             isReloadTree = false;//重载后还原
@@ -666,7 +703,6 @@ function DeleteFindProject(projectid) {
         }, datatype: "json"
     });
 };
-
 
 //地图选点
 function mapPosition(type) {

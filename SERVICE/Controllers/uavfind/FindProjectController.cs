@@ -303,7 +303,8 @@ namespace SERVICE.Controllers
 
                             #region 1-模型
 
-                            string modelmaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_use WHERE syscode={0} AND useprojectid={1} AND ztm={2} ORDER BY id DESC", (int)MODEL.Enum.System.Uav, findProject.Id, (int)MODEL.Enum.State.InUse));
+                           
+                            string modelmaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_use WHERE syscode={0} AND useprojectid={1} AND ztm={2} ORDER BY id DESC", (int)MODEL.Enum.System.UavFind, findProject.Id, (int)MODEL.Enum.State.InUse));
                             if (!string.IsNullOrEmpty(modelmaps))
                             {
                                 List<ModelTask> models = new List<ModelTask>();
@@ -311,10 +312,10 @@ namespace SERVICE.Controllers
                                 string[] maprows = modelmaps.Split(new char[] { COM.ConstHelper.rowSplit });
                                 for (int j = 0; j < maprows.Length; j++)
                                 {
-                                    MapModelProjecTask mapModelProjecTask = ParseModelHelper.ParseMapModelProjecTask(maprows[j]);
-                                    if (mapModelProjecTask != null)
+                                    MapModelProjectUse mapModelProjectUse = ParseModelHelper.ParseMapModelProjectUse(maprows[j]);
+                                    if (mapModelProjectUse != null)
                                     {
-                                        ModelTask model = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjecTask.TaskId, (int)MODEL.Enum.State.InUse)));
+                                        ModelTask model = ParseModelHelper.ParseModelTask(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_task WHERE id={0} AND ztm={1}", mapModelProjectUse.ModelTaskId, (int)MODEL.Enum.State.InUse)));
                                         if (model != null)
                                         {
                                             models.Add(model);
@@ -338,6 +339,7 @@ namespace SERVICE.Controllers
 
                             findProjectDatas.Add(findprojectdata);
                         }
+                        
                     }
 
                     if (findProjectDatas.Count > 0)

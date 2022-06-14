@@ -92,8 +92,6 @@ function CloseAllLayer() {
         layer.close(findprojectinfoeditlayerindex);
         findprojectinfoeditlayerindex = null;
     }
-
-
 }
 
 //缩放至目标目范围
@@ -116,15 +114,6 @@ function MarkNode() {
             nodes[i].style.fontSize = "14px";
             nodes[i].style.fontWeight = "normal";
         }
-
-        if (searchresult.length > 0) {
-            if (searchresult.indexOf(nodes[i].innerHTML) != -1) {
-                nodes[i].style.borderBottom = "2px solid #FFB800";
-            }
-            else {
-                nodes[i].style.borderBottom = "0px solid #FFFFFF";
-            }
-        }
     }
 };
 
@@ -134,7 +123,7 @@ function MarkCurrentProject() {
         for (var i in findprojectlist) {
             for (var j in findprojectlist[i].children) {
                 if (findprojectlist[i].id == currentprojectid) {
-                    findprojectlist[i].children[j].spread = true;
+                    //findprojectlist[i].children[j].spread = true;
                     findprojectlist[i].spread = true;
                 }
                 else {
@@ -142,11 +131,8 @@ function MarkCurrentProject() {
                 }
             }
         }
-
-
     }
 
     tree.reload('projectlistid', { data: findprojectlist });
-
-    MarkNode();//高亮当前节点 
+    MarkNode();//高亮当前节点
 };

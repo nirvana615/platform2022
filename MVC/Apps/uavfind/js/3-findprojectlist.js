@@ -1,6 +1,48 @@
 ﻿//加载中
 loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
 
+layer.open({
+    type: 1
+    , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+    , area: ['330px', '58%']
+    , shade: 0
+    , offset: ['60px', '5px']
+    , closeBtn: 0
+    , maxmin: true
+    , moveOut: false
+    , resize: false
+    , content: '<!--项目列表--><div id="projectlist"></div>'
+    , zIndex: layer.zIndex
+    , success: function (layero) {
+        layer.setTop(layero);
+
+        tree.render({
+            elem: '#projectlist'
+            , id: 'projectlistid'
+            , data: []
+            , accordion: false
+            , showLine: true
+            , edit: ['add', 'update', 'del']
+            , showCheckbox: true
+            , customCheckbox: true
+            , customSpread: true
+            , customOperate: true
+            , cancelNodeFileIcon: true
+            , click: function (obj) {
+                FindProjectNodeClick(obj);//节点点击
+            }
+            , operate: function (obj) {
+                FindProjectNodeOperate(obj);//节点操作
+            }
+            , oncheck: function (obj) {
+                FindProjectNodeCheck(obj);//节点选中or取消选中
+            }
+        });
+
+        document.getElementById('projectlist').parentNode.style.maxHeight = (parseInt(document.getElementById('projectlist').parentNode.style.height.replace("px", "")) - 30).toString() + "px";
+    }
+});
+
 GetUserAllFindProjectsQuick();//获取用户项目
 GetUserAllFindProjects();//获取用户项目+模型+航线+目标
 
@@ -11,48 +53,6 @@ function GetUserAllFindProjectsQuick() {
         success: function (data) {
             CloseLayer(loadlayerindex);//关闭正在加载
 
-            layer.open({
-                type: 1
-                , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['330px', '58%']
-                , shade: 0
-                , offset: ['60px', '5px']
-                , closeBtn: 0
-                , maxmin: true
-                , moveOut: false
-                , resize: false
-                , content: '<!--项目列表--><div id="projectlist"></div>'
-                , zIndex: layer.zIndex
-                , success: function (layero) {
-                    layer.setTop(layero);
-
-                    tree.render({
-                        elem: '#projectlist'
-                        , id: 'projectlistid'
-                        , data: []
-                        , accordion: false
-                        , showLine: true
-                        , edit: ['add', 'update', 'del']
-                        , showCheckbox: true
-                        , customCheckbox: true
-                        , customSpread: true
-                        , customOperate: true
-                        , cancelNodeFileIcon: true
-                        , click: function (obj) {
-                            FindProjectNodeClick(obj);//节点点击
-                        }
-                        , operate: function (obj) {
-                            FindProjectNodeOperate(obj);//节点操作
-                        }
-                        , oncheck: function (obj) {
-                            FindProjectNodeCheck(obj);//节点选中or取消选中
-                        }
-                    });
-
-                    document.getElementById('projectlist').parentNode.style.maxHeight = (parseInt(document.getElementById('projectlist').parentNode.style.height.replace("px", "")) - 30).toString() + "px";
-                }
-            });
-
             var result = JSON.parse(data);
             if (result.code == 1) {
                 //返回项目信息
@@ -62,6 +62,7 @@ function GetUserAllFindProjectsQuick() {
                     project.id = findprojectdata[i].Project.Id;
                     project.title = findprojectdata[i].Project.XMMC;
                     project.type = "findproject";
+                    project.spread = false;
                     project.data = findprojectdata[i].Project;
 
                     var child = [];
@@ -94,7 +95,7 @@ function GetUserAllFindProjectsQuick() {
                         id: "PROJECTCENTER_" + findprojectdata[i].Project.Id,
                         position: Cesium.Cartesian3.fromDegrees(findprojectdata[i].Project.ZXJD, findprojectdata[i].Project.ZXWD),
                         billboard: {
-                            image: '../../Resources/img/model/modelprojecticon.png',
+                            image: '../../Resources/img/uavfind/findprojecticon.png',
                             verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             width: 40,
@@ -141,9 +142,10 @@ function GetUserAllFindProjectsQuick() {
 
         }, datatype: "json"
     });
+    
 };
 
-//获取用户全部巡查项目数据（含模型、航线、目标）
+//获取用户全部巡查项目数据
 function GetUserAllFindProjects() {
     $.ajax({
         url: servicesurl + "/api/FindProject/GetUserFindProjectDatas", type: "get", data: { "cookie": document.cookie },
@@ -162,6 +164,7 @@ function GetUserAllFindProjects() {
                     findproject.type = "findproject";
                     findproject.nodeOperate = true;
                     findproject.spread = false;
+                    
                     var child = [];
                     //实景模型
                     var models = new Object();
@@ -178,16 +181,17 @@ function GetUserAllFindProjects() {
                         model.type = "findsurmodel";
                         model.data = findprojectdata[i].Models[j];
                         model.nodeOperate = true;
+                        model.customItem = true;
+                        model.edit = ['del'];
                         model.showCheckbox = true;
                         model.checked = false;
 
-                        if (findprojectdata[i].Tasks[j].MXLJ != null && findprojectdata[k].Tasks[m].MXLJ != "") {
+                        if (findprojectdata[i].Models[j].MXLJ != null && findprojectdata[i].Models[j].MXLJ != "") {
                             model.disabled = false;
                         }
                         else {
                             model.disabled = true;
                         }
-
                         modelchild.push(model);
                     }
 
@@ -216,7 +220,6 @@ function GetUserAllFindProjects() {
                 }
 
                 tree.reload('projectlistid', { data: findprojectlist });
-
             }
             else {
                 layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -224,8 +227,6 @@ function GetUserAllFindProjects() {
         }, datatype: "json"
     });
 };
-
-
 
 
 //节点点击
@@ -310,7 +311,7 @@ function FindProjectNodeClick(obj) {
                             id: "PROJECTCENTER_" + findprojectlist[i].id,
                             position: Cesium.Cartesian3.fromDegrees(findprojectlist[i].data.ZXJD, findprojectlist[i].data.ZXWD),
                             billboard: {
-                                image: '../../Resources/img/model/modelprojecticon.png',
+                                image: '../../Resources/img/uavfind/findprojecticon.png',
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                                 heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                 width: 40,
@@ -362,28 +363,16 @@ function FindProjectNodeClick(obj) {
             }
         }
     }
-    else if (obj.data.type == "findmodel") {
-        if (curtileset != null) {
-            if (obj.data.id == curtileset.data.Id) {
-                if (curtileset.data.MXSJ != undefined && curtileset.data.MXSJ != "") {
-                    viewer.scene.camera.setView(JSON.parse(curtileset.data.MXSJ));
-                }
-                else {
-                    viewer.zoomTo(curtileset);
-                }
-            }
-        }
-    }
-    //TODO
     else {
         if (obj.data.children != null && obj.data.children != undefined) {
 
-            for (var i in findprojectlistarea) {
+            for (var i in findprojectlist) {
                 if (findprojectlist[i].id == obj.data.id) {
-                    findprojectlist[i].spread = true;
-                }
-                else {
-                    findprojectlist[i].spread = false;
+                    for (var j in findprojectlist[i].children) {
+                        if (findprojectlist[i].children[j].title == obj.data.title) {
+                            findprojectlist[i].children[j].spread = !findprojectlist[i].children[j].spread;
+                        }
+                    }
                 }
             }
             isReloadTree = true;//标记重载
@@ -405,15 +394,6 @@ function FindProjectNodeOperate(obj) {
         }
         else if (obj.type == 'del') {
             DeleteFindProject(obj.data.id);//删除项目
-        }
-    }
-    else if (obj.data.type == 'findsurmodel') {
-        //模型
-        if (obj.type == 'update') {
-            EditModel(obj.data.data);//编辑模型
-        }
-        else if (obj.type == 'del') {
-            DeleteModel(obj.data.id);//删除模型
         }
     }
     else if (obj.data.type == "uavroute") {
