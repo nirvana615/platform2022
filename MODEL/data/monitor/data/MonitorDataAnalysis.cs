@@ -36,5 +36,9 @@ namespace MODEL
         /// 深部位移监测数据
         /// </summary>
         public List<SBWYAnalysis> SBWYAnalysisArr { get; set; }
+        /// <summary>
+        /// 降雨监测数据
+        /// </summary>
+        public List<RAINAnalysis> RAINAnalysisArr { get; set; }
     }
 }

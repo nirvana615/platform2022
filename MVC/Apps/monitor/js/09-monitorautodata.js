@@ -17,8 +17,8 @@ var autoOriginalData = null;                      //原始数据分类
 var autoallData = null;                         //待处理设备所有数据
 
 
-var overlayChart = null;                        //综合分析
-
+var overlayChart = null;                        //综合分析图表
+var OverlayAnalysisData=null                    //综合分析数据
 
 var LiFengDatastatisticsTable = null;           //变形量的数据lf
 var YingLiDatastatisticsTable = null;           //变形量的数据应力
@@ -46,7 +46,7 @@ function LoadAutoDataLayer(id) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--自动化监测数据可视化--> <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;"> <ul class="layui-tab-title"> <li class="layui-this" style="width:21%;">可视化</li> <li style="width:21%;">数据处理</li> <li style="width:21%;">综合分析</li> <li style="width:21%;">统计分析</li> </ul> <div class="layui-tab-content" style="margin:0px 0px"> <!--可视化--> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="monitortreebytype" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> </div> </form> <!--图形--> <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> <!--统计表格--> <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;"> <table id="autodatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> <!--数据处理--> <div class="layui-tab-item"> <div class="layui-row" style="margin: 0px 10px;"> <!--选择设备及时间范围--> <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <label class="layui-form-label" style="text-align:center;">选择设备：</label> <div class="layui-input-block"> <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;"> <option value="">请选择设备</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;"> <option value="">请选择年限</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div></div> </form> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-col-md10"> <!--图形--> <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:790px;height:400px;border: 1px solid #e6e6e6;visibility:hidden;"></div> </div> <div class="layui-col-md2"> <!--数据集--> <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div> </div> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-tab layui-tab-brief" lay-filter="EditAutoDataTabBrief"> <ul class="layui-tab-title"> <li lay-id="abnormal" class="layui-this">异常处理</li> <li lay-id="grosserror">粗差剔除</li> <li lay-id="initialvalue">设置初值</li> <li lay-id="interpolation">插补数据</li> <li lay-id="fittingcurve">拟合曲线</li> </ul> <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;"> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--异常处理工具及说明--> <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;"> <!--异常处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter"> <option value="0">按时间范围选择</option> <option value="1">按值域范围选择</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editabnormaldatatoolbodyid"> <!--异常处理工具参数--> </div> </div> <!--异常处理工具说明--> <div id="editabnormaldatatooldoc"></div> </div> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--粗差处理工具及说明--> <form class="layui-form" lay-filter="editgrosserrordatatoolform" style="margin-top:5px;"> <!--粗差处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editgrosserrordatatoolid" name="editgrosserrordatatool" lay-filter="editgrosserrordatatoolfilter"> <option value="0">按标准差σ剔除</option> <option value="1">按残差δ剔除</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editgrosserrordatatoolbodyid"> <!--粗差处理工具参数--> </div> </div> <!--粗差剔除工具说明--> <div id="editgrosserrordatatooldoc"></div> </div> <div class="layui-tab-item">3</div> <div class="layui-tab-item">4</div> <div class="layui-tab-item">5</div> <div class="layui-tab-item">6</div> </div> </div> </div></div> <!--综合分析--> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="overlaymonitortree" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="overlaydataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="overlaydatapretimeid" name="overlaydatapretime" lay-filter="overlaydatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="overlaydatacustomtimeid" name="overlaydatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> <div class="layui-col-xs2"> <div class="grid-demo"> <div class="layui-form-item"> <label class="layui-form-label" style="width:40px;padding:5px 5px;">小时雨量</label> <div class="layui-input-block" style="right:55px;"> <input type="checkbox" id="hourrainid" name="hourrain" lay-skin="switch" lay-text="ON|OFF"> </div> </div> </div> </div> <div class="layui-col-xs2"> <div class="grid-demo"> <div class="layui-form-item"> <label class="layui-form-label" style="width:40px;padding:5px 5px;">每日雨量</label> <div class="layui-input-block" style="right:55px;"> <input type="checkbox" id="dayrainid" name="dayrain" lay-skin="switch" lay-text="ON|OFF"> </div> </div> </div> </div> </div> </form> <!--图形--> <div id="overlaydatachartid" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> </div> </div> </div> </div> <!--统计分析--> <div class="layui-tab-item"> <div class="layui-col-md12" style="height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;overflow-y: auto;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="bianXingDataform" style="margin-top:5px;margin-left:20px;margin-right:40px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:40px;"><select id="bianXingDatapretimeid" name="bianXingDatapretime" lay-filter="bianXingDatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:20px;margin-right:40px;"> <input id="bianXingDatacustomtimeid" name="bianXingDatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div> </div> </form> <!--统计表格--> <div id="LiFengDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block "> <table id="LiFengDatastatistics" class="layui-hide"></table> </div> <div id="YingLiDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="YingLiDatastatistics" class="layui-hide"></table> </div> <div id="GNSSDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="GNSSDatastatistics" class="layui-hide"></table> </div> <div id="QinJiaoDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="QinJiaoDatastatistics" class="layui-hide"></table> </div> <div id="SbwyDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="SbwyDatastatistics" class="layui-hide"></table> </div> <div id="DxswDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px;vertical-align: top;display:inline-block"> <table id="DxswDatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> </div>'
+                , content: '<!--自动化监测数据可视化--> <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;"> <ul class="layui-tab-title"> <li class="layui-this" style="width:21%;">可视化</li> <li style="width:21%;">数据处理</li> <li style="width:21%;">综合分析</li> <li style="width:21%;">统计分析</li> </ul> <div class="layui-tab-content" style="margin:0px 0px"> <!--可视化--> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="monitortreebytype" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> </div> </form> <!--图形--> <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> <!--统计表格--> <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;"> <table id="autodatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> <!--数据处理--> <div class="layui-tab-item"> <div class="layui-row" style="margin: 0px 10px;"> <!--选择设备及时间范围--> <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <label class="layui-form-label" style="text-align:center;">选择设备：</label> <div class="layui-input-block"> <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;"> <option value="">请选择设备</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;"> <option value="">请选择年限</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div></div> </form> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-col-md10"> <!--图形--> <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:790px;height:400px;border: 1px solid #e6e6e6;visibility:hidden;"></div> </div> <div class="layui-col-md2"> <!--数据集--> <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div> </div> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-tab layui-tab-brief" lay-filter="EditAutoDataTabBrief"> <ul class="layui-tab-title"> <li lay-id="abnormal" class="layui-this">异常处理</li> <li lay-id="grosserror">粗差剔除</li> <li lay-id="initialvalue">设置初值</li> <li lay-id="interpolation">插补数据</li> <li lay-id="fittingcurve">拟合曲线</li> </ul> <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;"> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--异常处理工具及说明--> <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;"> <!--异常处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter"> <option value="0">按时间范围选择</option> <option value="1">按值域范围选择</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editabnormaldatatoolbodyid"> <!--异常处理工具参数--> </div> </div> <!--异常处理工具说明--> <div id="editabnormaldatatooldoc"></div> </div> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--粗差处理工具及说明--> <form class="layui-form" lay-filter="editgrosserrordatatoolform" style="margin-top:5px;"> <!--粗差处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editgrosserrordatatoolid" name="editgrosserrordatatool" lay-filter="editgrosserrordatatoolfilter"> <option value="0">按标准差σ剔除</option> <option value="1">按残差δ剔除</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editgrosserrordatatoolbodyid"> <!--粗差处理工具参数--> </div> </div> <!--粗差剔除工具说明--> <div id="editgrosserrordatatooldoc"></div> </div> <div class="layui-tab-item">3</div> <div class="layui-tab-item">4</div> <div class="layui-tab-item">5</div> <div class="layui-tab-item">6</div> </div> </div> </div></div> <!--综合分析--> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="overlaymonitortree" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="overlaydataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="overlaydatapretimeid" name="overlaydatapretime" lay-filter="overlaydatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="overlaydatacustomtimeid" name="overlaydatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> <div class="layui-col-xs2"> <div class="grid-demo"> <div class="layui-form-item"> <label class="layui-form-label" style="width:40px;padding:0px 5px;">小时雨量</label> <div class="layui-input-block" style="right:55px;"> <input type="checkbox" id="hourrainid" name="hourrain" lay-skin="switch" lay-filter="hourrainfilter" lay-text="ON|OFF" disabled> </div> </div> </div> </div> <div class="layui-col-xs2"> <div class="grid-demo"> <div class="layui-form-item"> <label class="layui-form-label" style="width:40px;padding:0px 5px;">每日雨量</label> <div class="layui-input-block" style="right:55px;"> <input type="checkbox" id="dayrainid" name="dayrain" lay-skin="switch" lay-filter="dayrainfilter" lay-text="ON|OFF" disabled> </div> </div> </div> </div> </div> </form> <!--图形--> <div id="overlaydatachartid" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> </div> </div> </div> </div> <!--统计分析--> <div class="layui-tab-item"> <div class="layui-col-md12" style="height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;overflow-y: auto;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="bianXingDataform" style="margin-top:5px;margin-left:20px;margin-right:40px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:40px;"><select id="bianXingDatapretimeid" name="bianXingDatapretime" lay-filter="bianXingDatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:20px;margin-right:40px;"> <input id="bianXingDatacustomtimeid" name="bianXingDatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div> </div> </form> <!--统计表格--> <div id="LiFengDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block "> <table id="LiFengDatastatistics" class="layui-hide"></table> </div> <div id="YingLiDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="YingLiDatastatistics" class="layui-hide"></table> </div> <div id="GNSSDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="GNSSDatastatistics" class="layui-hide"></table> </div> <div id="QinJiaoDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="QinJiaoDatastatistics" class="layui-hide"></table> </div> <div id="SbwyDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px ;vertical-align: top;display:inline-block"> <table id="SbwyDatastatistics" class="layui-hide"></table> </div> <div id="DxswDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;height:300px;vertical-align: top;display:inline-block"> <table id="DxswDatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> </div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -5002,6 +5002,7 @@ function Fittingmethod(type, data, threshold) {
 //综合分析
 function OverlayAnalysis() {
     var monitors = null;
+    var rainmonitor = {};
     var overlayTreeDatabytwoid = null;
     //渲染工具
     document.getElementById("overlaydatapretimeid").style.visibility = "visible";
@@ -5023,12 +5024,18 @@ function OverlayAnalysis() {
                     treeData[i].children[j].children[k].showCheckbox = true;
                     treeData[i].children[j].children[k].checked = false;
                     treeData[i].children[j].children[k].disabled = true;
+                    rainmonitor.id = treeData[i].children[j].children[k].id;
+                    rainmonitor.type = treeData[i].children[j].children[k].type;
+                    rainmonitor.title = treeData[i].children[j].children[k].title;
+                    $('#hourrainid').removeAttr('disabled');
+                    $('#dayrainid').removeAttr('disabled'); 
                 }
             }
             else {
                 treeData[i].children[j].type = "className";
                 treeData[i].children[j].showCheckbox = true;
                 treeData[i].children[j].checked = false;
+                treeData[i].children[j].tid = treeData[i].children[j].title + treeData[i].children[j].id;
                 for (var k in treeData[i].children[j].children) {
                     treeData[i].children[j].children[k].tid = treeData[i].children[j].title + treeData[i].children[j].children[k].id;
                     treeData[i].children[j].children[k].showCheckbox = true;
@@ -5071,10 +5078,10 @@ function OverlayAnalysis() {
             if (obj.data.type == "className") {
                 if (overlayTreeDatabytwoid == null) {
                     if (!isReloadTree) {
-                        overlayTreeDatabytwoid = obj.data.id;
+                        overlayTreeDatabytwoid = obj.data.tid;
                         for (var i in treeData) {
                             for (var j in treeData[i].children) {
-                                if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
+                                if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
                                     treeData[i].children[j].spread = true;
                                 }
                                 else {
@@ -5091,11 +5098,11 @@ function OverlayAnalysis() {
                 else {
                     if (obj.data.id != overlayTreeDatabytwoid) {
                         if (!isReloadTree) {
-                            overlayTreeDatabytwoid = obj.data.id;
+                            overlayTreeDatabytwoid = obj.data.tid;
                             //取消所有选中
                             for (var i in treeData) {
                                 for (var j in treeData[i].children) {
-                                    if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
+                                    if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
                                         treeData[i].children[j].spread = true;
                                     }
                                     else {
@@ -5123,10 +5130,10 @@ function OverlayAnalysis() {
             if (obj.checked) {
                 if (obj.data.type == "className") {
                     if (!isReloadTree) {
-                        overlayTreeDatabytwoid = obj.data.id;
+                        overlayTreeDatabytwoid = obj.data.tid;
                         for (var i in treeData) {
                             for (var j in treeData[i].children) {
-                                if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
+                                if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
                                     for (var k in treeData[i].children[j].children) {
                                         treeData[i].children[j].children[k].checked = true;
                                         treeData[i].children[j].children[k].spread = true;
@@ -5153,7 +5160,7 @@ function OverlayAnalysis() {
                         if (!isReloadTree) {
                             for (var i in treeData) {
                                 for (var j in treeData[i].children) {
-                                    if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
+                                    if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
                                         for (var k in treeData[i].children[j].children) {
                                             if (treeData[i].children[j].children[k].tid == obj.data.tid) {
                                                 treeData[i].children[j].children[k].checked = true;
@@ -5198,7 +5205,7 @@ function OverlayAnalysis() {
                     if (!isReloadTree) {
                         for (var i in treeData) {
                             for (var j in treeData[i].children) {
-                                if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
+                                if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
                                     treeData[i].children[j].checked = false;
                                     for (var k in treeData[i].children[j].children) {
                                         treeData[i].children[j].children[k].checked = false;
@@ -5218,11 +5225,13 @@ function OverlayAnalysis() {
                     if (!isReloadTree) {
                         for (var i in treeData) {
                             for (var j in treeData[i].children) {
-                                if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
+                                if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
                                     for (var k in treeData[i].children[j].children) {
                                         if (treeData[i].children[j].children[k].tid == obj.data.tid) {
                                             treeData[i].children[j].checked = false;
                                             treeData[i].children[j].children[k].checked = false;
+                                            //取消数据
+                                            cancelCheckedMonitor(treeData[i].children[j].children[k].id, treeData[i].children[j].children[k].type)
                                             break;
                                         }
                                     }
@@ -5233,11 +5242,12 @@ function OverlayAnalysis() {
                         isReloadTree = true;//标记重载
                         tree.reload('overlaymonitortreeid', { data: treeData });
                         isReloadTree = false;//重载后还原
-                        getCheckedMonitor();
+                        
                     }
                 }
                 
             }
+            //获取选中数据并加载
             function getCheckedMonitor() {
                 monitors = [];
                 for (var i in treeData) {
@@ -5262,7 +5272,7 @@ function OverlayAnalysis() {
                     //加载初始监测点数据
                     LoadAnalysisAutoDataPreDateTime(monitors, form.val("overlaydataform").overlaydatapretime);
                 }
-                
+
             }
         }
     });
@@ -5300,39 +5310,153 @@ function OverlayAnalysis() {
             
         }
     });
+    //监听小时降雨开关
+    form.on('switch(hourrainfilter)', function (data) {
+        if (this.checked) {
+            
+            var type = "hourrain"
+            LoadAnalysisRainDataDateTime(rainmonitor, type);
+        }
+        else {
+            OverlayAnalysisData.RAINAnalysisArr = {};
+            DisplayOverlayAnalysis(OverlayAnalysisData);
+        }
+        $('#dayrainid').prop("checked", false);
+        form.render('checkbox');
+    });
+    //监听每日降雨开关
+    form.on('switch(dayrainfilter)', function (data) {
+        if (this.checked) {
+            var type = "dayrain"
+            LoadAnalysisRainDataDateTime(rainmonitor, type);
+        } else {
+            OverlayAnalysisData.RAINAnalysisArr = {};
+            DisplayOverlayAnalysis(OverlayAnalysisData);
+        }
+        $('#hourrainid').prop("checked", false);
+        form.render('checkbox');
+    });
 
     form.render();
     form.render('select');
+    form.render('checkbox');
     
 }
+//取消选中数据加载
+function cancelCheckedMonitor(id, type) {
+    if (type == "GNSS") {
+        for (var i in OverlayAnalysisData.GNSSAnalysisArr) {
+            if (OverlayAnalysisData.GNSSAnalysisArr[i].Id == id) {
+                delete OverlayAnalysisData.GNSSAnalysisArr[i];
+            }
+        }
+    } else if (type == "裂缝") {
+        for (var i in OverlayAnalysisData.LFAnalysisArr) {
+            if (OverlayAnalysisData.LFAnalysisArr[i].Id == id) {
+                delete OverlayAnalysisData.LFAnalysisArr[i];
+            }
+        }
+    } else if (type == "倾角") {
+        for (var i in OverlayAnalysisData.QJAnalysisArr) {
+            if (OverlayAnalysisData.QJAnalysisArr[i].Id == id) {
+                delete OverlayAnalysisData.QJAnalysisArr[i];
+            }
+        }
+    } else if (type == "应力") {
+        for (var i in OverlayAnalysisData.YLAnalysisArr) {
+            if (OverlayAnalysisData.YLAnalysisArr[i].Id == id) {
+                delete OverlayAnalysisData.YLAnalysisArr[i];
+            }
+        }
+    } else if (type == "深部位移") {
+        for (var i in OverlayAnalysisData.SBWYAnalysisArr) {
+            if (OverlayAnalysisData.SBWYAnalysisArr[i].Id == id) {
+                delete OverlayAnalysisData.SBWYAnalysisArr[i];
+            }
+        }
+    } else if (type == "地下水位") {
+        for (var i in OverlayAnalysisData.WATERAnalysisArr) {
+            if (OverlayAnalysisData.WATERAnalysisArr[i].Id == id) {
+                delete OverlayAnalysisData.WATERAnalysisArr[i];
+            }
+        }
+    }
+    DisplayOverlayAnalysis(OverlayAnalysisData);
+
+}
+//加载分析数据（除降雨外）
 function LoadAnalysisAutoDataPreDateTime(monitors, datetime) {
+    //关闭降雨开关
+    $('#dayrainid').prop("checked", false);
+    $('#hourrainid').prop("checked", false);
+    form.render('checkbox');
+    //加载数据
     overlayChart.showLoading();
+    OverlayAnalysisData = null;
     var monitorstr = { "monitorstr": monitors};
     var datastring = JSON.stringify(monitorstr);
     //请求监测点指点时间范围数据
     $.ajax({
         url: servicesurl + "/api/Data/GetAnalysisAutoDatabyPreDateTime", type: "get", data: { "monitros": datastring, "predatetime": datetime, "cookie": document.cookie },
         success: function (data) {
-            var result = JSON.parse(data);
-            OverlayAnalysisData(result);
+            OverlayAnalysisData= JSON.parse(data);
+            DisplayOverlayAnalysis(OverlayAnalysisData);
         }, datatype: "json"
     });
 }
 function LoadAnalysisAutoDataCustomDateTime(monitors, datetime) {
+    //关闭降雨开关
+    $('#dayrainid').prop("checked", false);
+    $('#hourrainid').prop("checked", false);
+    form.render('checkbox');
+    //加载数据
     overlayChart.showLoading();
+    OverlayAnalysisData = null;
     var monitorstr = { "monitorstr": monitors };
     var datastring = JSON.stringify(monitorstr);
     //请求监测点指点时间范围数据
     $.ajax({
         url: servicesurl + "/api/Data/GetAnalysisAutoDatabyCustomDateTime", type: "get", data: { "monitros": datastring, "customdatetime": datetime, "cookie": document.cookie },
         success: function (data) {
-            var result = JSON.parse(data);
-            OverlayAnalysisData(result);
+            OverlayAnalysisData = JSON.parse(data);
+            DisplayOverlayAnalysis(OverlayAnalysisData);
         }, datatype: "json"
     });
 }
+//加载降雨数据
+function LoadAnalysisRainDataDateTime(rainmonitor,type) {
+    overlayChart.showLoading();
+    OverlayAnalysisData.RAINAnalysisArr = {};
+    //请求监测点指点时间范围数据
+    if (document.getElementById("overlaydatacustomtimeid").value != "") {
+        var datetime = document.getElementById("overlaydatacustomtimeid").value;
+        $.ajax({
+            url: servicesurl + "/api/Data/GetAnalysisRainDatabyCustomDateTime", type: "get", data: { "id": rainmonitor.id, "type": type, "title": rainmonitor.title, "customdatetime": datetime, "cookie": document.cookie },
+            success: function (data) {
+                var rainData = JSON.parse(data);
+                OverlayAnalysisData.RAINAnalysisArr = rainData;
+                DisplayOverlayAnalysis(OverlayAnalysisData);
+            }, datatype: "json"
+        });
+    }
+    else {
+        var datetime = form.val("overlaydataform").overlaydatapretime;
+        $.ajax({
+            url: servicesurl + "/api/Data/GetAnalysisRainDatabyPreDateTime", type: "get", data: { "id": rainmonitor.id, "type": type, "title": rainmonitor.title, "predatetime": datetime, "cookie": document.cookie },
+            success: function (data) {
+                var rainData = JSON.parse(data);
+                OverlayAnalysisData.RAINAnalysisArr = rainData;
+                DisplayOverlayAnalysis(OverlayAnalysisData);
+            }, datatype: "json"
+        });
+        
+    }
+    
+}
+
+
 //叠加展示
-function OverlayAnalysisData(analysisDatas) {
+function DisplayOverlayAnalysis(analysisDatas) {
     var yAxisData = [];
     var seriesData = [];
     var gnssAnalysisData = analysisDatas.GNSSAnalysisArr;
@@ -5341,6 +5465,7 @@ function OverlayAnalysisData(analysisDatas) {
     var ylAnalysisData = analysisDatas.YLAnalysisArr;
     var waterAnalysisData = analysisDatas.WATERAnalysisArr;
     var sbwyAnalysisData = analysisDatas.SBWYAnalysisArr;
+    var rainAnalysisData = analysisDatas.RAINAnalysisArr;
     if (gnssAnalysisData.length > 0) {
         if (yAxisData.length < 1) {
             position = "left";
@@ -5485,7 +5610,31 @@ function OverlayAnalysisData(analysisDatas) {
             sbwyDissplay(id, name, sbwyAnalysisData[i].Datas);
         }
     };
-
+    if (rainAnalysisData.length > 0) {
+        if (yAxisData.length < 1) {
+            position = "left";
+        }
+        else {
+            position = "right";
+        }
+        var offset = yAxisData.length * 35;
+        yAxisData.push(
+            {
+                id: 'rain',
+                type: 'value',
+                position: position,
+                offset: offset,
+                name: 'RAIN(mm)',
+                splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+            }
+        );
+        for (var i in rainAnalysisData) {
+            var id = rainAnalysisData[i].Id;
+            var name = rainAnalysisData[i].Name;
+            var type = rainAnalysisData[i].Type;
+            rainDissplay(id, name, type, rainAnalysisData[i].Datas);
+        }
+    };
     
     function gnssDissplay(id, name, gnssData) {
         var id = id.toString();
@@ -5708,9 +5857,54 @@ function OverlayAnalysisData(analysisDatas) {
         );
     
     }
+    function rainDissplay(id, name,type, rainData) {
+        //图表
+        var rains = [];
+        if (type == "dayrain") {
+            for (var i in rainData) {
+                var time = Math.round(new Date(rainData[i].Time + " 12:00:00") / 1000) * 1000;
+                var rain = [];
+                rain.push(time);
+                rain.push(parseFloat(rainData[i].Value));
+                rains.push(rain);
+            }
+            seriesData.push(
+                {
+                    id: id + 'x',
+                    name: '降雨量(日)',
+                    type: 'bar',
+                    xAxisIndex: 0,
+                    yAxisIndex: yAxisData.length - 1,
+                    showSymbol: false,
+                    data: rains
+                }
+            );
+        }
+        else{
+            for (var i in rainData) {
+                var time = Math.round(new Date(rainData[i].Time + ":00:00") / 1000) * 1000;
+                var rain = [];
+                rain.push(time);
+                rain.push(parseFloat(rainData[i].Value));
+                rains.push(rain);
+            }
+            seriesData.push(
+                {
+                    id: id + 'x',
+                    name: '降雨量(小时)',
+                    type: 'bar',
+                    xAxisIndex: 0,
+                    yAxisIndex: yAxisData.length - 1,
+                    showSymbol: false,
+                    data: rains
+                }
+            );
+        }
 
+    }
     var option = {
         legend: {
+            type: 'scroll',
             left: 'center',
             bottom: 2,
         },

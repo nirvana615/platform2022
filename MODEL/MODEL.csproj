@@ -98,6 +98,7 @@
     <Compile Include="data\monitormap\MapMonitorThreshold.cs" />
     <Compile Include="data\monitormap\MapUserMonitorProject.cs" />
     <Compile Include="data\monitor\data\DataBianXinLiang.cs" />
+    <Compile Include="data\monitor\data\RAINAnalysis.cs" />
     <Compile Include="data\monitor\data\SBWYAnalysis.cs" />
     <Compile Include="data\monitor\data\WATERAnalysis.cs" />
     <Compile Include="data\monitor\data\YLAnalysis.cs" />

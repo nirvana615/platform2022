@@ -245,7 +245,7 @@ namespace SERVICE.Controllers
 
 
         /// <summary>
-        /// 获取待分析监测点预设时间范围监测数据
+        /// 获取待分析监测点预设时间范围监测数据(除降雨外)
         /// </summary>
         /// <param name="id">监测点id</param>
         /// <param name="type">监测点类型</param>
@@ -279,7 +279,7 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
-        /// 获取待分析监测点预设时间范围监测数据
+        /// 获取待分析监测点预设时间范围监测数据(除降雨外)
         /// </summary>
         /// <param name="id">监测点id</param>
         /// <param name="type">监测点类型</param>
@@ -315,13 +315,70 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
-        /// 剔除监测数据
+        /// 获取待分析监测点预设时间范围降雨数据
         /// </summary>
         /// <param name="id">监测点id</param>
         /// <param name="type">监测点类型</param>
-        /// <param name="datas">剔除监测数据id</param>
+        /// <param name="predatetime">预设时间范围编码</param>
         /// <param name="cookie"></param>
         /// <returns></returns>
+        [HttpGet]
+        public string GetAnalysisRainDatabyPreDateTime(int id, string type, string title, string predatetime, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                //获取时间范围
+                string datetime = GetDateTimebyPre(Convert.ToInt16(predatetime));
+                if (!string.IsNullOrEmpty(datetime))
+                {
+
+                    return GetAnalysisRainDatabyDateTime(id,type, title, datetime, userbsms);
+                }
+            }
+            else
+            {
+                //验权失败
+            }
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取待分析监测点预设时间范围降雨数据
+        /// </summary>
+        /// <param name="id">监测点id</param>
+        /// <param name="type">监测点类型</param>
+        /// <param name="customdatetime">自定义时间范围</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetAnalysisRainDatabyCustomDateTime(int id, string type,string title, string customdatetime, string cookie)
+        {
+            
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                try
+                {
+                    //获取时间范围
+                    string[] timerange = customdatetime.Replace(" - ", ";").Split(new char[] { ';' });
+
+                    return GetAnalysisRainDatabyDateTime(id,type,title, string.Format("(gcsj>='{0}' AND gcsj<'{1}')", timerange[0], timerange[1]), userbsms);
+                }
+                catch
+                { }
+            }
+            else
+            {
+                //验权失败
+            }
+
+            return string.Empty;
+        }
 
 
 
@@ -753,7 +810,7 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
-        /// 获取待处理监测点设备指定时间范围数据
+        /// 获取待处理监测点设备指定时间范围数据(除降雨外)
         /// </summary>
         /// <param name="id"></param>
         /// <param name="type"></param>
@@ -1179,7 +1236,7 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
-        /// 获取待分析监测点设备指定时间范围数据
+        /// 获取待分析监测点设备指定时间范围数据(除降雨外)
         /// </summary>
         /// <param name="id"></param>
         /// <param name="type"></param>
@@ -1194,6 +1251,7 @@ namespace SERVICE.Controllers
             monitorDataAnalysis.SBWYAnalysisArr = new List<SBWYAnalysis>();
             monitorDataAnalysis.WATERAnalysisArr = new List<WATERAnalysis>();
             monitorDataAnalysis.YLAnalysisArr = new List<YLAnalysis>();
+            monitorDataAnalysis.RAINAnalysisArr = new List<RAINAnalysis>();
             foreach (var jObject in monitorArray)
             {
                 int id = Convert.ToInt16(jObject["id"].ToString());
@@ -1570,7 +1628,106 @@ namespace SERVICE.Controllers
             return JsonHelper.ToJson(monitorDataAnalysis);
             
         }
-        
+        /// <summary>
+        /// 获取待分析监测点设备指定时间范围数据(除降雨外)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private string GetAnalysisRainDatabyDateTime(int id,string type,string title, string time, string userbsms)
+        {
+            
+            List<RAINAnalysis> RAINAnalysisArr = new List<RAINAnalysis>();
+            if (type == "dayrain")
+            {
+                #region 日雨量
+                //根据监测点号获取设备
+                MapMonitorDevice mapMonitorDevice = ParseMonitorHelper.ParseMapMonitorDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_monitor_device WHERE monitorid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (mapMonitorDevice != null)
+                {
+                    //获取设备
+                    Device device = ParseMonitorHelper.ParseDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_device WHERE id={0} AND sblx={1} AND bsm{2} AND ztm={3}", mapMonitorDevice.DeviceId, (int)MODEL.EnumMonitor.AutoDeviceType.RAIN, userbsms, (int)MODEL.Enum.State.InUse)));
+                    if (device != null)
+                    {
+                        string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT sum(value),substring(gcsj,0,11) FROM monitor_data_rain WHERE code='{0}' AND bsm{1} AND {2} GROUP BY substring(gcsj,0,11) ORDER BY substring(gcsj,0,11)", device.Code, userbsms, time));
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                            if (rows.Length > 0)
+                            {
+                                RAINAnalysis rainanalysis = new RAINAnalysis();
+                                List<RAINDelta> raindeltas = new List<RAINDelta>();
+                                for (int i = 0; i < rows.Length; i++)
+                                {
+                                    RAINDelta raindelta = ParseMonitorHelper.ParseRAINDelta(rows[i], id, 0);
+                                    if (raindelta != null)
+                                    {
+                                        raindeltas.Add(raindelta);
+                                    }
+                                }
+
+                                rainanalysis.Datas = raindeltas;
+                                rainanalysis.Id = id;
+                                rainanalysis.Name = title;
+                                rainanalysis.Type = type;
+
+                                if (rainanalysis.Datas != null)
+                                {
+                                    RAINAnalysisArr.Add(rainanalysis);
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
+            }
+            else if (type == "hourrain")
+            {
+                #region 小时雨量
+                //根据监测点号获取设备
+                MapMonitorDevice mapMonitorDevice = ParseMonitorHelper.ParseMapMonitorDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_map_monitor_device WHERE monitorid={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse)));
+                if (mapMonitorDevice != null)
+                {
+                    //获取设备
+                    Device device = ParseMonitorHelper.ParseDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM monitor_device WHERE id={0} AND sblx={1} AND bsm{2} AND ztm={3}", mapMonitorDevice.DeviceId, (int)MODEL.EnumMonitor.AutoDeviceType.RAIN, userbsms, (int)MODEL.Enum.State.InUse)));
+                    if (device != null)
+                    {
+                        string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT sum(value),substring(gcsj,0,14) FROM monitor_data_rain WHERE code='{0}' AND bsm{1} AND {2} GROUP BY substring(gcsj,0,14) ORDER BY substring(gcsj,0,14)", device.Code, userbsms, time));
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                            if (rows.Length > 0)
+                            {
+                                RAINAnalysis rainanalysis = new RAINAnalysis();
+                                List<RAINDelta> raindeltas = new List<RAINDelta>();
+                                for (int i = 0; i < rows.Length; i++)
+                                {
+                                    RAINDelta raindelta = ParseMonitorHelper.ParseRAINDelta(rows[i], id, 0);
+                                    if (raindelta != null)
+                                    {
+                                        raindeltas.Add(raindelta);
+                                    }
+                                }
+
+                                rainanalysis.Datas = raindeltas;
+                                rainanalysis.Id = id;
+                                rainanalysis.Name = title;
+                                rainanalysis.Type = type;
+                                
+                                if (rainanalysis.Datas != null)
+                                {
+                                    RAINAnalysisArr.Add(rainanalysis);
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
+            }
+            return JsonHelper.ToJson(RAINAnalysisArr);
+
+        }
         /// <summary>
         /// 根据预设获取观测时间范围
         /// 大于等于开始时间且小于结束时间
