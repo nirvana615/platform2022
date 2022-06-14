@@ -2585,70 +2585,26 @@ function gaoJinManagLayer(projectid) {
 function GetLaryMonitorYueZhi(id) {
    
     //请求监测点指点时间范围数据
-    yueZhitable = table.render({
-        elem: '#yueZhitable-view'
-        , id: 'yueZhitableviewid'
-        , title: '斜坡信息'
-        , skin: 'line'
-        , even: false
-        , page: true
-        , limit: 10
-        , totalRow: false
-        , initSort: { field: 'id', type: 'desc' }
-        , cols: [[
-              { field: 'id', title: 'ID', hide: true }
-            , { field: 'jcdbh', title: '监测点编号', width: 120, align: "center",  }
-            , {
-                field: 'jcff', title: '监测方法', width: 120, align: "center", templet: function (row) {
-                    if (row.jcff =='0') {
-                        return 'GNSS';
-                    } else if (row.jcff == '1') {
-                        return '裂缝';
-                    } else if (row.jcff == '2') {
-                        return '倾斜';
-                    } else if (row.jcff == '3') {
-                        return '应力';
-                    } else if (row.jcff == '4') {
-                        return '深部位移';
-                    } else if (row.jcff == '5') {
-                        return '地下水位';
-                    } else if (row.jcff == '6') {
-                        return '雨量';
-                    }
-                }
-            }
-            , { field: 'lastUpdateTime', title: '生效时间', width: 120, align: "center" }
-            , { field: 'backTrack', title: '回溯时长', width: 100, edit: 'text', align: "center" }
-            , { field: 'yueZhiOne', title: '阈值1', width: 90, edit: 'text', align: "center" }
-            , { field: 'yueZhiTwo', title: '阈值2', width: 90, edit: 'text', align: "center" }
-            , { field: 'yueZhiThree', title: '阈值3', width: 90, edit: 'text', align: "center" }
-      
-            , { fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#yuZhiChuButon' }
-        ]]
-        , data: []
-    });
+    
     //阈值信息分类展示
-    $("#btn-wi-all").on("click", function () {
-        //DisplayYuZhiInfo("", monitorYuZhiTableData);
-        GetMonitorYueZhi(id);//查总的就去阈值
-    });
+  
     $("#btn-wi-gnss").on("click", function () {
-        DisplayYuZhiInfo("0", monitorYuZhiTableData);
+        xuanRanTable(id, "0")
     });
     $("#btn-wi-lf").on("click", function () {
-        DisplayYuZhiInfo("1", monitorYuZhiTableData);
+        xuanRanTable(id, "1");
     });
     $("#btn-wi-sbwy").on("click", function () {
-        DisplayYuZhiInfo("4", monitorYuZhiTableData);
+        xuanRanTable(id, "4")
     });
     $("#btn-wi-yili").on("click", function () {
-        DisplayYuZhiInfo("3", monitorYuZhiTableData);
+        xuanRanTable(id, "3")
     });
     $("#btn-wi-qj").on("click", function () {
-        DisplayYuZhiInfo("2", monitorYuZhiTableData);
+        xuanRanTable(id, "2")
     });
     $("#btn-wi-dxsw").on("click", function () {
-        DisplayYuZhiInfo("5", monitorYuZhiTableData);
+        xuanRanTable(id, "5")
     });
     function DisplayYuZhiInfo(type, wis) {
         if (wis.length > 0) {
@@ -2724,7 +2680,7 @@ function GetLaryMonitorYueZhi(id) {
                         var res = JSON.parse(result);
                         if (res.code == 1) {//成功
                             layer.msg("删除成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                            GetMonitorYueZhi(id);
+                            GetMonitorYueZhi(id, obj.data.jcff);
                         } else {
                             layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }
@@ -2751,19 +2707,19 @@ function GetLaryMonitorYueZhi(id) {
             };
             if (data.jcff == '0') {
                 if (data.yueZhiOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的水平位移(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg('请输入' + data.jcdbh + "的水平位移阈值！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (isNaN(data.yueZhiOne) || parseFloat(data.yueZhiOne) <= 0) {
-                    layer.msg(data.jcdbh + '的水平位移(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg(data.jcdbh + '的水平位移阈值应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (data.yueZhiTwo.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的垂直位移（阈值2）！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg('请输入' + data.jcdbh + "的垂直位移阈值！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (isNaN(data.yueZhiTwo) || parseFloat(data.yueZhiTwo) <= 0) {
-                    layer.msg(data.jcdbh + '的垂直位移（阈值2）应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg(data.jcdbh + '的垂直位移阈值应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 sendData.yueZhiOne = parseFloat(data.yueZhiOne);
@@ -2771,34 +2727,34 @@ function GetLaryMonitorYueZhi(id) {
                 
             } else if (data.jcff == '1') {//裂缝
                 if (data.yueZhiOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的裂缝阈值(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg('请输入' + data.jcdbh + "的裂缝阈值！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (isNaN(data.yueZhiOne) || parseFloat(data.yueZhiOne) <= 0) {
-                    layer.msg(data.jcdbh + '的裂缝阈值(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg(data.jcdbh + '的裂缝阈值应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 sendData.yueZhiOne = parseFloat(data.yueZhiOne);
             } else if (data.jcff == '2') {//倾斜
                 if (data.yueZhiOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的X方向(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg('请输入' + data.jcdbh + "的X方向阈值！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (isNaN(data.yueZhiOne) || parseFloat(data.yueZhiOne) <= 0) {
-                    layer.msg(data.jcdbh + '的X方向(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg(data.jcdbh + '的X方向阈值应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (data.yueZhiTwo.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的Y方向（阈值2）！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg('请输入' + data.jcdbh + "的Y方向阈值！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (isNaN(data.yueZhiTwo) || parseFloat(data.yueZhiTwo) <= 0) {
-                    layer.msg(data.jcdbh + '的Y方向（阈值2）应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg(data.jcdbh + '的Y方向阈值应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 //阈值三可设置，也可以不设置
                 if (data.yueZhiThree.length>0&&(isNaN(data.yueZhiThree) || parseFloat(data.yueZhiThree) <= 0)) {
-                    layer.msg(data.jcdbh + '的Z方向（阈值3）应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg(data.jcdbh + '的Z方向阈值应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 sendData.yueZhiOne = parseFloat(data.yueZhiOne);
@@ -2808,40 +2764,40 @@ function GetLaryMonitorYueZhi(id) {
                 }
             } else if (data.jcff == '3') {//应力
                 if (data.yueZhiOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的应力阈值(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg('请输入' + data.jcdbh + "的应力阈值！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (isNaN(data.yueZhiOne) || parseFloat(data.yueZhiOne) <= 0) {
-                    layer.msg(data.jcdbh + '的应力阈值(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg(data.jcdbh + '的应力阈值应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 sendData.yueZhiOne = parseFloat(data.yueZhiOne);
             } else if (data.jcff == '4') {
                 if (data.yueZhiOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的X方向(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg('请输入' + data.jcdbh + "的X方向阈值！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (isNaN(data.yueZhiOne) || parseFloat(data.yueZhiOne) <= 0) {
-                    layer.msg(data.jcdbh + '的X方向(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg(data.jcdbh + '的X方向阈值应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (data.yueZhiTwo.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的Y方向（阈值2）！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg('请输入' + data.jcdbh + "的Y方向阈值！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (isNaN(data.yueZhiTwo) || parseFloat(data.yueZhiTwo) <= 0) {
-                    layer.msg(data.jcdbh + '的Y方向（阈值2）应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg(data.jcdbh + '的Y方向阈值应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 sendData.yueZhiOne = parseFloat(data.yueZhiOne);
                 sendData.yueZhiTwo = parseFloat(data.yueZhiTwo);
             } else if (data.jcff == '5') {
                 if (data.yueZhiOne.length == 0) {
-                    layer.msg('请输入' + data.jcdbh + "的地下水位阈值(阈值1)！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg('请输入' + data.jcdbh + "的地下水位阈值！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 if (isNaN(data.yueZhiOne) || parseFloat(data.yueZhiOne) <= 0) {
-                    layer.msg(data.jcdbh + '的地下水位阈值(阈值1)应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    layer.msg(data.jcdbh + '的地下水位阈值应该为正数', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     return;
                 }
                 sendData.yueZhiOne = parseFloat(data.yueZhiOne);
@@ -2856,7 +2812,7 @@ function GetLaryMonitorYueZhi(id) {
                     var res = JSON.parse(result);
                     if (res.code == 1) {//成功
                         layer.msg("更新成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                        GetMonitorYueZhi(id);
+                        GetMonitorYueZhi(id,data.jcff);
                     } else {
                         layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                     }
@@ -2866,13 +2822,13 @@ function GetLaryMonitorYueZhi(id) {
         }
     });
     
-    GetMonitorYueZhi(id)
+    GetMonitorYueZhi(id,"")
 }
-function GetMonitorYueZhi(id) {
+function GetMonitorYueZhi(id,jcff) {
     var loadinglayerindex1 = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     //请求监测点指点时间范围数据
     $.ajax({
-        url: servicesurl + "/api/Data/GetMonitorYueZhi", type: "get", data: { "id": id ,"cookie": document.cookie },
+        url: servicesurl + "/api/Data/GetMonitorYueZhi", type: "get", data: { "id": id, "jcff": jcff ,"cookie": document.cookie },
         success: function (data) {
             layer.close(loadinglayerindex1);
             monitorYuZhiTableData = JSON.parse(data);
@@ -2883,59 +2839,87 @@ function GetMonitorYueZhi(id) {
             var yilicount = 0;
             var qjcount = 0;
             var dxswcount = 0;
-
-            for (var i in monitorYuZhiTableData) {
-                if (monitorYuZhiTableData[i].jcff == "0") {
-                    gnsscount++;
+            if (jcff == "") {//第一次进来查询
+                for (var i in monitorYuZhiTableData) {
+                    if (monitorYuZhiTableData[i].jcff == "0") {
+                        gnsscount++;
+                    }
+                    else if (monitorYuZhiTableData[i].jcff == "1") {
+                        lfcount++;
+                    }
+                    else if (monitorYuZhiTableData[i].jcff == "4") {
+                        sbwycount++;
+                    }
+                    else if (monitorYuZhiTableData[i].jcff == "3") {
+                        yilicount++;
+                    }
+                    else if (monitorYuZhiTableData[i].jcff == "2") {
+                        qjcount++;
+                    }
+                    else if (monitorYuZhiTableData[i].jcff == "5") {
+                        dxswcount++;
+                    }
                 }
-                else if (monitorYuZhiTableData[i].jcff == "1") {
-                    lfcount++;
+                var chushiHuaFlag = true;
+                if (gnsscount > 0) {
+                    document.getElementById('warning-gnss-count').innerText = "(" + gnsscount + ")";
+                    if (chushiHuaFlag) {
+                        xuanRanTable(id, "0");
+                        chushiHuaFlag = false;
+                    }
+                } else {
+                    $("#btn-wi-gnss").hide();
                 }
-                else if (monitorYuZhiTableData[i].jcff == "4") {
-                    sbwycount++;
+                if (lfcount > 0) {
+                    document.getElementById('warning-lf-count').innerText = "(" + lfcount + ")";
+                    if (chushiHuaFlag) {
+                        xuanRanTable(id, "1");
+                        chushiHuaFlag = false;
+                    }
+                } else {
+                    $("#btn-wi-lf").hide();
                 }
-                else if (monitorYuZhiTableData[i].jcff == "3") {
-                    yilicount++;
+                if (sbwycount > 0) {
+                    document.getElementById('warning-sbwy-count').innerText = "(" + sbwycount + ")";
+                    if (chushiHuaFlag) {
+                        xuanRanTable(id, "4");
+                        chushiHuaFlag = false;
+                    }
+                } else {
+                    $("#btn-wi-sbwy").hide();
                 }
-                else if (monitorYuZhiTableData[i].jcff == "2") {
-                    qjcount++;
+                if (yilicount > 0) {
+                    document.getElementById('warning-yili-count').innerText = "(" + yilicount + ")";
+                    if (chushiHuaFlag) {
+                        xuanRanTable(id, "3");
+                        chushiHuaFlag = false;
+                    }
+                } else {
+                    $("#btn-wi-yili").hide();
                 }
-                else if (monitorYuZhiTableData[i].jcff == "5") {
-                    dxswcount++;
+                if (qjcount > 0) {
+                    document.getElementById('warning-qj-count').innerText = "(" + qjcount + ")";
+                    if (chushiHuaFlag) {
+                        xuanRanTable(id, "2");
+                        chushiHuaFlag = false;
+                    }
+                } else {
+                    $("#btn-wi-qj").hide();
                 }
-            }
-            if (gnsscount > 0) {
-                document.getElementById('warning-gnss-count').innerText = gnsscount;
+                if (dxswcount > 0) {
+                    document.getElementById('warning-dxsw-count').innerText = "(" + dxswcount + ")";
+                    if (chushiHuaFlag) {
+                        xuanRanTable(id, "5");
+                        chushiHuaFlag = false;
+                    }
+                } else {
+                    $("#btn-wi-dxsw").hide();
+                }
             } else {
-                $("#btn-wi-gnss").hide();
+                yueZhitable.reload({ id: 'yueZhitableviewid', data: monitorYuZhiTableData });
             }
-            if (lfcount > 0) {
-                document.getElementById('warning-lf-count').innerText = lfcount;
-            } else {
-                $("#btn-wi-lf").hide();
-            }
-            if (sbwycount > 0) {
-                document.getElementById('warning-sbwy-count').innerText = sbwycount;
-            } else {
-                $("#btn-wi-sbwy").hide();
-            }
-            if (yilicount > 0) {
-                document.getElementById('warning-yili-count').innerText = yilicount;
-            } else {
-                $("#btn-wi-yili").hide();
-            }
-            if (qjcount > 0) {
-                document.getElementById('warning-qj-count').innerText = qjcount;
-            } else {
-                $("#btn-wi-qj").hide();
-            }
-            if (dxswcount > 0) {
-                document.getElementById('warning-dxsw-count').innerText = dxswcount;
-            } else {
-                $("#btn-wi-dxsw").hide();
-            }
-            document.getElementById('warning-all-count').innerText = allcount;
-            yueZhitable.reload({ id: 'yueZhitableviewid', data: monitorYuZhiTableData });
+            
+            
         }, datatype: "json"
     });
 }
@@ -3140,7 +3124,152 @@ function openLayerAddYuZhi(data) {
     });
 }
 
+function xuanRanTable(id,jcff) {
+    if (jcff == "0") {
+        yueZhitable = table.render({
+            elem: '#yueZhitable-view'
+            , id: 'yueZhitableviewid'
+            , title: '斜坡信息'
+            , skin: 'line'
+            , even: false
+            , page: true
+            , limit: 10
+            , totalRow: false
+            , initSort: { field: 'id', type: 'desc' }
+            , cols: [[
+                { field: 'id', title: 'ID', hide: true }
+                , { field: 'jcdbh', title: '监测点编号', width: 120, align: "center", }
+                , { field: 'lastUpdateTime', title: '生效时间', width: 130, align: "center" }
+                , { field: 'backTrack', title: '回溯时长(h)', width: 120, edit: 'text', align: "center" }
+                , { field: 'yueZhiOne', title: '水平位移(mm)', width: 120, edit: 'text', align: "center" }
+                , { field: 'yueZhiTwo', title: '垂直位移(mm)', width: 120, edit: 'text', align: "center" }
+                , { field: 'yueZhiThree', title: '', width: 120, align: "center" }
+                , { fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#yuZhiChuButon' }
+            ]]
+            , data: []
+        });
+        GetMonitorYueZhi(id, "0");//查总的就去阈值
+    } else if (jcff == "1") {
+        yueZhitable = table.render({
+            elem: '#yueZhitable-view'
+            , id: 'yueZhitableviewid'
+            , title: '斜坡信息'
+            , skin: 'line'
+            , even: false
+            , page: true
+            , limit: 10
+            , totalRow: false
+            , initSort: { field: 'id', type: 'desc' }
+            , cols: [[
+                { field: 'id', title: 'ID', hide: true }
+                , { field: 'jcdbh', title: '监测点编号', width: 150, align: "center", }
+                , { field: 'lastUpdateTime', title: '生效时间', width: 160, align: "center" }
+                , { field: 'backTrack', title: '回溯时长(h)', width: 150, edit: 'text', align: "center" }
+                , { field: 'yueZhiOne', title: '裂缝阈值(mm)', width: 150, edit: 'text', align: "center" }
+                , { field: 'yueZhiThree', title: '', width: 120, align: "center" }
+                , { fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#yuZhiChuButon' }
+            ]]
+            , data: []
+        });
+        GetMonitorYueZhi(id, "1");//查总的就去阈值
+    } else if (jcff == "2") {
+        yueZhitable = table.render({
+            elem: '#yueZhitable-view'
+            , id: 'yueZhitableviewid'
+            , title: '斜坡信息'
+            , skin: 'line'
+            , even: false
+            , page: true
+            , limit: 10
+            , totalRow: false
+            , initSort: { field: 'id', type: 'desc' }
+            , cols: [[
+                { field: 'id', title: 'ID', hide: true }
+                , { field: 'jcdbh', title: '监测点编号', width: 120, align: "center", }
+                , { field: 'lastUpdateTime', title: '生效时间', width: 130, align: "center" }
+                , { field: 'backTrack', title: '回溯时长(h)', width: 90, edit: 'text', align: "center" }
+                , { field: 'yueZhiOne', title: 'X方向(°)', width: 90, edit: 'text', align: "center" }
+                , { field: 'yueZhiTwo', title: 'Y方向(°)', width: 90, edit: 'text', align: "center" }
+                , { field: 'yueZhiThree', title: 'Z方向(°)', width: 90, edit: 'text', align: "center" }
+                , { field: '', title: '', width: 120, align: "center" }
+                , { fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#yuZhiChuButon' }
+            ]]
+            , data: []
+        });
+        GetMonitorYueZhi(id, "2");//查总的就去阈值
+    } else if (jcff == "3") {
+        yueZhitable = table.render({
+            elem: '#yueZhitable-view'
+            , id: 'yueZhitableviewid'
+            , title: '斜坡信息'
+            , skin: 'line'
+            , even: false
+            , page: true
+            , limit: 10
+            , totalRow: false
+            , initSort: { field: 'id', type: 'desc' }
+            , cols: [[
+                { field: 'id', title: 'ID', hide: true }
+                , { field: 'jcdbh', title: '监测点编号', width: 150, align: "center", }
+                , { field: 'lastUpdateTime', title: '生效时间', width: 160, align: "center" }
+                , { field: 'backTrack', title: '回溯时长(h)', width: 150, edit: 'text', align: "center" }
+                , { field: 'yueZhiOne', title: '应力阈值(mm)', width: 150, edit: 'text', align: "center" }
+                , { field: 'yueZhiThree', title: '', width: 120, align: "center" }
+                , { fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#yuZhiChuButon' }
+            ]]
+            , data: []
+        });
+        GetMonitorYueZhi(id, "3");//查总的就去阈值
+    } else if (jcff == "4") {
 
+        yueZhitable = table.render({
+            elem: '#yueZhitable-view'
+            , id: 'yueZhitableviewid'
+            , title: '斜坡信息'
+            , skin: 'line'
+            , even: false
+            , page: true
+            , limit: 10
+            , totalRow: false
+            , initSort: { field: 'id', type: 'desc' }
+            , cols: [[
+                { field: 'id', title: 'ID', hide: true }
+                , { field: 'jcdbh', title: '监测点编号', width: 120, align: "center", }
+                , { field: 'lastUpdateTime', title: '生效时间', width: 130, align: "center" }
+                , { field: 'backTrack', title: '回溯时长(h)', width: 120, edit: 'text', align: "center" }
+                , { field: 'yueZhiOne', title: 'X方向(mm)', width: 120, edit: 'text', align: "center" }
+                , { field: 'yueZhiTwo', title: 'Y方向(mm)', width: 120, edit: 'text', align: "center" }
+                , { field: 'yueZhiThree', title: '', width: 120, align: "center" }
+                , { fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#yuZhiChuButon' }
+            ]]
+            , data: []
+        });
+        GetMonitorYueZhi(id, "4");//查总的就去阈值
+    } else if (jcff == "5") {
+        yueZhitable = table.render({
+            elem: '#yueZhitable-view'
+            , id: 'yueZhitableviewid'
+            , title: '斜坡信息'
+            , skin: 'line'
+            , even: false
+            , page: true
+            , limit: 10
+            , totalRow: false
+            , initSort: { field: 'id', type: 'desc' }
+            , cols: [[
+                { field: 'id', title: 'ID', hide: true }
+                , { field: 'jcdbh', title: '监测点编号', width: 150, align: "center", }
+                , { field: 'lastUpdateTime', title: '生效时间', width: 160, align: "center" }
+                , { field: 'backTrack', title: '回溯时长(h)', width: 150, edit: 'text', align: "center" }
+                , { field: 'yueZhiOne', title: '地下水位(m)', width: 150, edit: 'text', align: "center" }
+                , { field: 'yueZhiThree', title: '', width: 120, align: "center" }
+                , { fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#yuZhiChuButon' }
+            ]]
+            , data: []
+        });
+        GetMonitorYueZhi(id, "5");//查总的就去阈值
+    }
+}
 
 var gaoJinHtml = "    <div class='layui-tab layui-tab-brief' lay-filter='docDemoTabBriefitem' style='margin:0px;'>                                                             "
     + "        <ul class='layui-tab-title' style='float: left;width:120px;border-color:white;'>                                                                     "
@@ -3151,12 +3280,11 @@ var gaoJinHtml = "    <div class='layui-tab layui-tab-brief' lay-filter='docDemo
     + "        <div class='layui-tab-content' id='xunShiDiv' style='margin-left:120px;height:600px;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;'>      "
     + "            <div class='layui-tab-item layui-show'>                                                                                                           "
     + "			<div style='margin-top: 15px;margin-bottom:15px'>                                                                                                                              "
-    + "				<button id='btn-wi-all' type='button' class='layui-btn layui-btn-primary' style='height:50px;'>监测总数  <span id='warning-all-count'></span></button>      "
-    + "				<button id='btn-wi-gnss' type='button' class='layui-btn layui-btn-blue' style='height:50px;'>GNSS总数  <span id='warning-gnss-count'></span></button>       "
-    + "				<button id='btn-wi-lf' type='button' class='layui-btn layui-btn-yellow' style='height:50px;'>裂缝总数  <span id='warning-lf-count'></span></button> "
+    + "				<button id='btn-wi-gnss' type='button' class='layui-btn layui-btn-blue' style='height:50px;'>GNSS监测  <span id='warning-gnss-count'></span></button>       "
+    + "				<button id='btn-wi-lf' type='button' class='layui-btn layui-btn-yellow' style='height:50px;'>裂缝监测  <span id='warning-lf-count'></span></button> "
     + "				<button id='btn-wi-sbwy' type='button' class='layui-btn layui-btn-orange' style='height:50px;'>深部位移  <span id='warning-sbwy-count'></span></button> "
-    + "				<button id='btn-wi-yili' type='button' class='layui-btn layui-btn-red' style='height:50px;'>应力总数  <span id='warning-yili-count'></span></button>          "
-    + "				<button id='btn-wi-qj' type='button' class='layui-btn layui-btn-green' style='height:50px;'>倾斜总数  <span id='warning-qj-count'></span></button>          "
+    + "				<button id='btn-wi-yili' type='button' class='layui-btn layui-btn-red' style='height:50px;'>应力监测  <span id='warning-yili-count'></span></button>          "
+    + "				<button id='btn-wi-qj' type='button' class='layui-btn layui-btn-green' style='height:50px;'>倾斜监测  <span id='warning-qj-count'></span></button>          "
     + "				<button id='btn-wi-dxsw' type='button' class='layui-btn layui-btn-primary' style='height:50px;'>地下水位  <span id='warning-dxsw-count'></span></button>          "
     + "			</div>                                                                                                                                                       "
 

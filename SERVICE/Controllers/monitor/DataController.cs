@@ -2090,7 +2090,7 @@ namespace SERVICE.Controllers
                 if (gnssCode.Length>1)
                 {
                     gnssCode=gnssCode.Substring(0, gnssCode.Length-1)+")";
-                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,cast(SQRT((max(x)-min(x))*(max(x)-min(x))+(max(y)-min(y))*(max(y)-min(y))) as decimal(10, 3)) bxl,cast((max(h)-min(h)) as decimal(10, 3)) blx2 FROM monitor_data_Gnss WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", gnssCode, time, userbsms));
+                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT code,cast(SQRT((max(x)-min(x))*(max(x)-min(x))+(max(y)-min(y))*(max(y)-min(y)))*1000 as decimal(10, 3)) bxl,cast((max(h)-min(h))*1000 as decimal(10, 3)) blx2 FROM monitor_data_Gnss WHERE code in {0} AND {1} AND bsm{2}  GROUP BY code ORDER BY bxl desc", gnssCode, time, userbsms));
                     if (!string.IsNullOrEmpty(data))
                     {
                         string[] rows1 = data.Split(new char[] { COM.ConstHelper.rowSplit });
@@ -2247,14 +2247,22 @@ namespace SERVICE.Controllers
         /// <param name="cookie"></param>
         /// <returns></returns>
         [HttpGet]
-        public string GetMonitorYueZhi(int id, string cookie)
+        public string GetMonitorYueZhi(int id, string jcff, string cookie)
         {
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
-                string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("select m.*,c.id as yuZhiId,c.back_track,c.yue_zhi_one,c.yue_zhi_two,c.yue_zhi_three,c.last_update_time  from (SELECT a.id,a.jcdbh,a.jcff from monitor_monitor a,monitor_project b where a.bsm=b.bsm and a.jcff!='6'  and b.id={0}  ) m left join monitor_alarm_threshold c on m.id = c.monitor_id  ORDER BY m.jcff,m.jcdbh", id));
+
+
+                string sql = "select m.*,c.id as yuZhiId,c.back_track,c.yue_zhi_one,c.yue_zhi_two,c.yue_zhi_three,c.last_update_time from(SELECT a.id, a.jcdbh, a.jcff from monitor_monitor a, monitor_project b where a.bsm= b.bsm and a.jcff!= '6'  and b.id ={0}";
+                if (!string.IsNullOrEmpty(jcff))
+                {
+                    sql = sql + " and a.jcff= " + SQLHelper.UpdateString(jcff);
+                }
+                sql += ") m left join monitor_alarm_threshold c on m.id = c.monitor_id  ORDER BY m.jcff,m.jcdbh";
+                string datas = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, id));
                 if (!string.IsNullOrEmpty(datas))
                 {
                     List<MonitorAndThreshold> MonitorAndThresholdList = new List<MonitorAndThreshold>();
