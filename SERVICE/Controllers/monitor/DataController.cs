@@ -239,8 +239,6 @@ namespace SERVICE.Controllers
             {
                 return "验权失败！";
             }
-
-            return string.Empty;
         }
 
 

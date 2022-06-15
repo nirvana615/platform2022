@@ -215,6 +215,15 @@ viewer.extend(Cesium.viewerCesiumNavigationMixin, {});                          
 document.getElementsByClassName("navigation-controls")[0].style = "visibility:hidden";                  //修改工具栏样式
 document.getElementsByClassName("compass")[0].style = "top:10px";                                       //修改指南针位置
 
+viewer.extend(Cesium.viewerDragDropMixin, {
+    clearOnDrop: false,//是否清除已存在数据
+    flyToOnDrop: true,//是否定位到添加数据
+    clampToGround: true,
+});
+viewer.dropError.addEventListener(function (viewerArg, source, error) {
+    window.alert('Error processing ' + source + ':' + error);
+});
+
 
 //移动端判断
 var isMobile = {

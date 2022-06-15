@@ -130,7 +130,7 @@ namespace SERVICE.Controllers
 
                 #region 点云
                 bool isHavePointCloud = false;//是否包含独立点云数据
-                List<BlockExtent> blockExtents = null;//区块空间范围
+                //List<BlockExtent> blockExtents = null;//区块空间范围
                 string pointcloudpath = string.Empty;//点云数据目录
                 if (string.IsNullOrEmpty(pointcloud))
                 {
@@ -148,7 +148,7 @@ namespace SERVICE.Controllers
                     //    isHavePointCloud = false;
                     //}
 
-                    blockExtents = JsonHelper.ToObject<List<BlockExtent>>(surPointCloud.QKFW);
+                    //blockExtents = JsonHelper.ToObject<List<BlockExtent>>(surPointCloud.QKFW);
                     //pointcloudpath = ptsdir + surPointCloud.DYLJ;
                     //isHavePointCloud = true;
                 }
@@ -793,64 +793,64 @@ namespace SERVICE.Controllers
                             if (isHavePointCloud)
                             {
                                 #region 筛选目标区块
-                                List<string> blocks = new List<string>();
-                                for (int j = 0; j < blockExtents.Count; j++)
-                                {
-                                    bool isIn = false;
+                                //List<string> blocks = new List<string>();
+                                //for (int j = 0; j < blockExtents.Count; j++)
+                                //{
+                                //    bool isIn = false;
 
-                                    foreach (var point in polygon_corners_xyz)
-                                    {
-                                        if ((point.X > blockExtents[j].MinX) && (point.X < blockExtents[j].MaxX)
-                                            && (point.Y > blockExtents[j].MinY) && (point.Y < blockExtents[j].MaxY)
-                                            && (point.Z > blockExtents[j].MinZ) && (point.Z < blockExtents[j].MaxZ))
-                                        {
-                                            isIn = true;
-                                        }
-                                    }
+                                //    foreach (var point in polygon_corners_xyz)
+                                //    {
+                                //        if ((point.X > blockExtents[j].MinX) && (point.X < blockExtents[j].MaxX)
+                                //            && (point.Y > blockExtents[j].MinY) && (point.Y < blockExtents[j].MaxY)
+                                //            && (point.Z > blockExtents[j].MinZ) && (point.Z < blockExtents[j].MaxZ))
+                                //        {
+                                //            isIn = true;
+                                //        }
+                                //    }
 
-                                    if (isIn)
-                                    {
-                                        if (File.Exists(pointcloudpath + blockExtents[j].BloockName))
-                                        {
-                                            blocks.Add(pointcloudpath + blockExtents[j].BloockName);
-                                        }
-                                    }
-                                }
+                                //    if (isIn)
+                                //    {
+                                //        if (File.Exists(pointcloudpath + blockExtents[j].BloockName))
+                                //        {
+                                //            blocks.Add(pointcloudpath + blockExtents[j].BloockName);
+                                //        }
+                                //    }
+                                //}
                                 #endregion
 
                                 #region 筛选目标点云
-                                foreach (string block in blocks)
-                                {
-                                    using (StreamReader sr = new StreamReader(block))
-                                    {
-                                        string row = string.Empty;
-                                        while ((row = sr.ReadLine()) != null)
-                                        {
-                                            if (row != "")
-                                            {
-                                                try
-                                                {
-                                                    string[] xyz = row.Split(new char[] { ' ' });
-                                                    double X = Convert.ToDouble(xyz[0]);
-                                                    double Y = Convert.ToDouble(xyz[1]);
-                                                    double Z = Convert.ToDouble(xyz[2]);
+                                //foreach (string block in blocks)
+                                //{
+                                //    using (StreamReader sr = new StreamReader(block))
+                                //    {
+                                //        string row = string.Empty;
+                                //        while ((row = sr.ReadLine()) != null)
+                                //        {
+                                //            if (row != "")
+                                //            {
+                                //                try
+                                //                {
+                                //                    string[] xyz = row.Split(new char[] { ' ' });
+                                //                    double X = Convert.ToDouble(xyz[0]);
+                                //                    double Y = Convert.ToDouble(xyz[1]);
+                                //                    double Z = Convert.ToDouble(xyz[2]);
 
-                                                    BLH pointBLH = COM.CoordConvert.XYZ2BLH(new XYZ(X, Y, Z), EnumCOM.Datum.CGCS2000, ref info);
-                                                    xy pointxy = COM.CoordConvert.BL2xy(pointBLH, EnumCOM.Datum.CGCS2000, 3, 108, false, ref info);
-                                                    xyh pointxyh = new xyh(pointxy.x, pointxy.y, pointBLH.H);
+                                //                    BLH pointBLH = COM.CoordConvert.XYZ2BLH(new XYZ(X, Y, Z), EnumCOM.Datum.CGCS2000, ref info);
+                                //                    xy pointxy = COM.CoordConvert.BL2xy(pointBLH, EnumCOM.Datum.CGCS2000, 3, 108, false, ref info);
+                                //                    xyh pointxyh = new xyh(pointxy.x, pointxy.y, pointBLH.H);
 
-                                                    if (COM.Waypoint.IsPointInPolygon(polygon_corners_2d, pointxyh))
-                                                    {
-                                                        pointclouds.Add(new Vector3d(X, Y, Z));
-                                                    }
-                                                }
-                                                catch
-                                                {
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                //                    if (COM.Waypoint.IsPointInPolygon(polygon_corners_2d, pointxyh))
+                                //                    {
+                                //                        pointclouds.Add(new Vector3d(X, Y, Z));
+                                //                    }
+                                //                }
+                                //                catch
+                                //                {
+                                //                }
+                                //            }
+                                //        }
+                                //    }
+                                //}
                                 #endregion
                             }
 
@@ -1888,64 +1888,64 @@ namespace SERVICE.Controllers
                             if (isHavePointCloud)
                             {
                                 #region 筛选目标区块
-                                List<string> blocks = new List<string>();
-                                for (int j = 0; j < blockExtents.Count; j++)
-                                {
-                                    bool isIn = false;
+                                //List<string> blocks = new List<string>();
+                                //for (int j = 0; j < blockExtents.Count; j++)
+                                //{
+                                //    bool isIn = false;
 
-                                    foreach (var point in polygon_corners_xyz)
-                                    {
-                                        if ((point.X > blockExtents[j].MinX) && (point.X < blockExtents[j].MaxX)
-                                            && (point.Y > blockExtents[j].MinY) && (point.Y < blockExtents[j].MaxY)
-                                            && (point.Z > blockExtents[j].MinZ) && (point.Z < blockExtents[j].MaxZ))
-                                        {
-                                            isIn = true;
-                                        }
-                                    }
+                                //    foreach (var point in polygon_corners_xyz)
+                                //    {
+                                //        if ((point.X > blockExtents[j].MinX) && (point.X < blockExtents[j].MaxX)
+                                //            && (point.Y > blockExtents[j].MinY) && (point.Y < blockExtents[j].MaxY)
+                                //            && (point.Z > blockExtents[j].MinZ) && (point.Z < blockExtents[j].MaxZ))
+                                //        {
+                                //            isIn = true;
+                                //        }
+                                //    }
 
-                                    if (isIn)
-                                    {
-                                        if (File.Exists(pointcloudpath + blockExtents[j].BloockName))
-                                        {
-                                            blocks.Add(pointcloudpath + blockExtents[j].BloockName);
-                                        }
-                                    }
-                                }
+                                //    if (isIn)
+                                //    {
+                                //        if (File.Exists(pointcloudpath + blockExtents[j].BloockName))
+                                //        {
+                                //            blocks.Add(pointcloudpath + blockExtents[j].BloockName);
+                                //        }
+                                //    }
+                                //}
                                 #endregion
 
                                 #region 筛选目标点云
-                                foreach (string block in blocks)
-                                {
-                                    using (StreamReader sr = new StreamReader(block))
-                                    {
-                                        string row = string.Empty;
-                                        while ((row = sr.ReadLine()) != null)
-                                        {
-                                            if (row != "")
-                                            {
-                                                try
-                                                {
-                                                    string[] xyz = row.Split(new char[] { ' ' });
-                                                    double X = Convert.ToDouble(xyz[0]);
-                                                    double Y = Convert.ToDouble(xyz[1]);
-                                                    double Z = Convert.ToDouble(xyz[2]);
+                                //foreach (string block in blocks)
+                                //{
+                                //    using (StreamReader sr = new StreamReader(block))
+                                //    {
+                                //        string row = string.Empty;
+                                //        while ((row = sr.ReadLine()) != null)
+                                //        {
+                                //            if (row != "")
+                                //            {
+                                //                try
+                                //                {
+                                //                    string[] xyz = row.Split(new char[] { ' ' });
+                                //                    double X = Convert.ToDouble(xyz[0]);
+                                //                    double Y = Convert.ToDouble(xyz[1]);
+                                //                    double Z = Convert.ToDouble(xyz[2]);
 
-                                                    BLH pointBLH = COM.CoordConvert.XYZ2BLH(new XYZ(X, Y, Z), EnumCOM.Datum.CGCS2000, ref info);
-                                                    xy pointxy = COM.CoordConvert.BL2xy(pointBLH, EnumCOM.Datum.CGCS2000, 3, 108, false, ref info);
-                                                    xyh pointxyh = new xyh(pointxy.x, pointxy.y, pointBLH.H);
+                                //                    BLH pointBLH = COM.CoordConvert.XYZ2BLH(new XYZ(X, Y, Z), EnumCOM.Datum.CGCS2000, ref info);
+                                //                    xy pointxy = COM.CoordConvert.BL2xy(pointBLH, EnumCOM.Datum.CGCS2000, 3, 108, false, ref info);
+                                //                    xyh pointxyh = new xyh(pointxy.x, pointxy.y, pointBLH.H);
 
-                                                    if (COM.Waypoint.IsPointInPolygon(polygon_corners_2d, pointxyh))
-                                                    {
-                                                        pointclouds.Add(new Vector3d(X, Y, Z));
-                                                    }
-                                                }
-                                                catch
-                                                {
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                //                    if (COM.Waypoint.IsPointInPolygon(polygon_corners_2d, pointxyh))
+                                //                    {
+                                //                        pointclouds.Add(new Vector3d(X, Y, Z));
+                                //                    }
+                                //                }
+                                //                catch
+                                //                {
+                                //                }
+                                //            }
+                                //        }
+                                //    }
+                                //}
                                 #endregion
                             }
 

@@ -1,27 +1,24 @@
 ﻿<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBriefitem" style="margin:0px;">
     <ul class="layui-tab-title" style="float: left;width:120px;border-color:white;">
-        <li class="layui-this" style="display: block;">加载KML</li>
-        <li style="display: block;">加载JSON</li>
+        <li class="layui-this" style="display: block;">KML</li>
+        <li style="display: block;">JSON</li>
         <li style="display: block;">自定义</li>
         <li style="display: block;">其他</li>
     </ul>
 
-    <div class="layui-tab-content" style="height:290px;width:340px;float: left;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;">
+    <div class="layui-tab-content" style="height:290px;width:400px;float: left;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;">
         <div class="layui-tab-item layui-show">
             <!--KML-->
-            <div class="layui-row">
-                <div class="layui-col-md9">
-                    <div class="grid-demo grid-demo-bg1">
-                        <div id="kmltree" style="width:200px;"> </div>
-                    </div>
-                </div>
-                <div class="layui-col-md3">
-                    <div class="grid-demo">
-                        <button type="button" class="layui-btn" id="selectkmlfile"><i class="layui-icon">✚</i>上传文件</button>
-
-                    </div>
-                </div>
+            <div class="layui-btn-container">
+                <button type="button" class="layui-btn" id="selectkmlfile"><i class="layui-icon">✚</i>选择文件</button>
+                <button type="button" class="layui-btn layui-btn-normal">清空全部要素</button>
+                <button type="button" class="layui-btn layui-btn-danger">清空拖拽要素</button>
             </div>
+
+            <div id="kmldatatree" style="height:100px;"></div>
+
+            <div id="kmldatastyle" style="height:100px;"></div>
+
         </div>
 
         <div class="layui-tab-item">
