@@ -347,7 +347,16 @@ namespace SERVICE.Controllers
                         int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, sql+") VALUES" + value+ ")");
                         if (id != -1)
                         {
-                             return id+"";
+                           int projectMapUserId= PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO flz_map_user_project (userid,projectid,cjsj,ztm) VALUES({0},{1},{2},{3})", user.Id, id, SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
+                            if (projectMapUserId != -1)
+                            {
+
+                                return id + "";
+                            }
+                            else
+                            {
+                                return "生成项目关联表失败！";
+                            }
                         }
                         else
                         {
@@ -393,7 +402,9 @@ namespace SERVICE.Controllers
                     return "请先删除测窗";
                 }
                 int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_project  WHERE id={0}", id));
-
+                //删除关联信息表
+                int deletecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_map_user_project  WHERE projectid={0}", id));
+                
                 if (updatecount == 1)
                 {
                     return "删除成功";
