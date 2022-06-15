@@ -39,7 +39,7 @@ util.fixbar({
             AddRoute();
         } else if (type === 'bar4') {
             //测量工具
-            if (current_project_tile == null) {
+            if (curtileset == null) {
                 Measurewidget("terrain");
             }
             else {

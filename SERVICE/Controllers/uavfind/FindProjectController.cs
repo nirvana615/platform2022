@@ -203,7 +203,7 @@ namespace SERVICE.Controllers
                             PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uavfind_project SET ztm={0} WHERE id={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, projectid, (int)MODEL.Enum.State.InUse));
                         }
 
-                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", string.Empty));
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", projectid));
                     }
                     else
                     {

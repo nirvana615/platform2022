@@ -168,7 +168,7 @@ function AddFindProject() {
     }
 };
 
-//TODO编辑巡查项目
+//编辑巡查项目
 function EditFindProject(findprojectdata) {
     if (findprojectinfoeditlayerindex != null) {
         EditFindProjectHelper();
@@ -459,11 +459,14 @@ function EditFindProject(findprojectdata) {
                                                                         var child = [];
                                                                         for (var k in newmodels) {
                                                                             var model = new Object;
-                                                                            model.id = "FINDSURMODEL_" + newmodels[k].Id;
+                                                                            model.id = newmodels[k].Id;
                                                                             model.icon = MODELICON;
                                                                             model.type = "findsurmodel";
                                                                             model.title = newmodels[k].RWMC;
                                                                             model.data = newmodels[k];
+                                                                            model.nodeOperate = true;
+                                                                            model.customItem = true;
+                                                                            model.edit = ['del'];
                                                                             model.showCheckbox = true;
                                                                             model.checked = false;
                                                                             child.push(model);
@@ -477,6 +480,7 @@ function EditFindProject(findprojectdata) {
                                                                 }
                                                             }
                                                         }
+
                                                         isReloadTree = true;//标记重载
                                                         MarkCurrentProject();
                                                         isReloadTree = false;//重载后还原
@@ -501,12 +505,12 @@ function EditFindProject(findprojectdata) {
                     };
                 });
 
-                //操作实景模型
+                //操作-删除-实景模型
                 table.on('tool(find-project-model)', function (obj) {
                     if (obj.event === 'modeldel') {
                         layer.confirm('是否删除?', { icon: 3, title: '消息', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
                             $.ajax({
-                                url: servicesurl + "/api/ModelProject/CancelUserModelProjectUse", type: "delete", data: { "syscode": 3, "useprojectid": findprojectdata.Id, "modelid": obj.data.id, "cookie": document.cookie },
+                                url: servicesurl + "/api/ModelProject/CancelUserModelProjectUse", type: "delete", data: { "syscode": 7, "useprojectid": findprojectdata.Id, "modelid": obj.data.id, "cookie": document.cookie },
                                 success: function (result) {
                                     var info = JSON.parse(result);
                                     if (info.code == 1) {
@@ -521,7 +525,13 @@ function EditFindProject(findprojectdata) {
                                         modeltabledata = newmodeltabledata;
                                         modeledittable.reload({ id: 'findprojectmodeltableid', data: modeltabledata });
 
-                                        //TODO删除的为选中加载的模型时需从地图的删除
+                                        if (curtileset != null) {
+                                            if (info.data == curtileset.data.Id) {
+                                                viewer.scene.primitives.remove(curtileset);
+                                                curtileset = null;
+                                                currentmodelid = null;
+                                            }
+                                        }
 
                                         for (var i in findprojectlist) {
                                             if (findprojectlist[i].id == findprojectdata.Id) {
@@ -530,7 +540,7 @@ function EditFindProject(findprojectdata) {
                                                         var child = [];
 
                                                         for (var k in findprojectlist[i].children[j].children) {
-                                                            if (findprojectlist[i].children[j].children[k].id.toString() != ("FINDSURMODEL_" + info.data)) {
+                                                            if (findprojectlist[i].children[j].children[k].id.toString() != (info.data)) {
                                                                 child.push(findprojectlist[i].children[j].children[k]);
                                                             }
                                                         }
@@ -540,8 +550,9 @@ function EditFindProject(findprojectdata) {
                                                 }
                                             }
                                         }
-
+                                        isReloadTree = true;//标记重载
                                         MarkCurrentProject();
+                                        isReloadTree = false;//重载后还原
                                     }
 
                                     layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -654,12 +665,12 @@ function DeleteFindProject(projectid) {
         success: function (data) {
             var result = JSON.parse(data);
             if (result.code == 1) {
-                //清除当前模型项目
-                if (currentprojectid == projectid) {
+                var delprojectid = JSON.parse(result.data);
+                //清除当前项目
+                if (currentprojectid == delprojectid) {
                     currentprojectid = null;
                     currentprojecttitle = null;
-
-                    //清除已加载模型
+                    //清除当前项目已加载模型
                     if (curtileset != null) {
                         viewer.scene.primitives.remove(curtileset);
                         curtileset = null;
@@ -670,7 +681,7 @@ function DeleteFindProject(projectid) {
                 //清除项目图形
                 var newprojectentities = [];
                 for (var i in projectentities) {
-                    if (projectentities[i].id == ("PROJECTCENTER_" + projectid) || projectentities[i].id == ("PROJECTCENTER_LABEL_" + projectid)) {
+                    if (projectentities[i].id == ("PROJECTCENTER_" + delprojectid) || projectentities[i].id == ("PROJECTCENTER_LABEL_" + delprojectid)) {
                         RemoveEntityInViewer(projectentities[i]);
                     }
                     else {
@@ -681,15 +692,7 @@ function DeleteFindProject(projectid) {
 
                 var newfindprojectlist = [];
                 for (var i in findprojectlist) {
-                    var projects = [];
-                    for (var j in findprojectlist[i].children) {
-                        if (findprojectlist[i].children[j].id != projectid) {
-                            projects.push(findprojectlist[i].children[j]);
-                        }
-                    }
-
-                    if (projects.length > 0) {
-                        findprojectlist[i].children = projects;
+                    if (findprojectlist[i].id != delprojectid) {
                         newfindprojectlist.push(findprojectlist[i]);
                     }
                 }
@@ -700,6 +703,53 @@ function DeleteFindProject(projectid) {
             isReloadTree = false;//重载后还原
 
             layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        }, datatype: "json"
+    });
+};
+
+//节点操作-删除项目模型关联
+function DeleteFindModel(modeltaskid, findprojectid) {
+    $.ajax({
+        url: servicesurl + "/api/ModelProject/CancelUserModelProjectUse", type: "delete", data: { "syscode": 7, "useprojectid": findprojectid, "modelid": modeltaskid, "cookie": document.cookie },
+        success: function (result) {
+            var info = JSON.parse(result);
+            if (info.code == 1) {
+                var id = JSON.parse(info.data);
+
+                if (curtileset != null) {
+                    if (id == curtileset.data.Id) {
+                        viewer.scene.primitives.remove(curtileset);
+                        curtileset = null;
+                        currentmodelid = null;
+                    }
+                }
+
+                for (var i in findprojectlist) {
+                    if (findprojectlist[i].id == currentprojectid) {
+                        for (var j in findprojectlist[i].children) {
+                            if (findprojectlist[i].children[j].title == "实景模型") {
+                                var child = [];
+
+                                for (var k in findprojectlist[i].children[j].children) {
+                                    if (findprojectlist[i].children[j].children[k].id != id) {
+                                        child.push(findprojectlist[i].children[j].children[k]);
+                                    }
+
+                                }
+
+                                findprojectlist[i].children[j].children = child;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                isReloadTree = true;//标记重载
+                MarkCurrentProject();
+                isReloadTree = false;//重载后还原
+            }
+            layer.msg(info.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         }, datatype: "json"
     });
 };

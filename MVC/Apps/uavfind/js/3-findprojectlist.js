@@ -58,7 +58,7 @@ function GetUserAllFindProjectsQuick() {
                 //返回项目信息
                 var findprojectdata = JSON.parse(result.data);
                 for (var i in findprojectdata) {
-                    var project = new Object;
+                    var project = new Object();
                     project.id = findprojectdata[i].Project.Id;
                     project.title = findprojectdata[i].Project.XMMC;
                     project.type = "findproject";
@@ -67,17 +67,14 @@ function GetUserAllFindProjectsQuick() {
 
                     var child = [];
                     var models = new Object();
-                    models.id = findprojectdata[i].Project.Id;
                     models.title = "实景模型";
                     models.spread = false;
                     child.push(models);
                     var routes = new Object();
-                    routes.id = findprojectdata[i].Project.Id;
                     routes.title = "巡查航线";
                     routes.spread = false;
                     child.push(routes);
                     var targets = new Object();
-                    targets.id = findprojectdata[i].Project.Id;
                     targets.title = "巡查目标";
                     targets.spread = false;
                     child.push(targets);
@@ -139,10 +136,8 @@ function GetUserAllFindProjectsQuick() {
             else {
                 layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
             }
-
         }, datatype: "json"
     });
-    
 };
 
 //获取用户全部巡查项目数据
@@ -151,31 +146,29 @@ function GetUserAllFindProjects() {
         url: servicesurl + "/api/FindProject/GetUserFindProjectDatas", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             findprojectlist = [];
-
             var result = JSON.parse(data);
             if (result.code == 1) {
                 var findprojectdata = JSON.parse(result.data);
 
                 for (var i in findprojectdata) {
-                    var findproject = new Object;
+                    var findproject = new Object();
                     findproject.id = findprojectdata[i].Project.Id;
                     findproject.title = findprojectdata[i].Project.XMMC;
                     findproject.data = findprojectdata[i].Project;
                     findproject.type = "findproject";
                     findproject.nodeOperate = true;
                     findproject.spread = false;
-                    
+
                     var child = [];
                     //实景模型
                     var models = new Object();
-                    models.id = findprojectdata[i].Project.Id;
                     models.title = "实景模型";
                     models.spread = true;
                     var modelchild = [];
 
                     for (var j in findprojectdata[i].Models) {
                         var model = new Object();
-                        model.id = "FINDSURMODEL_" + findprojectdata[i].Models[j].Id;
+                        model.id = findprojectdata[i].Models[j].Id;
                         model.title = findprojectdata[i].Models[j].RWMC;
                         model.icon = MODELICON;
                         model.type = "findsurmodel";
@@ -200,7 +193,6 @@ function GetUserAllFindProjects() {
 
                     //TODO巡查航线
                     var routes = new Object();
-                    routes.id = findprojectdata[i].Project.Id;
                     routes.title = "巡查航线";
                     routes.spread = true;
 
@@ -208,15 +200,13 @@ function GetUserAllFindProjects() {
 
                     //TODO巡查目标
                     var targets = new Object();
-                    targets.id = findprojectdata[i].Project.Id;
                     targets.title = "巡查目标";
                     targets.spread = true;
 
                     child.push(targets);
 
-
                     findproject.children = child;
-                    findprojectlist.push(findproject);                  
+                    findprojectlist.push(findproject);
                 }
 
                 tree.reload('projectlistid', { data: findprojectlist });
@@ -363,11 +353,24 @@ function FindProjectNodeClick(obj) {
             }
         }
     }
+    else if (obj.data.type == "findsurmodel") {
+        if (curtileset != null) {
+            if (obj.data.id == (curtileset.data.Id)) {
+                if (curtileset.data.MXSJ != undefined && curtileset.data.MXSJ != "") {
+                    viewer.scene.camera.setView(JSON.parse(curtileset.data.MXSJ));
+                }
+                else {
+                    viewer.zoomTo(curtileset);
+                }
+            }
+         }
+    }
+    else if (obj.data.type == "findtarget")
+    { }
     else {
         if (obj.data.children != null && obj.data.children != undefined) {
-
             for (var i in findprojectlist) {
-                if (findprojectlist[i].id == obj.data.id) {
+                if (findprojectlist[i].id == currentprojectid) {
                     for (var j in findprojectlist[i].children) {
                         if (findprojectlist[i].children[j].title == obj.data.title) {
                             findprojectlist[i].children[j].spread = !findprojectlist[i].children[j].spread;
@@ -378,7 +381,7 @@ function FindProjectNodeClick(obj) {
             isReloadTree = true;//标记重载
             MarkCurrentProject();
             isReloadTree = false;//重载后还原
-        }
+         }
     }
 };
 
@@ -394,6 +397,11 @@ function FindProjectNodeOperate(obj) {
         }
         else if (obj.type == 'del') {
             DeleteFindProject(obj.data.id);//删除项目
+        }
+    }
+    else if (obj.data.type == "findsurmodel") {
+        if (obj.type == 'del') {
+            DeleteFindModel(obj.data.id, currentprojectid);//删除模型
         }
     }
     else if (obj.data.type == "uavroute") {
@@ -477,7 +485,7 @@ function FindProjectNodeCheck(obj) {
                     }
                 }
 
-                current_model_id = obj.data.id;
+                currentmodelid = obj.data.id;
                 curtileset = Load3DTiles(obj.data.data);
 
                 if (measurewidget_layerindex != null) {
@@ -524,7 +532,7 @@ function FindProjectNodeCheck(obj) {
     }
     else {
         //取消选中
-        if (obj.data.type == "findmodel") {
+        if (obj.data.type == "findsurmodel") {
             if (curtileset != null) {
                 viewer.scene.primitives.remove(curtileset);//清除模型
                 curtileset = null;
@@ -586,3 +594,6 @@ function FindProjectNodeCheck(obj) {
         }
     }
 };
+
+
+

@@ -123,7 +123,6 @@ function MarkCurrentProject() {
         for (var i in findprojectlist) {
             for (var j in findprojectlist[i].children) {
                 if (findprojectlist[i].id == currentprojectid) {
-                    //findprojectlist[i].children[j].spread = true;
                     findprojectlist[i].spread = true;
                 }
                 else {
