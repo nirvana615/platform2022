@@ -5192,9 +5192,9 @@ function OverlayAnalysis() {
                                     }
                                 }
                             }
-                            isReloadTree = true;//标记重载
-                            tree.reload('overlaymonitortreeid', { data: treeData });
-                            isReloadTree = false;//重载后还原
+                            //isReloadTree = true;//标记重载
+                            //tree.reload('overlaymonitortreeid', { data: treeData });
+                            //isReloadTree = false;//重载后还原
                             getCheckedMonitor();
                         }
                     } else {
@@ -5209,9 +5209,9 @@ function OverlayAnalysis() {
                                     }
                                 }
                             }
-                            isReloadTree = true;//标记重载
-                            tree.reload('overlaymonitortreeid', { data: treeData });
-                            isReloadTree = false;//重载后还原
+                            //isReloadTree = true;//标记重载
+                            //tree.reload('overlaymonitortreeid', { data: treeData });
+                            //isReloadTree = false;//重载后还原
                             getCheckedMonitor();
                         }
                     }
