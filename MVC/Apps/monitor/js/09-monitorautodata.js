@@ -5029,6 +5029,12 @@ function OverlayAnalysis() {
     for (var i in treeData) {
         treeData[i].type = "projectName";
         for (var j in treeData[i].children) {
+            treeData[i].children[j].type = "className";
+            treeData[i].children[j].showCheckbox = true;
+            treeData[i].children[j].checked = false;
+            treeData[i].children[j].spread = false;
+            treeData[i].children[j].id = treeData[i].children[j].title + "#" + treeData[i].children[j].id;
+
             if (treeData[i].children[j].title == "雨量") {
                 treeData[i].children[j].disabled = true;
                 for (var k in treeData[i].children[j].children) {
@@ -5043,11 +5049,7 @@ function OverlayAnalysis() {
                 }
             }
             else {
-                treeData[i].children[j].type = "className";
-                treeData[i].children[j].showCheckbox = true;
-                treeData[i].children[j].checked = false;
-                treeData[i].children[j].spread = false;
-                treeData[i].children[j].id = treeData[i].children[j].title + "#" + treeData[i].children[j].id;
+                
                 for (var k in treeData[i].children[j].children) {
                     treeData[i].children[j].children[k].id = treeData[i].children[j].title + "#" + treeData[i].children[j].children[k].id;
                     treeData[i].children[j].children[k].showCheckbox = true;
@@ -5107,6 +5109,7 @@ function OverlayAnalysis() {
                         isReloadTree = true;//标记重载
                         tree.reload('overlaymonitortreeid', { data: treeData });
                         isReloadTree = false;//重载后还原
+                        
                     }
 
                 }
@@ -5122,22 +5125,18 @@ function OverlayAnalysis() {
                                     }
                                     else {
                                         treeData[i].children[j].spread = false;
-                                        //for (var k in treeData[i].children[j].children) {
-                                        //    treeData[i].children[j].children[k].checked = false;
-                                        //}
+                                        for (var k in treeData[i].children[j].children) {
+                                            treeData[i].children[j].children[k].checked = false;
+                                        }
                                     }
-
                                 }
                             }
                             isReloadTree = true;//标记重载
                             tree.reload('overlaymonitortreeid', { data: treeData });
                             isReloadTree = false;//重载后还原
                         }
-
                     }
-
                 }
-
             }
 
         }
@@ -5192,9 +5191,6 @@ function OverlayAnalysis() {
                                     }
                                 }
                             }
-                            //isReloadTree = true;//标记重载
-                            //tree.reload('overlaymonitortreeid', { data: treeData });
-                            //isReloadTree = false;//重载后还原
                             getCheckedMonitor();
                         }
                     } else {
@@ -5205,13 +5201,11 @@ function OverlayAnalysis() {
                                         if (treeData[i].children[j].children[k].id == obj.data.id) {
                                             treeData[i].children[j].children[k].checked = true;
                                             treeData[i].children[j].children[k].spread = true;
+                                            overlayTreeDatabytwoid = treeData[i].children[j].id;
                                         }
                                     }
                                 }
                             }
-                            //isReloadTree = true;//标记重载
-                            //tree.reload('overlaymonitortreeid', { data: treeData });
-                            //isReloadTree = false;//重载后还原
                             getCheckedMonitor();
                         }
                     }
@@ -5231,10 +5225,7 @@ function OverlayAnalysis() {
                                 }
                             }
                         }
-                        isReloadTree = true;//标记重载
-                        tree.reload('overlaymonitortreeid', { data: treeData });
-                        isReloadTree = false;//重载后还原
-                        getCheckedMonitor()
+                        getCheckedMonitor();
                         overlayTreeDatabytwoid == null;
                     }
 
@@ -5256,10 +5247,6 @@ function OverlayAnalysis() {
                                 }
                             }
                         }
-                        isReloadTree = true;//标记重载
-                        tree.reload('overlaymonitortreeid', { data: treeData });
-                        isReloadTree = false;//重载后还原
-
                     }
                 }
 
@@ -6177,6 +6164,7 @@ function DisplayOverlayAnalysis(analysisDatas) {
     }
 
 }
+
 //获取项目监测点
 function getBianXingLiangData(projectid) {
 
