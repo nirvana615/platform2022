@@ -5030,7 +5030,7 @@ function OverlayAnalysis() {
         treeData[i].type = "projectName";
         for (var j in treeData[i].children) {
             if (treeData[i].children[j].title == "雨量") {
-                //treeData[i].children[j].disabled = true;
+                treeData[i].children[j].disabled = true;
                 for (var k in treeData[i].children[j].children) {
                     treeData[i].children[j].children[k].showCheckbox = true;
                     treeData[i].children[j].children[k].checked = false;
@@ -5060,11 +5060,11 @@ function OverlayAnalysis() {
     tree.render({
         elem: '#overlaymonitortree'
         , id: 'overlaymonitortreeid'
-        , accordion: true
+        , accordion: false
         , showLine: true
         , showCheckbox: true
         , customCheckbox: true
-        //, customSpread: true
+        , customSpread: true
         , cancelNodeFileIcon: true
         , data: treeData
         , click: function (obj) {
