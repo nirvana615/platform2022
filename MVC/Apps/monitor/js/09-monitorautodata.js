@@ -18,7 +18,7 @@ var autoallData = null;                         //待处理设备所有数据
 
 
 var overlayChart = null;                        //综合分析图表
-var OverlayAnalysisData=null                    //综合分析数据
+var OverlayAnalysisData = null                    //综合分析数据
 
 var LiFengDatastatisticsTable = null;           //变形量的数据lf
 var YingLiDatastatisticsTable = null;           //变形量的数据应力
@@ -46,7 +46,7 @@ function LoadAutoDataLayer(id) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--自动化监测数据可视化--> <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;"> <ul class="layui-tab-title"> <li class="layui-this" style="width:21%;">可视化</li> <li style="width:21%;">数据处理</li> <li style="width:21%;">综合分析</li> <li style="width:21%;">统计分析</li> </ul> <div class="layui-tab-content" style="margin:0px 0px"> <!--可视化--> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="monitortreebytype" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> </div> </form> <!--图形--> <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> <!--统计表格--> <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;"> <table id="autodatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> <!--数据处理--> <div class="layui-tab-item"> <div class="layui-row" style="margin: 0px 10px;"> <!--选择设备及时间范围--> <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <label class="layui-form-label" style="text-align:center;">选择设备：</label> <div class="layui-input-block"> <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;"> <option value="">请选择设备</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;"> <option value="">请选择年限</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div></div> </form> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-col-md10"> <!--图形--> <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:790px;height:400px;border: 1px solid #e6e6e6;visibility:hidden;"></div> </div> <div class="layui-col-md2"> <!--数据集--> <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div> </div> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-tab layui-tab-brief" lay-filter="EditAutoDataTabBrief"> <ul class="layui-tab-title"> <li lay-id="abnormal" class="layui-this">异常处理</li> <li lay-id="grosserror">粗差剔除</li> <li lay-id="initialvalue">设置初值</li> <li lay-id="interpolation">插补数据</li> <li lay-id="fittingcurve">拟合曲线</li> </ul> <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;"> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--异常处理工具及说明--> <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;"> <!--异常处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter"> <option value="0">按时间范围选择</option> <option value="1">按值域范围选择</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editabnormaldatatoolbodyid"> <!--异常处理工具参数--> </div> </div> <!--异常处理工具说明--> <div id="editabnormaldatatooldoc"></div> </div> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--粗差处理工具及说明--> <form class="layui-form" lay-filter="editgrosserrordatatoolform" style="margin-top:5px;"> <!--粗差处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editgrosserrordatatoolid" name="editgrosserrordatatool" lay-filter="editgrosserrordatatoolfilter"> <option value="0">按标准差σ剔除</option> <option value="1">按残差δ剔除</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editgrosserrordatatoolbodyid"> <!--粗差处理工具参数--> </div> </div> <!--粗差剔除工具说明--> <div id="editgrosserrordatatooldoc"></div> </div> <div class="layui-tab-item">3</div> <div class="layui-tab-item">4</div> <div class="layui-tab-item">5</div> <div class="layui-tab-item">6</div> </div> </div> </div></div> <!--综合分析--> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="overlaymonitortree" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="overlaydataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="overlaydatapretimeid" name="overlaydatapretime" lay-filter="overlaydatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="overlaydatacustomtimeid" name="overlaydatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> <div class="layui-col-xs2"> <div class="grid-demo"> <div class="layui-form-item"> <label class="layui-form-label" style="width:40px;padding:0px 5px;">小时雨量</label> <div class="layui-input-block" style="right:55px;"> <input type="checkbox" id="hourrainid" name="hourrain" lay-skin="switch" lay-filter="hourrainfilter" lay-text="ON|OFF" disabled> </div> </div> </div> </div> <div class="layui-col-xs2"> <div class="grid-demo"> <div class="layui-form-item"> <label class="layui-form-label" style="width:40px;padding:0px 5px;">每日雨量</label> <div class="layui-input-block" style="right:55px;"> <input type="checkbox" id="dayrainid" name="dayrain" lay-skin="switch" lay-filter="dayrainfilter" lay-text="ON|OFF" disabled> </div> </div> </div> </div> </div> </form> <!--图形--> <div id="overlaydatachartid" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> </div> </div> </div> </div> <!--统计分析--> <div class="layui-tab-item"> <div class="layui-col-md12" style="height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;overflow-y: auto;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="bianXingDataform" style="margin-top:5px;margin-left:20px;margin-right:40px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:40px;"><select id="bianXingDatapretimeid" name="bianXingDatapretime" lay-filter="bianXingDatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:20px;margin-right:40px;"> <input id="bianXingDatacustomtimeid" name="bianXingDatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div> </div> </form> <!--统计表格--> <div id="LiFengDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block "> <table id="LiFengDatastatistics" class="layui-hide"></table> </div> <div id="YingLiDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block"> <table id="YingLiDatastatistics" class="layui-hide"></table> </div> <div id="GNSSDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block"> <table id="GNSSDatastatistics" class="layui-hide"></table> </div> <div id="QinJiaoDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block"> <table id="QinJiaoDatastatistics" class="layui-hide"></table> </div> <div id="SbwyDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block"> <table id="SbwyDatastatistics" class="layui-hide"></table> </div> <div id="DxswDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block"> <table id="DxswDatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> </div>'
+                , content: '<!--自动化监测数据可视化--> <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;"> <ul class="layui-tab-title"> <li class="layui-this" style="width:21%;">变形统计</li> <li style="width:21%;">可视化</li> <li style="width:21%;">数据处理</li> <li style="width:21%;">综合分析</li></ul> <div class="layui-tab-content" style="margin:0px 0px"> <!--统计分析--> <div class="layui-tab-item layui-show"> <div class="layui-row" style="height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;overflow-y: auto;"> <!--工具栏--> <form class="layui-form" lay-filter="bianXingDataform" style="margin-top:5px;margin-left:20px;margin-right:40px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:40px;"><select id="bianXingDatapretimeid" name="bianXingDatapretime" lay-filter="bianXingDatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:20px;margin-right:40px;"> <input id="bianXingDatacustomtimeid" name="bianXingDatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div> </div> </form> <!--统计表格--> <div id="LiFengDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block "> <table id="LiFengDatastatistics" class="layui-hide"></table> </div> <div id="YingLiDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block"> <table id="YingLiDatastatistics" class="layui-hide"></table> </div> <div id="GNSSDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block"> <table id="GNSSDatastatistics" class="layui-hide"></table> </div> <div id="QinJiaoDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block"> <table id="QinJiaoDatastatistics" class="layui-hide"></table> </div> <div id="SbwyDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block"> <table id="SbwyDatastatistics" class="layui-hide"></table> </div> <div id="DxswDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block"> <table id="DxswDatastatistics" class="layui-hide"></table> </div> </div> </div> <!--可视化--> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="monitortreebytype" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs6"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs6"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> </div> </form> <!--图形--> <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> <!--统计表格--> <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;"> <table id="autodatastatistics" class="layui-hide"></table> </div> </div> </div> </div> </div> <!--数据处理--> <div class="layui-tab-item"> <div class="layui-row" style="margin: 0px 10px;"> <!--选择设备及时间范围--> <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <label class="layui-form-label" style="text-align:center;">选择设备：</label> <div class="layui-input-block"> <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;"> <option value="">请选择设备</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;"> <option value="">请选择年限</option> </select> </div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"> <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div> </div> </div> </div></div> </form> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-col-md10"> <!--图形--> <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:790px;height:400px;border: 1px solid #e6e6e6;visibility:hidden;"></div> </div> <div class="layui-col-md2"> <!--数据集--> <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div> </div> </div> <div class="layui-row" style="margin: 0px 10px;"> <div class="layui-tab layui-tab-brief" lay-filter="EditAutoDataTabBrief"> <ul class="layui-tab-title"> <li lay-id="abnormal" class="layui-this">异常处理</li> <li lay-id="grosserror">粗差剔除</li> <li lay-id="initialvalue" style="pointer-events:none; color: darkgray;">设置初值</li> <li lay-id="interpolation" style="pointer-events:none; color: darkgray;">插补数据</li> <li lay-id="fittingcurve" style="pointer-events:none; color: darkgray;">拟合曲线</li> </ul> <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;"> <div class="layui-tab-item layui-show"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--异常处理工具及说明--> <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;"> <!--异常处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter"> <option value="0">按时间范围选择</option> <option value="1">按值域范围选择</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editabnormaldatatoolbodyid"> <!--异常处理工具参数--> </div> </div> <!--异常处理工具说明--> <div id="editabnormaldatatooldoc"></div> </div> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-xs2"> <!--粗差处理工具及说明--> <form class="layui-form" lay-filter="editgrosserrordatatoolform" style="margin-top:5px;"> <!--粗差处理工具--> <div class="layui-row"> <div class="layui-form-item"> <div class="layui-input-block selectUp" style="margin-left:1px;"> <select id="editgrosserrordatatoolid" name="editgrosserrordatatool" lay-filter="editgrosserrordatatoolfilter"> <option value="0">按标准差σ剔除</option> <option value="1">按残差δ剔除</option> </select> </div> </div> </div> </form> </div> <!--右侧--> <div class="layui-col-xs10" id="editgrosserrordatatoolbodyid"> <!--粗差处理工具参数--> </div> </div> <!--粗差剔除工具说明--> <div id="editgrosserrordatatooldoc"></div> </div> <div class="layui-tab-item">3</div> <div class="layui-tab-item">4</div> <div class="layui-tab-item">5</div> <div class="layui-tab-item">6</div> </div> </div> </div></div> <!--综合分析--> <div class="layui-tab-item"> <div class="layui-row"> <!--左侧--> <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;"> <div id="overlaymonitortree" class="grid-demo"></div> </div> <!--右侧--> <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"> <div class="grid-demo grid-demo-bg1"> <!--工具栏--> <form class="layui-form" lay-filter="overlaydataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs4"> <div class="grid-demo grid-demo-bg1"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;"><select id="overlaydatapretimeid" name="overlaydatapretime" lay-filter="overlaydatapretimefilter" style="visibility:hidden;"></select></div> </div> </div> </div> <div class="layui-col-xs4"> <div class="grid-demo"> <div class="layui-form-item"> <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="overlaydatacustomtimeid" name="overlaydatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"></div> </div> </div> </div> <div class="layui-col-xs2"> <div class="grid-demo"> <div class="layui-form-item"> <label class="layui-form-label" style="width:40px;padding:0px 5px;">小时雨量</label> <div class="layui-input-block" style="right:55px;"> <input type="checkbox" id="hourrainid" name="hourrain" lay-skin="switch" lay-filter="hourrainfilter" lay-text="ON|OFF" disabled> </div> </div> </div> </div> <div class="layui-col-xs2"> <div class="grid-demo"> <div class="layui-form-item"> <label class="layui-form-label" style="width:40px;padding:0px 5px;">每日雨量</label> <div class="layui-input-block" style="right:55px;"> <input type="checkbox" id="dayrainid" name="dayrain" lay-skin="switch" lay-filter="dayrainfilter" lay-text="ON|OFF" disabled> </div> </div> </div> </div> </div> </form> <!--图形--> <div id="overlaydatachartid" class="layui-tab-item layui-show" style="width:790px;height:480px"></div> </div> </div> </div> </div></div> </div>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -355,7 +355,7 @@ function GetMonitors(projectid, index) {
 
                 //加载初始监测点数据
                 LoadMonitorAutoDataPreDateTime(currentmonitor, form.val("autodataform").autodatapretime);
-                
+
             }
         }, datatype: "json"
     });
@@ -2084,14 +2084,14 @@ function LoadAuoData(monitor) {
                             ]
                         };
                     }
-                    
+
                     chart.hideLoading();
                     chart.setOption(option, true, false);
                 }
 
             }, datatype: "json"
         });
-        
+
     }
 
 }
@@ -2102,7 +2102,7 @@ function EditProjectDeviceAutoData(projectid) {
     monitorArr = {};
     selectedsCurve = null;//选中曲线
     axisType = "X";//初设X轴标识线
-    
+
     //渲染工具
     document.getElementById("editautodatadeviceid").style.visibility = "visible";
     document.getElementById("editautodatapretimeid").style.visibility = "visible";
@@ -2208,7 +2208,7 @@ function EditProjectDeviceAutoData(projectid) {
     ////设置初值模块
     ////插补数据模块
     ////监测曲线模块
-    
+
 }
 function LoadEditAutoDataPreDateTime(monitorArr, datetime) {
     editChart.showLoading();
@@ -2379,7 +2379,7 @@ function DataSetNodeCheck(obj) {
                 isReloadTree = false;//重载后还原
                 targetView();
             }
-            
+
         }
         else if (obj.data.type == "history") {
             if (!isReloadTree) {
@@ -2388,7 +2388,7 @@ function DataSetNodeCheck(obj) {
                         for (var j in dataSetTree[i].children) {
                             if (dataSetTree[i].children[j].id == obj.data.id) {
                                 dataSetTree[i].children[j].checked = true;
-                            } 
+                            }
                         }
                     }
                     else {
@@ -2404,7 +2404,7 @@ function DataSetNodeCheck(obj) {
                 historyView();
             }
         }
-       
+
     }
     else {
         if (obj.data.type == "target") {
@@ -2455,7 +2455,7 @@ function DataSetNodeCheck(obj) {
             if (dataSetTree[i].type == "targetdataset") {
                 for (var j in dataSetTree[i].children) {
                     if (dataSetTree[i].children[j].checked == true) {
-                        if (dataSetTree[i].children[j].id =='revise') {
+                        if (dataSetTree[i].children[j].id == 'revise') {
                             for (var k in autoOriginalData.Datas) {
                                 if (autoOriginalData.Datas[k].Flag != '200') {
                                     if (!targetDataViewid.includes(autoOriginalData.Datas[k].Id)) {
@@ -2497,7 +2497,7 @@ function DataSetNodeCheck(obj) {
                 }
             }
         }
-        
+
         if (targetDataView.Datas.length > 0) {
             DisplayEditDATA(monitorArr, targetDataView);
         }
@@ -2598,7 +2598,7 @@ function ReviseViewTree() {
 function editAbnormaldata() {
     document.getElementById("editabnormaldatatoolbodyid").innerHTML = '<!--异常处理工具参数--> <form class="layui-form" lay-filter="editabnormaldataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs10"> <div class="layui-form-item "> <label class="layui-form-label" style="width: 80px;padding:9px 0px;">时间范围：</label> <div class="layui-input-inline" style="width: 150px;"> <input type="text" autocomplete="off" id="editabnormalstarttimeid" name="editabnormalstarttime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid" style="width: 10px;"> - </div> <div class="layui-input-inline" style="width: 150px;"> <input type="text" autocomplete="off" id="editabnormalendtimeid" name="editabnormalendtime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="结束时间"> </div></div> </div> <div class="layui-col-xs2"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editabnormaldataXsubmit" style="width:80px;border-radius:5px;">剔除</button> </div> </div> </div> </div> </form>';
     document.getElementById("editabnormaldatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标选择或手动输入欲选时间段，点击剔除按钮，即可删除该时间段数据。</p>';
-    
+
     //切换图例联动选择曲线
     editChart.on('legendselectchanged', function (params) {
         try {
@@ -2750,7 +2750,7 @@ function editAbnormaldata() {
                     deletData += autoOriginalData.Datas[i].Id.toString() + ",";
                 }
             }
-            
+
             //加载修正后数据
             ReviseViewTree();
             //删除数据
@@ -2828,15 +2828,17 @@ function editAbnormaldata() {
 //粗差处理
 function editGrosserrordata() {
     elem.on('tab(EditAutoDataTabBrief)', function (elem) {
-        axisType = "X";
-        //粗差剔除参数页
-        document.getElementById("editgrosserrordatatoolbodyid").innerHTML = '<!--粗差剔除工具参数--> <form class="layui-form" lay-filter="editgrosserrordataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs8"> <div class="layui-form-item "> <label class="layui-form-label">时间范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorstarttimeid" name="editgrosserrorstarttime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorendtimeid" name="editgrosserrorendtime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="结束时间"> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatapreview" style="width:120px;border-radius:5px;">预览</button> </div> </div> </div> </div> <div class="layui-row"> <div class="layui-col-xs3"> <div class="layui-form-item"> <label class="layui-form-label" style="width:90px;padding:9px 10px;">标准差倍数：</label> <div class="layui-input-inline selectUp" style="width:80px;"> <input type="text" autocomplete="off" id="editCullingmethodid" name="editCullingmethod" lay-verify="required|number" class="layui-input"> </div> </div> </div><div class="layui-col-xs5"> <div class="layui-form-item"> <label class="layui-form-label">选择曲线：</label> <div class="layui-input-inline selectUp" style="width:205px;"> <select id="editgrosscurveid" name="editgrosscurve" lay-verify="required" lay-filter="editgrosscurvefilter"> <option value="">请选择曲线</option> </select> </div></div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatasubmit" style="width:120px;border-radius:5px;">剔除</button> </div> </div> </div> </div></form>';
-        document.getElementById("editgrosserrordatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标选择或手动输入欲选时间段，选择剔除方法，先预览在剔除。</p>';
-        //获取时间范围
-        $("#editgrosserrorstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
-        $("#editgrosserrorendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
+
         //
         if ($(this).attr('lay-id') == "grosserror") {
+            axisType = "X";
+            //粗差剔除参数页
+            document.getElementById("editgrosserrordatatoolbodyid").innerHTML = '<!--粗差剔除工具参数--> <form class="layui-form" lay-filter="editgrosserrordataform" style="margin-top:5px;"> <div class="layui-row"> <div class="layui-col-xs8"> <div class="layui-form-item "> <label class="layui-form-label">时间范围：</label> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorstarttimeid" name="editgrosserrorstarttime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="开始时间"> </div> <div class="layui-form-mid"> - </div> <div class="layui-input-inline"> <input type="text" autocomplete="off" id="editgrosserrorendtimeid" name="editgrosserrorendtime" lay-verify="required" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" placeholder="结束时间"> </div> </div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatapreview" style="width:120px;border-radius:5px;">预览</button> </div> </div> </div> </div> <div class="layui-row"> <div class="layui-col-xs3"> <div class="layui-form-item"> <label class="layui-form-label" style="width:90px;padding:9px 10px;">标准差倍数：</label> <div class="layui-input-inline selectUp" style="width:80px;"> <input type="text" autocomplete="off" id="editCullingmethodid" name="editCullingmethod" lay-verify="required|number" class="layui-input"> </div> </div> </div><div class="layui-col-xs5"> <div class="layui-form-item"> <label class="layui-form-label">选择曲线：</label> <div class="layui-input-inline selectUp" style="width:205px;"> <select id="editgrosscurveid" name="editgrosscurve" lay-verify="required" lay-filter="editgrosscurvefilter"> <option value="">请选择曲线</option> </select> </div></div> </div> <div class="layui-col-xs4"> <div class="layui-form-item"> <div style="text-align:center"> <button type="submit" class="layui-btn" lay-submit="" lay-filter="editgrosserrordatasubmit" style="width:120px;border-radius:5px;">剔除</button> </div> </div> </div> </div></form>';
+            document.getElementById("editgrosserrordatatooldoc").innerHTML = '<p>&ensp;&ensp;说明：可通过X轴游标选择或手动输入欲选时间段，选择剔除方法，先预览在剔除。</p>';
+            //获取时间范围
+            $("#editgrosserrorstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
+            $("#editgrosserrorendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
+
             var selectedType = editChart.getOption().legend[0].selected;//获取图例选中曲线
             document.getElementById("editgrosscurveid").innerHTML = null;
             for (var key in selectedType) {
@@ -2972,7 +2974,7 @@ function editGrosserrordata() {
         }
         form.render();
         form.render('select');
-        
+
     });
 
     //粗差--按标准差剔除
@@ -3080,7 +3082,7 @@ function editGrosserrordata() {
             }
         }
         //拟合曲线返回剔除点
-        var preDeletedata=[];
+        var preDeletedata = [];
         if (fittingmethod == 'polynomial') {
             preDeletedata = Fittingmethod(fittingmethod, resData, threshold);
         } else {
@@ -3151,7 +3153,9 @@ function editGrosserrordata() {
     form.render('select');
 }
 //设置初值
+function setInitialValue() {
 
+}
 //插补数据
 function editImputationdata() {
 
@@ -3213,8 +3217,7 @@ function DisplayEditNODATA(monitor) {
     };
 
     editChart.hideLoading();
-    editChart.dispose();
-    editChart = echarts.init(document.getElementById('editautodatachartid'));
+    editChart.setOption(option, true, false);
 };
 function DisplayEditGNSS(monitor, data) {
     var gnssmonitors = data;
@@ -3303,13 +3306,7 @@ function DisplayEditGNSS(monitor, data) {
                     label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
                 }
                 return time + '<br/>' + label;
-            },
-            position: function (pos, params, el, elRect, size) {
-                var obj = { top: 15 };
-                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-                return obj;
-            },
-            extraCssText: 'width: 170px'
+            }
         },
         grid: {
             left: '5%',
@@ -3419,7 +3416,7 @@ function DisplayEditGNSS(monitor, data) {
     //初始化异常处理时间范围
     $("#editabnormalstarttimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmin));
     $("#editabnormalendtimeid").val(echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', thresholdXmax));
-   
+
 }
 function DisplayEditLF(monitor, data) {
     var lfmonitors = data;
@@ -3486,13 +3483,7 @@ function DisplayEditLF(monitor, data) {
                     label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
                 }
                 return time + '<br/>' + label;
-            },
-            position: function (pos, params, el, elRect, size) {
-                var obj = { top: 15 };
-                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-                return obj;
-            },
-            extraCssText: 'width: 170px'
+            }
         },
         grid: {
             left: '5%',
@@ -3684,16 +3675,10 @@ function DisplayEditQJ(monitor, data) {
                 var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
                 var label = "";
                 for (var i in params) {
-                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + '°<br/>';
                 }
                 return time + '<br/>' + label;
-            },
-            position: function (pos, params, el, elRect, size) {
-                var obj = { top: 10 };
-                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-                return obj;
-            },
-            extraCssText: 'width: 170px'
+            }
         },
         grid: {
             left: '5%',
@@ -3852,16 +3837,10 @@ function DisplayEditYL(monitor, data) {
                 var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
                 var label = "";
                 for (var i in params) {
-                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'kN<br/>';
                 }
                 return time + '<br/>' + label;
-            },
-            position: function (pos, params, el, elRect, size) {
-                var obj = { top: 10 };
-                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-                return obj;
-            },
-            extraCssText: 'width: 170px'
+            }
         },
         grid: {
             left: '5%',
@@ -4024,13 +4003,7 @@ function DisplayEditSBWY(monitor, data) {
                     label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
                 }
                 return time + '<br/>' + label;
-            },
-            position: function (pos, params, el, elRect, size) {
-                var obj = { top: 10 };
-                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-                return obj;
-            },
-            extraCssText: 'width: 170px'
+            }
         },
         grid: {
             left: '5%',
@@ -4176,16 +4149,10 @@ function DisplayEditWATER(monitor, data) {
                 var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
                 var label = "";
                 for (var i in params) {
-                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'm<br/>';
                 }
                 return time + '<br/>' + label;
-            },
-            position: function (pos, params, el, elRect, size) {
-                var obj = { top: 10 };
-                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-                return obj;
-            },
-            extraCssText: 'width: 170px'
+            }
         },
         legend: {
             data: ['地下水位'],
@@ -4346,13 +4313,7 @@ function DisplayEditRAIN(monitor, data) {
                     label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
                 }
                 return time + '<br/>' + label;
-            },
-            position: function (pos, params, el, elRect, size) {
-                var obj = { top: 10 };
-                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-                return obj;
-            },
-            extraCssText: 'width: 170px'
+            }
         },
         legend: {
             data: ['降雨量(日)'],
@@ -4458,7 +4419,7 @@ function DragMarkLine(curveid, axisType) {
     else if (axisType == "Y") {
         UpdataDraggingY();
     }
-    
+
     //缩放时调整标示线初始位置
     editChart.on('datazoom', function (params) {
         thresholdYmin = editChart.getOption().dataZoom[1].startValue;
@@ -4488,12 +4449,10 @@ function DragMarkLine(curveid, axisType) {
                 UpdataDraggingX();
             }
             else if (axisType == "Y") {
-               
                 UpdataDraggingY();
             };
-           
-        }, 1000);
-        
+        }, 500);
+
     });
     function UpdataDraggingY() {
         editChart.setOption({
@@ -4585,10 +4544,36 @@ function DragMarkLine(curveid, axisType) {
                     },
                     cursor: 'move',
                     ondrag: onPointDraggingYmax
+                },
+                {
+                    id: '3',
+                    type: 'rect',
+                    animation: false,
+                    z: 0,
+                    shape: {
+                        width: 0,
+                        height: 0
+                        // r: 10
+                    },
+                    position: [editChart.convertToPixel({ xAxisId: '1' }, thresholdXmin), 0],
+                    draggable: false,
+                },
+                {
+                    id: '4',
+                    type: 'rect',
+                    animation: false,
+                    z: 0,
+                    shape: {
+                        width: 0,
+                        height: 0
+                        // r: 10
+                    },
+                    position: [editChart.convertToPixel({ xAxisId: '1' }, thresholdXmax), 0],
+                    draggable: false,
                 }
             ],
         });
-        
+
     }
     function UpdataDraggingX() {
         editChart.setOption({
@@ -4646,7 +4631,7 @@ function DragMarkLine(curveid, axisType) {
                     id: '3',
                     type: 'rect',
                     animation: false,
-                    z: 100,
+                    z: 10000,
                     shape: {
                         width: 2,
                         height: 750
@@ -4681,10 +4666,36 @@ function DragMarkLine(curveid, axisType) {
                     },
                     cursor: 'move',
                     ondrag: onPointDraggingXmax
-                }
+                },
+                {
+                    id: '1',
+                    type: 'rect',
+                    animation: false,
+                    z: 0,
+                    shape: {
+                        width: 0,
+                        height: 0
+                        // r: 10
+                    },
+                    position: [0, editChart.convertToPixel({ yAxisId: '1' }, thresholdYmin)],
+                    draggable: false,
+                },
+                {
+                    id: '2',
+                    type: 'rect',
+                    animation: false,
+                    z: 0,
+                    shape: {
+                        width: 0,
+                        height: 0
+                        // r: 10
+                    },
+                    position: [0, editChart.convertToPixel({ yAxisId: '1' }, thresholdYmax)],
+                    draggable: false,
+                },
             ],
         });
-        
+
     }
     function onPointDraggingYmin() {
         thresholdYmin = editChart.convertFromPixel({ yAxisId: '1' }, this.position[1]);
@@ -4844,7 +4855,7 @@ function Fittingmethod(type, data, threshold) {
     layer.open({
         type: 1
         , title: ['预览', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-        , area: ['900px', '600px']
+        , area: ['900px', '660px']
         , shade: 0
         , offset: 'auto'
         , closeBtn: 1
@@ -4872,10 +4883,17 @@ function Fittingmethod(type, data, threshold) {
                 myRegression = ecStat.regression(type, data);
                 preViewChart();
             }
-            
+
             function preViewChart() {
                 var regressData = myRegression.points;
                 option = {
+                    grid: {
+                        left: '2%',
+                        right: '2%',
+                        top: '2%',
+                        bottom: '2%',
+                        containLabel: true
+                    },
                     tooltip: {
                         trigger: 'axis',
                         backgroundColor: 'rgba(105,105,105)',
@@ -4890,16 +4908,10 @@ function Fittingmethod(type, data, threshold) {
                             var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
                             var label = "";
                             for (var i in params) {
-                                label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
+                                label += params[i].marker + params[i].seriesName + ':' + params[i].value[1].toFixed(4) + '<br/>';
                             }
                             return time + '<br/>' + label;
                         },
-                        position: function (pos, params, el, elRect, size) {
-                            var obj = { top: 15 };
-                            obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-                            return obj;
-                        },
-                        extraCssText: 'width: 170px'
                     },
                     xAxis: {
                         type: 'time',
@@ -4925,7 +4937,7 @@ function Fittingmethod(type, data, threshold) {
                             show: false
                         },
                         axisLine: {
-                            show: false
+                            show: true,
                         }
                     },
                     series: [
@@ -4969,7 +4981,7 @@ function Fittingmethod(type, data, threshold) {
                                 shape: {
                                     cx: 0,
                                     cy: 0,
-                                    r: 3
+                                    r: 2
                                 },
                                 style: {
                                     fill: '#01FF70',
@@ -4978,7 +4990,7 @@ function Fittingmethod(type, data, threshold) {
                                 },
                                 invisible: false,
                                 bouding: 'raw',
-                                z: 100
+                                z: 1000
                             };
                         })
                     });
@@ -5011,15 +5023,14 @@ function OverlayAnalysis() {
 
     //获取图表
     overlayChart = echarts.init(document.getElementById('overlaydatachartid'));
-    overlayChart.showLoading();
-    
+
     //重构监测目录树
     var treeData = JSON.parse(JSON.stringify(currentprojectmonitors));
     for (var i in treeData) {
         treeData[i].type = "projectName";
         for (var j in treeData[i].children) {
             if (treeData[i].children[j].title == "雨量") {
-                treeData[i].children[j].disabled = true;
+                //treeData[i].children[j].disabled = true;
                 for (var k in treeData[i].children[j].children) {
                     treeData[i].children[j].children[k].showCheckbox = true;
                     treeData[i].children[j].children[k].checked = false;
@@ -5028,16 +5039,17 @@ function OverlayAnalysis() {
                     rainmonitor.type = treeData[i].children[j].children[k].type;
                     rainmonitor.title = treeData[i].children[j].children[k].title;
                     $('#hourrainid').removeAttr('disabled');
-                    $('#dayrainid').removeAttr('disabled'); 
+                    $('#dayrainid').removeAttr('disabled');
                 }
             }
             else {
                 treeData[i].children[j].type = "className";
                 treeData[i].children[j].showCheckbox = true;
                 treeData[i].children[j].checked = false;
-                treeData[i].children[j].tid = treeData[i].children[j].title + treeData[i].children[j].id;
+                treeData[i].children[j].spread = false;
+                treeData[i].children[j].id = treeData[i].children[j].title + "#" + treeData[i].children[j].id;
                 for (var k in treeData[i].children[j].children) {
-                    treeData[i].children[j].children[k].tid = treeData[i].children[j].title + treeData[i].children[j].children[k].id;
+                    treeData[i].children[j].children[k].id = treeData[i].children[j].title + "#" + treeData[i].children[j].children[k].id;
                     treeData[i].children[j].children[k].showCheckbox = true;
                     treeData[i].children[j].children[k].checked = false;
                 }
@@ -5048,11 +5060,11 @@ function OverlayAnalysis() {
     tree.render({
         elem: '#overlaymonitortree'
         , id: 'overlaymonitortreeid'
-        , accordion: false
+        , accordion: true
         , showLine: true
         , showCheckbox: true
         , customCheckbox: true
-        , customSpread: true
+        //, customSpread: true
         , cancelNodeFileIcon: true
         , data: treeData
         , click: function (obj) {
@@ -5073,16 +5085,19 @@ function OverlayAnalysis() {
                     tree.reload('overlaymonitortreeid', { data: treeData });
                     isReloadTree = false;//重载后还原
                 }
-                
+
             }
             if (obj.data.type == "className") {
                 if (overlayTreeDatabytwoid == null) {
                     if (!isReloadTree) {
-                        overlayTreeDatabytwoid = obj.data.tid;
+                        overlayTreeDatabytwoid = obj.data.id;
                         for (var i in treeData) {
                             for (var j in treeData[i].children) {
-                                if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
+                                if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
                                     treeData[i].children[j].spread = true;
+                                    for (var k in treeData[i].children[j].children) {
+                                        treeData[i].children[j].children[k].spread = true;
+                                    }
                                 }
                                 else {
                                     treeData[i].children[j].spread = false;
@@ -5093,23 +5108,23 @@ function OverlayAnalysis() {
                         tree.reload('overlaymonitortreeid', { data: treeData });
                         isReloadTree = false;//重载后还原
                     }
-                    
+
                 }
                 else {
                     if (obj.data.id != overlayTreeDatabytwoid) {
                         if (!isReloadTree) {
-                            overlayTreeDatabytwoid = obj.data.tid;
+                            overlayTreeDatabytwoid = obj.data.id;
                             //取消所有选中
                             for (var i in treeData) {
                                 for (var j in treeData[i].children) {
-                                    if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
+                                    if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
                                         treeData[i].children[j].spread = true;
                                     }
                                     else {
                                         treeData[i].children[j].spread = false;
-                                        for (var k in treeData[i].children[j].children) {
-                                            treeData[i].children[j].children[k].checked = false;
-                                        }
+                                        //for (var k in treeData[i].children[j].children) {
+                                        //    treeData[i].children[j].children[k].checked = false;
+                                        //}
                                     }
 
                                 }
@@ -5118,7 +5133,7 @@ function OverlayAnalysis() {
                             tree.reload('overlaymonitortreeid', { data: treeData });
                             isReloadTree = false;//重载后还原
                         }
-                        
+
                     }
 
                 }
@@ -5130,13 +5145,15 @@ function OverlayAnalysis() {
             if (obj.checked) {
                 if (obj.data.type == "className") {
                     if (!isReloadTree) {
-                        overlayTreeDatabytwoid = obj.data.tid;
+                        overlayTreeDatabytwoid = obj.data.id;
                         for (var i in treeData) {
                             for (var j in treeData[i].children) {
-                                if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
+                                if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
+                                    treeData[i].children[j].spread = true;
                                     for (var k in treeData[i].children[j].children) {
                                         treeData[i].children[j].children[k].checked = true;
                                         treeData[i].children[j].children[k].spread = true;
+
                                     }
                                 }
                                 else {
@@ -5160,9 +5177,9 @@ function OverlayAnalysis() {
                         if (!isReloadTree) {
                             for (var i in treeData) {
                                 for (var j in treeData[i].children) {
-                                    if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
+                                    if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
                                         for (var k in treeData[i].children[j].children) {
-                                            if (treeData[i].children[j].children[k].tid == obj.data.tid) {
+                                            if (treeData[i].children[j].children[k].id == obj.data.id) {
                                                 treeData[i].children[j].children[k].checked = true;
                                             }
                                         }
@@ -5185,7 +5202,7 @@ function OverlayAnalysis() {
                             for (var i in treeData) {
                                 for (var j in treeData[i].children) {
                                     for (var k in treeData[i].children[j].children) {
-                                        if (treeData[i].children[j].children[k].tid == obj.data.tid) {
+                                        if (treeData[i].children[j].children[k].id == obj.data.id) {
                                             treeData[i].children[j].children[k].checked = true;
                                             treeData[i].children[j].children[k].spread = true;
                                         }
@@ -5205,7 +5222,7 @@ function OverlayAnalysis() {
                     if (!isReloadTree) {
                         for (var i in treeData) {
                             for (var j in treeData[i].children) {
-                                if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
+                                if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
                                     treeData[i].children[j].checked = false;
                                     for (var k in treeData[i].children[j].children) {
                                         treeData[i].children[j].children[k].checked = false;
@@ -5220,18 +5237,18 @@ function OverlayAnalysis() {
                         getCheckedMonitor()
                         overlayTreeDatabytwoid == null;
                     }
-                    
+
                 } else {
                     if (!isReloadTree) {
                         for (var i in treeData) {
                             for (var j in treeData[i].children) {
-                                if (treeData[i].children[j].tid == overlayTreeDatabytwoid) {
+                                if (treeData[i].children[j].id == overlayTreeDatabytwoid) {
                                     for (var k in treeData[i].children[j].children) {
-                                        if (treeData[i].children[j].children[k].tid == obj.data.tid) {
+                                        if (treeData[i].children[j].children[k].id == obj.data.id) {
                                             treeData[i].children[j].checked = false;
                                             treeData[i].children[j].children[k].checked = false;
                                             //取消数据
-                                            cancelCheckedMonitor(treeData[i].children[j].children[k].id, treeData[i].children[j].children[k].type)
+                                            cancelCheckedMonitor(treeData[i].children[j].children[k].id.split('#')[1], treeData[i].children[j].children[k].type)
                                             break;
                                         }
                                     }
@@ -5242,10 +5259,10 @@ function OverlayAnalysis() {
                         isReloadTree = true;//标记重载
                         tree.reload('overlaymonitortreeid', { data: treeData });
                         isReloadTree = false;//重载后还原
-                        
+
                     }
                 }
-                
+
             }
             //获取选中数据并加载
             function getCheckedMonitor() {
@@ -5255,7 +5272,7 @@ function OverlayAnalysis() {
                         for (var k in treeData[i].children[j].children) {
                             if (treeData[i].children[j].children[k].checked == true) {
                                 var monitorid = {};
-                                monitorid.id = treeData[i].children[j].children[k].id;
+                                monitorid.id = treeData[i].children[j].children[k].id.split('#')[1];
                                 monitorid.type = treeData[i].children[j].children[k].type;
                                 monitorid.title = treeData[i].children[j].children[k].title;
                                 monitors.push(monitorid);
@@ -5307,13 +5324,13 @@ function OverlayAnalysis() {
             document.getElementById("overlaydatacustomtimeid").value = "";
             //按预设时间范围绘制图表
             LoadAnalysisAutoDataPreDateTime(monitors, data.value);
-            
+
         }
     });
     //监听小时降雨开关
     form.on('switch(hourrainfilter)', function (data) {
         if (this.checked) {
-            
+
             var type = "hourrain"
             LoadAnalysisRainDataDateTime(rainmonitor, type);
         }
@@ -5340,7 +5357,7 @@ function OverlayAnalysis() {
     form.render();
     form.render('select');
     form.render('checkbox');
-    
+
 }
 //取消选中数据加载
 function cancelCheckedMonitor(id, type) {
@@ -5393,13 +5410,13 @@ function LoadAnalysisAutoDataPreDateTime(monitors, datetime) {
     //加载数据
     overlayChart.showLoading();
     OverlayAnalysisData = null;
-    var monitorstr = { "monitorstr": monitors};
+    var monitorstr = { "monitorstr": monitors };
     var datastring = JSON.stringify(monitorstr);
     //请求监测点指点时间范围数据
     $.ajax({
         url: servicesurl + "/api/Data/GetAnalysisAutoDatabyPreDateTime", type: "get", data: { "monitros": datastring, "predatetime": datetime, "cookie": document.cookie },
         success: function (data) {
-            OverlayAnalysisData= JSON.parse(data);
+            OverlayAnalysisData = JSON.parse(data);
             DisplayOverlayAnalysis(OverlayAnalysisData);
         }, datatype: "json"
     });
@@ -5424,7 +5441,7 @@ function LoadAnalysisAutoDataCustomDateTime(monitors, datetime) {
     });
 }
 //加载降雨数据
-function LoadAnalysisRainDataDateTime(rainmonitor,type) {
+function LoadAnalysisRainDataDateTime(rainmonitor, type) {
     overlayChart.showLoading();
     OverlayAnalysisData.RAINAnalysisArr = {};
     //请求监测点指点时间范围数据
@@ -5449,12 +5466,10 @@ function LoadAnalysisRainDataDateTime(rainmonitor,type) {
                 DisplayOverlayAnalysis(OverlayAnalysisData);
             }, datatype: "json"
         });
-        
+
     }
-    
+
 }
-
-
 //叠加展示
 function DisplayOverlayAnalysis(analysisDatas) {
     var yAxisData = [];
@@ -5467,21 +5482,44 @@ function DisplayOverlayAnalysis(analysisDatas) {
     var sbwyAnalysisData = analysisDatas.SBWYAnalysisArr;
     var rainAnalysisData = analysisDatas.RAINAnalysisArr;
     if (gnssAnalysisData.length > 0) {
+        var all = [];
+        for (var i in gnssAnalysisData) {
+            for (var j in gnssAnalysisData[i].Datas) {
+                if (gnssAnalysisData[i].Datas[j].Flag != '200') {
+                    all.push(parseInt(parseFloat(gnssAnalysisData[i].Datas[j].Dx) * 1000) / 1000);
+                    all.push(parseInt(parseFloat(gnssAnalysisData[i].Datas[j].Dy) * 1000) / 1000);
+                    all.push(parseInt(parseFloat(gnssAnalysisData[i].Datas[j].Dxy) * 1000) / 1000);
+                    all.push(parseInt(parseFloat(gnssAnalysisData[i].Datas[j].Dh) * 1000) / 1000);
+                }
+
+            }
+        }
         if (yAxisData.length < 1) {
             position = "left";
+            var offset = 0;
         }
         else {
             position = "right";
+            var offset = (yAxisData.length - 1) * 50;
         }
-        var offset = yAxisData.length * 35;
+
+        var ymax = Math.max(...all);
+        var ymin = Math.min(...all);
         yAxisData.push(
             {
                 id: 'gnss',
                 type: 'value',
+                max: ymax,
+                min: ymin,
+                alignTicks: true,
                 position: position,
                 offset: offset,
-                name:'GNSS(mm)',
-                splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+                name: 'GNSS(mm)',
+                nameTextStyle: {
+                    fontSize: 10,
+                    padding: [0, 10, 0, 0]
+                }
+                //splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             }
         );
         for (var i in gnssAnalysisData) {
@@ -5491,21 +5529,42 @@ function DisplayOverlayAnalysis(analysisDatas) {
         }
     };
     if (qjAnalysisData.length > 0) {
+        var all = [];
+        for (var i in qjAnalysisData) {
+            for (var j in qjAnalysisData[i].Datas) {
+                if (qjAnalysisData[i].Datas[j].Flag != '200') {
+                    all.push(parseInt(parseFloat(qjAnalysisData[i].Datas[j].Dx) * 1000) / 1000);
+                    all.push(parseInt(parseFloat(qjAnalysisData[i].Datas[j].Dy) * 1000) / 1000);
+                }
+
+            }
+        }
         if (yAxisData.length < 1) {
             position = "left";
+            var offset = 0;
         }
         else {
             position = "right";
+            var offset = (yAxisData.length - 1) * 50;
         }
-        var offset = yAxisData.length * 35;
+
+        var ymax = Math.max(...all);
+        var ymin = Math.min(...all);
         yAxisData.push(
             {
                 id: 'qj',
                 type: 'value',
+                max: ymax,
+                min: ymin,
+                alignTicks: true,
                 position: position,
                 offset: offset,
                 name: 'QJ(°)',
-                splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+                nameTextStyle: {
+                    fontSize: 10,
+                    padding: [0, 4, 0, 0]
+                }
+                //splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             }
         );
         for (var i in qjAnalysisData) {
@@ -5515,21 +5574,42 @@ function DisplayOverlayAnalysis(analysisDatas) {
         }
     };
     if (lfAnalysisData.length > 0) {
+        var all = [];
+        for (var i in lfAnalysisData) {
+            for (var j in lfAnalysisData[i].Datas) {
+                if (lfAnalysisData[i].Datas[j].Flag != '200') {
+                    all.push(parseInt(parseFloat(lfAnalysisData[i].Datas[j].Dv) * 1000) / 1000);
+                }
+
+            }
+        }
         if (yAxisData.length < 1) {
             position = "left";
+            var offset = 0;
         }
         else {
             position = "right";
+            var offset = (yAxisData.length - 1) * 50;
         }
-        var offset = yAxisData.length * 35;
+
+
+        var ymax = Math.max(...all);
+        var ymin = Math.min(...all);
         yAxisData.push(
             {
                 id: 'lf',
                 type: 'value',
+                max: ymax,
+                min: ymin,
+                alignTicks: true,
                 position: position,
                 offset: offset,
                 name: 'LF(mm)',
-                splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+                nameTextStyle: {
+                    fontSize: 10,
+                    padding: [0, 4, 0, 0]
+                }
+                //splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             }
         );
         for (var i in lfAnalysisData) {
@@ -5539,21 +5619,41 @@ function DisplayOverlayAnalysis(analysisDatas) {
         }
     };
     if (ylAnalysisData.length > 0) {
+        var all = [];
+        for (var i in ylAnalysisData) {
+            for (var j in ylAnalysisData[i].Datas) {
+                if (ylAnalysisData[i].Datas[j].Flag != '200') {
+                    all.push(parseInt(parseFloat(ylAnalysisData[i].Datas[j].Dv) * 1000) / 1000);
+                }
+
+            }
+        }
         if (yAxisData.length < 1) {
             position = "left";
+            var offset = 0;
         }
         else {
             position = "right";
+            var offset = (yAxisData.length - 1) * 50;
         }
-        var offset = yAxisData.length * 35;
+
+        var ymax = Math.max(...all);
+        var ymin = Math.min(...all);
         yAxisData.push(
             {
                 id: 'yl',
                 type: 'value',
+                max: ymax,
+                min: ymin,
+                alignTicks: true,
                 position: position,
                 offset: offset,
                 name: 'YL(kN)',
-                splitLine: { show: true, lineStyle: { color: 'red' } },
+                nameTextStyle: {
+                    fontSize: 10,
+                    padding: [0, 4, 0, 0]
+                }
+                //splitLine: { show: true, lineStyle: { color: 'red' } },
             }
         );
         for (var i in ylAnalysisData) {
@@ -5563,21 +5663,41 @@ function DisplayOverlayAnalysis(analysisDatas) {
         }
     };
     if (waterAnalysisData.length > 0) {
+        var all = [];
+        for (var i in waterAnalysisData) {
+            for (var j in waterAnalysisData[i].Datas) {
+                if (waterAnalysisData[i].Datas[j].Flag != '200') {
+                    all.push(parseInt(parseFloat(waterAnalysisData[i].Datas[j].Value) * 1000) / 1000);
+                }
+
+            }
+        }
         if (yAxisData.length < 1) {
             position = "left";
+            var offset = 0;
         }
         else {
             position = "right";
+            var offset = (yAxisData.length - 1) * 50;
         }
-        var offset = yAxisData.length * 35;
+
+        var ymax = Math.max(...all);
+        var ymin = Math.min(...all);
         yAxisData.push(
             {
                 id: 'water',
                 type: 'value',
+                max: ymax,
+                min: ymin,
+                alignTicks: true,
                 position: position,
                 offset: offset,
                 name: 'WATER(m)',
-                splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+                nameTextStyle: {
+                    fontSize: 10,
+                    padding: [0, 10, 0, 0]
+                }
+                //splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             }
         );
         for (var i in waterAnalysisData) {
@@ -5587,21 +5707,42 @@ function DisplayOverlayAnalysis(analysisDatas) {
         }
     };
     if (sbwyAnalysisData.length > 0) {
+        var all = [];
+        for (var i in sbwyAnalysisData) {
+            for (var j in sbwyAnalysisData[i].Datas) {
+                if (sbwyAnalysisData[i].Datas[j].Flag != '200') {
+                    all.push(parseInt(parseFloat(sbwyAnalysisData[i].Datas[j].X) * 1000) / 1000);
+                    all.push(parseInt(parseFloat(sbwyAnalysisData[i].Datas[j].Y) * 1000) / 1000);
+                }
+
+            }
+        }
         if (yAxisData.length < 1) {
             position = "left";
+            var offset = 0;
         }
         else {
             position = "right";
+            var offset = (yAxisData.length - 1) * 50;
         }
-        var offset = yAxisData.length * 35;
+
+        var ymax = Math.max(...all);
+        var ymin = Math.min(...all);
         yAxisData.push(
             {
                 id: 'sbwy',
                 type: 'value',
+                max: ymax,
+                min: ymin,
+                alignTicks: true,
                 position: position,
                 offset: offset,
                 name: 'SBWY(mm)',
-                splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+                nameTextStyle: {
+                    fontSize: 10,
+                    padding: [0, 10, 0, 0]
+                }
+                //splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             }
         );
         for (var i in sbwyAnalysisData) {
@@ -5613,19 +5754,26 @@ function DisplayOverlayAnalysis(analysisDatas) {
     if (rainAnalysisData.length > 0) {
         if (yAxisData.length < 1) {
             position = "left";
+            var offset = 0;
         }
         else {
             position = "right";
+            var offset = (yAxisData.length - 1) * 50;
         }
-        var offset = yAxisData.length * 35;
+
         yAxisData.push(
             {
                 id: 'rain',
                 type: 'value',
+                alignTicks: true,
                 position: position,
                 offset: offset,
                 name: 'RAIN(mm)',
-                splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
+                nameTextStyle: {
+                    fontSize: 10,
+                    padding: [0, 10, 0, 0]
+                }
+                //splitLine: { show: true, lineStyle: { color: '#DCDCDC' } },
             }
         );
         for (var i in rainAnalysisData) {
@@ -5635,39 +5783,40 @@ function DisplayOverlayAnalysis(analysisDatas) {
             rainDissplay(id, name, type, rainAnalysisData[i].Datas);
         }
     };
-    
+
     function gnssDissplay(id, name, gnssData) {
-        var id = id.toString();
         //图表
         var xs = [];
         var ys = [];
         var xys = [];
         var hs = [];
-
         for (var i in gnssData) {
-            //yyyy-MM-dd HH:mm:ss转UNIX时间戳（毫秒）
-            var time = Math.round(new Date(gnssData[i].Time) / 1000) * 1000;
+            if (gnssData[i].Flag != '200') {
+                //yyyy-MM-dd HH:mm:ss转UNIX时间戳（毫秒）
+                var time = Math.round(new Date(gnssData[i].Time) / 1000) * 1000;
 
-            var x = [];
-            var y = [];
-            var xy = [];
-            var h = [];
+                var x = [];
+                var y = [];
+                var xy = [];
+                var h = [];
 
-            x.push(time);
-            x.push(parseInt(parseFloat(gnssData[i].Dx) * 1000) / 1000);
-            xs.push(x);
+                x.push(time);
+                x.push(parseInt(parseFloat(gnssData[i].Dx) * 1000) / 1000);
+                xs.push(x);
 
-            y.push(time);
-            y.push(parseInt(parseFloat(gnssData[i].Dy) * 1000) / 1000);
-            ys.push(y);
+                y.push(time);
+                y.push(parseInt(parseFloat(gnssData[i].Dy) * 1000) / 1000);
+                ys.push(y);
 
-            xy.push(time);
-            xy.push(parseInt(parseFloat(gnssData[i].Dxy) * 1000) / 1000);
-            xys.push(xy);
+                xy.push(time);
+                xy.push(parseInt(parseFloat(gnssData[i].Dxy) * 1000) / 1000);
+                xys.push(xy);
 
-            h.push(time);
-            h.push(parseInt(parseFloat(gnssData[i].Dh) * 1000) / 1000);
-            hs.push(h);
+                h.push(time);
+                h.push(parseInt(parseFloat(gnssData[i].Dh) * 1000) / 1000);
+                hs.push(h);
+            }
+
         }
 
         seriesData.push(
@@ -5676,7 +5825,7 @@ function DisplayOverlayAnalysis(analysisDatas) {
                 name: name + '_X位移',
                 type: 'line',
                 xAxisIndex: 0,
-                yAxisIndex: yAxisData.length-1,
+                yAxisIndex: yAxisData.length - 1,
                 showSymbol: false,
                 data: xs,
             },
@@ -5685,7 +5834,7 @@ function DisplayOverlayAnalysis(analysisDatas) {
                 name: name + '_Y位移',
                 type: 'line',
                 xAxisIndex: 0,
-                yAxisIndex: yAxisData.length-1,
+                yAxisIndex: yAxisData.length - 1,
                 showSymbol: false,
                 data: ys
             },
@@ -5694,7 +5843,7 @@ function DisplayOverlayAnalysis(analysisDatas) {
                 name: name + '_水平位移',
                 type: 'line',
                 xAxisIndex: 0,
-                yAxisIndex: yAxisData.length-1,
+                yAxisIndex: yAxisData.length - 1,
                 showSymbol: false,
                 data: xys
             },
@@ -5703,24 +5852,27 @@ function DisplayOverlayAnalysis(analysisDatas) {
                 name: name + '_垂直位移',
                 type: 'line',
                 xAxisIndex: 0,
-                yAxisIndex: yAxisData.length-1,
+                yAxisIndex: yAxisData.length - 1,
                 showSymbol: false,
                 data: hs
             }
         );
-        
 
-        
+
+
     }
     function lfDissplay(id, name, lfData) {
         //图表
         var lens = [];
         for (var i in lfData) {
-            var len = [];
+            if (lfData[i].Flag != '200') {
+                var len = [];
 
-            len.push(Math.round(new Date(lfData[i].Time) / 1000) * 1000);
-            len.push(parseFloat(lfData[i].Dv));
-            lens.push(len);
+                len.push(Math.round(new Date(lfData[i].Time) / 1000) * 1000);
+                len.push(parseFloat(lfData[i].Dv));
+                lens.push(len);
+            }
+
         }
         seriesData.push(
             {
@@ -5741,16 +5893,19 @@ function DisplayOverlayAnalysis(analysisDatas) {
         var zs = [];
 
         for (var i in qjData) {
-            var x = [];
-            var y = [];
+            if (qjData[i].Flag != '200') {
+                var x = [];
+                var y = [];
 
-            x.push(Math.round(new Date(qjData[i].Time) / 1000) * 1000);
-            x.push(parseFloat(qjData[i].Dx));
-            xs.push(x);
+                x.push(Math.round(new Date(qjData[i].Time) / 1000) * 1000);
+                x.push(parseFloat(qjData[i].Dx));
+                xs.push(x);
 
-            y.push(Math.round(new Date(qjData[i].Time) / 1000) * 1000);
-            y.push(parseFloat(qjData[i].Dy));
-            ys.push(y);
+                y.push(Math.round(new Date(qjData[i].Time) / 1000) * 1000);
+                y.push(parseFloat(qjData[i].Dy));
+                ys.push(y);
+            }
+
         }
         seriesData.push(
             {
@@ -5777,11 +5932,14 @@ function DisplayOverlayAnalysis(analysisDatas) {
         //图表
         var ps = [];
         for (var i in ylData) {
-            var p = [];
+            if (ylData[i].Flag != '200') {
+                var p = [];
 
-            p.push(Math.round(new Date(ylData[i].Time) / 1000) * 1000);
-            p.push(parseFloat(ylData[i].Dv));
-            ps.push(p);
+                p.push(Math.round(new Date(ylData[i].Time) / 1000) * 1000);
+                p.push(parseFloat(ylData[i].Dv));
+                ps.push(p);
+            }
+
         }
         seriesData.push(
             {
@@ -5798,12 +5956,15 @@ function DisplayOverlayAnalysis(analysisDatas) {
     function waterDissplay(id, name, waterData) {
         var waters = [];
         for (var i in waterData) {
-            var time = Math.round(new Date(waterData[i].Time) / 1000) * 1000;
-            var water = [];
+            if (waterData[i].Flag != '200') {
+                var time = Math.round(new Date(waterData[i].Time) / 1000) * 1000;
+                var water = [];
 
-            water.push(time);
-            water.push(parseFloat(waterData[i].Value));
-            waters.push(water);
+                water.push(time);
+                water.push(parseFloat(waterData[i].Value));
+                waters.push(water);
+            }
+
         }
         seriesData.push(
             {
@@ -5824,16 +5985,19 @@ function DisplayOverlayAnalysis(analysisDatas) {
         var zs = [];
 
         for (var i in sbwyData) {
-            var x = [];
-            var y = [];
+            if (sbwyData[i].Flag != '200') {
+                var x = [];
+                var y = [];
 
-            x.push(Math.round(new Date(sbwyData[i].Time) / 1000) * 1000);
-            x.push(parseFloat(sbwyData[i].X));
-            xs.push(x);
+                x.push(Math.round(new Date(sbwyData[i].Time) / 1000) * 1000);
+                x.push(parseFloat(sbwyData[i].X));
+                xs.push(x);
 
-            y.push(Math.round(new Date(sbwyData[i].Time) / 1000) * 1000);
-            y.push(parseFloat(sbwyData[i].Y));
-            ys.push(y);
+                y.push(Math.round(new Date(sbwyData[i].Time) / 1000) * 1000);
+                y.push(parseFloat(sbwyData[i].Y));
+                ys.push(y);
+            }
+
         }
         seriesData.push(
             {
@@ -5855,9 +6019,9 @@ function DisplayOverlayAnalysis(analysisDatas) {
                 data: ys,
             }
         );
-    
+
     }
-    function rainDissplay(id, name,type, rainData) {
+    function rainDissplay(id, name, type, rainData) {
         //图表
         var rains = [];
         if (type == "dayrain") {
@@ -5875,12 +6039,15 @@ function DisplayOverlayAnalysis(analysisDatas) {
                     type: 'bar',
                     xAxisIndex: 0,
                     yAxisIndex: yAxisData.length - 1,
+                    itemStyle: {
+                        color: '#4cabce'
+                    },
                     showSymbol: false,
                     data: rains
                 }
             );
         }
-        else{
+        else {
             for (var i in rainData) {
                 var time = Math.round(new Date(rainData[i].Time + ":00:00") / 1000) * 1000;
                 var rain = [];
@@ -5895,6 +6062,9 @@ function DisplayOverlayAnalysis(analysisDatas) {
                     type: 'bar',
                     xAxisIndex: 0,
                     yAxisIndex: yAxisData.length - 1,
+                    itemStyle: {
+                        color: '#4cabce'
+                    },
                     showSymbol: false,
                     data: rains
                 }
@@ -5902,92 +6072,111 @@ function DisplayOverlayAnalysis(analysisDatas) {
         }
 
     }
-    var option = {
-        legend: {
-            type: 'scroll',
-            left: 'center',
-            bottom: 2,
-        },
-        tooltip: {
-            trigger: 'axis',
-            backgroundColor: 'rgba(105,105,105)',
-            formatter: function (params) {
-                var date = new Date(parseInt(params[0].value[0]));
-                var y = date.getFullYear();
-                var m = date.getMonth() + 1;
-                var d = date.getDate();
-                var h = date.getHours();
-                var mm = date.getMinutes();
-                var s = date.getSeconds();
-                var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
-                var label = "";
-                for (var i in params) {
-                    label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + 'mm<br/>';
-                }
-                return time + '<br/>' + label;
-            },
-            position: function (pos, params, el, elRect, size) {
-                var obj = { top: 15 };
-                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-                return obj;
-            },
-            extraCssText: 'width: 200px'
-        },
-        grid: {
-            left: '5%',
-            right: '5%',
-            top: '10%',
-            bottom: '10%',
-            containLabel: true
-        },
-        toolbox: {
-            feature: {
-                saveAsImage: {}
-            }
-        },
-        xAxis: {
-            id: '1',
-            type: 'time',
-            position: 'bottom',
-            splitLine: { show: false },
-            axisLabel: {
-                formatter: function (params, index) {
-                    var time = new Date(params);
-                    var y = time.getFullYear();
-                    var m = time.getMonth() + 1;
-                    var d = time.getDate();
-                    var h = time.getHours();
-                    var mm = time.getMinutes();
-                    var s = time.getSeconds();
-                    //return (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s) + '\n' + y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
-                    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
-                }
-            }
-        },
-        yAxis: yAxisData,
-        dataZoom: [
-            {
-                //x轴滑块
-                type: 'slider',
-                height: 15,
-                xAxisIndex: 0,
-                filterMode: 'empty'
-            },
 
-            {
-                //x轴缩放
-                type: 'inside',
-                xAxisIndex: 0,
-                filterMode: 'empty'
+    if (seriesData.length == 0) {
+        var option = {
+            title: {
+                text: '暂无数据',
+                textStyle: {
+                    align: 'center',
+                    color: '#C0C0C0',
+                    fontSize: 28,
+                },
+                top: 'center',
+                left: 'center',
+            },
+            grid: {
+                left: '2%',
+                right: '2%',
+                top: '10%',
+                bottom: '10%',
+                containLabel: true
             }
-        ],
-        series: seriesData
-    };
-    overlayChart.hideLoading();
-    option && overlayChart.setOption(option, true, false);
+        };
+        overlayChart.hideLoading();
+        option && overlayChart.setOption(option, true, false);
+    }
+    else {
+        var option = {
+            legend: {
+                type: 'scroll',
+                left: 'center',
+                bottom: 2,
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(105,105,105)',
+                formatter: function (params) {
+                    var date = new Date(parseInt(params[0].value[0]));
+                    var y = date.getFullYear();
+                    var m = date.getMonth() + 1;
+                    var d = date.getDate();
+                    var h = date.getHours();
+                    var mm = date.getMinutes();
+                    var s = date.getSeconds();
+                    var time = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
+                    var label = "";
+                    for (var i in params) {
+                        label += params[i].marker + params[i].seriesName + ':' + params[i].value[1] + '<br/>';
+                    }
+                    return time + '<br/>' + label;
+                },
+            },
+            grid: {
+                left: '2%',
+                right: '2%',
+                top: '10%',
+                bottom: '10%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                id: '1',
+                type: 'time',
+                position: 'bottom',
+                splitLine: { show: false },
+                axisLabel: {
+                    formatter: function (params, index) {
+                        var time = new Date(params);
+                        var y = time.getFullYear();
+                        var m = time.getMonth() + 1;
+                        var d = time.getDate();
+                        var h = time.getHours();
+                        var mm = time.getMinutes();
+                        var s = time.getSeconds();
+                        //return (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s) + '\n' + y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                        return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+                    }
+                }
+            },
+            yAxis: yAxisData,
+            dataZoom: [
+                {
+                    //x轴滑块
+                    type: 'slider',
+                    height: 15,
+                    xAxisIndex: 0,
+                    filterMode: 'empty'
+                },
+
+                {
+                    //x轴缩放
+                    type: 'inside',
+                    xAxisIndex: 0,
+                    filterMode: 'empty'
+                }
+            ],
+            series: seriesData
+        };
+        overlayChart.hideLoading();
+        option && overlayChart.setOption(option, true, false);
+    }
+
 }
-
-
 //获取项目监测点
 function getBianXingLiangData(projectid) {
 
