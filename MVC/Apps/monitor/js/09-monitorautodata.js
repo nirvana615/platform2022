@@ -6354,8 +6354,13 @@ function getBianXingLiangData(projectid) {
         ]]
         , data: []
     });
-
-
+    //先不要打开
+    $("#LiFengDatastatisticsDiv").hide();
+    $("#YingLiDatastatisticsDiv").hide();
+    $("#GNSSDatastatisticsDiv").hide();
+    $("#QinJiaoDatastatisticsDiv").hide();
+    $("#SbwyDatastatisticsDiv").hide();
+    $("#DxswDatastatisticsDiv").hide();
 
 
     //加载初始监测点数据
