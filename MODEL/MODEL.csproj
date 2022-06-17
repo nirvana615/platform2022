@@ -52,6 +52,7 @@
     <Compile Include="data\common\mark\MapMarkProject.cs" />
     <Compile Include="data\common\mark\Mark.cs" />
     <Compile Include="data\common\mark\MarkData.cs" />
+    <Compile Include="data\sysfind\uavfindmap\MapFindProjectRoute.cs" />
     <Compile Include="data\sysgeo\flzone\FlzData.cs" />
     <Compile Include="data\sysgeo\flzone\FlzDataLayer.cs" />
     <Compile Include="data\sysgeo\flzone\FlzProject.cs" />
@@ -233,7 +234,6 @@
     <Compile Include="data\sysfind\uavfindmap\MapUserFindProject.cs" />
     <Compile Include="data\sysfind\uavfind\FindProject.cs" />
     <Compile Include="data\sysfind\uavfind\FindProjectData.cs" />
-    <Compile Include="data\sysfind\uavfind\FindRoute.cs" />
     <Compile Include="data\sysfind\uavfind\FindTask.cs" />
     <Compile Include="data\sysuav\uavmap\MapCameraPhotoRatio.cs" />
     <Compile Include="data\sysuav\uavmap\MapRouteWayarea.cs" />

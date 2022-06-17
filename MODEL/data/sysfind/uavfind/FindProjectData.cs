@@ -21,7 +21,7 @@ namespace MODEL
         /// <summary>
         /// 巡查航线信息
         /// </summary>
-        public List<FindRoute> Routes { get; set; }
+        public List<UavRoute> Routes { get; set; }
 
         /// <summary>
         /// 巡查目标信息

@@ -301,9 +301,7 @@ namespace SERVICE.Controllers
                             FindProjectData findprojectdata = new FindProjectData();
                             findprojectdata.Project = findProject;
 
-                            #region 1-模型
-
-                           
+                            #region 1-模型                      
                             string modelmaps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM model_map_project_use WHERE syscode={0} AND useprojectid={1} AND ztm={2} ORDER BY id DESC", (int)MODEL.Enum.System.UavFind, findProject.Id, (int)MODEL.Enum.State.InUse));
                             if (!string.IsNullOrEmpty(modelmaps))
                             {
@@ -332,6 +330,30 @@ namespace SERVICE.Controllers
 
 
                             #region TODO 2-航线
+                            string routemaps = PostgresqlHelper.QueryData(pgsqlConnection,string.Format("SELECT *FROM uavfind_map_project_route WHERE projectid={0} AND ztm={1} ORDER BY id DESC", findProject.Id, (int)MODEL.Enum.State.InUse));
+                            if (!string.IsNullOrEmpty(routemaps))
+                            {
+                                List<UavRoute> uavroutes = new List<UavRoute>();
+
+                                string[] maprows = routemaps.Split(new char[] { COM.ConstHelper.rowSplit });
+                                for (int j=0;j<maprows.Length;j++)
+                                {
+                                    MapFindProjectRoute mapFindProjectRoute = ParseUavFindHelper.ParseMapFindProjectRoute(maprows[j]);
+                                    if (mapFindProjectRoute != null)
+                                    {
+                                        UavRoute uavroute = ParseUavHelper.ParseUavRoute(PostgresqlHelper.QueryData(pgsqlConnection,string.Format("SELECT *FROM uav_route WHERE id={0} AND ztm={1}", mapFindProjectRoute.RouteId, (int)MODEL.Enum.State.InUse)));
+                                        if (uavroute != null)
+                                        {
+                                            uavroutes.Add(uavroute);
+                                        }
+                                    }
+                                }
+                                if (uavroutes.Count>0)
+                                {
+                                    findprojectdata.Routes = uavroutes;
+                                }
+                            }
+
                             #endregion
 
                             #region TODO 3-目标

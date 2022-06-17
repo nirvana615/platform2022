@@ -36,7 +36,7 @@ util.fixbar({
             }
         } else if (type === 'bar3') {
             //新建航线
-            AddRoute();
+            AddFindRoute();
         } else if (type === 'bar4') {
             //测量工具
             if (curtileset == null) {

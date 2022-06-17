@@ -46,6 +46,8 @@ var currentprojecttitle = null;     //当前项目标题
 var currentmodelid = null;          //当前模型id
 var curtileset = null;              //当前模型
 
+var current_project_tile = null; //当前模型-航线规划系统***********
+
 var current_entities_route = [];//当前路径
 var isReloadTree = false;//是否tree重载（默认否）用于处理由于tree重载触发的选中事件
 

@@ -53,6 +53,48 @@ namespace MODEL
             }
         }
 
+        /// <summary>
+        /// 巡查项目-航线映射
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="c"></param>
+        /// <param name="r"></param>
+        /// <returns></returns>
+        public static MapFindProjectRoute ParseMapFindProjectRoute(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("巡查项目-航线映射数据为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("巡查项目-航线映射不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                MapFindProjectRoute mapFindProjectRoute = new MapFindProjectRoute()
+                {
+                    Id = Convert.ToInt32(row[0].ToString()),
+                    FindProjectId = Convert.ToInt32(row[1].ToString()),
+                    RouteId= Convert.ToInt32(row[2].ToString()),
+                    CJSJ = row[3].ToString()
+                };
+
+                return mapFindProjectRoute;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("MapUserFindProject解析失败：" + data, ex);
+                return null;
+            }
+        }
+
         #endregion
 
 

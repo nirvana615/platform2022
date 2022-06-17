@@ -222,6 +222,7 @@
     <Compile Include="Controllers\manage\SridController.cs" />
     <Compile Include="Controllers\tool\ParameterController.cs" />
     <Compile Include="Controllers\uavfind\FindProjectController.cs" />
+    <Compile Include="Controllers\uavfind\FindRouteController.cs" />
     <Compile Include="Controllers\uav\UavDroneController.cs" />
     <Compile Include="Controllers\uav\UavMissionController.cs" />
     <Compile Include="Controllers\uav\UavProjectController.cs" />

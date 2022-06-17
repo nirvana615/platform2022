@@ -118,7 +118,7 @@ function AddFindProject() {
                                     id: "PROJECTCENTER_" + findproject.Id,
                                     position: Cesium.Cartesian3.fromDegrees(findproject.ZXJD, findproject.ZXWD),
                                     billboard: {
-                                        image: '../../Resources/img/model/modelprojecticon.png',
+                                        image: '../../Resources/img/uavfind/findprojecticon.png',
                                         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                                         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                         width: 40,
@@ -797,7 +797,7 @@ function mapPosition(type) {
                         name: "temp_findproject_position",
                         position: position,
                         billboard: {
-                            image: '../../Resources/img/model/modelprojecticon.png',
+                            image: '../../Resources/img/uavfind/findprojecticon.png',
                             verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                             width: 40,

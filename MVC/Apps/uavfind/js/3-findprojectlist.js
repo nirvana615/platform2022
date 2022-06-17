@@ -195,7 +195,25 @@ function GetUserAllFindProjects() {
                     var routes = new Object();
                     routes.title = "巡查航线";
                     routes.spread = true;
+                    var routechild = [];
+                    for (var j in findprojectdata[i].Routes) {
+                        var route = new Object();
+                        route.icon = WAYLINECON;
+                        route.type = "findroute";
+                        route.id = findprojectdata[i].Routes[j].Id;
+                        route.title = findprojectdata[i].Routes[j].HXMC;
+                        route.class = findprojectdata[i].Routes[j].HXLX;
+                        route.line = findprojectdata[i].Routes[j].LINE;
+                        route.data = findprojectdata[i].Routes[j];
+                        route.nodeOperate = true;
+                        route.showCheckbox = true;
+                        route.checked = false;
 
+                        routechild.push(route);
+                    }
+
+
+                    routes.children = routechild;
                     child.push(routes);
 
                     //TODO巡查目标
@@ -363,10 +381,9 @@ function FindProjectNodeClick(obj) {
                     viewer.zoomTo(curtileset);
                 }
             }
-         }
+        }
     }
-    else if (obj.data.type == "findtarget")
-    { }
+    else if (obj.data.type == "findtarget") { }
     else {
         if (obj.data.children != null && obj.data.children != undefined) {
             for (var i in findprojectlist) {
@@ -381,7 +398,7 @@ function FindProjectNodeClick(obj) {
             isReloadTree = true;//标记重载
             MarkCurrentProject();
             isReloadTree = false;//重载后还原
-         }
+        } 
     }
 };
 
@@ -462,6 +479,8 @@ function FindProjectNodeCheck(obj) {
                     currentmodelid = obj.data.id;
                     curtileset = Load3DTiles(obj.data.data);
 
+                    current_project_tile = curtileset;//用于航线规划判读有无选中模型
+
                     if (measurewidget_layerindex != null) {
                         layui.element.tabChange('measureway', 'modelMeasure'); //模型测量
                     }
@@ -487,6 +506,7 @@ function FindProjectNodeCheck(obj) {
 
                 currentmodelid = obj.data.id;
                 curtileset = Load3DTiles(obj.data.data);
+                current_project_tile = curtileset;//用于航线规划判读有无选中模型
 
                 if (measurewidget_layerindex != null) {
                     layui.element.tabChange('measureway', 'modelMeasure'); //模型测量
