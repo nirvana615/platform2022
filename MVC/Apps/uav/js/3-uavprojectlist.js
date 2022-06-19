@@ -1,4 +1,7 @@
-﻿//项目列表
+﻿//加载中
+loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
+
+//项目列表
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
@@ -14,8 +17,7 @@ layer.open({
     , success: function (layero) {
         layer.setTop(layero);
 
-        //加载中
-        loadlayerindex = layer.load(1, { offset: 'auto', area: ['37px', '37px'], zIndex: layer.zIndex, shade: [0.5, '#393D49'], success: function (layero) { layer.setTop(layero); } });
+        
 
         //渲染航线任务项目列表树
         tree.render({

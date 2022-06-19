@@ -3,27 +3,49 @@
         <li class="layui-this" style="display: block;">KML</li>
         <li style="display: block;">JSON</li>
         <li style="display: block;">自定义</li>
-        <li style="display: block;">其他</li>
     </ul>
 
     <div class="layui-tab-content" style="height:290px;width:400px;float: left;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;">
         <div class="layui-tab-item layui-show">
             <!--KML-->
-            <div class="layui-btn-container">
-                <button type="button" class="layui-btn" id="selectkmlfile"><i class="layui-icon">✚</i>选择文件</button>
-                <button type="button" class="layui-btn layui-btn-normal">清空全部要素</button>
-                <button type="button" class="layui-btn layui-btn-danger">清空拖拽要素</button>
+            <div class="layui-btn-container" style="text-align:right;">
+                <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="selectkmldata" style="width:110px;"><i class="layui-icon" style="font-size: 14px!important;"></i> 添加kml数据</button>
+                <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" id="clearkmldatas" style="width:110px;"><i class="layui-icon" style="font-size: 14px!important;"></i> 清空kml数据</button>
             </div>
 
-            <div id="kmldatatree" style="height:100px;"></div>
-
-            <div id="kmldatastyle" style="height:100px;"></div>
-
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md7">
+                    <div class="grid-demo grid-demo-bg1">
+                        <div id="kmldatastree" style="height:300px;max-height:300px;border:1px solid #e6e6e6;"></div>
+                    </div>
+                </div>
+                <div class="layui-col-md5">
+                    <div class="grid-demo">
+                        <div id="kmldatastyle" style="height:300px;max-height:300px;border:1px solid #e6e6e6;"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="layui-tab-item">
             <!--JSON-->
+            <div class="layui-btn-container" style="text-align:right;">
+                <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="selectjsondata"><i class="layui-icon" style="font-size: 14px!important;"></i> 添加json数据</button>
+                <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" id="clearjsondatas"><i class="layui-icon" style="font-size: 14px!important;"></i> 清空json数据</button>
+            </div>
 
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md7">
+                    <div class="grid-demo grid-demo-bg1">
+                        <div id="jsondatastree" style="height:300px;max-height:300px;border:1px solid #e6e6e6;"></div>
+                    </div>
+                </div>
+                <div class="layui-col-md5">
+                    <div class="grid-demo">
+                        <div id="jsondatastyle" style="height:300px;max-height:300px;border:1px solid #e6e6e6;"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="layui-tab-item">
@@ -31,9 +53,5 @@
 
         </div>
 
-        <div class="layui-tab-item">
-            <!--其他-->
-
-        </div>
     </div>
 </div>

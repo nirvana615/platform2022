@@ -662,6 +662,9 @@
     <Content Include="Apps\uav\widget\3.1-uavroute-mbtxcj.html" />
     <Content Include="Apps\uav\widget\2.0-uavroutetype.html" />
     <Content Include="Apps\uav\widget\1.0-uavproject-add.html" />
+    <Content Include="Resources\img\icon\point.png" />
+    <Content Include="Resources\img\icon\polygon.png" />
+    <Content Include="Resources\img\icon\polyline.png" />
     <Content Include="Resources\img\icon\tip.png" />
     <Content Include="Resources\img\map\endPoint.png" />
     <Content Include="Resources\img\map\map.png" />
@@ -1380,6 +1383,7 @@
     <Content Include="Scripts\openseadragon\openseadragon.js" />
     <Content Include="Scripts\openseadragon\openseadragon.min.js" />
     <Content Include="Scripts\three.r119.min.js" />
+    <Content Include="Scripts\togeojson.js" />
     <Content Include="Scripts\vanta.birds.min.js" />
     <Content Include="Scripts\viewer.min.css" />
     <Content Include="Scripts\viewer.min.js" />
