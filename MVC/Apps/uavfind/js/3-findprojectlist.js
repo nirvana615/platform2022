@@ -191,7 +191,7 @@ function GetUserAllFindProjects() {
                     models.children = modelchild;
                     child.push(models);
 
-                    //TODO巡查航线
+                    //巡查航线
                     var routes = new Object();
                     routes.title = "巡查航线";
                     routes.spread = true;
@@ -383,6 +383,31 @@ function FindProjectNodeClick(obj) {
             }
         }
     }
+    else if (obj.data.type == "findroute") {
+        for (var i in findprojectlist) {
+            if (currentprojectid == findprojectlist[i].id) {
+                for (var j in findprojectlist[i].children) {
+                    if (findprojectlist[i].children[j].title == "巡查航线") {
+                        for (var k in findprojectlist[i].children[j].children) {
+                            if (obj.data.id == findprojectlist[i].children[j].children[k].id) {
+                                if (findprojectlist[i].children[j].children[k].checked) {
+                                    for (var m in current_entities_route) {
+                                        if (("FINDROUTE_" + obj.data.id) == current_entities_route[m].id) {
+                                            ZoomToEntity(current_entities_route[m]);
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
     else if (obj.data.type == "findtarget") { }
     else {
         if (obj.data.children != null && obj.data.children != undefined) {
@@ -421,7 +446,7 @@ function FindProjectNodeOperate(obj) {
             DeleteFindModel(obj.data.id, currentprojectid);//删除模型
         }
     }
-    else if (obj.data.type == "uavroute") {
+    else if (obj.data.type == "findroute") {
         //航线
         if (obj.type === 'add') {
             ViewUavRoute(obj.data.class, obj.data.id); //查看航线
@@ -431,7 +456,7 @@ function FindProjectNodeOperate(obj) {
             EditUavRoute(obj.data.class, obj.data.id);
         }
         else if (obj.type === 'del') {
-            DeleteUavRoute(obj.data.id);//删除航线     
+            DeleteFindRoute(obj.data.id);//删除航线     
         }
     }
 
@@ -533,7 +558,7 @@ function FindProjectNodeCheck(obj) {
                 }
 
                 var entity_route = new Cesium.Entity({
-                    id: "UAVROUTE_" + obj.data.id,
+                    id: "FINDROUTE_" + obj.data.id,
                     polyline: {
                         positions: JSON.parse(obj.data.line),
                         width: 3,
@@ -583,7 +608,7 @@ function FindProjectNodeCheck(obj) {
             for (var i in findprojectlist) {
                 if (findprojectlist[i].id == currentprojectid) {
                     for (var j in findprojectlist[i].children) {
-                        if (findprojectlist[i].children[j].title == "航线任务") {
+                        if (findprojectlist[i].children[j].title == "巡查航线") {
                             for (var k in findprojectlist[i].children[j].children) {
                                 if (findprojectlist[i].children[j].children[k].id == obj.data.id) {
                                     findprojectlist[i].children[j].children[k].checked = false;

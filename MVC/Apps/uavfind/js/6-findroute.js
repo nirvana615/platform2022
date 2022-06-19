@@ -699,12 +699,6 @@ function AddFindRoute() {
             }
         });
 
-
-
-
-
-
-
     }
 }
 
@@ -886,7 +880,7 @@ function SaveFindMission(type) {
                         }
 
                         var entity_route = new Cesium.Entity({
-                            id: "UAVROUTE_" + uavroute.Id,
+                            id: "FINDROUTE_" + uavroute.Id,
                             polyline: {
                                 positions: JSON.parse(uavroute.LINE),
                                 width: 3,
@@ -916,3 +910,55 @@ function SaveFindMission(type) {
 };
 
 
+
+//删除航线
+function DeleteFindRoute(delfindrouteid) {
+    $.ajax({
+        url: servicesurl + "/api/FindRoute/DeleteFindRoute", type: "delete", data: { "id": delfindrouteid, "cookie": document.cookie },
+        success: function (data) {
+            var result = JSON.parse(data);
+            var routeid = result.data;
+            if (result.code == 1) {
+                for (var i in findprojectlist) {
+                    if (findprojectlist[i].id == currentprojectid) {
+                        for (var j in findprojectlist[i].children) {
+                            if (findprojectlist[i].children[j].title == "巡查航线") {
+                                var routechild = [];
+
+                                for (var k in findprojectlist[i].children[j].children) {
+                                    if (findprojectlist[i].children[j].children[k].id != routeid) {
+
+                                        routechild.push(findprojectlist[i].children[j].children[k]);
+                                    }
+                                }
+                                findprojectlist[i].children[j].children = routechild;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                //清除路径
+                if (current_entities_route.length > 0) {
+                    var new_current_entities_route = [];
+
+                    for (var i in current_entities_route) {
+                        if (current_entities_route[i].id == ("FINDROUTE_" + routeid)) {
+                            RemoveEntityInViewer(current_entities_route[i]);
+                        }
+                        else {
+                            new_current_entities_route.push(current_entities_route[i]);
+                        }
+                    }
+
+                    current_entities_route = new_current_entities_route;
+                }
+            }
+
+            isReloadTree = true;//标记重载
+            MarkCurrentProject();
+            isReloadTree = false;//重载后还原
+            layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        }, datatype: "json"
+    });
+};

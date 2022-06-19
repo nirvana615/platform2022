@@ -246,7 +246,43 @@ namespace SERVICE.Controllers
             }
         }
 
+        /// <summary>
+        /// 删除巡查航线路径
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        public string DeleteFindRoute()
+        {
+            string routeid = HttpContext.Current.Request.Form["id"];
 
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uav_route SET ztm={0} WHERE id={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, routeid, (int)MODEL.Enum.State.InUse));
+                if (updatecount == 1)
+                {
+                    int updatemapcount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uavfind_map_project_route SET ztm={0} WHERE routeid={1} AND ztm={2}", (int)MODEL.Enum.State.NoUse, routeid, (int)MODEL.Enum.State.InUse));
+                    if (updatemapcount == 1)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", routeid));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除项目-路径映射失败！", string.Empty));
+                    }
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除路径失败！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
 
 
         #region 方法
