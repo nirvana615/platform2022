@@ -156,7 +156,7 @@ function AddProject() {
     if (projectinfoaddlayerindex == null) {
         projectinfoaddlayerindex = layer.open({
             type: 1
-            , title: ['新增点云时序对比项目', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+            , title: ['新增消落带点云时序对比项目', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
             , area: ['800px', '450px']
             , shade: 0
             , offset: 'auto'

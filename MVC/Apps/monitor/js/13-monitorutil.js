@@ -53,7 +53,7 @@ util.fixbar({
             Measurewidget();
         } else if (type === 'bar10') {
             //标注工具
-            Markwidget();
+            Markwidget(currentprojectid);
         } else if (type === 'bar11') {
             //告警管理
             gaoJinManagLayer(currentprojectid);
