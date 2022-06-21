@@ -1,7 +1,7 @@
 ﻿//弹出项目列表widget
 var layerYouCeTanChuIndex = null;
 var layerZuoCeTanChuIndex = null;
-
+var monitorinfos = [];
 var projectLieBiaoIndex = layer.open({
     type: 1
     , title: ['项目', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
@@ -483,7 +483,7 @@ function GetProjectMonitor(projectid) {
     $.ajax({
         url: servicesurl + "/api/Monitor/GetMonitor", type: "get", data: { "id": projectid, "cookie": document.cookie },
         success: function (data) {
-            var monitorinfos = JSON.parse(data);
+            monitorinfos = JSON.parse(data);
 
             var disasterinfo = [];//灾害体
             var methodinfo = [];//监测方法

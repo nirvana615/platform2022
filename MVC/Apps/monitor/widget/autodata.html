@@ -1,10 +1,11 @@
 ﻿<!--自动化监测数据可视化-->
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;">
     <ul class="layui-tab-title">
-        <li class="layui-this" style="width:21%;padding-top: 10px;">变形统计</li>
-        <li style="width:21%;padding-top: 10px;">可视化</li>
-        <li style="width:21%;padding-top: 10px;">数据处理</li>
-        <li style="width:21%;padding-top: 10px;">综合分析</li>
+        <li class="layui-this" style="width:17%;padding-top: 10px;">变形统计</li>
+        <li style="width:17%;padding-top: 10px;">可视化</li>
+        <li style="width:17%;padding-top: 10px;">数据处理</li>
+        <li style="width:17%;padding-top: 10px;">综合分析</li>
+        <li style="width:17%;padding-top: 10px;">推送管理</li>
 
     </ul>
     <div class="layui-tab-content" style="margin:0px 0px">
@@ -274,6 +275,46 @@
                 </div>
             </div>
         </div>
-
+        <!--推送管理-->
+        <div class="layui-tab-item">
+            <div class="layui-row">
+                <div class="layui-row">
+                    <!--左侧-->
+                    <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;">
+                        <div id="pushtreebytype" class="grid-demo"></div>
+                    </div>
+                    <!--右侧-->
+                    <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">
+                        <div class="grid-demo grid-demo-bg1">
+                            <!--工具栏-->
+                            <form class="layui-form" lay-filter="pushdataform" style="margin-top:5px;">
+                                <div class="layui-row">
+                                    <div class="layui-col-xs6">
+                                        <div class="grid-demo grid-demo-bg1">
+                                            <div class="layui-form-item">
+                                                <div class="layui-input-block" style="margin-left:10px;"><select id="pushdatapretimeid" name="pushdatapretime" lay-filter="pushdatapretimefilter" style="visibility:hidden;"></select></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs6">
+                                        <div class="grid-demo">
+                                            <div class="layui-form-item">
+                                                <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">
+                                                    <input id="pushdatacustomtimeid" name="pushdatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <!--统计表格-->
+                            <div id="pushdatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;">
+                                <table id="pushdatastatistics" class="layui-hide"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

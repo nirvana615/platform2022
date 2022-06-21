@@ -2297,5 +2297,67 @@ namespace SERVICE.Controllers
 
             return string.Empty;
         }
+
+        /// <summary>
+        /// 获取项目预设时间范围监测数据
+        /// </summary>
+        /// <param name="id">项目id</param>
+        /// <param name="predatetime">预设时间范围编码</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetPushDataPreDateTime(int id, string predatetime, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                //获取时间范围
+                string datetime = GetDateTimebyPre(Convert.ToInt16(predatetime));
+                if (!string.IsNullOrEmpty(datetime))
+                {
+                    return GetAutoDatabyBianXing(id, datetime, userbsms);
+                }
+            }
+            else
+            {
+                //验权失败
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取项目自定义时间范围监测数据
+        /// </summary>
+        /// <param name="id">项目id</param>
+        /// <param name="customdatetime">自定义时间范围</param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetPushDataCustomDateTime(int id, string customdatetime, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                try
+                {
+                    //获取时间范围
+                    string[] timerange = customdatetime.Replace(" - ", ";").Split(new char[] { ';' });
+                    return GetAutoDatabyBianXing(id, string.Format("(gcsj>='{0}' AND gcsj<'{1}')", timerange[0], timerange[1]), userbsms);
+                }
+                catch
+                { }
+            }
+            else
+            {
+                //验权失败
+            }
+
+            return string.Empty;
+        }
     }
 }
