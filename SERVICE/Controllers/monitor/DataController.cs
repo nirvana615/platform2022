@@ -2313,12 +2313,13 @@ namespace SERVICE.Controllers
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
-                //获取时间范围
-                string datetime = GetDateTimebyPre(Convert.ToInt16(predatetime));
-                if (!string.IsNullOrEmpty(datetime))
-                {
-                    return GetAutoDatabyBianXing(id, datetime, userbsms);
-                }
+                return GetPushDataby(id, predatetime, userbsms);
+                ////获取时间范围
+                //string datetime = GetDateTimebyPre(Convert.ToInt16(predatetime));
+                //if (!string.IsNullOrEmpty(datetime))
+                //{
+                //    return GetPushDataby(id, datetime, userbsms);
+                //}
             }
             else
             {
@@ -2326,6 +2327,78 @@ namespace SERVICE.Controllers
             }
 
             return string.Empty;
+        }
+
+
+
+        #region 方法
+        /// <summary>
+        /// 获取监测点设备指定时间范围数据的推送失败数据
+        /// </summary>
+        /// <param name="id"></param>//projectId
+        /// <param name="type"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private string GetPushDataby(int id, string time, string userbsms)
+        {
+            #region 
+            //查设备id
+            Device device = ParseMonitorHelper.ParseDevice(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT a.* FROM monitor_device a,monitor_map_monitor_device b  WHERE a.id=b.deviceid and b.ztm='1'  and  monitorid={0}  AND bsm{1} AND a.ztm={2}", id,  userbsms, (int)MODEL.Enum.State.InUse)));
+            PushDataList pushDataList = new PushDataList();
+            if (device != null)
+            {
+                //TODO获取但当前点好阈值。
+
+                string thresholdValue = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(" select c.id,c.threshold from      monitor_cq_device a ,monitor_cqmap_device_threshold b ,monitor_cq_threshold c  where a.zbh={0} and a.id=b.deviceid and b.thresholdid=c.id and a.ztm='1'  and b.ztm='1' and c.ztm='1' ", SQLHelper.UpdateString(device.Code)));
+
+                if (!string.IsNullOrEmpty(thresholdValue))//阈值。阈值id放进来，修改阈值，启动推送
+                {
+                    string[] row = thresholdValue.Split(new char[] { COM.ConstHelper.columnSplit });
+                    pushDataList.threshold = row[1];
+                    pushDataList.thresholdId = Convert.ToInt32(row[0].ToString());
+                }
+                var gcsj = "2000-01-01";
+                //成功的时间，最后一次啊
+                string suscessTime = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(" select max(c.uploadtime) from      monitor_cq_device a ,monitor_cqmap_device_success b ,monitor_cq_success c  where  a.zbh={0} and  a.id=b.deviceid and b.successid=c.id and a.ztm='1'  and b.ztm='1'  ", SQLHelper.UpdateString(device.Code)));
+
+                if (!string.IsNullOrEmpty(suscessTime))//阈值。
+                {
+                    pushDataList.pushNowTime = suscessTime;
+                    gcsj = suscessTime;
+                }
+                //查询失败数据。
+                string sql = string.Format(" select * from 		( select c.id,c.zbh,c.sbsj->>'sendTime'  as gcsj ,c.sbsj->>'data' as sendData from      monitor_cq_device a ,monitor_cqmap_device_failure b ,monitor_cq_failure c  where   a.zbh={0} and a.id=b.deviceid and b.failureid=c.id and a.ztm='1'  and b.ztm='1' and c.ztm='1' and c.sbyy='1') tablea where 1=1 and gcsj>{1}  ORDER BY gcsj desc ", SQLHelper.UpdateString(device.Code), SQLHelper.UpdateString(gcsj)); 
+                string faildata = PostgresqlHelper.QueryData(pgsqlConnection,sql );
+
+                if (!string.IsNullOrEmpty(faildata))
+                {
+                    string[] rows = faildata.Split(new char[] { COM.ConstHelper.rowSplit });
+                    
+                    if (rows.Length > 0)
+                    {
+                        List<PushFailureData> pushFailureDataList = new List<PushFailureData>();
+                        for (int i = 0; i < rows.Length; i++)
+                        {
+                            PushFailureData pushFailureData = ParseMonitorHelper.ParsePushFailureData(rows[i]);
+                            pushFailureDataList.Add(pushFailureData);
+                        }
+                        pushDataList.pushFailureList = pushFailureDataList;
+
+
+                    }
+                }
+                
+                if ((pushDataList != null))
+                {
+                    return JsonHelper.ToJson(pushDataList);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            return string.Empty;
+            #endregion
         }
 
         /// <summary>
@@ -2347,7 +2420,7 @@ namespace SERVICE.Controllers
                 {
                     //获取时间范围
                     string[] timerange = customdatetime.Replace(" - ", ";").Split(new char[] { ';' });
-                    return GetAutoDatabyBianXing(id, string.Format("(gcsj>='{0}' AND gcsj<'{1}')", timerange[0], timerange[1]), userbsms);
+                    return GetPushDataby(id, string.Format("(gcsj>='{0}' AND gcsj<'{1}')", timerange[0], timerange[1]), userbsms);
                 }
                 catch
                 { }
@@ -2359,5 +2432,6 @@ namespace SERVICE.Controllers
 
             return string.Empty;
         }
+        #endregion
     }
 }

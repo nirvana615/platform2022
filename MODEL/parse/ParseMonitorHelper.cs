@@ -5130,5 +5130,44 @@ namespace MODEL
                 return null;
             }
         }
+
+        /// 推送失败信息获取
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static PushFailureData ParsePushFailureData(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析推送失败信息为空！");
+                return null;
+            }
+
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("推送失败信息不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                PushFailureData pushFailureData = new PushFailureData()
+                {
+                    id = Convert.ToInt32(row[0].ToString()),
+                    zbh = row[1].ToString(),
+                    pushTime = row[2].ToString(),
+                    failureData = row[3].ToString(),
+
+                };
+                return pushFailureData;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("为推送失败解析失败：" + data, ex);
+                return null;
+            }
+        }
     }
 }
