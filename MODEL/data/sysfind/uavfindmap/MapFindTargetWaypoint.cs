@@ -7,35 +7,25 @@ using System.Threading.Tasks;
 namespace MODEL
 {
     /// <summary>
-    /// 巡查目标
+    /// 巡查目标-航点映射
     /// </summary>
-    public class FindTask
+    public class MapFindTargetWaypoint
     {
         /// <summary>
         /// id
         /// </summary>
-        public int Id { get; set; }
+        public int Id { get; set; }     
         /// <summary>
-        /// 目标名称
+        /// 巡查目标id
         /// </summary>
-        public string MBMC { get; set; }
+        public int TargetId { get; set; }
         /// <summary>
-        /// 目标类型
+        /// 航点id
         /// </summary>
-        public int MBLX { get; set; }
-      
-
+        public int WaypointId { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
         public string CJSJ { get; set; }
-        /// <summary>
-        /// 标识码
-        /// </summary>
-        public string BSM { get; set; }
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public string BZ { get; set; }
     }
 }

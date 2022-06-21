@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace MODEL
 {
     /// <summary>
-    /// 巡查项目-航线映射
+    /// 巡查项目-目标映射
     /// </summary>
-    public class MapFindProjectRoute
+    public class MapFindProjectTarget
     {
         /// <summary>
         /// id
@@ -20,9 +20,9 @@ namespace MODEL
         /// </summary>
         public int FindProjectId { get; set; }
         /// <summary>
-        /// 航线id
+        /// 目标id
         /// </summary>
-        public int RouteId { get; set; }
+        public int TargetId { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>

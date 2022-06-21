@@ -9,11 +9,19 @@ using COM;
 namespace MODEL
 {
     /// <summary>
-    /// 无人机巡查枚举
+    /// 巡查目标类型
     /// </summary>
     public static class EnumUavFind
     {
-       
+        public enum TargetType
+        {
+            [RemarkAttribute("目视判读")]
+            View = 0,
+
+            [RemarkAttribute("时序对比")]
+            Moitor = 1
+        }
+
 
 
 

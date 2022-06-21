@@ -26,6 +26,6 @@ namespace MODEL
         /// <summary>
         /// 巡查目标信息
         /// </summary>
-        public List<FindTask> Tasks { get; set; }
+        public List<FindTarget> Targets { get; set; }
     }
 }

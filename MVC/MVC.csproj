@@ -641,6 +641,7 @@
     <Content Include="Apps\uavfind\js\7-findheader.js" />
     <Content Include="Apps\uavfind\js\8-findvutil.js" />
     <Content Include="Apps\uavfind\widget\1.0-projectlist.html" />
+    <Content Include="Apps\uavfind\widget\1.4 target-add.html" />
     <Content Include="Apps\uavfind\widget\1.1 projectadd.html" />
     <Content Include="Apps\uavfind\widget\1.2 projectview.html" />
     <Content Include="Apps\uavfind\widget\1.3 projectedit.html" />

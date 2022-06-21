@@ -35,10 +35,13 @@ var directmodify = false;       //方向修正（计算第二次自定义平面�
 var level = true;              //是否水平
 
 
-//新建巡查航线
+//******TODO新建巡查航线,后期随航线规划系统更改
 function AddFindRoute() {
     if (currentprojectid == null) {
         layer.msg("请先选择当前项目！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+    }
+    else if (current_project_tile == null) {
+        layer.msg("请加载项目三维实景模型！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
     }
     else {
         viewer.scene.globe.depthTestAgainstTerrain = false;
@@ -307,7 +310,8 @@ function AddFindRoute() {
                                     }
 
                                     //编辑目标点（视线）信息
-                                    EditTargetE(obj);
+                                    //EditTargetE(obj);
+                                    EditFindTargetE(obj)
                                 }
                                 else if (obj.data.type == "avoid") {
                                     for (var i in entities_avoid) {
@@ -538,7 +542,7 @@ function AddFindRoute() {
 
                 AddTakeOffModel(7);//添加起飞点
                 AddLandingModel(7);//添加降落点
-                AddTargetEyeModel();//添加目标点（视线）
+                AddFindTargetEyeModel();//添加目标点（视线）
                 AddAvoidModel(7);//添加避障点
 
                 //悬停
@@ -702,118 +706,7 @@ function AddFindRoute() {
     }
 }
 
-//******添加目标点（视线）--------巡查系统特用
-function AddTargetEyeModel() {
-    $("#uav-route-add-target").on("click", function () {
-        if (current_project_tile == null) {
-            layer.msg("请加载项目三维实景模型！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-        }
-        else {
-            if (handler != undefined) {
-                handler.destroy();
-            }
-
-            viewer._container.style.cursor = "crosshair";//修改鼠标样式
-
-            handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-            handler.setInputAction(function (leftclick) {
-                var pick = viewer.scene.pick(leftclick.position);
-                if (pick != undefined) {
-                    var XYZ = viewer.scene.pickPosition(leftclick.position);
-                    if (XYZ != undefined) {
-                        var blh = Cesium.Cartographic.fromCartesian(XYZ);
-                        if (blh.height > 0) {
-                            var uav_route_add_target = new Object;
-                            uav_route_add_target.id = uav_route_add_targets.length + 1;
-                            uav_route_add_target.title = "目标点" + (uav_route_add_targets.length + 1);
-                            uav_route_add_target.icon = TARGETICON;
-                            uav_route_add_target.type = "target";
-
-                            //***目标类别
-
-                            uav_route_add_target.spread = true;
-                            var pos = new Object;
-                            pos.b = Cesium.Math.toDegrees(blh.latitude);
-                            pos.l = Cesium.Math.toDegrees(blh.longitude);
-                            pos.h = blh.height.toFixed(4);
-                            uav_route_add_target.blh = pos;
-                            uav_route_add_target.xyz = XYZ;
-                            uav_route_add_target.height = 0;
-                            uav_route_add_target.speed = routespeed;//非调整段速度
-                            var adjust = new Object;
-                            adjust.photodistance = photodistance;//拍照距离
-                            adjust.adjustdistance = adjustdistance;//调整距离
-                            adjust.adjustspeed = adjustspeed;//调整速度
-                            adjust.level = level;//是否水平
-                            uav_route_add_target.adjust = adjust;
-                            uav_route_add_target.eye = new Cesium.Cartesian3(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z);//记录视点
-
-                            uav_route_add_targets.push(uav_route_add_target);
-                            uav_route_add_waypoint.push(uav_route_add_target);
-
-                            //刷新航线树
-                            current_target_id = uav_route_add_target.id;
-                            current_waypoint_title = uav_route_add_target.title;
-                            for (var i in uav_route_add_waypoint) {
-
-                                if (uav_route_add_waypoint[i].id == uav_route_add_target.id) {
-                                    uav_route_add_waypoint[i].spread = true;;
-                                }
-                                else {
-                                    uav_route_add_waypoint[i].spread = false;
-                                }
-                            }
-                            updateroutetree();
-
-                            //添加图形
-                            var entity_target = new Cesium.Entity({
-                                id: "TARGET_" + uav_route_add_target.id,
-                                position: XYZ,
-                                billboard: {
-                                    image: '../../Resources/img/uav/target.png',
-                                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                                    heightReference: Cesium.HeightReference.NONE,
-                                    width: 40,
-                                    height: 40,
-                                }
-                            });
-                            entities_target.push(entity_target);
-                            AddEntityInViewer(entity_target);
-
-                            //添加标注
-                            var entity_target_label = new Cesium.Entity({
-                                id: "TARGET_LABEL_" + uav_route_add_target.id,
-                                position: XYZ,
-                                label: {
-                                    text: uav_route_add_target.title,
-                                    font: '20px Times New Roman',
-                                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                                    heightReference: Cesium.HeightReference.NONE,
-                                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
-                                    pixelOffset: new Cesium.Cartesian2(0.0, -60),
-                                }
-                            });
-                            entities_target_label.push(entity_target_label);
-                            AddEntityInViewer(entity_target_label);
-
-                            document.getElementById("uav-route-add-action").style.visibility = "visible";//显示航点动作
-                            document.getElementById("uav-route-add-waypointpara").innerHTML = '';
-                        }
-                    }
-                }
-            }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-            handler.setInputAction(function (rightclik) {
-                if (handler != undefined) {
-                    handler.destroy();
-                }
-
-                viewer._container.style.cursor = "default";//还原鼠标样式
-            }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
-        }
-    });
-};
-
-//******保存航线任务---巡查系统特用
+//******TODO保存航线任务,保存target\mapprojecttarget\maptargetwaypoint
 function SaveFindMission(type) {
     form.on('submit(find-route-add-submit)', function (data) {
         if (current_json == null) {
@@ -909,9 +802,7 @@ function SaveFindMission(type) {
     });
 };
 
-
-
-//删除航线
+//删除巡查航线
 function DeleteFindRoute(delfindrouteid) {
     $.ajax({
         url: servicesurl + "/api/FindRoute/DeleteFindRoute", type: "delete", data: { "id": delfindrouteid, "cookie": document.cookie },
@@ -962,3 +853,193 @@ function DeleteFindRoute(delfindrouteid) {
         }, datatype: "json"
     });
 };
+
+
+
+
+
+//添加目标点（视线）,后期删除，用航线规划系统改后版
+function AddFindTargetEyeModel() {
+    $("#uav-route-add-target").on("click", function () {
+        if (current_project_tile == null) {
+            layer.msg("请加载项目三维实景模型！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        }
+        else {
+            if (handler != undefined) {
+                handler.destroy();
+            }
+
+            viewer._container.style.cursor = "crosshair";//修改鼠标样式
+
+            handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+            //左键单击事件
+            handler.setInputAction(function (leftclick) {
+
+                //增加目标名称、目标类型
+                var pick = viewer.scene.pick(leftclick.position);
+                if (pick != undefined) {
+                    var XYZ = viewer.scene.pickPosition(leftclick.position);
+                    if (XYZ != undefined) {
+                        var blh = Cesium.Cartographic.fromCartesian(XYZ);
+                        if (blh.height > 0) {
+                            var uav_route_add_target = new Object;
+                            uav_route_add_target.id = uav_route_add_targets.length + 1;
+                            uav_route_add_target.title = "目标点" + (uav_route_add_targets.length + 1);
+
+                            uav_route_add_target.name = "目标点" + (uav_route_add_targets.length + 1);
+                            uav_route_add_target.type = "";
+
+                            uav_route_add_target.icon = TARGETICON;
+                            uav_route_add_target.type = "target";
+                            uav_route_add_target.spread = true;
+                            var pos = new Object;
+                            pos.b = Cesium.Math.toDegrees(blh.latitude);
+                            pos.l = Cesium.Math.toDegrees(blh.longitude);
+                            pos.h = blh.height.toFixed(4);
+                            uav_route_add_target.blh = pos;
+                            uav_route_add_target.xyz = XYZ;
+                            uav_route_add_target.height = 0;
+                            uav_route_add_target.speed = routespeed;//非调整段速度
+                            var adjust = new Object;
+                            adjust.photodistance = photodistance;//拍照距离
+                            adjust.adjustdistance = adjustdistance;//调整距离
+                            adjust.adjustspeed = adjustspeed;//调整速度
+                            adjust.level = level;//是否水平
+                            uav_route_add_target.adjust = adjust;
+                            uav_route_add_target.eye = new Cesium.Cartesian3(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z);//记录视点
+
+                            uav_route_add_targets.push(uav_route_add_target);
+                            uav_route_add_waypoint.push(uav_route_add_target);
+
+                            //刷新航线树
+                            current_target_id = uav_route_add_target.id;
+                            current_waypoint_title = uav_route_add_target.title;
+                            for (var i in uav_route_add_waypoint) {
+
+                                if (uav_route_add_waypoint[i].id == uav_route_add_target.id) {
+                                    uav_route_add_waypoint[i].spread = true;;
+                                }
+                                else {
+                                    uav_route_add_waypoint[i].spread = false;
+                                }
+                            }
+                            updateroutetree();
+
+                            //添加图形
+                            var entity_target = new Cesium.Entity({
+                                id: "TARGET_" + uav_route_add_target.id,
+                                position: XYZ,
+                                billboard: {
+                                    image: '../../Resources/img/uav/target.png',
+                                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                                    heightReference: Cesium.HeightReference.NONE,
+                                    width: 40,
+                                    height: 40,
+                                }
+                            });
+                            entities_target.push(entity_target);
+                            AddEntityInViewer(entity_target);
+
+                            //添加标注
+                            var entity_target_label = new Cesium.Entity({
+                                id: "TARGET_LABEL_" + uav_route_add_target.id,
+                                position: XYZ,
+                                label: {
+                                    text: uav_route_add_target.title,
+                                    font: '20px Times New Roman',
+                                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                    heightReference: Cesium.HeightReference.NONE,
+                                    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                    pixelOffset: new Cesium.Cartesian2(0.0, -60),
+                                }
+                            });
+                            entities_target_label.push(entity_target_label);
+                            AddEntityInViewer(entity_target_label);
+
+                            document.getElementById("uav-route-add-action").style.visibility = "visible";//显示航点动作
+                            document.getElementById("uav-route-add-waypointpara").innerHTML = '<!--目标点视线属性(新建)--><div style="margin-top:5px;padding-right:5px;"><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">目标名称</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-route-add-target-mc" placeholder="请输入" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">目标类型</label><div class="layui-input-block" style="margin-left:90px;"><select id="mblxid" name="uav-route-add-target-lx" class="layui-input" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><div class="layui-row"><div class="layui-col-md9"><div class="layui-form-item"><label class="layui-form-label" style="width:70px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label><div class="layui-input-block" style="margin-left:90px;padding-right:5px;"><input type="text" name="uav-route-add-target-jd" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:70px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label><div class="layui-input-block" style="margin-left:90px;padding-right:5px;"><input type="text" name="uav-route-add-target-wd" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:70px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label><div class="layui-input-block" style="margin-left:90px;padding-right:5px;"><input type="text" name="uav-route-add-target-gc" autocomplete="off" class="layui-input" /></div></div></div><div class="layui-col-md3"><div class="grid-demo" style="width:100%;height:100%;margin-left:5px;"><div class="layui-input-inline" style="width:100%;height:100%;margin-top:30px;"><button type="button" id="map_position_add" class="layui-btn layui-btn-primary" title="地图选点" style="width:100%;height:100%;border-radius:10px;"><svg t="1641451887073" class="icon" style="position:relative;top:8px;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7602" width="100%" height="100%"><path d="M512 621.696l-150.848-150.826667 30.165333-30.186666L512 561.365333l120.682667-120.682666 30.165333 30.165333L512 621.696z m150.848-150.826667l-30.165333-30.186666a170.666667 170.666667 0 1 0-241.365334 0L361.173333 470.826667c-83.306667-83.306667-83.306667-218.389333 0-301.696 83.306667-83.306667 218.389333-83.306667 301.696 0 83.306667 83.306667 83.306667 218.389333 0 301.696zM512 362.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z m-134.186667 365.290666a21.333333 21.333333 0 1 1 30.144-30.165333l110.634667 110.613333L857.664 469.333333H768v-42.666666h106.538667A63.936 63.936 0 0 1 938.666667 490.474667V874.88A64 64 0 0 1 874.602667 938.666667H149.397333A63.914667 63.914667 0 0 1 85.333333 874.858667V490.453333A63.808 63.808 0 0 1 149.461333 426.666667H256v42.666666H149.461333A21.141333 21.141333 0 0 0 128 490.474667v302.208l200.042667-200.042667a21.205333 21.205333 0 0 1 30.058666 0.128c8.32 8.32 8.192 21.973333 0.106667 30.037333L130.474667 850.56a21.333333 21.333333 0 0 1-2.474667 2.133333v22.186667c0 11.669333 9.536 21.141333 21.397333 21.141333h396.437334l-168.042667-168.042666zM874.581333 896A21.333333 21.333333 0 0 0 896 874.858667V491.050667a21.973333 21.973333 0 0 1-1.984 2.261333L548.757333 838.592l54.186667 54.186667c1.002667 1.002667 1.898667 2.090667 2.666667 3.221333h269.013333z" fill="#8a8a8a" p-id="7603"></path></svg></button></div></div></div></div></div></div><div class="layui-form-item"><div style="margin-top:5px;"><button type="button" id="uav-route-add-save" class="layui-btn layui-btn-primary layui-btn-sm" style="width:96%;margin-left:2%;margin-right:2%;">确认</button></div></div>';
+                            //监听事件
+                            $("#map_position_add").on("click", function () {
+                                modelPosition("add");//地图选点
+                            });
+                            $("#find_reset_add").on("click", function () {
+                                ClearMapPoint();//清除临时点
+                            });
+                            form.val("uav-route-add", {
+                                "uav-route-add-target-jd": pos.l
+                                , "uav-route-add-target-wd": pos.b
+                                , "uav-route-add-target-gc": pos.h
+                                
+                            });
+                            $("#uav-route-add-save").on("click", function (obj) {
+                                for (var i in uav_route_add_waypoint) {
+                                    if (uav_route_add_waypoint[i].type == "target") {
+                                        uav_route_add_waypoint[i].name = uav_route_add_waypoint[i].title + "_" + form.val("uav-route-add")["uav-route-add-target-mc"];
+                                        uav_route_add_waypoint[i].title = uav_route_add_waypoint[i].name;
+                                        uav_route_add_waypoint[i].type = form.val("uav-route-add")["uav-route-add-target-lx"];
+                                        uav_route_add_waypoint[i].blh.l = form.val("uav-route-add")["uav-route-add-target-jd"];
+                                        uav_route_add_waypoint[i].blh.b = form.val("uav-route-add")["uav-route-add-target-wd"];
+                                        uav_route_add_waypoint[i].blh.h = form.val("uav-route-add")["uav-route-add-target-gc"];
+                                        break;
+                                    }
+                                }
+
+                                //刷新航线树
+                                updateroutetree();
+
+                                layer.msg("成功！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            });
+
+                        }
+                    }
+                }
+            }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+            //右键单击
+            handler.setInputAction(function (rightclik) {
+                if (handler != undefined) {
+                    handler.destroy();
+                }
+
+                viewer._container.style.cursor = "default";//还原鼠标样式
+            }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+        }
+    });
+};
+
+//编辑目标点（视线）,后期删除，用航线规划系统改后版
+function EditFindTargetE(obj) {
+    document.getElementById("uav-route-add-waypointpara").innerHTML = '<!--目标点视线属性(编辑)--><div style="margin-top:5px;padding-right:5px;"><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">目标名称</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-route-add-target-mc" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">目标类型</label><div class="layui-input-block"  style="margin-left:90px;"><select id="mblxid" name="uav-route-add-target-lx" class="layui-input" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item";"><div class="layui-row"><div class="layui-col-md9"><div class="layui-form-item"><label class="layui-form-label" style="width:70px;text-align:left;padding-left:5px;padding-right:5px;">经&emsp;&emsp;度°</label><div class="layui-input-block" style="margin-left:90px;padding-right:5px;"><input type="text" name="uav-route-add-target-jd" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:70px;text-align:left;padding-left:5px;padding-right:5px;">纬&emsp;&emsp;度°</label><div class="layui-input-block" style="margin-left:90px;padding-right:5px;"><input type="text" name="uav-route-add-target-wd" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:70px;text-align:left;padding-left:5px;padding-right:5px;">高&emsp;&emsp;程m</label><div class="layui-input-block" style="margin-left:90px;padding-right:5px;"><input type="text" name="uav-route-add-target-gc" autocomplete="off" class="layui-input" /></div></div></div><div class="layui-col-md3"><div class="grid-demo" style="width:100%;height:100%;margin-left:5px;"><div class="layui-input-inline" style="width:100%;height:100%;margin-top:30px;"><button type="button" id="map_position_add" class="layui-btn layui-btn-primary" title="地图选点" style="width:100%;height:100%;border-radius:10px;"><svg t="1641451887073" class="icon" style="position:relative;top:8px;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7602" width="100%" height="100%"><path d="M512 621.696l-150.848-150.826667 30.165333-30.186666L512 561.365333l120.682667-120.682666 30.165333 30.165333L512 621.696z m150.848-150.826667l-30.165333-30.186666a170.666667 170.666667 0 1 0-241.365334 0L361.173333 470.826667c-83.306667-83.306667-83.306667-218.389333 0-301.696 83.306667-83.306667 218.389333-83.306667 301.696 0 83.306667 83.306667 83.306667 218.389333 0 301.696zM512 362.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z m-134.186667 365.290666a21.333333 21.333333 0 1 1 30.144-30.165333l110.634667 110.613333L857.664 469.333333H768v-42.666666h106.538667A63.936 63.936 0 0 1 938.666667 490.474667V874.88A64 64 0 0 1 874.602667 938.666667H149.397333A63.914667 63.914667 0 0 1 85.333333 874.858667V490.453333A63.808 63.808 0 0 1 149.461333 426.666667H256v42.666666H149.461333A21.141333 21.141333 0 0 0 128 490.474667v302.208l200.042667-200.042667a21.205333 21.205333 0 0 1 30.058666 0.128c8.32 8.32 8.192 21.973333 0.106667 30.037333L130.474667 850.56a21.333333 21.333333 0 0 1-2.474667 2.133333v22.186667c0 11.669333 9.536 21.141333 21.397333 21.141333h396.437334l-168.042667-168.042666zM874.581333 896A21.333333 21.333333 0 0 0 896 874.858667V491.050667a21.973333 21.973333 0 0 1-1.984 2.261333L548.757333 838.592l54.186667 54.186667c1.002667 1.002667 1.898667 2.090667 2.666667 3.221333h269.013333z" fill="#8a8a8a" p-id="7603"></path></svg></button></div></div></div></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">拍照距离m</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-route-add-target-pd" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">调整距离m</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-route-add-target-ad" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">速&emsp;&emsp;度m/s</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-route-add-target-sd" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">调整速度m/s</label><div class="layui-input-block" style="margin-left:90px;"><input type="text" name="uav-route-add-target-as" autocomplete="off" class="layui-input" /></div></div><div class="layui-form-item" style="margin-bottom:2px;"><label class="layui-form-label" style="width:80px;text-align:left;padding-left:5px;padding-right:5px;">是否水平</label><div class="layui-input-block" style="margin-left:90px;"><input type="checkbox" name="uav-route-add-target-level" lay-skin="switch" lay-text="开启|关闭"></div></div></div><div class="layui-form-item"><div style="margin-top:5px;"><button type="button" id="uav-route-add-save" class="layui-btn layui-btn-primary layui-btn-sm" style="width:96%;margin-left:2%;margin-right:2%;">修改</button></div></div>';
+    form.val("uav-route-add", {
+        "uav-route-add-target-jd": obj.data.blh.l.toFixed(8)
+        , "uav-route-add-target-wd": obj.data.blh.b.toFixed(8)
+        , "uav-route-add-target-gc": obj.data.blh.h
+        , "uav-route-add-target-pd": obj.data.adjust.photodistance
+        , "uav-route-add-target-ad": obj.data.adjust.adjustdistance
+        , "uav-route-add-target-sd": obj.data.speed
+        , "uav-route-add-target-as": obj.data.adjust.adjustspeed
+        , "uav-route-add-target-level": obj.data.adjust.level
+    });
+
+    $("#uav-route-add-save").on("click", function () {
+        for (var i in uav_route_add_waypoint) {
+            if (uav_route_add_waypoint[i].id == obj.data.id && uav_route_add_waypoint[i].type == "target") {
+                uav_route_add_waypoint[i].speed = form.val("uav-route-add")["uav-route-add-target-sd"];
+                uav_route_add_waypoint[i].adjust.photodistance = form.val("uav-route-add")["uav-route-add-target-pd"];
+                uav_route_add_waypoint[i].adjust.adjustdistance = form.val("uav-route-add")["uav-route-add-target-ad"];
+                uav_route_add_waypoint[i].adjust.adjustspeed = form.val("uav-route-add")["uav-route-add-target-as"];
+                uav_route_add_waypoint[i].adjust.level = OnOff2TrueFalse(form.val("uav-route-add")["uav-route-add-target-level"]);
+                break;
+            }
+        }
+
+        //刷新航线树
+        updateroutetree();
+
+        layer.msg("修改成功！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+    });
+};
+
+
+
+
