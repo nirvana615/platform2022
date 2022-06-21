@@ -560,6 +560,7 @@
     <Content Include="Apps\monitor\js\11-monitoranalysis.js" />
     <Content Include="Apps\monitor\js\10-monitorwarning.js" />
     <Content Include="Apps\monitor\js\06-monitoretl.js" />
+    <Content Include="Apps\monitor\js\14-monitorconstruction.js" />
     <Content Include="Apps\monitor\widget\1.3 monitorproject-auth.html" />
     <Content Include="Apps\monitor\widget\5.0 headeruser.html" />
     <Content Include="Apps\monitor\widget\1.5 disasterpropertyedit.html" />
@@ -567,6 +568,7 @@
     <Content Include="Apps\monitor\widget\1.7 sectionadd.html" />
     <Content Include="Apps\monitor\widget\1.6 disasteradd.html" />
     <Content Include="Apps\monitor\widget\1.4 disasterpropertyview.html" />
+    <Content Include="Apps\monitor\widget\construction.html" />
     <Content Include="Apps\monitor\widget\etl.html" />
     <Content Include="Apps\monitor\widget\partol.html" />
     <Content Include="Apps\monitor\widget\warningmodelcriterionadd.html" />
