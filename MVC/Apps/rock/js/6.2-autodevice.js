@@ -57,9 +57,7 @@ function DrwInfo(data,flag) {
             if (drwInfox != null) {
                 layer.close(drwInfox);
             }
-            var loadingceindex = layer.load(0, { shade: 0.2, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
-           
-                    setTimeout(() => {
+             setTimeout(() => {
                         drwInfox = layer.open({
                             type: 1
                             , title: ['信息查看', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']

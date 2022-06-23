@@ -6797,13 +6797,17 @@ function LoadPushDataPreDateTime(monitor, datetime) {
             console.log(monitor);
             console.log(data);
             console.log(JSON.parse(data));
+            
+
+
+
             if (data != "") {
                 var fanHuiData = JSON.parse(data);
                 if (monitor.type == "裂缝") {
                     var lfThreshold = JSON.parse(fanHuiData.threshold);
                     form.val('pushdataform', {
                         monitorName: monitor.title,
-                        lfThreshold: lfThreshold.len_t+"mm",
+                        lfThreshold: lfThreshold.len_t + "mm",
                         pushNowTime: fanHuiData.pushNowTime
                     })
                     if (fanHuiData.pushFailureList != null) {
@@ -6812,6 +6816,19 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                             fanHuiData.pushFailureList[i].value = failureData.value.now_shift_num;
                         }
                         pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
+                    } else {
+                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
+                    }
+                } else if (monitor.type == "倾角") {
+                    var qjThreshold = JSON.parse(fanHuiData.threshold);
+                    console.log(qjThreshold);
+                    if (fanHuiData.pushFailureList != null) {
+                        for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
+                            var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
+                            console.log(failureData);
+                            // fanHuiData.pushFailureList[i].value = failureData.value.now_shift_num;
+                        }
+                        //pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
                     } else {
                         pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                     }
