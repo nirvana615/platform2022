@@ -1,0 +1,30 @@
+﻿<!--项目授权-->
+<form class="layui-form" action="" lay-filter="findprojectauthform" style="margin:5px;">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md9">
+            <div class="grid-demo grid-demo-bg1">
+                <label class="layui-form-label" style="width:60px;">用&emsp;&emsp;户</label>
+                <div class="layui-input-block" style="margin-left:95px;">
+                    <select id="findusersid" name="findusers" lay-filter="selectfinduser">
+                        <option value="">请选择用户</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md3">
+            <div class="grid-demo" style="position:absolute;right:9px;">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="authuserfindprojectsubmit" style="width:100px;">更新授权</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-demo" style="margin-top:10px;padding-right:5px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:60px;">项&emsp;&emsp;目</label>
+            <div class="layui-input-block" style="margin-left:95px;height:auto;border:solid;border-color:#e6e6e6;border-width:1px;overflow:auto;max-height:80%;">
+                <div id="findprojectid" style="padding:0px;overflow:auto;max-height:395px;height:395px;"></div>
+            </div>
+        </div>
+    </div>
+</form>

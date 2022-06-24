@@ -384,6 +384,112 @@ namespace SERVICE.Controllers
             }
         }
 
+        /// <summary>
+        /// 获取用户-巡查项目映射
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetMapUserFindProject(int userid)
+        {
+            string maps = PostgresqlHelper.QueryData(pgsqlConnection,string.Format("SELECT *FROM uavfind_map_user_project WHERE userid={0} AND ztm={1} ORDER BY id ASC", userid, (int)MODEL.Enum.State.InUse));
+            if (string.IsNullOrEmpty(maps))
+            {
+                return string.Empty;
+            }
+            else
+            {
+                List<MapUserFindProject> mapUserFindProjects = new List<MapUserFindProject>();
+                string[] rows = maps.Split(new char[] {COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    MapUserFindProject mapUserFindProject = ParseUavFindHelper.ParseMapUserFindProject(rows[i]);
+                    if (mapUserFindProject!=null)
+                    {
+                        mapUserFindProjects.Add(mapUserFindProject);
+                    }
+                }
+                if (mapUserFindProjects.Count>0)
+                {
+                    return JsonHelper.ToJson(mapUserFindProjects);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// 更新用户-巡查项目映射
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public string UpdateMapUserFindProject()
+        {
+            string userid = HttpContext.Current.Request.Form["userid"];
+            string allfindprojectids = HttpContext.Current.Request.Form["allfindprojectids"];
+            string findprojectids = HttpContext.Current.Request.Form["findprojectids"];
+
+            List<string> userfindprojectlist = new List<string>();
+            List<string> authfindprojectlist = new List<string>();
+            List<string> existfindprojectlist = new List<string>();
+
+            if (!string.IsNullOrEmpty(allfindprojectids))
+            {
+                userfindprojectlist = allfindprojectids.Split(new char[] { ',' }).ToList();//授权用户全部航线项目
+            }
+            if (!string.IsNullOrEmpty(findprojectids))
+            {
+                authfindprojectlist = findprojectids.Split(new char[] { ',' }).ToList();//授权项目模型
+            }
+
+            //查询用户已有模型项目
+            string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uavfind_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
+            if (!string.IsNullOrEmpty(maps))
+            {
+                string[] rows = maps.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    MapUserFindProject mapUserFindProject = ParseUavFindHelper.ParseMapUserFindProject(rows[i]);
+                    if (mapUserFindProject != null)
+                    {
+                        FindProject findProject = ParseUavFindHelper.ParseFindProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uavfind_project WHERE id={0} AND ztm={1}", mapUserFindProject.FindProjectId, (int)MODEL.Enum.State.InUse)));
+                        if (findProject != null)
+                        {
+                            existfindprojectlist.Add(findProject.Id.ToString());
+                        }
+                    }
+                }
+            }
+
+            //增加
+            for (int i = 0; i < authfindprojectlist.Count; i++)
+            {
+                if (!existfindprojectlist.Contains(authfindprojectlist[i]))
+                {
+                    PostgresqlHelper.InsertDataReturnID(pgsqlConnection, string.Format("INSERT INTO uavfind_map_user_project (userid,projectid,cjsj,ztm) VALUES({0},{1},{2},{3})", userid, authfindprojectlist[i], SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), (int)MODEL.Enum.State.InUse));
+                }
+            }
+
+
+            //减少
+            for (int i = 0; i < existfindprojectlist.Count; i++)
+            {
+                if (userfindprojectlist.Contains(existfindprojectlist[i]) && !userfindprojectlist.Contains(existfindprojectlist[i]))
+                {
+                    PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uavfind_map_user_project SET ztm={0} WHERE userid={1} AND ztm={2} AND projectid={3}", (int)MODEL.Enum.State.NoUse, userid, (int)MODEL.Enum.State.InUse, existfindprojectlist[i]));
+                }
+            }
+
+            return string.Empty;
+        }
+
+
+
+
+
 
 
         #region 方法
