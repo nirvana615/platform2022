@@ -1018,5 +1018,32 @@ namespace SERVICE.Controllers
                 return string.Empty;
             }
         }
+
+        /// <summary>
+        /// 修改阈值信息表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string updateyuZhiInfo()
+        {
+            #region 参数
+            string thresholdId = HttpContext.Current.Request.Form["ThresholdId"];
+            string threshold = HttpContext.Current.Request.Form["Threshold"];
+
+
+            #endregion
+            string sql = "UPDATE   monitor_cq_threshold SET threshold={0} WHERE id={1} ";
+
+            int updateCount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(threshold), SQLHelper.UpdateString(thresholdId)));
+            if (updateCount != -1)
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "修改成功！", ""));
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "修改失败", ""));
+
+            }
+        }
     }
 }

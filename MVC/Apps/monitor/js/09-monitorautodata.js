@@ -51,7 +51,9 @@ function LoadAutoDataLayer(id) {
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content:'<!--自动化监测数据可视化--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;">    <ul class="layui-tab-title">        <li class="layui-this" style="width:17%;padding-top: 10px;">变形统计</li>        <li style="width:17%;padding-top: 10px;">可视化</li>        <li style="width:17%;padding-top: 10px;">数据处理</li>        <li style="width:17%;padding-top: 10px;">综合分析</li>        <li style="width:17%;padding-top: 10px;">推送管理</li>    </ul>    <div class="layui-tab-content" style="margin:0px 0px">        <!--统计分析-->        <div class="layui-tab-item layui-show">            <div class="layui-row" style="height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;overflow-y: auto;">                <!--工具栏-->                <form class="layui-form" lay-filter="bianXingDataform" style="margin-top:5px;margin-left:20px;margin-right:40px;">                    <div class="layui-row">                        <div class="layui-col-xs6">                            <div class="grid-demo grid-demo-bg1">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:40px;"><select id="bianXingDatapretimeid" name="bianXingDatapretime" lay-filter="bianXingDatapretimefilter" style="visibility:hidden;"></select></div>                                </div>                            </div>                        </div>                        <div class="layui-col-xs6">                            <div class="grid-demo">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:20px;margin-right:40px;"> <input id="bianXingDatacustomtimeid" name="bianXingDatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div>                                </div>                            </div>                        </div>                    </div>                </form>                <!--统计表格-->                <div id="LiFengDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block ">                    <table id="LiFengDatastatistics" class="layui-hide"></table>                </div>                <div id="YingLiDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block">                    <table id="YingLiDatastatistics" class="layui-hide"></table>                </div>                <div id="GNSSDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block">                    <table id="GNSSDatastatistics" class="layui-hide"></table>                </div>                <div id="QinJiaoDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block">                    <table id="QinJiaoDatastatistics" class="layui-hide"></table>                </div>                <div id="SbwyDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block">                    <table id="SbwyDatastatistics" class="layui-hide"></table>                </div>                <div id="DxswDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block">                    <table id="DxswDatastatistics" class="layui-hide"></table>                </div>            </div>        </div>        <!--可视化-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;">                    <div id="monitortreebytype" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs6">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs6">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--图形-->                        <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div>                        <!--统计表格-->                        <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;">                            <table id="autodatastatistics" class="layui-hide"></table>                        </div>                    </div>                </div>            </div>        </div>        <!--数据处理-->        <div class="layui-tab-item">            <div class="layui-row" style="margin: 0px 10px;">                <!--选择设备及时间范围-->                <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;">                    <div class="layui-row">                        <div class="layui-col-xs4">                            <div class="grid-demo grid-demo-bg1">                                <div class="layui-form-item">                                    <label class="layui-form-label" style="text-align:center;">选择设备：</label>                                    <div class="layui-input-block">                                        <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;">                                            <option value="">请选择设备</option>                                        </select>                                    </div>                                </div>                            </div>                        </div>                        <div class="layui-col-xs4">                            <div class="grid-demo">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:10px;">                                        <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;">                                            <option value="">请选择年限</option>                                        </select>                                    </div>                                </div>                            </div>                        </div>                        <div class="layui-col-xs4">                            <div class="grid-demo">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:10px;">                                        <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                    </div>                                </div>                            </div>                        </div>                    </div>                </form>            </div>            <div class="layui-row" style="margin: 0px 10px;">                <div class="layui-col-md10">                    <!--图形-->                    <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:790px;height:400px;border: 1px solid #e6e6e6;visibility:hidden;"></div>                </div>                <div class="layui-col-md2">                    <!--数据集-->                    <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div>                </div>            </div>            <div class="layui-row" style="margin: 0px 10px;">                <div class="layui-tab layui-tab-brief" lay-filter="EditAutoDataTabBrief">                    <ul class="layui-tab-title">                        <li lay-id="abnormal" class="layui-this">异常处理</li>                        <li lay-id="grosserror">粗差剔除</li>                        <li lay-id="initialvalue" style="pointer-events:none; color: darkgray;">设置初值</li>                        <li lay-id="interpolation" style="pointer-events:none; color: darkgray;">插补数据</li>                        <li lay-id="fittingcurve" style="pointer-events:none; color: darkgray;">拟合曲线</li>                    </ul>                    <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;">                        <div class="layui-tab-item layui-show">                            <div class="layui-row">                                <!--左侧-->                                <div class="layui-col-xs2">                                    <!--异常处理工具及说明-->                                    <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;">                                        <!--异常处理工具-->                                        <div class="layui-row">                                            <div class="layui-form-item">                                                <div class="layui-input-block selectUp" style="margin-left:1px;">                                                    <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter">                                                        <option value="0">按时间范围选择</option>                                                        <option value="1">按值域范围选择</option>                                                    </select>                                                </div>                                            </div>                                        </div>                                    </form>                                </div>                                <!--右侧-->                                <div class="layui-col-xs10" id="editabnormaldatatoolbodyid">                                    <!--异常处理工具参数-->                                </div>                            </div>                            <!--异常处理工具说明-->                            <div id="editabnormaldatatooldoc"></div>                        </div>                        <div class="layui-tab-item">                            <div class="layui-row">                                <!--左侧-->                                <div class="layui-col-xs2">                                    <!--粗差处理工具及说明-->                                    <form class="layui-form" lay-filter="editgrosserrordatatoolform" style="margin-top:5px;">                                        <!--粗差处理工具-->                                        <div class="layui-row">                                            <div class="layui-form-item">                                                <div class="layui-input-block selectUp" style="margin-left:1px;">                                                    <select id="editgrosserrordatatoolid" name="editgrosserrordatatool" lay-filter="editgrosserrordatatoolfilter">                                                        <option value="0">按标准差σ剔除</option>                                                        <option value="1">按残差δ剔除</option>                                                    </select>                                                </div>                                            </div>                                        </div>                                    </form>                                </div>                                <!--右侧-->                                <div class="layui-col-xs10" id="editgrosserrordatatoolbodyid">                                    <!--粗差处理工具参数-->                                </div>                            </div>                            <!--粗差剔除工具说明-->                            <div id="editgrosserrordatatooldoc"></div>                        </div>                        <div class="layui-tab-item">3</div>                        <div class="layui-tab-item">4</div>                        <div class="layui-tab-item">5</div>                        <div class="layui-tab-item">6</div>                    </div>                </div>            </div>        </div>        <!--综合分析-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;">                    <div id="overlaymonitortree" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="overlaydataform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs4">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;"><select id="overlaydatapretimeid" name="overlaydatapretime" lay-filter="overlaydatapretimefilter" style="visibility:hidden;"></select></div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs4">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="overlaydatacustomtimeid" name="overlaydatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                            </div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs2">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <label class="layui-form-label" style="width:40px;padding:0px 5px;">小时雨量</label>                                            <div class="layui-input-block" style="right:55px;">                                                <input type="checkbox" id="hourrainid" name="hourrain" lay-skin="switch" lay-filter="hourrainfilter" lay-text="ON|OFF" disabled>                                            </div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs2">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <label class="layui-form-label" style="width:40px;padding:0px 5px;">每日雨量</label>                                            <div class="layui-input-block" style="right:55px;">                                                <input type="checkbox" id="dayrainid" name="dayrain" lay-skin="switch" lay-filter="dayrainfilter" lay-text="ON|OFF" disabled>                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--图形-->                        <div id="overlaydatachartid" class="layui-tab-item layui-show" style="width:790px;height:480px"></div>                    </div>                </div>            </div>        </div>        <!--推送管理-->        <div class="layui-tab-item">            <div class="layui-row">                <div class="layui-row">                    <!--左侧-->                    <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;">                        <div id="pushtreebytype" class="grid-demo"></div>                    </div>                    <!--右侧-->                    <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                        <div class="grid-demo grid-demo-bg1">                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">                                <legend>阈值信息</legend>                            </fieldset>                            <!--工具栏-->                            <form class="layui-form  layui-form-pane" lay-filter="pushdataform" style="margin-top:15px; margin-left:15px; " id="pushFromId">                                <div class="layui-form-item">                                    <div class="layui-inline">                                        <label class="layui-form-label">监测点号</label>                                        <div class="layui-input-inline">                                            <input type="text" name="monitorName" lay-verify="required"  disabled="" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" style="display:none">                                        <label class="layui-form-label">阈值Id</label>                                        <div class="layui-input-inline">                                            <input type="text" name="ThresholdId" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="lfType">                                        <label class="layui-form-label">阈值(mm)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="lfThreshold" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="ylType">                                        <label class="layui-form-label">阈值(KN)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="ylThreshold" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="xyGNSSType">                                        <label class="layui-form-label">水平(mm)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="xygnssThreshold" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="hGNSSType">                                        <label class="layui-form-label">垂直(mm)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="hgnssThreshold" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="qjTypex">                                        <label class="layui-form-label">X阈值(°)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="qjThresholdx" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="qjTypey">                                        <label class="layui-form-label">Y阈值(°)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="qjThresholdy" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="qjTypez">                                        <label class="layui-form-label">Z阈值(°)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="qjThresholdz" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline">                                        <label class="layui-form-label">开始时间</label>                                        <div class="layui-input-inline">                                            <input type="text" name="pushNowTime" disabled="" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                </div>                                <div class="layui-form-item">                                    <div class="layui-input-block">                                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="yuZhiUpdate">阈值修改</button>                                    </div>                                </div>                            </form>                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">                                <legend>推送失败列表</legend>                            </fieldset>                            <!--统计表格-->                            <div id="pushdatastatisticsdiv" style="margin-left:10px;margin-right:10px;">                                <table id="pushdatastatistics" class="layui-hide"></table>                            </div>                        </div>                    </div>                </div>            </div>        </div>    </div></div>'
+                , content:'<!--自动化监测数据可视化--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:1px 0px;overflow: hidden;">    <ul class="layui-tab-title">        <li class="layui-this" style="width:17%;padding-top: 10px;">变形统计</li>        <li style="width:17%;padding-top: 10px;">可视化</li>        <li style="width:17%;padding-top: 10px;">数据处理</li>        <li style="width:17%;padding-top: 10px;">综合分析</li>        <li style="width:17%;padding-top: 10px;">推送管理</li>    </ul>    <div class="layui-tab-content" style="margin:0px 0px">        <!--统计分析-->        <div class="layui-tab-item layui-show">            <div class="layui-row" style="height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;overflow-y: auto;">                <!--工具栏-->                <form class="layui-form" lay-filter="bianXingDataform" style="margin-top:5px;margin-left:20px;margin-right:40px;">                    <div class="layui-row">                        <div class="layui-col-xs6">                            <div class="grid-demo grid-demo-bg1">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:40px;"><select id="bianXingDatapretimeid" name="bianXingDatapretime" lay-filter="bianXingDatapretimefilter" style="visibility:hidden;"></select></div>                                </div>                            </div>                        </div>                        <div class="layui-col-xs6">                            <div class="grid-demo">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:20px;margin-right:40px;"> <input id="bianXingDatacustomtimeid" name="bianXingDatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div>                                </div>                            </div>                        </div>                    </div>                </form>                <!--统计表格-->                <div id="LiFengDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block ">                    <table id="LiFengDatastatistics" class="layui-hide"></table>                </div>                <div id="YingLiDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block">                    <table id="YingLiDatastatistics" class="layui-hide"></table>                </div>                <div id="GNSSDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block">                    <table id="GNSSDatastatistics" class="layui-hide"></table>                </div>                <div id="QinJiaoDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block">                    <table id="QinJiaoDatastatistics" class="layui-hide"></table>                </div>                <div id="SbwyDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block">                    <table id="SbwyDatastatistics" class="layui-hide"></table>                </div>                <div id="DxswDatastatisticsDiv" style="margin-left:10px;margin-right:10px;margin-top:10px;margin-bottom:10px; width:460px;vertical-align: top;display:inline-block">                    <table id="DxswDatastatistics" class="layui-hide"></table>                </div>            </div>        </div>        <!--可视化-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;">                    <div id="monitortreebytype" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="autodataform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs6">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;"><select id="autodatapretimeid" name="autodatapretime" lay-filter="autodatapretimefilter" style="visibility:hidden;"></select></div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs6">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--图形-->                        <div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:480px"></div>                        <!--统计表格-->                        <div id="autodatastatisticsdiv" style="margin-left:10px;margin-right:10px;visibility:hidden;">                            <table id="autodatastatistics" class="layui-hide"></table>                        </div>                    </div>                </div>            </div>        </div>        <!--数据处理-->        <div class="layui-tab-item">            <div class="layui-row" style="margin: 0px 10px;">                <!--选择设备及时间范围-->                <form class="layui-form" lay-filter="editautodataform" style="margin-top:5px;">                    <div class="layui-row">                        <div class="layui-col-xs4">                            <div class="grid-demo grid-demo-bg1">                                <div class="layui-form-item">                                    <label class="layui-form-label" style="text-align:center;">选择设备：</label>                                    <div class="layui-input-block">                                        <select id="editautodatadeviceid" name="editautodatadevice" lay-filter="editautodatadevicefilter" style="visibility:hidden;">                                            <option value="">请选择设备</option>                                        </select>                                    </div>                                </div>                            </div>                        </div>                        <div class="layui-col-xs4">                            <div class="grid-demo">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:10px;">                                        <select id="editautodatapretimeid" name="editautodatapretime" lay-filter="editautodatapretimefilter" style="visibility:hidden;">                                            <option value="">请选择年限</option>                                        </select>                                    </div>                                </div>                            </div>                        </div>                        <div class="layui-col-xs4">                            <div class="grid-demo">                                <div class="layui-form-item">                                    <div class="layui-input-block" style="margin-left:10px;">                                        <input id="editautodatacustomtimeid" name="editautodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                    </div>                                </div>                            </div>                        </div>                    </div>                </form>            </div>            <div class="layui-row" style="margin: 0px 10px;">                <div class="layui-col-md10">                    <!--图形-->                    <div id="editautodatachartid" class="layui-tab-item layui-show" style="width:790px;height:400px;border: 1px solid #e6e6e6;visibility:hidden;"></div>                </div>                <div class="layui-col-md2">                    <!--数据集-->                    <div id="editautodatasetid" class="layui-tab-item layui-show" style="width:98%;height:400px;border: 1px solid #e6e6e6;overflow-y: auto;"> </div>                </div>            </div>            <div class="layui-row" style="margin: 0px 10px;">                <div class="layui-tab layui-tab-brief" lay-filter="EditAutoDataTabBrief">                    <ul class="layui-tab-title">                        <li lay-id="abnormal" class="layui-this">异常处理</li>                        <li lay-id="grosserror">粗差剔除</li>                        <li lay-id="initialvalue" style="pointer-events:none; color: darkgray;">设置初值</li>                        <li lay-id="interpolation" style="pointer-events:none; color: darkgray;">插补数据</li>                        <li lay-id="fittingcurve" style="pointer-events:none; color: darkgray;">拟合曲线</li>                    </ul>                    <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;">                        <div class="layui-tab-item layui-show">                            <div class="layui-row">                                <!--左侧-->                                <div class="layui-col-xs2">                                    <!--异常处理工具及说明-->                                    <form class="layui-form" lay-filter="editabnormaldatatoolform" style="margin-top:5px;">                                        <!--异常处理工具-->                                        <div class="layui-row">                                            <div class="layui-form-item">                                                <div class="layui-input-block selectUp" style="margin-left:1px;">                                                    <select id="editabnormaldatatoolid" name="editabnormaldatatool" lay-filter="editabnormaldatatoolfilter">                                                        <option value="0">按时间范围选择</option>                                                        <option value="1">按值域范围选择</option>                                                    </select>                                                </div>                                            </div>                                        </div>                                    </form>                                </div>                                <!--右侧-->                                <div class="layui-col-xs10" id="editabnormaldatatoolbodyid">                                    <!--异常处理工具参数-->                                </div>                            </div>                            <!--异常处理工具说明-->                            <div id="editabnormaldatatooldoc"></div>                        </div>                        <div class="layui-tab-item">                            <div class="layui-row">                                <!--左侧-->                                <div class="layui-col-xs2">                                    <!--粗差处理工具及说明-->                                    <form class="layui-form" lay-filter="editgrosserrordatatoolform" style="margin-top:5px;">                                        <!--粗差处理工具-->                                        <div class="layui-row">                                            <div class="layui-form-item">                                                <div class="layui-input-block selectUp" style="margin-left:1px;">                                                    <select id="editgrosserrordatatoolid" name="editgrosserrordatatool" lay-filter="editgrosserrordatatoolfilter">                                                        <option value="0">按标准差σ剔除</option>                                                        <option value="1">按残差δ剔除</option>                                                    </select>                                                </div>                                            </div>                                        </div>                                    </form>                                </div>                                <!--右侧-->                                <div class="layui-col-xs10" id="editgrosserrordatatoolbodyid">                                    <!--粗差处理工具参数-->                                </div>                            </div>                            <!--粗差剔除工具说明-->                            <div id="editgrosserrordatatooldoc"></div>                        </div>                        <div class="layui-tab-item">3</div>                        <div class="layui-tab-item">4</div>                        <div class="layui-tab-item">5</div>                        <div class="layui-tab-item">6</div>                    </div>                </div>            </div>        </div>        <!--综合分析-->        <div class="layui-tab-item">            <div class="layui-row">                <!--左侧-->                <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;">                    <div id="overlaymonitortree" class="grid-demo"></div>                </div>                <!--右侧-->                <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                    <div class="grid-demo grid-demo-bg1">                        <!--工具栏-->                        <form class="layui-form" lay-filter="overlaydataform" style="margin-top:5px;">                            <div class="layui-row">                                <div class="layui-col-xs4">                                    <div class="grid-demo grid-demo-bg1">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;"><select id="overlaydatapretimeid" name="overlaydatapretime" lay-filter="overlaydatapretimefilter" style="visibility:hidden;"></select></div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs4">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">                                                <input id="overlaydatacustomtimeid" name="overlaydatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">                                            </div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs2">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <label class="layui-form-label" style="width:40px;padding:0px 5px;">小时雨量</label>                                            <div class="layui-input-block" style="right:55px;">                                                <input type="checkbox" id="hourrainid" name="hourrain" lay-skin="switch" lay-filter="hourrainfilter" lay-text="ON|OFF" disabled>                                            </div>                                        </div>                                    </div>                                </div>                                <div class="layui-col-xs2">                                    <div class="grid-demo">                                        <div class="layui-form-item">                                            <label class="layui-form-label" style="width:40px;padding:0px 5px;">每日雨量</label>                                            <div class="layui-input-block" style="right:55px;">                                                <input type="checkbox" id="dayrainid" name="dayrain" lay-skin="switch" lay-filter="dayrainfilter" lay-text="ON|OFF" disabled>                                            </div>                                        </div>                                    </div>                                </div>                            </div>                        </form>                        <!--图形-->                        <div id="overlaydatachartid" class="layui-tab-item layui-show" style="width:790px;height:480px"></div>                    </div>                </div>            </div>        </div>        <!--推送管理-->        <div class="layui-tab-item">            <div class="layui-row">                <div class="layui-row">                    <!--左侧-->                    <div class="layui-col-md3" style="width:20%;height:700px;overflow: auto;">                        <div id="pushtreebytype" class="grid-demo"></div>                    </div>                    <!--右侧-->                    <div class="layui-col-md9" style="width:80%;height:700px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">                        <div class="grid-demo grid-demo-bg1">                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">                                <legend>阈值信息</legend>                            </fieldset>                            <!--工具栏-->                            <form class="layui-form  layui-form-pane" lay-filter="pushdataform" style="margin-top:15px; margin-left:15px; " id="pushFromId">                                <div class="layui-form-item">                                    <div class="layui-inline">                                        <label class="layui-form-label">监测点号</label>                                        <div class="layui-input-inline">                                            <input type="text" name="monitorName" lay-verify="required" disabled="" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" style="display:none">                                        <label class="layui-form-label">阈值Id</label>                                        <div class="layui-input-inline">                                            <input type="text" name="ThresholdId" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" style="display:none">                                        <label class="layui-form-label">类型</label>                                        <div class="layui-input-inline">                                            <input type="text" name="type" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="lfType">                                        <label class="layui-form-label">阈值(mm)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="lfThreshold" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="ylType">                                        <label class="layui-form-label">阈值(KN)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="ylThreshold" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="xyGNSSType">                                        <label class="layui-form-label">水平(mm)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="xygnssThreshold" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="hGNSSType">                                        <label class="layui-form-label">垂直(mm)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="hgnssThreshold" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="qjTypex">                                        <label class="layui-form-label">X阈值(°)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="qjThresholdx" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="qjTypey">                                        <label class="layui-form-label">Y阈值(°)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="qjThresholdy" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline" id="qjTypez">                                        <label class="layui-form-label">Z阈值(°)</label>                                        <div class="layui-input-inline">                                            <input type="text" name="qjThresholdz" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                    <div class="layui-inline">                                        <label class="layui-form-label">开始时间</label>                                        <div class="layui-input-inline">                                            <input type="text" name="pushNowTime" disabled="" autocomplete="off" class="layui-input">                                        </div>                                    </div>                                </div>                                <div class="layui-form-item" id="yuZhiUpdateId">                                    <div class="layui-input-block">                                        <button type="submit"  style="margin-left: 80%"  class="layui-btn" lay-submit="" lay-filter="yuZhiUpdate">阈值修改</button>                                    </div>                                </div>                            </form>                            <div style="margin-left:20%" id="wenXinTiShiId">                                <span style="color:red">                                    温馨提示:该监测点并未设置阈值，属于厂商推送数据。                                </span>                            </div>                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">                                <legend>推送失败列表</legend>                            </fieldset>                            <!--统计表格-->                            <div id="pushdatastatisticsdiv" style="margin-left:10px;margin-right:10px;">                                <table id="pushdatastatistics" class="layui-hide"></table>                            </div>                        </div>                    </div>                </div>            </div>        </div>    </div></div>'
+
+
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
@@ -6719,25 +6721,109 @@ function PushManage() {
 
     //监听提交
     form.on('submit(yuZhiUpdate)', function (data) {
-        layer.alert(JSON.stringify(data.field), {
-            title: '最终的提交信息'
-        })
+            console.log(data.field);
+       
        // var data = form.val('example');
-        if (data.field.type = "裂缝") {
+        var sendDate = {
+            ThresholdId: data.field.ThresholdId
+        };
 
-            if (isNaN(centralLongitude)) {//是数字的情况
-                layer.msg('中央经度应为数字请输入数字');
+        if (data.field.type = "裂缝") {
+            if (data.field.lfThreshold.length==0) {//是数字的情况
+                layer.msg("请输入裂缝阈值", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 return false;
             }
+            if (isNaN(data.field.lfThreshold)) {//是数字的情况
+                layer.msg("裂缝阈值请输入数字", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            var threshold = {
+                "len_t": data.field.lfThreshold 
+            }
+            sendDate.Threshold = JSON.stringify(threshold);
         } else if (data.field.type = "应力") {
-
+            if (data.field.ylThreshold.length == 0) {//是数字的情况
+                layer.msg("请输入应力阈值", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            if (isNaN(data.field.ylThreshold)) {//是数字的情况
+                layer.msg("应力阈值请输入数字", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            var threshold = {
+                "yl_t": data.field.lfThreshold
+            }
+            sendDate.Threshold = JSON.stringify(threshold);
         } else if (data.field.type = "GNSS") {
-
+            if(data.field.xygnssThreshold.length == 0) {//是数字的情况
+                layer.msg("请输入GNSS水平阈值", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            if (isNaN(data.field.xygnssThreshold)) {//是数字的情况
+                layer.msg("GNSS水平阈值请输入数字", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            if (data.field.hgnssThreshold.length == 0) {//是数字的情况
+                layer.msg("请输入GNSS垂直阈值", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            if (isNaN(data.field.hgnssThreshold)) {//是数字的情况
+                layer.msg("GNSS垂直阈值请输入数字", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            var threshold = {
+                "xy_t": data.field.xygnssThreshold,
+                "h_t": data.field.hgnssThreshold
+            }
+            sendDate.Threshold = JSON.stringify(threshold);
         } else if (data.field.type = "倾角") {
             //修改阈值
-
+            if (data.field.qjThresholdx.length == 0) {//是数字的情况
+                layer.msg("请输入倾角X方向", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            if (isNaN(data.field.qjThresholdx)) {//是数字的情况
+                layer.msg("倾角X方向请输入数字", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            if (data.field.qjThresholdy.length == 0) {//是数字的情况
+                layer.msg("请输入倾角Y方向", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            if (isNaN(data.field.qjThresholdy)) {//是数字的情况
+                layer.msg("倾角Y方向请输入数字", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            if (data.field.qjThresholdz.length == 0) {//是数字的情况
+                layer.msg("请输入倾角Y方向", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            if (isNaN(data.field.qjThresholdz)) {//是数字的情况
+                layer.msg("倾角Y方向请输入数字", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            var threshold = {
+                "x_t": data.field.qjThresholdx,
+                "y_t": data.field.qjThresholdy,
+                "z_t": data.field.qjThresholdz
+            }
+            sendDate.Threshold = JSON.stringify(threshold);
         }
         
+        var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+        $.ajax({
+            url: servicesurl + "/api/PatrolEquipment/updateyuZhiInfo", type: "post", data: sendDate,
+            success: function (result) {
+                layer.close(loadinglayerindex);
+                console.log(result);
+                var res = JSON.parse(result);
+                if (res.code == 1) {//成功
+                    layer.msg(data.field.monitorName+"阈值修改成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                } else {
+                    layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                }
+            }, datatype: "json"
+        });
         return false;
     });
     //渲染统计表格
@@ -6772,6 +6858,9 @@ function LoadPushDataPreDateTime(monitor, datetime) {
     $("#ylType").hide();
     $("#xyGNSSType").hide();
     $("#hGNSSType").hide();
+    $("#yuZhiUpdateId").show();
+    $("#pushFromId").show();
+    $("#wenXinTiShiId").hide();
     //请求监测点指点时间范围数据
     var loadingpushindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
@@ -6787,110 +6876,117 @@ function LoadPushDataPreDateTime(monitor, datetime) {
 
             if (data != "") {
                 var fanHuiData = JSON.parse(data);
-                if (monitor.type == "裂缝") {
-                    $("#lfType").show();
-                    var lfThreshold = JSON.parse(fanHuiData.threshold);
-                    form.val('pushdataform', {
-                        monitorName: monitor.title,
-                        lfThreshold: lfThreshold.len_t,
-                        pushNowTime: fanHuiData.pushNowTime,
-                        ThresholdId: fanHuiData.thresholdId,
-                        type: monitor.type
-                    })
-                    if (fanHuiData.pushFailureList != null) {
-                        for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
-                            var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
-                            fanHuiData.pushFailureList[i].value = failureData.value.now_shift_num;
+                if (fanHuiData.threshold != null) {
+                    if (monitor.type == "裂缝") {
+                        $("#lfType").show();
+                        var lfThreshold = JSON.parse(fanHuiData.threshold);
+                        form.val('pushdataform', {
+                            monitorName: monitor.title,
+                            lfThreshold: lfThreshold.len_t,
+                            pushNowTime: fanHuiData.pushNowTime,
+                            ThresholdId: fanHuiData.thresholdId,
+                            type: monitor.type
+                        })
+                        if (fanHuiData.pushFailureList != null) {
+                            for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
+                                var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
+                                fanHuiData.pushFailureList[i].value = failureData.value.now_shift_num;
+                            }
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
+                        } else {
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                         }
-                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
-                    } else {
-                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
-                    }
-                } else if (monitor.type == "应力") {
-                    $("#ylType").show();
-                    var ylThreshold = JSON.parse(fanHuiData.threshold);
-                    form.val('pushdataform', {
-                        monitorName: monitor.title,
-                        ylThreshold: ylThreshold.yl_t,
-                        pushNowTime: fanHuiData.pushNowTime,
-                        ThresholdId: fanHuiData.thresholdId,
-                        type: monitor.type
-                    })
-                    if (fanHuiData.pushFailureList != null) {
-                        for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
-                            var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
-                            fanHuiData.pushFailureList[i].value = failureData.value.yl;
+                    } else if (monitor.type == "应力") {
+                        $("#ylType").show();
+                        var ylThreshold = JSON.parse(fanHuiData.threshold);
+                        form.val('pushdataform', {
+                            monitorName: monitor.title,
+                            ylThreshold: ylThreshold.yl_t,
+                            pushNowTime: fanHuiData.pushNowTime,
+                            ThresholdId: fanHuiData.thresholdId,
+                            type: monitor.type
+                        })
+                        if (fanHuiData.pushFailureList != null) {
+                            for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
+                                var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
+                                fanHuiData.pushFailureList[i].value = failureData.value.yl;
+                            }
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
+                        } else {
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                         }
-                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
-                    } else {
-                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
-                    }
-                } else if (monitor.type == "倾角") {
-                    $("#qjTypex").show();
-                    $("#qjTypey").show();
-                    $("#qjTypez").show();
-                    var qjThreshold = JSON.parse(fanHuiData.threshold);
-                    console.log(qjThreshold);
-                    form.val('pushdataform', {
-                        monitorName: monitor.title,
-                        qjThresholdx: qjThreshold.x_t,
-                        qjThresholdy: qjThreshold.y_t,
-                        qjThresholdz: qjThreshold.z_t,
-                        pushNowTime: fanHuiData.pushNowTime,
-                        ThresholdId: fanHuiData.thresholdId,
-                        type: monitor.type
-                    })
-                    if (fanHuiData.pushFailureList != null) {
-                        for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
-                            var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
-                            console.log(failureData);
-                            fanHuiData.pushFailureList[i].value = "X:" + failureData.value.now_x_num + "、Y:" + failureData.value.now_y_num + "、Z:" + failureData.value.now_z_num 
+                    } else if (monitor.type == "倾角") {
+                        $("#qjTypex").show();
+                        $("#qjTypey").show();
+                        $("#qjTypez").show();
+                        var qjThreshold = JSON.parse(fanHuiData.threshold);
+                        console.log(qjThreshold);
+                        form.val('pushdataform', {
+                            monitorName: monitor.title,
+                            qjThresholdx: qjThreshold.x_t,
+                            qjThresholdy: qjThreshold.y_t,
+                            qjThresholdz: qjThreshold.z_t,
+                            pushNowTime: fanHuiData.pushNowTime,
+                            ThresholdId: fanHuiData.thresholdId,
+                            type: monitor.type
+                        })
+                        if (fanHuiData.pushFailureList != null) {
+                            for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
+                                var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
+                                console.log(failureData);
+                                fanHuiData.pushFailureList[i].value = "X:" + failureData.value.now_x_num + "、Y:" + failureData.value.now_y_num + "、Z:" + failureData.value.now_z_num
+                            }
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
+                        } else {
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                         }
-                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
-                    } else {
-                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
-                    }
-                } else if (monitor.type == "GNSS") {
-                    $("#xyGNSSType").show();
-                    $("#hGNSSType").show();
-                    var qjThreshold = JSON.parse(fanHuiData.threshold);
-                    console.log(qjThreshold);
-                    form.val('pushdataform', {
-                        monitorName: monitor.title,
-                        xygnssThreshold: qjThreshold.xy_t,
-                        hgnssThreshold: qjThreshold.h_t,
-                        pushNowTime: fanHuiData.pushNowTime,
-                        ThresholdId: fanHuiData.thresholdId,
-                        type: monitor.type
-                    })
-                    if (fanHuiData.pushFailureList != null) {
-                        for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
-                            var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
-                            console.log(failureData);
-                            fanHuiData.pushFailureList[i].value = "X:" + failureData.value.x.toFixed(3) + "、Y:" + failureData.value.y.toFixed(3) + "、Z:" + failureData.value.height.toFixed(3)
+                    } else if (monitor.type == "GNSS") {
+                        $("#xyGNSSType").show();
+                        $("#hGNSSType").show();
+                        var qjThreshold = JSON.parse(fanHuiData.threshold);
+                        console.log(qjThreshold);
+                        form.val('pushdataform', {
+                            monitorName: monitor.title,
+                            xygnssThreshold: qjThreshold.xy_t,
+                            hgnssThreshold: qjThreshold.h_t,
+                            pushNowTime: fanHuiData.pushNowTime,
+                            ThresholdId: fanHuiData.thresholdId,
+                            type: monitor.type
+                        })
+                        if (fanHuiData.pushFailureList != null) {
+                            for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
+                                var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
+                                console.log(failureData);
+                                fanHuiData.pushFailureList[i].value = "X:" + failureData.value.x.toFixed(3) + "、Y:" + failureData.value.y.toFixed(3) + "、Z:" + failureData.value.height.toFixed(3)
+                            }
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
+                        } else {
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                         }
-                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
-                    } else {
-                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
-                    }
-                } else if (monitor.type == "深部位移") {
-                    //深部位移没有设置阈值
-                    form.val('pushdataform', {
-                        monitorName: monitor.title,
-                        pushNowTime: fanHuiData.pushNowTime
-                    })
-                    if (fanHuiData.pushFailureList != null) {
-                        for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
-                            var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
-                            console.log(failureData);
-                            fanHuiData.pushFailureList[i].value = "X:" + failureData.value.shift_x.toFixed(2) + "、Y:" + failureData.value.shift_y.toFixed(2) + "、Z:" + failureData.value.shift_z.toFixed(2)
+                    } else if (monitor.type == "深部位移") {
+                        $("#yuZhiUpdateId").hide();
+                        //深部位移没有设置阈值
+                        form.val('pushdataform', {
+                            monitorName: monitor.title,
+                            pushNowTime: fanHuiData.pushNowTime
+                        })
+                        if (fanHuiData.pushFailureList != null) {
+                            for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
+                                var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
+                                console.log(failureData);
+                                fanHuiData.pushFailureList[i].value = "X:" + failureData.value.shift_x.toFixed(2) + "、Y:" + failureData.value.shift_y.toFixed(2) + "、Z:" + failureData.value.shift_z.toFixed(2)
+                            }
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
+                        } else {
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                         }
-                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
-                    } else {
-                        pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                     }
+
+                } else {
+                    $("#pushFromId").hide();
+                    $("#wenXinTiShiId").show();
                 }
-                
+               
                 form.render();
                 
             } else {
