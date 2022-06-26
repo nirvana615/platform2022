@@ -295,38 +295,73 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label">监测点号</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="monitorName" lay-verify="required" autocomplete="off" class="layui-input">
+                                            <input type="text" name="monitorName" lay-verify="required" disabled="" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="display:none">
+                                        <label class="layui-form-label">阈值Id</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="ThresholdId" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="display:none">
+                                        <label class="layui-form-label">类型</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="type" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline" id="lfType">
-                                        <label class="layui-form-label">裂缝阈值</label>
+                                        <label class="layui-form-label">阈值(mm)</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="lfThreshold" lay-verify="required|number" autocomplete="off" class="layui-input">
+                                            <input type="text" name="lfThreshold" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" id="ylType">
+                                        <label class="layui-form-label">阈值(KN)</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="ylThreshold" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" id="xyGNSSType">
+                                        <label class="layui-form-label">水平(mm)</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="xygnssThreshold" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" id="hGNSSType">
+                                        <label class="layui-form-label">垂直(mm)</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="hgnssThreshold" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline" id="qjTypex">
-                                        <label class="layui-form-label">倾角X阈值</label>
+                                        <label class="layui-form-label">X阈值(°)</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="qjThresholdx" lay-verify="required|number" autocomplete="off" class="layui-input">
+                                            <input type="text" name="qjThresholdx" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline" id="qjTypey">
-                                        <label class="layui-form-label">倾角Y阈值</label>
+                                        <label class="layui-form-label">Y阈值(°)</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="qjThresholdy" lay-verify="required|number" autocomplete="off" class="layui-input">
+                                            <input type="text" name="qjThresholdy" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline" id="qjTypez">
-                                        <label class="layui-form-label">倾角Z阈值</label>
+                                        <label class="layui-form-label">Z阈值(°)</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="qjThresholdz" lay-verify="required|number" autocomplete="off" class="layui-input">
+                                            <input type="text" name="qjThresholdz" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label">开始时间</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="pushNowTime" lay-verify="required" autocomplete="off" class="layui-input">
+                                            <input type="text" name="pushNowTime" disabled="" autocomplete="off" class="layui-input">
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="yuZhiUpdate">阈值修改</button>
                                     </div>
                                 </div>
                             </form>
