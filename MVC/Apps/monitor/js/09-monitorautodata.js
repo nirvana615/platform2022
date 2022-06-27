@@ -6861,6 +6861,35 @@ function LoadPushDataPreDateTime(monitor, datetime) {
     $("#yuZhiUpdateId").show();
     $("#pushFromId").show();
     $("#wenXinTiShiId").hide();
+    form.val('pushdataform', {
+        monitorName: "",
+        ylThreshold:"",
+        pushNowTime:"",
+        ThresholdId:"",
+        lfThreshold: "",
+        xygnssThreshold: "",
+        hgnssThreshold: "",
+        qjThresholdx: "",
+        qjThresholdy: "",
+        qjThresholdz: ""
+    })
+    pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
+    form.render();
+    if (monitor.type == "裂缝") {
+        $("#lfType").show();
+    } else if (monitor.type == "应力") {
+        $("#ylType").show();
+    } else if (monitor.type == "倾角") {
+        $("#qjTypex").show();
+        $("#qjTypey").show();
+        $("#qjTypez").show();
+    } else if (monitor.type == "GNSS") {
+        $("#xyGNSSType").show();
+        $("#hGNSSType").show();
+    } else if (monitor.type == "深部位移") {
+        $("#yuZhiUpdateId").hide();
+    }
+
     //请求监测点指点时间范围数据
     var loadingpushindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
@@ -6878,7 +6907,6 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                 var fanHuiData = JSON.parse(data);
                 if (fanHuiData.threshold != null) {
                     if (monitor.type == "裂缝") {
-                        $("#lfType").show();
                         var lfThreshold = JSON.parse(fanHuiData.threshold);
                         form.val('pushdataform', {
                             monitorName: monitor.title,
@@ -6897,7 +6925,6 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                             pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                         }
                     } else if (monitor.type == "应力") {
-                        $("#ylType").show();
                         var ylThreshold = JSON.parse(fanHuiData.threshold);
                         form.val('pushdataform', {
                             monitorName: monitor.title,
@@ -6916,9 +6943,6 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                             pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                         }
                     } else if (monitor.type == "倾角") {
-                        $("#qjTypex").show();
-                        $("#qjTypey").show();
-                        $("#qjTypez").show();
                         var qjThreshold = JSON.parse(fanHuiData.threshold);
                         console.log(qjThreshold);
                         form.val('pushdataform', {
@@ -6941,8 +6965,6 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                             pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                         }
                     } else if (monitor.type == "GNSS") {
-                        $("#xyGNSSType").show();
-                        $("#hGNSSType").show();
                         var qjThreshold = JSON.parse(fanHuiData.threshold);
                         console.log(qjThreshold);
                         form.val('pushdataform', {
@@ -6964,7 +6986,6 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                             pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
                         }
                     } else if (monitor.type == "深部位移") {
-                        $("#yuZhiUpdateId").hide();
                         //深部位移没有设置阈值
                         form.val('pushdataform', {
                             monitorName: monitor.title,
@@ -6992,8 +7013,6 @@ function LoadPushDataPreDateTime(monitor, datetime) {
             } else {
 
             }
-            
-           // DisplayDATA(monitor, data);
         }, datatype: "json"
     });
 };
