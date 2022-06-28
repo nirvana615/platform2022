@@ -22,7 +22,7 @@ function FindlProjectAuth() {
             , success: function (layero) {
                 layer.setTop(layero);
 
-                //渲染模型项目
+                //渲染巡查项目树
                 tree.render({
                     elem: '#findprojectid'
                     , id: 'findprojecttreeid'
@@ -71,7 +71,8 @@ function FindlProjectAuth() {
                 form.on('submit(authuserfindprojectsubmit)', function (data) {
                     if (userfindprojects.length < 1) {
                         layer.msg("当前用户无巡查项目，无法进行授权！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-                    } else {
+                    }
+                    else {
                         if (authfinduserid == null) {
                             layer.msg("请先选择授权用户！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                         }
@@ -87,7 +88,6 @@ function FindlProjectAuth() {
                                     findprojectids += userfindprojects[i].id + ",";
                                 }
                             }
-
                             if (allfindprojectids != "") {
                                 if ((allfindprojectids.indexOf(",") != -1)) {
                                     data.field.allfindprojectids = allfindprojectids.substring(0, allfindprojectids.length - 1);
@@ -104,7 +104,6 @@ function FindlProjectAuth() {
                                     data.field.findprojectids = findprojectids;
                                 }
                             }
-
                             $.ajax({
                                 url: servicesurl + "/api/FindProject/UpdateMapUserFindProject", type: "put", data: data.field,
                                 success: function (result) {
@@ -113,7 +112,6 @@ function FindlProjectAuth() {
                             });
                         }
                     }
-
                     return false;
                 });
             }
@@ -164,9 +162,9 @@ function FindlProjectAuth() {
                                         }
                                         else {
                                             var mapuserfindprojectdata = JSON.parse(data);
-                                            var userfindprojects = [];
+                                            var userfindprojectids = [];
                                             for (var i in mapuserfindprojectdata) {
-                                                userfindprojects.push(mapuserfindprojectdata[i].FindProjectId);
+                                                userfindprojectids.push(mapuserfindprojectdata[i].FindProjectId);
                                             }
 
                                             for (var i in userfindprojects) {

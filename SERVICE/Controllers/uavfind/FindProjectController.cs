@@ -390,9 +390,9 @@ namespace SERVICE.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public string GetMapUserFindProject(int userid)
+        public string GetMapUserFindProject(int id)
         {
-            string maps = PostgresqlHelper.QueryData(pgsqlConnection,string.Format("SELECT *FROM uavfind_map_user_project WHERE userid={0} AND ztm={1} ORDER BY id ASC", userid, (int)MODEL.Enum.State.InUse));
+            string maps = PostgresqlHelper.QueryData(pgsqlConnection,string.Format("SELECT *FROM uavfind_map_user_project WHERE userid={0} AND ztm={1} ORDER BY id ASC", id, (int)MODEL.Enum.State.InUse));
             if (string.IsNullOrEmpty(maps))
             {
                 return string.Empty;
@@ -438,14 +438,14 @@ namespace SERVICE.Controllers
 
             if (!string.IsNullOrEmpty(allfindprojectids))
             {
-                userfindprojectlist = allfindprojectids.Split(new char[] { ',' }).ToList();//授权用户全部航线项目
+                userfindprojectlist = allfindprojectids.Split(new char[] { ',' }).ToList();//授权用户全部巡查项目
             }
             if (!string.IsNullOrEmpty(findprojectids))
             {
-                authfindprojectlist = findprojectids.Split(new char[] { ',' }).ToList();//授权项目模型
+                authfindprojectlist = findprojectids.Split(new char[] { ',' }).ToList();//授权的巡查项目
             }
 
-            //查询用户已有模型项目
+            //查询用户已有巡查项目
             string maps = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM uavfind_map_user_project WHERE userid={0} AND ztm={1}", userid, (int)MODEL.Enum.State.InUse));
             if (!string.IsNullOrEmpty(maps))
             {
@@ -477,7 +477,7 @@ namespace SERVICE.Controllers
             //减少
             for (int i = 0; i < existfindprojectlist.Count; i++)
             {
-                if (userfindprojectlist.Contains(existfindprojectlist[i]) && !userfindprojectlist.Contains(existfindprojectlist[i]))
+                if (userfindprojectlist.Contains(existfindprojectlist[i]) && !authfindprojectlist.Contains(existfindprojectlist[i]))
                 {
                     PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE uavfind_map_user_project SET ztm={0} WHERE userid={1} AND ztm={2} AND projectid={3}", (int)MODEL.Enum.State.NoUse, userid, (int)MODEL.Enum.State.InUse, existfindprojectlist[i]));
                 }
