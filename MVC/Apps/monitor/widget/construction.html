@@ -21,6 +21,95 @@
                     <div class="layui-tab-content" style="height: 690px;width:840px;float: left;border-left:solid;border-left-color:#e6e6e6;border-left-width:1px;">
                         <div class="layui-tab-item layui-show">
                             <!--施工信息-->
+                            <form class="layui-form" style="margin-top:0px" lay-filter="constructioninfoviewform">
+
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" style="margin-top:0px">项目名称</label>
+                                    <div class="layui-input-block" style="margin-top:20px">
+                                        <input type="text" name="htmc" class="layui-input" readonly="readonly" />
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-row" style="margin-top:20px">
+                                        <div class="layui-col-md6">
+                                            <div class="grid-demo grid-demo-bg1">
+                                                <label class="layui-form-label">开工时间</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="kgsj" class="layui-input" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md6">
+                                            <div class="grid-demo">
+                                                <label class="layui-form-label">结束时间</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="sjsj" class="layui-input" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-row" style="margin-top:20px">
+                                        <div class="layui-col-md6">
+                                            <div class="grid-demo grid-demo-bg1">
+                                                <label class="layui-form-label">项目负责人</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="project_leader" class="layui-input" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md6">
+                                            <div class="grid-demo">
+                                                <label class="layui-form-label">技术负责人</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="technical_director" class="layui-input" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-row" style="margin-top:20px">
+                                        <div class="layui-col-md6">
+                                            <div class="grid-demo grid-demo-bg1">
+                                                <label class="layui-form-label">执行负责人</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="scene_leader" class="layui-input" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md6">
+                                            <div class="grid-demo">
+                                                <label class="layui-form-label">监测墩尺寸</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="jcsize" class="layui-input" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item" style="margin-top:20px">
+                                    <label class="layui-form-label">项目简介</label>
+                                        <div class="layui-input-block">
+                                            <textarea name="bz" class="layui-textarea"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item" style="margin-bottom:10px">
+                                        <div style="position:absolute;right:10px;bottom:10px;">
+                                            <button class="layui-btn" lay-filter="construction_info_edit" style="width:100px">编辑</button>
+                                            <button type="submit" class="layui-btn" lay-filter="construction_info_submit" style="width:100px">提交</button>
+                                        </div>
+                                    </div>
+
+</form>
                         </div>
                         <div class="layui-tab-item">
                             <!--进度统计-->
@@ -64,41 +153,61 @@
             </div>
             <!--右侧-->
             <div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;">
-                <ul class="layui-timeline">
-                    <li class="layui-timeline-item">
+                <ul class="layui-timeline" id="construction_photo">
+                    <li class="layui-timeline-item" style="height:120px;">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                         <div class="layui-timeline-content layui-text">
                             <h3 class="layui-timeline-title">放样</h3>
+                            <div class="site-demo-flow" id="construction_photo_fixedpoisnt">
+                                <img id="img_mark_P1" src="/Resources/pic/test/1.jpg" style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P2" src="/Resources/pic/test/2.jpg" style=" width:100px; height: 100px;margin: 2px;">                             
+                            </div>
                         </div>
                     </li>
-                    <li class="layui-timeline-item">
+                    <li class="layui-timeline-item" style="height:120px;" >
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                         <div class="layui-timeline-content layui-text">
                             <h3 class="layui-timeline-title">挖坑</h3>
+                            <div class="site-demo-flow" id="construction_photo_dig">
+                                <img id="img_mark_P1" src="/Resources/pic/test/1.jpg" style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P2" src="/Resources/pic/test/2.jpg" style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P3" src="/Resources/pic/test/3.jpg" style=" width:100px; height: 100px;margin: 2px;">
+                            </div>
                         </div>
                     </li>
-                    <li class="layui-timeline-item">
+                    <li class="layui-timeline-item" style="height:120px;">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                         <div class="layui-timeline-content layui-text">
                             <h3 class="layui-timeline-title">浇筑</h3>
+                            <div class="site-demo-flow" id="construction_photo_pour">
+                                <img id="img_mark_P1" src="/Resources/pic/test/1.jpg" style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P2" src="/Resources/pic/test/2.jpg" style=" width:100px; height: 100px;margin: 2px;">                               
+                            </div>
                         </div>
                     </li>
-                    <li class="layui-timeline-item">
+                    <li class="layui-timeline-item" style="height:120px;">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                         <div class="layui-timeline-content layui-text">
-                            <h3 class="layui-timeline-title">安装</h3>
+                            <h3 class="layui-timeline-title">安装-调试</h3>
+                            <div class="site-demo-flow" id="construction_photo_install">
+                                <img id="img_mark_P1" src="/Resources/pic/test/1.jpg"style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P2" src="/Resources/pic/test/2.jpg"style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P3" src="/Resources/pic/test/3.jpg"style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P4" src="/Resources/pic/test/4.jpg"style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P5" src="/Resources/pic/test/5.jpg"style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P6" src="/Resources/pic/test/6.jpg"style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P7" src="/Resources/pic/test/7.jpg"style=" width:100px; height: 100px;margin: 2px;">
+                            </div>                                                  
                         </div>
                     </li>
-                    <li class="layui-timeline-item">
-                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-content layui-text">
-                            <h3 class="layui-timeline-title">调试</h3>
-                        </div>
-                    </li>
-                    <li class="layui-timeline-item">
+                    <li class="layui-timeline-item" style="height:120px;">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                         <div class="layui-timeline-content layui-text">
                             <h3 class="layui-timeline-title">完成</h3>
+                            <div class="site-demo-flow" id="construction_photo_finish">
+                                <img id="img_mark_P1" src="/Resources/pic/test/1.jpg" style=" width:100px; height: 100px;margin: 2px;">
+                                <img id="img_mark_P2" src="/Resources/pic/test/2.jpg" style=" width:100px; height: 100px;margin: 2px;">
+                            </div>
                         </div>
                     </li>
                 </ul>

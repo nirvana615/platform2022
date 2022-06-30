@@ -99,6 +99,7 @@
     <Compile Include="data\sysmonitor\monitormap\MapProjectWarningInfo.cs" />
     <Compile Include="data\sysmonitor\monitormap\MapMonitorThreshold.cs" />
     <Compile Include="data\sysmonitor\monitormap\MapUserMonitorProject.cs" />
+    <Compile Include="data\sysmonitor\monitor\construction\ConstructionInfo.cs" />
     <Compile Include="data\sysmonitor\monitor\data\DataBianXinLiang.cs" />
     <Compile Include="data\sysmonitor\monitor\data\RAINAnalysis.cs" />
     <Compile Include="data\sysmonitor\monitor\data\SBWYAnalysis.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="enum\EnumModel.cs" />
     <Compile Include="enum\EnumIMG.cs" />
     <Compile Include="enum\EnumMonitor.cs" />
+    <Compile Include="parse\ParseContruction.cs" />
     <Compile Include="parse\ParseFlzoneHelper.cs" />
     <Compile Include="parse\ParseImageHelper.cs" />
     <Compile Include="parse\ParseManageHelper.cs" />
