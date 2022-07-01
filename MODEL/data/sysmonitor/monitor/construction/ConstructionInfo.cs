@@ -61,7 +61,7 @@ namespace MODEL
         public string size { get; set; }
 
         /// <summary>
-        /// 备注
+        /// 项目简介
         /// </summary>
         public string bz { get; set; }
 

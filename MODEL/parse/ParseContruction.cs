@@ -56,7 +56,46 @@ namespace MODEL
 
         }
 
+        public static ConstructionPhoto ParseConstructionPhoto(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析施工照片数据为空！");
+                return null;
+            }
 
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("ConstructionPhoto不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                ConstructionPhoto constPhoto = new ConstructionPhoto()
+                {
+                    id = Convert.ToInt32(row[0].ToString()),
+                    photo_url = row[1].ToString(),
+                    sphoto_url = row[2].ToString(),
+                    project_id = Convert.ToInt32(row[3].ToString()),
+                    draster_id = Convert.ToInt32(row[4].ToString()),
+                    monitor_id = Convert.ToInt32(row[5].ToString()),
+                    type_id = Convert.ToInt32(row[6].ToString()),
+                    upload_time = row[7].ToString(),
+                    is_report = Convert.ToInt32(row[8].ToString()),
+                    ztm = Convert.ToInt32(row[9].ToString()),
+                    bz = row[10].ToString(),
+                };
+                return constPhoto;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("为施工照片信息解析失败：" + data, ex);
+                return null;
+            }
+        }
 
 
 

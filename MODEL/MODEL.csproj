@@ -100,6 +100,7 @@
     <Compile Include="data\sysmonitor\monitormap\MapMonitorThreshold.cs" />
     <Compile Include="data\sysmonitor\monitormap\MapUserMonitorProject.cs" />
     <Compile Include="data\sysmonitor\monitor\construction\ConstructionInfo.cs" />
+    <Compile Include="data\sysmonitor\monitor\construction\ConstructionPhoto.cs" />
     <Compile Include="data\sysmonitor\monitor\data\DataBianXinLiang.cs" />
     <Compile Include="data\sysmonitor\monitor\data\RAINAnalysis.cs" />
     <Compile Include="data\sysmonitor\monitor\data\SBWYAnalysis.cs" />
