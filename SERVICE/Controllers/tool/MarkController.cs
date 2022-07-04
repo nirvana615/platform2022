@@ -243,5 +243,72 @@ namespace SERVICE.Controllers
             }
 
         }
+
+        /// <summary>
+        /// 标注授权
+        /// </summary>
+        [HttpPost]
+        public string AuthorizeMark()
+        {
+            string cookie = HttpContext.Current.Request.Form["cookie"];
+            string authorizemarks = HttpContext.Current.Request.Form["authorizemarks"];
+            User user = null;
+            string userbsms = string.Empty;
+            int syscode = 0;
+
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user, ref syscode);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                if (user == null)
+                {
+                    return "用户为空！";
+                }
+                if (!string.IsNullOrEmpty(authorizemarks))
+                {
+                    List<MarkData> authorizemark = JsonHelper.ToObject<List<MarkData>>(authorizemarks);
+                    int num = 0;
+                    for (int i = 0; i < authorizemark.Count; i++)
+                    {
+                        if (!string.IsNullOrEmpty(authorizemark[i].id)
+                           && !string.IsNullOrEmpty(authorizemark[i].projetid)
+                            )
+                        {
+                            string related_value = "("
+                                 + SQLHelper.UpdateString(authorizemark[i].id) + ","
+                                 + SQLHelper.UpdateString(authorizemark[i].projetid) + ","
+                                 + syscode + ","
+                                 + SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + ","
+                                 + (int)MODEL.Enum.State.InUse;
+                            string related_sql = " INSERT INTO common_map_project_mark(markid, projectid, syscode, cjsj, ztm";
+                            //int related_id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, related_sql + ") VALUES" + related_value + ")");
+                            //if (related_id != -1)
+                            //{
+                            //    num++;
+                            //}
+                        }
+                    }
+                    if (num == authorizemark.Count)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "保存成功！", JsonHelper.ToJson(authorizemark)));
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "保存失败！请重试", string.Empty));
+                    }
+
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "标注列表为空！！！", string.Empty));
+
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "无权限！", string.Empty));
+            }
+        }
+
     }
 }

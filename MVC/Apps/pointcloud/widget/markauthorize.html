@@ -1,0 +1,38 @@
+﻿<form class="layui-form" action="" lay-filter="markauthorizeform">
+    <div class="layui-form-item" style="margin-top:30px">
+        <div class="layui-col-md10">
+            <div class="grid-demo">
+                <label class="layui-form-label">授权系统</label>
+                <div class="layui-input-block">
+                    <select id="markauthorizeid" name="markauthorize" lay-filter="markauthorizefilter">
+                        <option value="">请选择</option>
+                        <option value="1">实景模型管理系统</option>
+                        <option value="2">地质灾害监测预警系统</option>
+                        <option value="3">航线任务规划系统</option>
+                        <option value="4">地质要素采集系统</option>
+                        <option value="5">影像对比分析系统</option>
+                        <option value="6">点云对比分析系统</option>
+                        <option value="7">无人机巡查系统</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="margin-top:30px">
+        <div class="layui-col-md10">
+            <div class="grid-demo">
+                <label class="layui-form-label">授权用户</label>
+                <div class="layui-input-block">
+                    <select id="markauthorizeuserid" name="markauthorizeuser" lay-filter="markauthorizeuserfilter">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="margin-bottom:10px">
+        <div style="position:absolute;right:10px;bottom:10px;">
+            <button class="layui-btn" lay-filter="mark_authorize_confirm" id="markauthorizeconfirmid" style="width:100px">提交</button>
+        </div>
+    </div>
+</form>

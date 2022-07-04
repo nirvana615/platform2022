@@ -24,5 +24,6 @@ namespace MODEL
         public string marktype { get; set; }
 
         public string info { get; set; }
+        public string userid { get; set; }
     }
 }
