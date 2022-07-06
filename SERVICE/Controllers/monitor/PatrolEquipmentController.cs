@@ -1045,5 +1045,30 @@ namespace SERVICE.Controllers
 
             }
         }
+        /// <summary>
+        /// 修改设备推送信息表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string updateDevicePushInfo()
+        {
+            #region 参数
+            string deviceId = HttpContext.Current.Request.Form["deviceId"];
+            string deviceStatus = HttpContext.Current.Request.Form["deviceStatus"];
+
+
+            #endregion
+            string sql = "UPDATE   monitor_cq_device SET ztm={0} WHERE id={1} ";
+
+            int updateCount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(deviceStatus), SQLHelper.UpdateString(deviceId)));
+            if (updateCount != -1)
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "修改成功！", ""));
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "修改失败", ""));
+            }
+        }
     }
 }

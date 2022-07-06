@@ -816,25 +816,57 @@ function LoadLayerListLayer(id) {
                                                     for (var i in data.children) {
                                                         var entity = viewer.entities.getById(data.children[i].id);
                                                         if (entity == undefined) {
-                                                            viewer.entities.add({
-                                                                id: data.children[i].id,
-                                                                polyline: {
-                                                                    positions: data.children[i].pointList,
-                                                                    width: 2,
-                                                                    material: Cesium.Color.RED,
-                                                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                                                        color: Cesium.Color.RED
-                                                                    })
+                                                            var points = data.children[i].pointList;
+                                                            if (points[0].L) {
+                                                                console.log(points);
+                                                                var pointList = [];
+                                                                for (var m in points) {
+                                                                    pointList.push(new Cesium.Cartesian3.fromDegrees(points[m].L, points[m].B, points[m].H));
                                                                 }
-                                                            });
-                                                            viewer.entities.add({
-                                                                id: data.children[i].id + "_LABEL",
-                                                                position: data.children[i].pointList[0],
-                                                                point: {
-                                                                    pixelSize: 1,
-                                                                    color: Cesium.Color.ORANGE
-                                                                }
-                                                            });
+                                                                console.log(pointList);
+                                                                entityFater = viewer.entities.add({
+                                                                    id: data.children[i].id,
+                                                                    polyline: {
+                                                                        positions: pointList,
+                                                                        width: 1,
+                                                                        material: Cesium.Color.YELLOW,
+                                                                        //depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                                                        //    color: Cesium.Color.fromCssColorString('#09f654')
+                                                                        //}),
+                                                                        //show: true,
+                                                                        //clampToGround: true,
+                                                                        //classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                viewer.entities.add({
+                                                                    id: data.children[i].id,
+                                                                    polyline: {
+                                                                        positions: points,
+                                                                        width: 1,
+                                                                        material: Cesium.Color.RED,
+                                                                        //depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                                                        //    color: Cesium.Color.RED
+                                                                        //})
+                                                                    }
+                                                                });
+                                                                viewer.entities.add({
+                                                                    id: data.children[i].id + "_LABEL",
+                                                                    position: points[0],
+                                                                    label: {
+                                                                        text: data.children[i].title,
+                                                                        showBackground: true,
+                                                                        backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
+                                                                        font: '14px Times New Roman',
+                                                                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                                                                        verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                                                                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                                                        scaleByDistance: new Cesium.NearFarScalar(200, 1, 2000, 0),
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            
                                                         }
                                                         data.children[i].checked = true;
                                                     }
@@ -1071,21 +1103,23 @@ function LoadLayerListLayer(id) {
                                                                     polyline: {
                                                                         positions: pointList,
                                                                         width: 1,
-                                                                        material: Cesium.Color.RED,
+                                                                        material: Cesium.Color.YELLOW,
                                                                         //depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
                                                                         //    color: Cesium.Color.fromCssColorString('#09f654')
                                                                         //}),
-                                                                        show: true,
-                                                                        clampToGround: true,
-                                                                        classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
+                                                                        //show: true,
+                                                                        //clampToGround: true,
+                                                                        //classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
                                                                     }
+
+                                                                    
                                                                 });
                                                         } else {
                                                             entityFater = viewer.entities.add({
                                                                 id: data.id,
                                                                 polyline: {
                                                                     positions: points,
-                                                                    width: 2,
+                                                                    width: 1,
                                                                     //arcType: Cesium.ArcType.RHUMB,
                                                                     material: Cesium.Color.RED,
                                                                     depthFailMaterial: new Cesium.PolylineDashMaterialProperty({

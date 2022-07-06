@@ -27,6 +27,14 @@ namespace MODEL
         /// 最新推送数据的时间
         /// </summary>
         public string pushNowTime { get; set; }
-        
+        /// <summary>
+        /// 推送设备的id
+        /// </summary>
+        public int deviceId { get; set; }
+        /// <summary>
+        /// 推送设备的状态
+        /// </summary>
+        public string deviceStatus { get; set; }
+
     }
 }

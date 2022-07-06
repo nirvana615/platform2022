@@ -2349,23 +2349,25 @@ namespace SERVICE.Controllers
             {
                 //TODO获取但当前点好阈值。
 
-                string thresholdValue = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(" select c.id,c.threshold from      monitor_cq_device a ,monitor_cqmap_device_threshold b ,monitor_cq_threshold c  where a.zbh={0} and a.id=b.deviceid and b.thresholdid=c.id and a.ztm='1'  and b.ztm='1' and c.ztm='1' ", SQLHelper.UpdateString(device.Code)));
+                string thresholdValue = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(" select c.id,c.threshold,a.id,a.ztm from      monitor_cq_device a ,monitor_cqmap_device_threshold b ,monitor_cq_threshold c  where a.zbh={0} and a.id=b.deviceid and b.thresholdid=c.id  and b.ztm='1' and c.ztm='1' ", SQLHelper.UpdateString(device.Code)));
 
                 if (!string.IsNullOrEmpty(thresholdValue))//阈值。阈值id放进来，修改阈值，启动推送
                 {
                     string[] row = thresholdValue.Split(new char[] { COM.ConstHelper.columnSplit });
                     pushDataList.threshold = row[1];
                     pushDataList.thresholdId = Convert.ToInt32(row[0].ToString());
+                    pushDataList.deviceId = Convert.ToInt32(row[2].ToString()); 
+                    pushDataList.deviceStatus = row[3];
                 }
-                var gcsj = "2000-01-01";
+                string gcsj = DateTime.Now.AddMonths(-2).ToString("yyyy-MM-dd");
                 //成功的时间，最后一次啊
                 string suscessTime = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(" select max(c.uploadtime) from      monitor_cq_device a ,monitor_cqmap_device_success b ,monitor_cq_success c  where  a.zbh={0} and  a.id=b.deviceid and b.successid=c.id and a.ztm='1'  and b.ztm='1'  ", SQLHelper.UpdateString(device.Code)));
 
                 if (!string.IsNullOrEmpty(suscessTime))//阈值。
                 {
                     pushDataList.pushNowTime = suscessTime;
-                    gcsj = suscessTime;
                 }
+                
                 //查询失败数据。
                 string sql = string.Format(" select * from 		( select c.id,c.zbh,c.sbsj->>'sendTime'  as gcsj ,c.sbsj->>'data' as sendData from      monitor_cq_device a ,monitor_cqmap_device_failure b ,monitor_cq_failure c  where   a.zbh={0} and a.id=b.deviceid and b.failureid=c.id and a.ztm='1'  and b.ztm='1' and c.ztm='1' and c.sbyy='1') tablea where 1=1 and gcsj>{1}  ORDER BY gcsj desc ", SQLHelper.UpdateString(device.Code), SQLHelper.UpdateString(gcsj)); 
                 string faildata = PostgresqlHelper.QueryData(pgsqlConnection,sql );
