@@ -89,7 +89,37 @@ function LoadLayerListLayer(id) {
                             
                             //projectlayer.title = layerlist.ProjectLayer.Title;
 
+                            // 地质识别
+                            if (layerlist.FlzDataLayer != null && layerlist.FlzDataLayer.FlzSteepHillList != null) {
+                                var flzSteepHillList = layerlist.FlzDataLayer.FlzSteepHillList;
+                                var dominantStructuralPlane = new Object;
+                                dominantStructuralPlane.title = "地质单元";
+                                dominantStructuralPlane.type = "DIZHIFA";
+                                dominantStructuralPlane.id = "DIZHIFA_" + id;
+                                dominantStructuralPlane.checked = false;
+                                dominantStructuralPlane.showCheckbox = true;//显示复选框
+                                var dominantStructuralPlanechild = [];
+                                if (flzSteepHillList != null) {
+                                    for (var j in flzSteepHillList) {//已经是项目id相同的查回来的。根据类型来显示
+                                        var pointListtem = JSON.parse(flzSteepHillList[j].points);
+                                        flzSteepHillList[j].postion = pointListtem;
+                                        var flzline = new Object;
+                                        flzline.title = flzSteepHillList[j].name;
+                                        flzline.id = "DIZHISON_" + flzSteepHillList[j].id;
+                                        flzline.type = "DIZHISON";
+                                        flzline.remarks = flzSteepHillList[j].remarks;
+                                        flzline.datas = flzSteepHillList[j];
+                                        flzline.pointList = pointListtem;
+                                        flzline.checked = false;
+                                        flzline.showCheckbox = true;//显示复选框
+                                        dominantStructuralPlanechild.push(flzline);
+                                    }
+                                }
+                                dominantStructuralPlane.children = dominantStructuralPlanechild;
 
+                                layers.push(dominantStructuralPlane);
+
+                            }
                             // 优势结构面
                             if (layerlist.FlzDataLayer != null && layerlist.FlzDataLayer.FlzDataList != null) {
                                
@@ -206,37 +236,7 @@ function LoadLayerListLayer(id) {
                                 projectlayer.children = projectlayerchild;
                                 layers.push(projectlayer);
                             }
-                            // 地质识别
-                            if (layerlist.FlzDataLayer != null && layerlist.FlzDataLayer.FlzSteepHillList != null) {
-                                var flzSteepHillList = layerlist.FlzDataLayer.FlzSteepHillList;
-                                var dominantStructuralPlane = new Object;
-                                dominantStructuralPlane.title = "地质识别";
-                                dominantStructuralPlane.type = "DIZHIFA";
-                                dominantStructuralPlane.id = "DIZHIFA_" + id;
-                                dominantStructuralPlane.checked = false;
-                                dominantStructuralPlane.showCheckbox = true;//显示复选框
-                                var dominantStructuralPlanechild = [];
-                                if (flzSteepHillList != null) {
-                                    for (var j in flzSteepHillList) {//已经是项目id相同的查回来的。根据类型来显示
-                                        var pointListtem = JSON.parse(flzSteepHillList[j].points);
-                                        flzSteepHillList[j].postion = pointListtem;
-                                        var flzline = new Object;
-                                        flzline.title = flzSteepHillList[j].name;
-                                        flzline.id = "DIZHISON_" + flzSteepHillList[j].id;
-                                        flzline.type = "DIZHISON";
-                                        flzline.remarks = flzSteepHillList[j].remarks;
-                                        flzline.datas = flzSteepHillList[j];
-                                        flzline.pointList = pointListtem;
-                                        flzline.checked = false;
-                                        flzline.showCheckbox = true;//显示复选框
-                                        dominantStructuralPlanechild.push(flzline);
-                                    }
-                                }
-                                dominantStructuralPlane.children = dominantStructuralPlanechild;
-                                
-                                layers.push(dominantStructuralPlane);
-
-                            }
+                           
 
                         }
                         //斜坡体
@@ -1059,21 +1059,45 @@ function LoadLayerListLayer(id) {
 
                                                     if (entityFater == undefined) {
                                                         var points = data.pointList;
-                                                        entityFater=viewer.entities.add({
-                                                            id: data.id,
-                                                            polyline: {
-                                                                positions: points,
-                                                                width: 2,
-                                                                //arcType: Cesium.ArcType.RHUMB,
-                                                                material: Cesium.Color.RED,
-                                                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                                                    color: Cesium.Color.RED
-                                                                }),
-                                                                show: true,
-                                                                //clampToGround: true,
-                                                                classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
-                                                            },
-                                                        });
+                                                        if (points[0].L) {
+                                                            console.log(points);
+                                                                var pointList = [];
+                                                            for (var m in points) {
+                                                                pointList.push(new Cesium.Cartesian3.fromDegrees(points[m].L, points[m].B, points[m].H));
+                                                                }
+                                                                console.log(pointList);
+                                                                entityFater = viewer.entities.add({
+                                                                    id: data.id,
+                                                                    polyline: {
+                                                                        positions: pointList,
+                                                                        width: 1,
+                                                                        material: Cesium.Color.RED,
+                                                                        //depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                                                        //    color: Cesium.Color.fromCssColorString('#09f654')
+                                                                        //}),
+                                                                        show: true,
+                                                                        clampToGround: true,
+                                                                        classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
+                                                                    }
+                                                                });
+                                                        } else {
+                                                            entityFater = viewer.entities.add({
+                                                                id: data.id,
+                                                                polyline: {
+                                                                    positions: points,
+                                                                    width: 2,
+                                                                    //arcType: Cesium.ArcType.RHUMB,
+                                                                    material: Cesium.Color.RED,
+                                                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                                                        color: Cesium.Color.RED
+                                                                    }),
+                                                                    show: true,
+                                                                    //clampToGround: true,
+                                                                    classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
+                                                                },
+                                                            });
+                                                        }
+                                                        
 
 
                                                     }

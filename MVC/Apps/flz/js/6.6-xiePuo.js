@@ -1271,6 +1271,7 @@ function GetSteepHillInfoList(data) {
         }, datatype: "json"
     });
 }
+var xiugaiList = [];
 //识别图片查看
 function xiePuoPhotoSee(datatemp) {
     if (xiePoChakanlayerindex != null) {
@@ -1346,7 +1347,133 @@ function xiePuoPhotoSee(datatemp) {
             });
 
         }
-        , end: function () {
+        , btn: ['重定位','提交']
+        , yes: function (index, layero) {
+            
+            console.log(datatemp);
+            var pointList = datatemp.postion;
+            var tempPointList = [];
+            for (var i = 0; i < pointList.length;i++) {
+                tempPointList.push(new Cesium.Cartesian3.fromDegrees(pointList[i].L, pointList[i].B, pointList[i].H));
+            }
+            var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+            
+            //viewer.scene.globe.depthTestAgainstTerrain = false;//模型测量
+            
+           
+          
+            var minHeight = 145;
+            scene.clampToHeightMostDetailed(tempPointList).then(function (clampedCartesians) {
+                // 每个点的高度
+                for (var i = 0; i < clampedCartesians.length; i++) {
+                    var heights = Cesium.Cartographic.fromCartesian(clampedCartesians[i]).height;
+                    console.log(clampedCartesians[i]);
+                    console.log(heights);
+                    if (heights < minHeight && heights>0) {
+                        minHeight = heights;
+                    }
+                    if (heights < 0) {//模型不够，地形来凑。
+                        
+                        clampedCartesians[i] = new Cesium.Cartesian3.fromDegrees(pointList[i].L, pointList[i].B, minHeight);
+                        //viewer.scene.globe.depthTestAgainstTerrain = true;//地形测量
+                        //var postionLB = new Cesium.Cartographic(Math.PI / 180 * pointList[i].L, Math.PI / 180 * pointList[i].B);
+                        //var Heights = scene.sampleHeight(postionLB);
+                        //if (Heights > 0) {
+                        //    clampedCartesians[i] = new Cesium.Cartesian3.fromDegrees(pointList[i].L, pointList[i].B, Heights+28);
+                        //}
+                        console.log(new Cesium.Cartesian3.fromDegrees(pointList[i].L, pointList[i].B, minHeight));
+                        //viewer.scene.globe.depthTestAgainstTerrain = false;//模型测量
+                    }
+
+                }
+
+                 viewer.entities.add({
+                    //id: "section123",
+                    polyline: {
+                        positions: clampedCartesians,
+                        width: 1,
+                        arcType: Cesium.ArcType.RHUMB,
+                        material: Cesium.Color.YELLOW,
+                        depthFailMaterial: Cesium.Color.YELLOW,
+                    }
+                });
+                xiugaiList = clampedCartesians;
+                layer.close(loadingminindex);
+            });
+            return false;
+        }, btn2: function (index, layero) {
+            if (xiugaiList.length==0) {//
+                layer.msg("请先重新定位", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            console.log(datatemp);
+            var data = {};
+            //存下当前视角
+            var x = viewer.camera.position;
+            var y1 = {
+                // 指向
+                heading: viewer.camera.heading,
+                // 视角
+                pitch: viewer.camera.pitch,
+                roll: viewer.camera.roll
+            }
+            var home = {
+                destination: x,
+                orientation: y1
+            }
+
+            data.level = JSON.stringify(home);
+            data.points = JSON.stringify(xiugaiList);
+            data.cookie = document.cookie;
+            data.id = datatemp.id;
+
+            var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+            $.ajax({
+                url: servicesurl + "/api/FlzWindowInfo/UpdateBianJieFlzSteepHill", type: "post", data: data,
+                success: function (result) {
+                    layer.close(loadinglayerindex);
+                    if (result == "更新成功") {
+                        ClearTemp();
+
+                        //for (var i in layers) {
+                        //    if (layers[i].type == "DIZHIFA") {
+
+                        //        for (var j in layers[i].children) {
+                        //            if (layers[i].children[j].id == "DIZHISON_" + datatemp.id) {
+                        //                layers[i].children[j].datas = datatemp;
+                        //                layers[i].children[j].checked = true;
+                        //                layers[i].children[j].spread = true;
+                        //                layers[i].spread = true;
+                        //                break;
+                        //            }
+                        //        }
+                        //    }
+                        //}
+                        //modeljiazaiFlag = false;
+                        //tree.reload('prjlayerlistid', { data: layers });
+                        //ClearTemp();
+                        layer.msg("提交成功。", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+
+                        //////if (xiePuoIndex != null) {
+                        //////    layer.restore(xiePuoIndex);
+                        //////    GetSteepHillInfoList({ "jieLun": "" });
+                        //////}
+                        //关闭
+
+                        //layer.close(xiePuoinfoaddlayerindex);
+                    }
+                    else {
+                        //更新失败
+                        layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    }
+                }, datatype: "json"
+            });
+
+            return false;
+        }, 
+        end: function () {
             xiePoChakanlayerindex = null;
         }
     });

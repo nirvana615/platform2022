@@ -627,7 +627,6 @@ namespace SERVICE.Controllers
             string ytfhSrc = HttpContext.Current.Request.Form["ytfhSrc"];
             string ytlhSrc = HttpContext.Current.Request.Form["ytlhSrc"];
             string jieLun = HttpContext.Current.Request.Form["jieLun"];
-
             #endregion
 
             #region 解析验证用户
@@ -687,6 +686,49 @@ namespace SERVICE.Controllers
                 return "验证用户失败！";
             }
         }
+        /// <summary>
+        /// 更新斜坡单元
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string UpdateBianJieFlzSteepHill()
+        {
+            #region 参数
+          
+            string id = HttpContext.Current.Request.Form["id"];
+            //修改位置，
+            string points = HttpContext.Current.Request.Form["points"];
+            string level = HttpContext.Current.Request.Form["level"];
 
+            #endregion
+
+            #region 解析验证用户
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+            #endregion
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                if (user == null)
+                {
+                    return "用户为空！";
+                }
+                string sql = " UPDATE flz_steep_hill_info set points={0},level={1} where id={2} ";
+                
+                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(points), SQLHelper.UpdateString(level), id));
+                if (updatecount == 1)
+                {
+                    return "更新成功";
+                }
+                else
+                {
+                    return "更新失败";
+                }
+            }
+            else
+            {
+                return "验证用户失败！";
+            }
+        }
     }
 }

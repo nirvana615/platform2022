@@ -75,7 +75,7 @@ function openPouMianLaey() {
                 if (data.value === "0") {//模型
                     viewer.scene.globe.depthTestAgainstTerrain = false;//模型测量
                 } else if (data.value === "1") {//地形
-                    viewer.scene.globe.depthTestAgainstTerrain = true;//模型测量
+                    viewer.scene.globe.depthTestAgainstTerrain = true;//地形测量
                 }
                 return false;
             });

@@ -6731,7 +6731,7 @@ function PushManage() {
             ThresholdId: data.field.ThresholdId
         };
 
-        if (data.field.type = "裂缝") {
+        if (data.field.type == "裂缝") {
             if (data.field.lfThreshold.length==0) {//是数字的情况
                 layer.msg("请输入裂缝阈值", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 return false;
@@ -6744,7 +6744,7 @@ function PushManage() {
                 "len_t": data.field.lfThreshold 
             }
             sendDate.Threshold = JSON.stringify(threshold);
-        } else if (data.field.type = "应力") {
+        } else if (data.field.type == "应力") {
             if (data.field.ylThreshold.length == 0) {//是数字的情况
                 layer.msg("请输入应力阈值", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 return false;
@@ -6757,7 +6757,7 @@ function PushManage() {
                 "yl_t": data.field.lfThreshold
             }
             sendDate.Threshold = JSON.stringify(threshold);
-        } else if (data.field.type = "GNSS") {
+        } else if (data.field.type == "GNSS") {
             if(data.field.xygnssThreshold.length == 0) {//是数字的情况
                 layer.msg("请输入GNSS水平阈值", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
                 return false;
@@ -6779,7 +6779,7 @@ function PushManage() {
                 "h_t": data.field.hgnssThreshold
             }
             sendDate.Threshold = JSON.stringify(threshold);
-        } else if (data.field.type = "倾角") {
+        } else if (data.field.type == "倾角") {
             //修改阈值
             if (data.field.qjThresholdx.length == 0) {//是数字的情况
                 layer.msg("请输入倾角X方向", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });

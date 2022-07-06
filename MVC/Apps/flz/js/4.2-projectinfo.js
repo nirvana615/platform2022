@@ -65,6 +65,12 @@ function ProjectInfo(id, style) {
                         });
                         return false;
                     });
+                }, btn: ['巫峡边界']
+                , yes: function (index, layero) {
+                    //新增项目
+                    openWuxiaBianjie();
+                    //insertWuxiaBianjie();
+                    return false;
                 }
                 , end: function () {
                     projectinfoviewlayerindex = null;
