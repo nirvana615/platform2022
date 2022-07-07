@@ -2369,7 +2369,7 @@ namespace SERVICE.Controllers
                 }
                 
                 //查询失败数据。
-                string sql = string.Format(" select * from 		( select c.id,c.zbh,c.sbsj->>'sendTime'  as gcsj ,c.sbsj->>'data' as sendData from      monitor_cq_device a ,monitor_cqmap_device_failure b ,monitor_cq_failure c  where   a.zbh={0} and a.id=b.deviceid and b.failureid=c.id and a.ztm='1'  and b.ztm='1' and c.ztm='1' and c.sbyy='1') tablea where 1=1 and gcsj>{1}  ORDER BY gcsj desc ", SQLHelper.UpdateString(device.Code), SQLHelper.UpdateString(gcsj)); 
+                string sql = string.Format(" select * from 		( select c.id,c.zbh,c.sbsj->>'sendTime'  as gcsj ,c.sbsj as sendData from      monitor_cq_device a ,monitor_cqmap_device_failure b ,monitor_cq_failure c  where   a.zbh={0} and a.id=b.deviceid and b.failureid=c.id and a.ztm='1'  and b.ztm='1' and c.ztm='1' and c.sbyy='1') tablea where 1=1 and gcsj>{1}  ORDER BY gcsj desc ", SQLHelper.UpdateString(device.Code), SQLHelper.UpdateString(gcsj)); 
                 string faildata = PostgresqlHelper.QueryData(pgsqlConnection,sql );
 
                 if (!string.IsNullOrEmpty(faildata))

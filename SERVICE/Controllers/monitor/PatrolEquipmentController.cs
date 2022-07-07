@@ -1070,5 +1070,24 @@ namespace SERVICE.Controllers
                 return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "修改失败", ""));
             }
         }
+        /// <summary>
+        /// 删除推送失败的信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        public string DeletePushFailalInfo()
+        {
+            string id = HttpContext.Current.Request.Form["id"];
+            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE from monitor_cq_failure  WHERE id={0}", id));
+            if (updatecount == 1)
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", ""));
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除失败", ""));
+
+            }
+        }
     }
 }

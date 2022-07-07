@@ -6889,10 +6889,9 @@ function PushManage() {
     pushFailuretable = table.render({
         elem: '#pushdatastatistics'
         , id: 'pushdatastatisticstableid'
-        , title: '推送失败统计信息'
-        , page: { layout: ['prev', 'page', 'next', 'count'] }
-        , even: true
+        , page: true
         , limit: 8
+        , height: 416
         , skin: 'line'
         , totalRow: false
         , cols: [[
@@ -6906,8 +6905,30 @@ function PushManage() {
     });
     table.on('tool(pushdatastatistics)', function (obj) {
         var layEvent = obj.event;
-
+        obj.del();
         console.log(obj);
+        //向平台推数据，然后，我们这边删除，失败数据。
+        var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+        $.ajax({
+            url: servicesurl + "/api/PatrolEquipment/DeletePushFailalInfo", type: "delete", data: { "id": obj.data.id },
+            success: function (result) {
+                layer.close(loadingminindex);
+                var res = JSON.parse(result);
+                if (res.code == 1) {//成功
+                    layer.msg("删除成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    //GetMonitorYueZhi(id, obj.data.jcff);
+                    //obj.del();
+                    shiBaiDataList.forEach((item, index) => {//先循环数组的数据
+                        if (item.id == obj.data.id) {
+                            shiBaiDataList.splice(index, 1);
+                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: shiBaiDataList });
+                        }
+                    });
+                } else {
+                    layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                }
+            }, datatype: "json"
+        });
     });
     var data1 = form.val("pushdataform");
 
@@ -6915,7 +6936,9 @@ function PushManage() {
     LoadPushDataPreDateTime(currentmonitor, '2');
 
 };
+var shiBaiDataList = [];
 function LoadPushDataPreDateTime(monitor, datetime) {
+    shiBaiDataList = [];
     $("#lfType").hide();
     $("#qjTypex").hide();
     $("#qjTypey").hide();
@@ -6995,11 +7018,12 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                         if (fanHuiData.pushFailureList != null) {
                             for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
                                 var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
-                                fanHuiData.pushFailureList[i].value = failureData.value.now_shift_num;
+                                fanHuiData.pushFailureList[i].value = failureData.data.value.now_shift_num;
+                                fanHuiData.pushFailureList[i].sendId = failureData.id;
+                                fanHuiData.pushFailureList[i].apiKey = failureData.apiKey;
+                                fanHuiData.pushFailureList[i].devType = failureData.devType;
                             }
-                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
-                        } else {
-                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
+                            shiBaiDataList = fanHuiData.pushFailureList;
                         }
                     } else if (monitor.type == "应力") {
                         var ylThreshold = JSON.parse(fanHuiData.threshold);
@@ -7009,11 +7033,12 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                         if (fanHuiData.pushFailureList != null) {
                             for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
                                 var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
-                                fanHuiData.pushFailureList[i].value = failureData.value.yl;
+                                fanHuiData.pushFailureList[i].value = failureData.data.value.yl;
+                                fanHuiData.pushFailureList[i].sendId = failureData.id;
+                                fanHuiData.pushFailureList[i].apiKey = failureData.apiKey;
+                                fanHuiData.pushFailureList[i].devType = failureData.devType;
                             }
-                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
-                        } else {
-                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
+                            shiBaiDataList = fanHuiData.pushFailureList;
                         }
                     } else if (monitor.type == "倾角") {
                         var qjThreshold = JSON.parse(fanHuiData.threshold);
@@ -7027,11 +7052,12 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                             for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
                                 var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
                                 console.log(failureData);
-                                fanHuiData.pushFailureList[i].value = "X:" + failureData.value.now_x_num + "、Y:" + failureData.value.now_y_num + "、Z:" + failureData.value.now_z_num
+                                fanHuiData.pushFailureList[i].value = "X:" + failureData.data.value.now_x_num + "、Y:" + failureData.data.value.now_y_num + "、Z:" + failureData.data.value.now_z_num;
+                                fanHuiData.pushFailureList[i].sendId = failureData.id;
+                                fanHuiData.pushFailureList[i].apiKey = failureData.apiKey;
+                                fanHuiData.pushFailureList[i].devType = failureData.devType;
                             }
-                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
-                        } else {
-                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
+                            shiBaiDataList = fanHuiData.pushFailureList;
                         }
                     } else if (monitor.type == "GNSS") {
                         var qjThreshold = JSON.parse(fanHuiData.threshold);
@@ -7044,12 +7070,13 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                             for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
                                 var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
                                 console.log(failureData);
-                                fanHuiData.pushFailureList[i].value = "X:" + failureData.value.x.toFixed(3) + "、Y:" + failureData.value.y.toFixed(3) + "、Z:" + failureData.value.height.toFixed(3)
+                                fanHuiData.pushFailureList[i].value = "X:" + failureData.data.value.x.toFixed(3) + "、Y:" + failureData.data.value.y.toFixed(3) + "、Z:" + failureData.data.value.height.toFixed(3);
+                                fanHuiData.pushFailureList[i].sendId = failureData.id;
+                                fanHuiData.pushFailureList[i].apiKey = failureData.apiKey;
+                                fanHuiData.pushFailureList[i].devType = failureData.devType;
                             }
-                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
-                        } else {
-                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
-                        }
+                            shiBaiDataList = fanHuiData.pushFailureList;
+                        } 
                     } else if (monitor.type == "深部位移") {
                         //深部位移没有设置阈值
                         
@@ -7057,13 +7084,17 @@ function LoadPushDataPreDateTime(monitor, datetime) {
                             for (var i = 0; i < fanHuiData.pushFailureList.length; i++) {
                                 var failureData = JSON.parse(fanHuiData.pushFailureList[i].failureData);
                                 console.log(failureData);
-                                fanHuiData.pushFailureList[i].value = "X:" + failureData.value.shift_x.toFixed(2) + "、Y:" + failureData.value.shift_y.toFixed(2) + "、Z:" + failureData.value.shift_z.toFixed(2)
+                                fanHuiData.pushFailureList[i].value = "X:" + failureData.data.value.shift_x.toFixed(2) + "、Y:" + failureData.data.value.shift_y.toFixed(2) + "、Z:" + failureData.data.value.shift_z.toFixed(2);
+                                fanHuiData.pushFailureList[i].sendId = failureData.id;
+                                fanHuiData.pushFailureList[i].apiKey = failureData.apiKey;
+                                fanHuiData.pushFailureList[i].devType = failureData.devType;
                             }
-                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: fanHuiData.pushFailureList });
-                        } else {
-                            pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: [] });
+                            shiBaiDataList = fanHuiData.pushFailureList;
                         }
                     }
+                    
+                    pushFailuretable.reload({ id: 'pushdatastatisticstableid', data: shiBaiDataList });
+                    
 
                 } else {
                     $("#pushFromId").hide();
