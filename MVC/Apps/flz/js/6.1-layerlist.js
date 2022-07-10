@@ -93,7 +93,7 @@ function LoadLayerListLayer(id) {
                             if (layerlist.FlzDataLayer != null && layerlist.FlzDataLayer.FlzSteepHillList != null) {
                                 var flzSteepHillList = layerlist.FlzDataLayer.FlzSteepHillList;
                                 var dominantStructuralPlane = new Object;
-                                dominantStructuralPlane.title = "地质单元";
+                                dominantStructuralPlane.title = "地质隐患识别";
                                 dominantStructuralPlane.type = "DIZHIFA";
                                 dominantStructuralPlane.id = "DIZHIFA_" + id;
                                 dominantStructuralPlane.checked = false;
@@ -826,9 +826,9 @@ function LoadLayerListLayer(id) {
                                                                 console.log(pointList);
                                                                 entityFater = viewer.entities.add({
                                                                     id: data.children[i].id,
-                                                                    polyline: {
+                                                                    corridor: {
                                                                         positions: pointList,
-                                                                        width: 1,
+                                                                        width: 3,
                                                                         material: Cesium.Color.YELLOW,
                                                                         //depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
                                                                         //    color: Cesium.Color.fromCssColorString('#09f654')
@@ -841,13 +841,16 @@ function LoadLayerListLayer(id) {
                                                             } else {
                                                                 viewer.entities.add({
                                                                     id: data.children[i].id,
-                                                                    polyline: {
+                                                                    corridor: {
                                                                         positions: points,
-                                                                        width: 1,
+                                                                        width: 3,
                                                                         material: Cesium.Color.RED,
                                                                         //depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
                                                                         //    color: Cesium.Color.RED
                                                                         //})
+                                                                        //show: true,
+                                                                        //clampToGround: true,
+                                                                        //classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
                                                                     }
                                                                 });
                                                                 viewer.entities.add({

@@ -9,6 +9,9 @@ var xiePuoIndex = null;
 var xiePoChakanlayerindex = null;
 var droXiePuoAddlayerindex = null;
 var xiepotableview = null;
+//斜坡模型新增弹出款
+var xiepuoModellayerindex = null;
+var xiepuoModelData = [];//斜坡模型数据
 function gotoXiePuo() {
     //本面积计算方法为：将所有点转换为大地坐标BLH，然后将H赋值为最大H，再转换为空间直角坐标XYZ，取XY计算面积
     ClearTemp();
@@ -908,7 +911,7 @@ function xiePuoTongji() {
     }
     xiePuoIndex = layer.open({
         type: 1
-        , title: ['斜坡信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+        , title: ['隐患识别', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
         , area: ['1030px', '700px']
         , shade: 0
         , offset: 'auto'
@@ -1035,7 +1038,9 @@ function xiePuoTongji() {
                 var entityList = [];
                 for (var i = 0; i < checkStatus.length;i++) {
                     var entity = viewer.entities.getById("DIZHISON_" + checkStatus[i].id);
-                    if (entity== undefined) {
+                    if (entity == undefined) {
+
+                      
                         entity=viewer.entities.add({
                             id: "DIZHISON_" + checkStatus[i].id,
                             polyline: {
@@ -1049,6 +1054,7 @@ function xiePuoTongji() {
                                 classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
                             },
                         });
+
                     }
                     var entitylabel = viewer.entities.getById("DIZHISON_" + checkStatus[i].id+ "_LABEL");
                     if (entitylabel == undefined) {
@@ -1085,19 +1091,36 @@ function xiePuoTongji() {
             if (obj.checked) {//选中
                 var entity = viewer.entities.getById("DIZHISON_" + obj.data.id);
                 if (entity == undefined) {
-                    entity=viewer.entities.add({
-                        id: "DIZHISON_" + obj.data.id,
-                        polyline: {
-                            positions: obj.data.points,
-                            width: 3,
-                            material: Cesium.Color.RED,
-                            depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                color: Cesium.Color.RED
-                            }),
-                            show: true,
-                            classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
-                        },
-                    });
+                    var points = obj.data.points;
+                    if (points[0].L) {
+                        var pointList = [];
+                        for (var m in points) {
+                            pointList.push(new Cesium.Cartesian3.fromDegrees(points[m].L, points[m].B, points[m].H));
+                        }
+                        entityFater = viewer.entities.add({
+                            id: "DIZHISON_" + obj.data.id,
+                            polyline: {
+                                positions: pointList,
+                                width: 1,
+                                material: Cesium.Color.YELLOW,
+                            }
+                        });
+                    } else {
+                        entity = viewer.entities.add({
+                            id: "DIZHISON_" + obj.data.id,
+                            polyline: {
+                                positions: points,
+                                width: 1,
+                                material: Cesium.Color.RED,
+                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                    color: Cesium.Color.RED
+                                }),
+                                show: true,
+                                classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+                            },
+                        });
+                    }
+                    
                 }
                 if (obj.data.level.length > 0) {
                     var home = JSON.parse(obj.data.level);
@@ -1144,7 +1167,14 @@ function xiePuoTongji() {
     });
     //新增按钮
     table.on('toolbar(xiepotable-view)', function (obj) {
-        gotoXiePuo();
+        console.log(obj); 
+        if (obj.event =="xie-puo-add") {//斜坡新
+         gotoXiePuo();
+        } else if (obj.event == "add-model") {//识别模型管理
+            gotoXiePuoModel()
+        } else if (obj.event == "xie-puo-del") {//删除
+            gotoXiePuo();
+        }
     });
 
     GetSteepHillInfoList({ "jieLun": ""});
@@ -1521,3 +1551,119 @@ function deleteDiZhiShiBie(data) {
         }, datatype: "json"
     });
 }
+//识别模型管理
+var modelShiBie = null;
+function gotoXiePuoModel() {
+    //var xiepuoModellayerindex = null;
+    //var xiepuoModelData = [];//斜坡模型数据
+    if (xiepuoModellayerindex == null) {
+        
+        xiepuoModellayerindex = layer.open({
+            type: 1
+            , title: ['地质单元模型设置', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+            , area: ['1030px', '700px']
+            , shade: 0
+            , offset: 'auto'
+            , closeBtn: 1
+            , anim: 0
+            , maxmin: true
+            , moveOut: true
+            , content: fromModelShiBie
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                layer.setTop(layero);
+                if (xjxzqs.length > 0) {
+                    for (var i in dicIndicatorType) {
+                        document.getElementById("dicIndicatorType").innerHTML += '<option value="' + dicIndicatorType[i].value + '">' + dicIndicatorType[i].name + '</option>';
+                    }
+                }
+
+                modelShiBie = table.render({
+                    elem: '#modelShiBie'
+                    , id: 'modelShiBieId'
+                    , title: '单元模型'
+                    , skin: 'line'
+                    , even: false
+                    , page: true
+                    , limit: 10
+                    , toolbar: '#model-add'
+                    , totalRow: false
+                    , initSort: { field: 'id', type: 'desc' }
+                    , cols: [[
+                        { field: 'id', title: 'ID', hide: true }
+                        , { type: 'checkbox' }
+                        , { field: 'name', title: '斜坡名称', width: 120, align: "center", totalRowText: '合计' }
+                        , { field: 'dxdm', title: '地形地貌得分', width: 120, sort: true, align: "center", totalRow: true }
+                        , { field: 'dzgz', title: '地质构造得分', width: 120, sort: true, align: "center", totalRow: true }
+                        , { field: 'gcdz', title: '工程地质得分', width: 120, sort: true, align: "center", totalRow: true }
+                        , { field: 'score', title: '斜坡得分', width: 100, sort: true, align: "center", totalRow: true }
+                        , {
+                            field: 'jieLun', title: '识别结果', width: 200, align: "center", templet: function (row) {
+                                if (row.jieLun != null && row.jieLun.length > 0) {
+                                    return row.jieLun;
+                                } else {
+                                    return "未识别"
+                                }
+
+                                //得到当前行数据，并拼接成自定义模板
+
+                            }
+                        }
+                        , { fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#modelCaoZuoButonn' }
+                    ]]
+                    , data: []
+                });
+
+                table.render({
+                    elem: '#modelShiBie'
+                    , id: 'modelShiBieId'
+                    , cellMinWidth: 80
+                    , cols: [[
+                        { type: 'numbers' }
+                        , { type: 'checkbox' }
+                        , { field: 'id', title: 'ID', width: 100, unresize: true, sort: true }
+                        , { field: 'username', title: '用户名', templet: '#usernameTpl' }
+                        , { field: 'city', title: '城市' }
+                        , { field: 'wealth', title: '财富', minWidth: 120, sort: true }
+                        , { field: 'sex', title: '性别', width: 85, templet: '#switchTpl', unresize: true }
+                        , { field: 'lock', title: '是否锁定', width: 110, templet: '#checkboxTpl', unresize: true }
+                    ]]
+                    , page: true
+                });
+                form.render();
+                form.render('select');
+                layer.min(xiePuoIndex);
+            }
+            , end: function () {
+                xiepuoModellayerindex = null;
+                modelShiBie = null;
+                layer.restore(xiePuoIndex);
+            }
+        });
+
+        
+    } else {
+        layer.msg('已打开识别模型管理窗口');
+        return;
+    }
+}
+//写一个数据字典。
+var dicIndicatorType = [
+    { "name": "地形地貌", "value": "1", "son": "dicDxdm" },
+    { "name": "地质构造", "value": "2", "son": "dicDzgz" },
+    { "name": "工程地质", "value": "3", "son": "dicGcdz" }
+];
+var dicDxdm = [
+    { "name": "岸坡坡度", "value": "1" },
+    { "name": "岸坡结构", "value": "2" },
+    { "name": "斜坡边界条件", "value": "3" }
+];
+var dicDxgz = [
+    { "name": "岩性岩组", "value": "1" },
+    { "name": "软弱层", "value": "2" },
+];
+var dicGcdz = [
+    { "name": "岩体结构", "value": "1" },
+    { "name": "岩体风化程度", "value": "2" },
+    { "name": "岩体劣化程度", "value": "3" }
+]
