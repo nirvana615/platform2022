@@ -58,6 +58,7 @@
     <Compile Include="data\sysgeo\flzone\FlzData.cs" />
     <Compile Include="data\sysgeo\flzone\FlzDataLayer.cs" />
     <Compile Include="data\sysgeo\flzone\FlzProject.cs" />
+    <Compile Include="data\sysgeo\flzone\FlzShiBieModelInfo.cs" />
     <Compile Include="data\sysgeo\flzone\FlzSteepHillInfo.cs" />
     <Compile Include="data\sysgeo\flzone\FlzWindowInfo.cs" />
     <Compile Include="data\sysimage\imagemap\MapImageProjecModel.cs" />

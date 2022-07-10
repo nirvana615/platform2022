@@ -1561,7 +1561,7 @@ function gotoXiePuoModel() {
         xiepuoModellayerindex = layer.open({
             type: 1
             , title: ['地质单元模型设置', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-            , area: ['1030px', '700px']
+            , area: ['1330px', '900px']
             , shade: 0
             , offset: 'auto'
             , closeBtn: 1
@@ -1571,65 +1571,127 @@ function gotoXiePuoModel() {
             , content: fromModelShiBie
             , zIndex: layer.zIndex
             , success: function (layero) {
-                layer.setTop(layero);
-                if (xjxzqs.length > 0) {
+                //layer.setTop(layero);
+                if (dicIndicatorType.length > 0) {
+                    document.getElementById("dicIndicatorType").innerHTML = '<option value="">请选择指标类型</option>';
                     for (var i in dicIndicatorType) {
                         document.getElementById("dicIndicatorType").innerHTML += '<option value="' + dicIndicatorType[i].value + '">' + dicIndicatorType[i].name + '</option>';
                     }
                 }
-
+                $("#modelAddform").hide();
                 modelShiBie = table.render({
-                    elem: '#modelShiBie'
+                    elem: '#modelShiBie-view'
                     , id: 'modelShiBieId'
                     , title: '单元模型'
                     , skin: 'line'
                     , even: false
                     , page: true
-                    , limit: 10
+                    , limit: 90
+                    , height:500
                     , toolbar: '#model-add'
-                    , totalRow: false
+                    , totalRow: true
                     , initSort: { field: 'id', type: 'desc' }
                     , cols: [[
                         { field: 'id', title: 'ID', hide: true }
-                        , { type: 'checkbox' }
-                        , { field: 'name', title: '斜坡名称', width: 120, align: "center", totalRowText: '合计' }
-                        , { field: 'dxdm', title: '地形地貌得分', width: 120, sort: true, align: "center", totalRow: true }
-                        , { field: 'dzgz', title: '地质构造得分', width: 120, sort: true, align: "center", totalRow: true }
-                        , { field: 'gcdz', title: '工程地质得分', width: 120, sort: true, align: "center", totalRow: true }
-                        , { field: 'score', title: '斜坡得分', width: 100, sort: true, align: "center", totalRow: true }
                         , {
-                            field: 'jieLun', title: '识别结果', width: 200, align: "center", templet: function (row) {
-                                if (row.jieLun != null && row.jieLun.length > 0) {
-                                    return row.jieLun;
-                                } else {
-                                    return "未识别"
+                            field: 'indicatorType', title: '指标类型', width: 160, align: "center", templet: function (row) {
+                                for (var i in dicIndicatorType) {
+                                    if (dicIndicatorType[i].value == row.indicatorType) {
+                                        return dicIndicatorType[i].name;
+                                    }
                                 }
-
-                                //得到当前行数据，并拼接成自定义模板
-
                             }
                         }
+                        , {
+                            field: 'identificatIndex', title: '识别指标', width: 160, sort: true, align: "center", templet: function (row) {
+                                for (var i in dicIndicatorType) {
+                                    if (dicIndicatorType[i].value == row.indicatorType) {
+                                        var son = dicIndicatorType[i].son;
+                                        for (var j in son) {
+                                            if (son[j].value == row.identificatIndex) {
+                                                return son[j].name;
+                                            }
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                        }
+                        , { field: 'indexFactor', title: '指标因子', width: 160, sort: true, align: "center" }
+                        , { field: 'factorValue', title: '因子值', width: 160, sort: true, align: "center", totalRow: true }
+                        , { field: 'evaluationCriteria', title: '评判标准', width: 360, sort: true, align: "center" }
+                        , { field: '', title: '', width: 0, align: "center" }
                         , { fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#modelCaoZuoButonn' }
                     ]]
-                    , data: []
+                    , data: xiepuoModelData
                 });
+                //新增按钮
+                table.on('toolbar(modelShiBie-view)', function (obj) {
+                    console.log(obj);
+                    if (obj.event == "model-add") {//斜坡新
+                        $("#modelAddform").show();
+                    } else if (obj.event == "modelAddform") {//识别模型管理
+                        gotoXiePuoModel()
+                    } 
+                });
+                //删除按钮
+                table.on('tool(modelShiBie-view)', function (obj) {
+                    console.log(obj);
+                    if(obj.event === 'delete') {
+                        layer.confirm('确认删除?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                            deleteFlzShiBieModel(obj.data);
+                        });
+                    } 
+                });
+                //监听选择类型
+                form.on('select(indicatorType)', function (data) {
+                    console.log(data);
+                    for (var i in dicIndicatorType) {
+                        if (dicIndicatorType[i].value==data.value) {
+                            var son = dicIndicatorType[i].son;
+                            document.getElementById("identificatIndex").innerHTML = '<option value="">请选择识别指标</option>';
+                            for (var j in son) {
+                                document.getElementById("identificatIndex").innerHTML += '<option value="' + son[j].value + '">' + son[j].name + '</option>';
+                            }
+                            break;
+                        }
+                    }
+                    form.render('select');
+                });
+                //监听提交
+                form.on('submit(modelShibieSubmit)', function (data) {
+                    
+                    data.field.cookie = document.cookie;
+                    data.field.projectId = currentprojectid;
+                    var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+                    $.ajax({
+                        url: servicesurl + "/api/FlzWindowInfo/AddFlzShiBieModel", type: "post", data: data.field,
+                        success: function (result) {
+                            layer.close(loadingminindex);
 
-                table.render({
-                    elem: '#modelShiBie'
-                    , id: 'modelShiBieId'
-                    , cellMinWidth: 80
-                    , cols: [[
-                        { type: 'numbers' }
-                        , { type: 'checkbox' }
-                        , { field: 'id', title: 'ID', width: 100, unresize: true, sort: true }
-                        , { field: 'username', title: '用户名', templet: '#usernameTpl' }
-                        , { field: 'city', title: '城市' }
-                        , { field: 'wealth', title: '财富', minWidth: 120, sort: true }
-                        , { field: 'sex', title: '性别', width: 85, templet: '#switchTpl', unresize: true }
-                        , { field: 'lock', title: '是否锁定', width: 110, templet: '#checkboxTpl', unresize: true }
-                    ]]
-                    , page: true
+                            var res = JSON.parse(result);
+                            console.log(res);
+                            if (res.code == 1) {//成功
+                                layer.msg("新增成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                data.field.id = res.data;
+                                xiepuoModelData.push(data.field);
+                                form.val('xiePuoModelAddFilter', {
+                                    indexFactor: ""
+                                    
+                                });
+                                modelShiBie.reload({ id: 'modelShiBieId', data: xiepuoModelData });
+                            } else {
+                                layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            }
+
+
+                        }, datatype: "json"
+                    });
+                    
+                    return false;
                 });
+                //查询数据。以设置的模型。
+                getShibieModelList();
                 form.render();
                 form.render('select');
                 layer.min(xiePuoIndex);
@@ -1637,6 +1699,7 @@ function gotoXiePuoModel() {
             , end: function () {
                 xiepuoModellayerindex = null;
                 modelShiBie = null;
+                xiepuoModelData = [];
                 layer.restore(xiePuoIndex);
             }
         });
@@ -1647,11 +1710,59 @@ function gotoXiePuoModel() {
         return;
     }
 }
+function getShibieModelList() {
+    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    $.ajax({
+        url: servicesurl + "/api/FlzWindowInfo/GetShiBieModelInfoList", type: "get", data: {
+            "id": currentprojectid,
+            "cookie": document.cookie
+        },
+        success: function (data) {
+            layer.close(loadinglayerindex);
+            xiepuoModelData = [];
+            if (data == "") {
+                //无监测剖面信息
+                modelShiBie.reload({ id: 'modelShiBieId', data: xiepuoModelData });
+            }
+            else {
+                xiepuoModelData = JSON.parse(data);
+                modelShiBie.reload({ id: 'modelShiBieId', data: xiepuoModelData });
+            }
+        }, datatype: "json"
+    });
+}
+//识别删除
+function deleteFlzShiBieModel(data) {
+    var temp = {};
+    temp.id = data.id;
+    temp.cookie = document.cookie;
+    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+    $.ajax({
+        url: servicesurl + "/api/FlzWindowInfo/DeleteFlzShiBieModel", type: "delete", data: temp,
+        success: function (result) {
+            layer.close(loadinglayerindex);
+            var res = JSON.parse(result);
+            if (res.code == 1) {//成功
+                layer.msg("删除成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                xiepuoModelData.forEach((item, index) => {//先循环数组的数据
+                    if (item.id == data.id) {
+                        xiepuoModelData.splice(index, 1);
+                        modelShiBie.reload({ id: 'modelShiBieId', data: xiepuoModelData });
+                    }
+                });
+            } else {
+                layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            }
+            
+        }, datatype: "json"
+    });
+}
 //写一个数据字典。
 var dicIndicatorType = [
-    { "name": "地形地貌", "value": "1", "son": "dicDxdm" },
-    { "name": "地质构造", "value": "2", "son": "dicDzgz" },
-    { "name": "工程地质", "value": "3", "son": "dicGcdz" }
+    { "name": "地形地貌", "value": "1", "son": [{ "name": "岸坡坡度", "value": "1" }, { "name": "岸坡结构", "value": "2" },{ "name": "斜坡边界条件", "value": "3" } ] },
+    { "name": "地质构造", "value": "2", "son": [{ "name": "岩性岩组", "value": "1" }, { "name": "软弱层", "value": "2" }] },
+    { "name": "工程地质", "value": "3", "son": [{ "name": "岩体结构", "value": "1" }, { "name": "岩体风化程度", "value": "2" }, { "name": "岩体劣化程度", "value": "3" } ] }
 ];
 var dicDxdm = [
     { "name": "岸坡坡度", "value": "1" },

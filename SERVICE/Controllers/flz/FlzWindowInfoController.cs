@@ -730,5 +730,241 @@ namespace SERVICE.Controllers
                 return "验证用户失败！";
             }
         }
+
+        /// <summary>
+        /// 新建斜坡模型
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string AddFlzShiBieModel()
+        {
+            #region 参数
+            string projectId = HttpContext.Current.Request.Form["projectId"];
+            string indicatorType = HttpContext.Current.Request.Form["indicatorType"];
+            string identificatIndex = HttpContext.Current.Request.Form["identificatIndex"];
+            string indexFactor = HttpContext.Current.Request.Form["indexFactor"];
+            string factorValue = HttpContext.Current.Request.Form["factorValue"];
+            string evaluationCriteria = HttpContext.Current.Request.Form["evaluationCriteria"];
+
+            #endregion
+
+            #region 解析验证用户
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+            #endregion
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                if (user == null)
+                {
+                    return "用户为空！";
+                }
+
+                if (!string.IsNullOrEmpty(projectId)
+                    && !string.IsNullOrEmpty(indicatorType)
+                    && !string.IsNullOrEmpty(identificatIndex)
+                    && !string.IsNullOrEmpty(indexFactor))
+                {
+                    string sqlFind = "SELECT id FROM flz_distinguish_model_info WHERE project_id ={0} and indicator_Type={1}  and identificat_Index={2}  and index_Factor={3} ";
+
+                    string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sqlFind, projectId, SQLHelper.UpdateString(indicatorType), SQLHelper.UpdateString(identificatIndex), SQLHelper.UpdateString(indexFactor)));
+                    if (!string.IsNullOrEmpty(data))//说明有,多了。
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "存在相同指标类型、识别指标、指标因子的数据！", string.Empty));
+                    }
+
+                    string sql = "INSERT INTO flz_distinguish_model_info (project_id,indicator_Type,identificat_Index,index_Factor,factor_Value,evaluation_Criteria";
+                    string value = "("
+                    + projectId + "," + SQLHelper.UpdateString(indicatorType) + ","
+                    + SQLHelper.UpdateString(identificatIndex) + ","
+                    + SQLHelper.UpdateString(indexFactor) + ","
+                    + SQLHelper.UpdateString(factorValue) + ","
+                    + SQLHelper.UpdateString(evaluationCriteria);
+
+                    int id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, sql + ") VALUES" + value + ")");
+                    if (id != -1)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "新增成功", id+""));
+                       
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "保存失败", string.Empty));
+                    }
+
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "参数不全", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "验证用户失败", string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// 获取识别模型信息
+        /// </summary>
+        /// <param name="id">项目id</param>
+        /// <param name="cookie">用户信息</param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetShiBieModelInfoList(int id, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            string sql = "SELECT * FROM flz_distinguish_model_info WHERE project_id ={0}  ORDER BY indicator_type,identificat_Index";
+            
+            #region
+            string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, id));
+            if (!string.IsNullOrEmpty(data))
+            {
+                List<FlzShiBieModelInfo> flShiBieModelInfo = new List<FlzShiBieModelInfo>();
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    FlzShiBieModelInfo flzData = ParseFlzoneHelper.ParseFlzShiBieModelInfo(rows[i]);
+                    flShiBieModelInfo.Add(flzData);
+                }
+                return JsonHelper.ToJson(flShiBieModelInfo);
+            }
+            #endregion
+
+
+            return "";
+        }
+
+        /// <summary>
+        /// 删除斜坡模型
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        public string DeleteFlzShiBieModel()
+        {
+            string id = HttpContext.Current.Request.Form["id"];
+
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_distinguish_model_info  WHERE id={0}", id));
+                if (updatecount == 1)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功", string.Empty));
+                    
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除失败", string.Empty));
+                   
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户验证失败", string.Empty));
+            }
+        }
+        /// <summary>
+        /// 更新斜坡模型
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string UpdateFlzShiBieModel()
+        {
+            #region 参数
+            string appd = HttpContext.Current.Request.Form["appd"];
+            string appdrest = HttpContext.Current.Request.Form["appdrest"];
+            string apjg = HttpContext.Current.Request.Form["apjg"];
+            string apjgrest = HttpContext.Current.Request.Form["apjgrest"];
+            string xpbj = HttpContext.Current.Request.Form["xpbj"];
+            string xpbjrest = HttpContext.Current.Request.Form["xpbjrest"];
+            string yxyz = HttpContext.Current.Request.Form["yxyz"];
+            string yxyzrest = HttpContext.Current.Request.Form["yxyzrest"];
+            string ruc = HttpContext.Current.Request.Form["ruc"];
+            string rucrest = HttpContext.Current.Request.Form["rucrest"];
+            string ytjg = HttpContext.Current.Request.Form["ytjg"];
+            string ytjgrest = HttpContext.Current.Request.Form["ytjgrest"];
+            string ytfh = HttpContext.Current.Request.Form["ytfh"];
+            string ytfhrest = HttpContext.Current.Request.Form["ytfhrest"];
+            string ytlh = HttpContext.Current.Request.Form["ytlh"];
+            string ytlhrest = HttpContext.Current.Request.Form["ytlhrest"];
+            string dxdm = HttpContext.Current.Request.Form["dxdm"];
+            string dzgz = HttpContext.Current.Request.Form["dzgz"];
+            string gcdz = HttpContext.Current.Request.Form["gcdz"];
+            string score = HttpContext.Current.Request.Form["score"];
+            string id = HttpContext.Current.Request.Form["id"];
+            string appdSrc = HttpContext.Current.Request.Form["appdSrc"];
+            string apjgSrc = HttpContext.Current.Request.Form["apjgSrc"];
+            string xpbjSrc = HttpContext.Current.Request.Form["xpbjSrc"];
+            string yxyzSrc = HttpContext.Current.Request.Form["yxyzSrc"];
+            string rucSrc = HttpContext.Current.Request.Form["rucSrc"];
+            string ytjgSrc = HttpContext.Current.Request.Form["ytjgSrc"];
+            string ytfhSrc = HttpContext.Current.Request.Form["ytfhSrc"];
+            string ytlhSrc = HttpContext.Current.Request.Form["ytlhSrc"];
+            string jieLun = HttpContext.Current.Request.Form["jieLun"];
+            #endregion
+
+            #region 解析验证用户
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+            #endregion
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                if (user == null)
+                {
+                    return "用户为空！";
+                }
+                string sql = " UPDATE flz_steep_hill_info set appd={0} ";
+                if (!string.IsNullOrEmpty(appdrest)) { sql = sql + ", appdrest = '" + appdrest + "'"; };
+                if (!string.IsNullOrEmpty(apjg)) { sql = sql + ", apjg = '" + apjg + "'"; };
+                if (!string.IsNullOrEmpty(apjgrest)) { sql = sql + ", apjgrest = '" + apjgrest + "'"; };
+                if (!string.IsNullOrEmpty(xpbj)) { sql = sql + ", xpbj = '" + xpbj + "'"; };
+                if (!string.IsNullOrEmpty(xpbjrest)) { sql = sql + ", xpbjrest = '" + xpbjrest + "'"; };
+                if (!string.IsNullOrEmpty(yxyz)) { sql = sql + ", yxyz = '" + yxyz + "'"; };
+                if (!string.IsNullOrEmpty(yxyzrest)) { sql = sql + ", yxyzrest = '" + yxyzrest + "'"; };
+                if (!string.IsNullOrEmpty(ruc)) { sql = sql + ", ruc = '" + ruc + "'"; };
+                if (!string.IsNullOrEmpty(rucrest)) { sql = sql + ", rucrest  = '" + rucrest + "'"; };
+                if (!string.IsNullOrEmpty(ytjg)) { sql = sql + ", ytjg = '" + ytjg + "'"; };
+                if (!string.IsNullOrEmpty(ytjgrest)) { sql = sql + ", ytjgrest = '" + ytjgrest + "'"; };
+                if (!string.IsNullOrEmpty(ytfh)) { sql = sql + ", ytfh = '" + ytfh + "'"; };
+                if (!string.IsNullOrEmpty(ytfhrest)) { sql = sql + ", ytfhrest = '" + ytfhrest + "'"; };
+                if (!string.IsNullOrEmpty(ytlh)) { sql = sql + ", ytlh = '" + ytlh + "'"; };
+                if (!string.IsNullOrEmpty(ytlhrest)) { sql = sql + ", ytlhrest = '" + ytlhrest + "'"; };
+                if (!string.IsNullOrEmpty(dxdm)) { sql = sql + ", dxdm = '" + dxdm + "'"; };
+                if (!string.IsNullOrEmpty(dzgz)) { sql = sql + ", dzgz = '" + dzgz + "'"; };
+                if (!string.IsNullOrEmpty(gcdz)) { sql = sql + ", gcdz = '" + gcdz + "'"; };
+                if (!string.IsNullOrEmpty(score)) { sql = sql + ", score    = '" + score + "'"; };
+                if (!string.IsNullOrEmpty(appdSrc)) { sql = sql + ", appdSrc = '" + appdSrc + "'"; };
+                if (!string.IsNullOrEmpty(apjgSrc)) { sql = sql + ", apjgSrc = '" + apjgSrc + "'"; };
+                if (!string.IsNullOrEmpty(xpbjSrc)) { sql = sql + ", xpbjSrc = '" + xpbjSrc + "'"; };
+                if (!string.IsNullOrEmpty(yxyzSrc)) { sql = sql + ", yxyzSrc = '" + yxyzSrc + "'"; };
+                if (!string.IsNullOrEmpty(rucSrc)) { sql = sql + ", rucSrc  = '" + rucSrc + "'"; };
+                if (!string.IsNullOrEmpty(ytjgSrc)) { sql = sql + ", ytjgSrc = '" + ytjgSrc + "'"; };
+                if (!string.IsNullOrEmpty(ytfhSrc)) { sql = sql + ", ytfhSrc = '" + ytfhSrc + "'"; };
+                if (!string.IsNullOrEmpty(ytlhSrc)) { sql = sql + ", ytlhSrc = '" + ytlhSrc + "'"; };
+                if (!string.IsNullOrEmpty(jieLun)) { sql = sql + ", jieLun = '" + jieLun + "'"; };
+                sql = sql + ", status = '" + 1 + "'";
+                sql = sql + " where id={1}";
+                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(appd), id));
+                if (updatecount == 1)
+                {
+                    return "更新成功";
+                }
+                else
+                {
+                    return "更新失败";
+                }
+            }
+            else
+            {
+                return "验证用户失败！";
+            }
+        }
+
     }
 }
