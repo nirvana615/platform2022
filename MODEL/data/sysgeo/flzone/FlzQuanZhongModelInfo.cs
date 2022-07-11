@@ -9,7 +9,7 @@ namespace MODEL
     /// <summary>
     /// 地质识别模型
     /// </summary>
-    public class FlzShiBieModelInfo
+    public class FlzQuanZhongModelInfo
     {
         /// <summary>
         /// id
@@ -28,20 +28,6 @@ namespace MODEL
         /// </summary>
         public string identificatIndex { get; set; }
         /// <summary>
-        /// 识别因子
-        /// </summary>
-        public string indexFactor { get; set; }
-        /// <summary>
-        /// 因子值
-        /// </summary>
-        public string factorValue { get; set; }
-
-        /// <summary>
-        /// 评判标准
-        /// </summary>
-        public string evaluationCriteria { get; set; }
-
-        /// <summary>
         /// 指标类型值
         /// </summary>
         public string indicatorValue { get; set; }
@@ -49,5 +35,9 @@ namespace MODEL
         /// 识别指标值
         /// </summary>
         public string identificatValue { get; set; }
+
+      
+
+
     }
 }

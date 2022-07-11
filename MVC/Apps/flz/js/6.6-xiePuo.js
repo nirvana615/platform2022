@@ -12,6 +12,7 @@ var xiepotableview = null;
 //斜坡模型新增弹出款
 var xiepuoModellayerindex = null;
 var xiepuoModelData = [];//斜坡模型数据
+var xiepuoQuanZhongModelData = [];//斜坡权重模型数据
 function gotoXiePuo() {
     //本面积计算方法为：将所有点转换为大地坐标BLH，然后将H赋值为最大H，再转换为空间直角坐标XYZ，取XY计算面积
     ClearTemp();
@@ -413,10 +414,10 @@ function LoadSteepHillindex(xiePuoinfo){
         layer.msg('请先选择项目', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
     }
-    if (modleInfo == null) {
-        layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-        return;
-    }
+    //if (modleInfo == null) {
+    //    layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+    //    return;
+    //}
     if (xiePuoinfo == null) {
         layer.msg('请先选择斜坡', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
@@ -667,7 +668,7 @@ function LoadSteepHillindex(xiePuoinfo){
                     //alert(JSON.stringify(data));
                 });
 
-
+                
 
             }
             , end: function () {
@@ -929,8 +930,12 @@ function xiePuoTongji() {
                 GetSteepHillInfoList(data.field);
                 return false;
             });
+            //查询数据。以设置的模型。
+            getShibieModelList();
         }
         , end: function () {
+
+            xiepuoModelData = [];
             xiePuoIndex = null;
             xiepotableview = null;
         }
@@ -1554,8 +1559,6 @@ function deleteDiZhiShiBie(data) {
 //识别模型管理
 var modelShiBie = null;
 function gotoXiePuoModel() {
-    //var xiepuoModellayerindex = null;
-    //var xiepuoModelData = [];//斜坡模型数据
     if (xiepuoModellayerindex == null) {
         
         xiepuoModellayerindex = layer.open({
@@ -1579,6 +1582,7 @@ function gotoXiePuoModel() {
                     }
                 }
                 $("#modelAddform").hide();
+                $("#quanZhongAddform").hide();
                 modelShiBie = table.render({
                     elem: '#modelShiBie-view'
                     , id: 'modelShiBieId'
@@ -1629,9 +1633,15 @@ function gotoXiePuoModel() {
                 table.on('toolbar(modelShiBie-view)', function (obj) {
                     console.log(obj);
                     if (obj.event == "model-add") {//斜坡新
+                        $("#quanZhongAddform").hide();
                         $("#modelAddform").show();
-                    } else if (obj.event == "modelAddform") {//识别模型管理
-                        gotoXiePuoModel()
+                    } else if (obj.event == "quanZhong-add") {//识别模型管理
+                        $("#modelAddform").hide();
+                        $("#quanZhongAddform").show();
+                        getQuanZhongModelList();
+                        //console.log(xiepuoModelData);
+                        //斜坡类型分类
+                        
                     } 
                 });
                 //删除按钮
@@ -1690,8 +1700,61 @@ function gotoXiePuoModel() {
                     
                     return false;
                 });
-                //查询数据。以设置的模型。
-                getShibieModelList();
+                //监听提交
+                form.on('submit(quanZhongSubmit)', function (data) {
+
+                    data.field.cookie = document.cookie;
+                    data.field.projectId = currentprojectid;
+                    console.log(data.field);
+                    if (parseFloat(data.field.dxdm) + parseFloat(data.field.dzgz) + parseFloat(data.field.gcdz)!=1) {
+                        layer.msg("指标类型的权重值之和不等于1", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        return false;
+                    }
+                    if (parseFloat(data.field.appd) + parseFloat(data.field.apjg) + parseFloat(data.field.xpbj) != 1) {
+                        layer.msg("地形地貌的识别指标权重值之和不等于1", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        return false;
+                    }
+                    if (parseFloat(data.field.yxyz) + parseFloat(data.field.rrc) != 1) {
+                        layer.msg("地质构造的识别指标权重值之和不等于1", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        return false;
+                    }
+                    if (parseFloat(data.field.ytjg) + parseFloat(data.field.ytfh) + parseFloat(data.field.ytlh) != 1) {
+                        layer.msg("工程地质的识别指标权重值之和不等于1", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        return false;
+                    }
+                    var senglist = [];
+                    senglist.push({ "indicatorType": 1, "identificatIndex": 1, "indicatorValue": data.field.dxdm, "identificatValue": data.field.appd});
+                    senglist.push({ "indicatorType": 1, "identificatIndex": 2, "indicatorValue": data.field.dxdm, "identificatValue": data.field.apjg});
+                    senglist.push({ "indicatorType": 1, "identificatIndex": 3, "indicatorValue": data.field.dxdm, "identificatValue": data.field.xpbj});
+                    senglist.push({ "indicatorType": 2, "identificatIndex": 1, "indicatorValue": data.field.dzgz, "identificatValue": data.field.yxyz });
+                    senglist.push({ "indicatorType": 2, "identificatIndex": 2, "indicatorValue": data.field.dzgz, "identificatValue": data.field.rrc });
+                    senglist.push({ "indicatorType": 3, "identificatIndex": 1, "indicatorValue": data.field.gcdz, "identificatValue": data.field.ytjg });
+                    senglist.push({ "indicatorType": 3, "identificatIndex": 2, "indicatorValue": data.field.gcdz, "identificatValue": data.field.ytfh });
+                    senglist.push({ "indicatorType": 3, "identificatIndex": 3, "indicatorValue": data.field.gcdz, "identificatValue": data.field.ytlh });
+                    data.field.senglist = JSON.stringify(senglist);//直接存吧;
+                    
+                    var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+                    $.ajax({
+                        url: servicesurl + "/api/FlzWindowInfo/AddFlzQuanZhongModel", type: "post", data: data.field,
+                        success: function (result) {
+                            layer.close(loadingminindex);
+
+                            var res = JSON.parse(result);
+                            console.log(res);
+                            if (res.code == 1) {//成功
+                                layer.msg("更新成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                $("#quanZhongAddform").hide();
+                            } else {
+                                layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            }
+
+
+                        }, datatype: "json"
+                    });
+
+                    return false;
+                });
+                
                 form.render();
                 form.render('select');
                 layer.min(xiePuoIndex);
@@ -1699,7 +1762,6 @@ function gotoXiePuoModel() {
             , end: function () {
                 xiepuoModellayerindex = null;
                 modelShiBie = null;
-                xiepuoModelData = [];
                 layer.restore(xiePuoIndex);
             }
         });
@@ -1719,14 +1781,75 @@ function getShibieModelList() {
         },
         success: function (data) {
             layer.close(loadinglayerindex);
-            xiepuoModelData = [];
             if (data == "") {
                 //无监测剖面信息
-                modelShiBie.reload({ id: 'modelShiBieId', data: xiepuoModelData });
             }
             else {
                 xiepuoModelData = JSON.parse(data);
-                modelShiBie.reload({ id: 'modelShiBieId', data: xiepuoModelData });
+            }
+        }, datatype: "json"
+    });
+}
+//获取权重数据
+function getQuanZhongModelList() {
+    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    $.ajax({
+        url: servicesurl + "/api/FlzWindowInfo/GetQuanZhongModelInfoList", type: "get", data: {
+            "id": currentprojectid,
+            "cookie": document.cookie
+        },
+        success: function (data) {
+            layer.close(loadinglayerindex);
+            if (data == "") {
+                //无监测剖面信息
+            }
+            else {
+                var quanZhongModelData = JSON.parse(data);
+                console.log(quanZhongModelData);
+                for (var i in quanZhongModelData) {
+                    if (quanZhongModelData[i].indicatorType=="1") {//地形地貌。
+                        if (quanZhongModelData[i].identificatIndex == "1") {//岸坡坡度
+                            form.val('quanZhongAddFilter', {
+                                appd: quanZhongModelData[i].identificatValue,
+                                dxdm: quanZhongModelData[i].indicatorValue
+                            });
+                        }else if (quanZhongModelData[i].identificatIndex == "2") {//岸坡坡度
+                            form.val('quanZhongAddFilter', {
+                                apjg: quanZhongModelData[i].identificatValue
+                            });
+                        }else if (quanZhongModelData[i].identificatIndex == "3") {//岸坡坡度
+                            form.val('quanZhongAddFilter', {
+                                xpbj: quanZhongModelData[i].identificatValue
+                            });
+                        }
+                    } else if (quanZhongModelData[i].indicatorType == "2") {//地质构造。
+                        if (quanZhongModelData[i].identificatIndex == "1") {//岸坡坡度
+                            form.val('quanZhongAddFilter', {
+                                yxyz: quanZhongModelData[i].identificatValue,
+                                dzgz: quanZhongModelData[i].indicatorValue
+                            });
+                        } else if (quanZhongModelData[i].identificatIndex == "2") {//岸坡坡度
+                            form.val('quanZhongAddFilter', {
+                                rrc: quanZhongModelData[i].identificatValue
+                            });
+                        }
+                    } else if (quanZhongModelData[i].indicatorType == "3") {//地形地貌。
+                        if (quanZhongModelData[i].identificatIndex == "1") {//
+                            form.val('quanZhongAddFilter', {
+                                ytjg: quanZhongModelData[i].identificatValue,
+                                gcdz: quanZhongModelData[i].indicatorValue
+                            });
+                        } else if (quanZhongModelData[i].identificatIndex == "2") {//
+                            form.val('quanZhongAddFilter', {
+                                ytfh: quanZhongModelData[i].identificatValue
+                            });
+                        } else if (quanZhongModelData[i].identificatIndex == "3") {//
+                            form.val('quanZhongAddFilter', {
+                                ytlh: quanZhongModelData[i].identificatValue
+                            });
+                        }
+                    }
+                }
             }
         }, datatype: "json"
     });

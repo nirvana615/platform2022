@@ -314,6 +314,8 @@ namespace MODEL
                     indexFactor = row[4].ToString(),
                     factorValue = row[5].ToString(),
                     evaluationCriteria = row[6].ToString(),
+                    indicatorValue = row[7].ToString(),
+                    identificatValue = row[8].ToString()
                 };
                 return flzWindowInfo;
             }
@@ -323,6 +325,45 @@ namespace MODEL
                 return null;
             }
         }
+        /// <summary>
+        /// 斜坡模型权重信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static FlzQuanZhongModelInfo ParseFlzquanZhongModelInfo(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析flz_Window_Info数据为空！");
+                return null;
+            }
 
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("Project不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                FlzQuanZhongModelInfo flzWindowInfo = new FlzQuanZhongModelInfo()
+                {
+                    id = Convert.ToInt32(row[0].ToString()),
+                    projectId = Convert.ToInt32(row[1].ToString()),
+                    indicatorType = row[2].ToString(),
+                    identificatIndex = row[3].ToString(),
+                    indicatorValue = row[4].ToString(),
+                    identificatValue = row[5].ToString()
+                };
+                return flzWindowInfo;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("识别模型解析失败：" + data, ex);
+                return null;
+            }
+        }
     }
 }
