@@ -305,6 +305,12 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline" style="display:none">
+                                        <label class="layui-form-label">设备Id</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="deviceId" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="display:none">
                                         <label class="layui-form-label">类型</label>
                                         <div class="layui-input-inline">
                                             <input type="text" name="type" autocomplete="off" class="layui-input">
@@ -353,15 +359,23 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">开始时间</label>
+                                        <label class="layui-form-label">推送时间</label>
                                         <div class="layui-input-inline">
                                             <input type="text" name="pushNowTime" disabled="" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">推送状态</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="deviceStatus" disabled="" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="layui-form-item" id="yuZhiUpdateId">
                                     <div class="layui-input-block">
-                                        <button type="submit"  style="margin-left: 80%"  class="layui-btn" lay-submit="" lay-filter="yuZhiUpdate">阈值修改</button>
+                                        <button type="submit" style="margin-left: 60%" class="layui-btn" lay-submit="" lay-filter="yuZhiUpdate">阈值修改</button>
+                                        <button id="closePush" type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="closePush">关闭推送</button>
+                                        <button id="openPush" type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="openPush">打开推送</button>
                                     </div>
                                 </div>
                             </form>
@@ -374,8 +388,14 @@
                                 <legend>推送失败列表</legend>
                             </fieldset>
                             <!--统计表格-->
-                            <div id="pushdatastatisticsdiv" style="margin-left:10px;margin-right:10px;">
-                                <table id="pushdatastatistics" class="layui-hide"></table>
+                            <div id="pushdatastatisticsdiv" style="margin-left:10px;margin-right:10px; overflow-y: auto">
+                                <table id="pushdatastatistics" lay-filter="pushdatastatistics" class="layui-hide"></table>
+                                <script type="text/html" id="table-toolbar-push">
+                                    <a class="layui-btn layui-btn layui-btn-xs" lay-event="shouPush">手动推送</a>
+                                </script>
+                                <script type="text/html" id="pilianPush">
+                                    <a class="layui-btn layui-btn" lay-event="shouPush">批量推送</a>
+                                </script>
                             </div>
                         </div>
                     </div>

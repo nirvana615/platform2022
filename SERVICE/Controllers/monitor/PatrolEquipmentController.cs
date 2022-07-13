@@ -1071,21 +1071,30 @@ namespace SERVICE.Controllers
             }
         }
         /// <summary>
-        /// 删除推送失败的信息
+        /// 修改推送失败的信息
         /// </summary>
         /// <returns></returns>
-        [HttpDelete]
-        public string DeletePushFailalInfo()
+        [HttpPut]
+        public string UpdatePushFailalInfo()
         {
             string id = HttpContext.Current.Request.Form["id"];
-            int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE from monitor_cq_failure  WHERE id={0}", id));
+
+            string[] idList = id.Split('&');//批量删除斜坡单元
+            int updatecount = 0;
+            for (int i = 0; i < idList.Length; i++)
+            {
+                updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE monitor_cq_failure set push='1'  WHERE id={0}", idList[i]));
+            }
+
+
+            //int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE monitor_cq_failure set push='1'  WHERE id={0}", id));
             if (updatecount == 1)
             {
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", ""));
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "更新成功！", ""));
             }
             else
             {
-                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除失败", ""));
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "更新失败", ""));
 
             }
         }

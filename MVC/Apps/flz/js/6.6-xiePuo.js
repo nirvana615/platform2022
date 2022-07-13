@@ -13,6 +13,7 @@ var xiepotableview = null;
 var xiepuoModellayerindex = null;
 var xiepuoModelData = [];//斜坡模型数据
 var xiepuoQuanZhongModelData = [];//斜坡权重模型数据
+var modelAddHavelayerindex = null;
 function gotoXiePuo() {
     //本面积计算方法为：将所有点转换为大地坐标BLH，然后将H赋值为最大H，再转换为空间直角坐标XYZ，取XY计算面积
     ClearTemp();
@@ -414,10 +415,14 @@ function LoadSteepHillindex(xiePuoinfo){
         layer.msg('请先选择项目', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
     }
-    //if (modleInfo == null) {
-    //    layer.msg('请先选择模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-    //    return;
-    //}
+    if (xiepuoModelData.length==0) {
+        layer.msg('请先添加识别模型', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        return;
+    }
+    if (xiepuoModelData[0].indicatorValue=="") {
+        layer.msg('请先添加识别模型的权重', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        return;
+    }
     if (xiePuoinfo == null) {
         layer.msg('请先选择斜坡', { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         return;
@@ -431,9 +436,9 @@ function LoadSteepHillindex(xiePuoinfo){
         xiePuoinfoaddlayerindex = layer.open({
             type: 1
             , title: [xiePuoinfo.name + '隐患识别', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-            , area: ['400px', '720px']
+            , area: ['340px', '720px']
             , shade: 0
-            , offset: ['68px','75.2%']
+            , offset: ['68px','78.2%']
             , closeBtn: 1
             , maxmin: true
             , moveOut: true
@@ -448,6 +453,8 @@ function LoadSteepHillindex(xiePuoinfo){
                 //        document.getElementById("appdId").innerHTML += '<option value="' + xjxzqs[i].value + '">' + xjxzqs[i].name + '</option>';
                 //    }
                 //}
+                //渲染下拉框
+                goSelectOption();
 
                 //渲染开始时间&结束时间
                 date.render({
@@ -686,9 +693,57 @@ function LoadSteepHillindex(xiePuoinfo){
 
 
 }
+//展示列表下拉选。
+function goSelectOption() {
+    console.log(xiepuoModelData);
+    console.log(dicIndicatorType);
+    var appdts = "";
+    var apjgts = "";
+    var xpbjts = "";
+    var yxyzts = "";
+    var rrcts = "";
+    var ytjgts = "";
+    var ytfhts = "";
+    var ytlhts = "";
+    for (var i in xiepuoModelData) {
+        if (xiepuoModelData[i].indicatorType == "1" && xiepuoModelData[i].identificatIndex == "1") {//岸坡坡度
+            document.getElementById("appdId").innerHTML += '<option value="' + xiepuoModelData[i].indexFactor + '@' + xiepuoModelData[i].factorValue + '">' + xiepuoModelData[i].indexFactor + '</option>';
+            appdts += xiepuoModelData[i].indexFactor + ': ' + xiepuoModelData[i].evaluationCriteria + '\n';
+        } else if (xiepuoModelData[i].indicatorType == "1" && xiepuoModelData[i].identificatIndex == "2") {//岸坡结构
+            document.getElementById("apjgId").innerHTML += '<option value="' + xiepuoModelData[i].indexFactor + '@' + xiepuoModelData[i].factorValue + '">' + xiepuoModelData[i].indexFactor + '</option>';
+            apjgts += xiepuoModelData[i].indexFactor+': '+xiepuoModelData[i].evaluationCriteria + '\n';
+        } else if (xiepuoModelData[i].indicatorType == "1" && xiepuoModelData[i].identificatIndex == "3") {//斜坡边界
+            document.getElementById("xpbjId").innerHTML += '<option value="' + xiepuoModelData[i].indexFactor + '@' + xiepuoModelData[i].factorValue + '">' + xiepuoModelData[i].indexFactor + '</option>';
+            xpbjts += xiepuoModelData[i].indexFactor + ': ' +xiepuoModelData[i].evaluationCriteria + '\n';
+        } else if (xiepuoModelData[i].indicatorType == "2" && xiepuoModelData[i].identificatIndex == "1") {//岩性岩组
+            document.getElementById("yxyzId").innerHTML += '<option value="' + xiepuoModelData[i].indexFactor + '@' + xiepuoModelData[i].factorValue + '">' + xiepuoModelData[i].indexFactor + '</option>';
+            yxyzts += xiepuoModelData[i].indexFactor + ': ' + xiepuoModelData[i].evaluationCriteria + '\n';
+        } else if (xiepuoModelData[i].indicatorType == "2" && xiepuoModelData[i].identificatIndex == "2") {//ru
+            document.getElementById("rucId").innerHTML += '<option value="' + xiepuoModelData[i].indexFactor + '@' + xiepuoModelData[i].factorValue + '">' + xiepuoModelData[i].indexFactor + '</option>';
+            rrcts += xiepuoModelData[i].indexFactor + ': ' + xiepuoModelData[i].evaluationCriteria + '\n';
+        } else if (xiepuoModelData[i].indicatorType == "3" && xiepuoModelData[i].identificatIndex == "1") {//岩体结构
+            document.getElementById("ytjgId").innerHTML += '<option value="' + xiepuoModelData[i].indexFactor + '@' + xiepuoModelData[i].factorValue + '">' + xiepuoModelData[i].indexFactor + '</option>';
+            ytjgts += xiepuoModelData[i].indexFactor + ': ' + xiepuoModelData[i].evaluationCriteria + '\n';
+        } else if (xiepuoModelData[i].indicatorType == "3" && xiepuoModelData[i].identificatIndex == "2") {//岩体结构
+            document.getElementById("ytfhId").innerHTML += '<option value="' + xiepuoModelData[i].indexFactor + '@' + xiepuoModelData[i].factorValue + '">' + xiepuoModelData[i].indexFactor + '</option>';
+            ytfhts += xiepuoModelData[i].indexFactor + ': ' + xiepuoModelData[i].evaluationCriteria + '\n';
+        } else if (xiepuoModelData[i].indicatorType == "3" && xiepuoModelData[i].identificatIndex == "3") {//岩体结构
+            document.getElementById("ytlhId").innerHTML += '<option value="' + xiepuoModelData[i].indexFactor + '@' + xiepuoModelData[i].factorValue + '">' + xiepuoModelData[i].indexFactor + '</option>';
+            ytlhts += xiepuoModelData[i].indexFactor + ': ' + xiepuoModelData[i].evaluationCriteria + '\n';
+        }
+    }
+    $("#appdts").attr('title', appdts);
+    $("#apjgts").attr('title', apjgts);
+    $("#xpbjts").attr('title', xpbjts);
+    $("#yxyzts").attr('title', yxyzts);
+    $("#rrcts").attr('title', rrcts);
+    $("#ytjgts").attr('title', ytjgts);
+    $("#ytfhts").attr('title', ytfhts);
+    $("#ytlhts").attr('title', ytlhts);
+}
 //带分数的切割
 function fenshu(datas) {
-    return parseFloat(datas.split('/')[0]) / parseFloat(datas.split('/')[1])
+    return parseFloat(datas.split('@')[1]);
 }
 function goShangChuan(flag) {
     if (xiepoimglayerindex == null) {
@@ -1172,13 +1227,31 @@ function xiePuoTongji() {
     });
     //新增按钮
     table.on('toolbar(xiepotable-view)', function (obj) {
-        console.log(obj); 
+        var checkStatus = table.checkStatus(obj.config.id);
         if (obj.event =="xie-puo-add") {//斜坡新
          gotoXiePuo();
         } else if (obj.event == "add-model") {//识别模型管理
             gotoXiePuoModel()
-        } else if (obj.event == "xie-puo-del") {//删除
-            gotoXiePuo();
+        } else if (obj.event == "xie-puo-del") {//批量删除删除
+            var checkData = checkStatus.data;
+            if (checkData.length == 0) {
+                layer.msg("请选择删除的单元", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                return false;
+            }
+            layer.confirm('确认删除选中的识别单元?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                var id = '';
+                for (var i in checkData) {
+                    id += checkData[i].id + '&'; 
+                }
+                id = id.substring(0, id.length-1);
+                
+                deleteDiZhiShiBie({"id":id});
+            });
+           
+        } else if (obj.event == "level-show") {//色彩
+            var checkData = checkStatus.data;
+            console.log(checkData);
+            // gotoXiePuo();
         }
     });
 
@@ -1642,7 +1715,56 @@ function gotoXiePuoModel() {
                         //console.log(xiepuoModelData);
                         //斜坡类型分类
                         
-                    } 
+                    } else if (obj.event == "model-add-have") {//引用现有模型
+                        if (xiepuoModelData.length > 0) {
+                            layer.confirm('引用的模型会覆盖现有的模型设置?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                                deleteFlzShiBieModel(obj.data);
+                            });
+                        }
+                        modelAddHavelayerindex = layer.open({
+                            type: 1
+                            , title: ['识别模型引用', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                            , area: ['350px', '200px']
+                            , shade: 0.5
+                            , offset: 'auto'
+                            , closeBtn: 1
+                            , maxmin: true
+                            , moveOut: true
+                            , content: modelAddHaveHtml
+                            , zIndex: layer.zIndex
+                            , success: function (layero) {
+                                layer.setTop(layero);
+                                //监听选择类型
+                                getHavaModelProject();
+                                form.render();
+                                form.render('select');
+                                layer.min(xiepuoModellayerindex);
+                                //监听提交
+                                form.on('submit(modelAddHaveSubmit)', function (data) {
+
+                                    data.field.cookie = document.cookie;
+                                    data.field.id = currentprojectid;
+                                    if (xiepuoModelData.length > 0) {
+                                        layer.confirm('引用的模型会覆盖现有的模型设置?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+                                            yinYongHaveModel(data.field);
+                                        });
+                                    } else {
+                                        yinYongHaveModel(data.field);
+                                    }
+                                    
+                                    return false;
+                                });
+                            },
+                            end: function () {
+                                if (xiepuoModellayerindex != null) {
+                                    layer.restore(xiepuoModellayerindex);
+                                }
+                                modelAddHavelayerindex = null;
+                            }
+                        });
+                        
+                        //getQuanZhongModelList();
+                    }
                 });
                 //删除按钮
                 table.on('tool(modelShiBie-view)', function (obj) {
@@ -1772,6 +1894,55 @@ function gotoXiePuoModel() {
         return;
     }
 }
+//引用已有模型，进去删除，再新增
+function yinYongHaveModel(data){
+    var loadingminindex = layer.load(0, { shade: 0.3, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    $.ajax({
+        url: servicesurl + "/api/FlzWindowInfo/yinYongHaveModel", type: "post", data: data,
+        success: function (result) {
+            layer.close(loadingminindex);
+
+            var res = JSON.parse(result);
+            console.log(res);
+            if (res.code == 1) {//成功
+                layer.msg("新增成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                layer.close(modelAddHavelayerindex);
+                //重新加载一下模型List
+                getShibieModelList();
+            } else {
+                layer.msg(res.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            }
+
+
+        }, datatype: "json"
+    });
+}
+function getHavaModelProject() {
+    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+    $.ajax({
+        url: servicesurl + "/api/FlzWindowInfo/getHavaModelProjectList", type: "get", data: {
+            "id": currentprojectid,
+            "cookie": document.cookie
+        },
+        success: function (data) {
+            layer.close(loadinglayerindex);
+            if (data == "") {
+                document.getElementById("checkprojectId").innerHTML = '<option value="">无可引用的模型</option>';
+                //无监测剖面信息
+                form.render();
+                form.render('select');
+            }
+            else {
+                var projectList=JSON.parse(data)
+                for (var i in projectList) {
+                    document.getElementById("checkprojectId").innerHTML += '<option value="' + projectList[i].Id + '">' + projectList[i].XMMC + '</option>';
+                }
+                form.render();
+                form.render('select');
+            }
+        }, datatype: "json"
+    });
+}
 function getShibieModelList() {
     var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
     $.ajax({
@@ -1786,6 +1957,9 @@ function getShibieModelList() {
             }
             else {
                 xiepuoModelData = JSON.parse(data);
+                if (modelShiBie!=null) {
+                    modelShiBie.reload({ id: 'modelShiBieId', data: xiepuoModelData });
+                }
             }
         }, datatype: "json"
     });
@@ -1883,9 +2057,9 @@ function deleteFlzShiBieModel(data) {
 }
 //写一个数据字典。
 var dicIndicatorType = [
-    { "name": "地形地貌", "value": "1", "son": [{ "name": "岸坡坡度", "value": "1" }, { "name": "岸坡结构", "value": "2" },{ "name": "斜坡边界条件", "value": "3" } ] },
-    { "name": "地质构造", "value": "2", "son": [{ "name": "岩性岩组", "value": "1" }, { "name": "软弱层", "value": "2" }] },
-    { "name": "工程地质", "value": "3", "son": [{ "name": "岩体结构", "value": "1" }, { "name": "岩体风化程度", "value": "2" }, { "name": "岩体劣化程度", "value": "3" } ] }
+    { "name": "地形地貌", "key": "dxdm", "value": "1", "son": [{ "name": "岸坡坡度", "key": "appd", "value": "1" }, { "name": "岸坡结构", "key": "apjg", "value": "2" }, { "name": "斜坡边界条件", "key": "xpbj", "value": "3" } ] },
+    { "name": "地质构造", "key": "dzgz", "value": "2", "son": [{ "name": "岩性岩组", "key": "yxyz", "value": "1" }, { "name": "软弱层", "key": "rrc", "value": "2" }] },
+    { "name": "工程地质", "key": "gcdz", "value": "3", "son": [{ "name": "岩体结构", "key": "ytjg", "value": "1" }, { "name": "岩体风化程度", "key": "ytfh", "value": "2" }, { "name": "岩体劣化程度", "key": "ytlh", "value": "3" } ] }
 ];
 var dicDxdm = [
     { "name": "岸坡坡度", "value": "1" },

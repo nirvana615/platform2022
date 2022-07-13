@@ -574,7 +574,13 @@ namespace SERVICE.Controllers
 
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
             {
-                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_steep_hill_info  WHERE id={0}", id));
+                string[] idList = id.Split('&');//批量删除斜坡单元
+                int updatecount = 0;
+                for (int i=0;i< idList.Length;i++)
+                {
+                    updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_steep_hill_info  WHERE id={0}", idList[i]));
+                }
+                
                 if (updatecount == 1)
                 {
                     return "删除成功";
@@ -816,7 +822,7 @@ namespace SERVICE.Controllers
             string userbsms = string.Empty;
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
-            string sql = "SELECT * FROM flz_distinguish_model_info WHERE project_id ={0}  ORDER BY indicator_type,identificat_Index";
+            string sql = "select a.*,b.indicator_value,b.identificat_value from flz_distinguish_model_info a  left join flz_weight_model_info b on a.project_id=b.project_id and a.indicator_type=b.indicator_type and  a.identificat_Index=b.identificat_Index WHERE a.project_id={0} ORDER BY a.indicator_type,a.identificat_Index;";
             
             #region
             string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, id));
@@ -869,43 +875,16 @@ namespace SERVICE.Controllers
             }
         }
         /// <summary>
-        /// 更新斜坡模型
+        /// 引用斜坡模型
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public string UpdateFlzShiBieModel()
+        public string yinYongHaveModel()
         {
             #region 参数
-            string appd = HttpContext.Current.Request.Form["appd"];
-            string appdrest = HttpContext.Current.Request.Form["appdrest"];
-            string apjg = HttpContext.Current.Request.Form["apjg"];
-            string apjgrest = HttpContext.Current.Request.Form["apjgrest"];
-            string xpbj = HttpContext.Current.Request.Form["xpbj"];
-            string xpbjrest = HttpContext.Current.Request.Form["xpbjrest"];
-            string yxyz = HttpContext.Current.Request.Form["yxyz"];
-            string yxyzrest = HttpContext.Current.Request.Form["yxyzrest"];
-            string ruc = HttpContext.Current.Request.Form["ruc"];
-            string rucrest = HttpContext.Current.Request.Form["rucrest"];
-            string ytjg = HttpContext.Current.Request.Form["ytjg"];
-            string ytjgrest = HttpContext.Current.Request.Form["ytjgrest"];
-            string ytfh = HttpContext.Current.Request.Form["ytfh"];
-            string ytfhrest = HttpContext.Current.Request.Form["ytfhrest"];
-            string ytlh = HttpContext.Current.Request.Form["ytlh"];
-            string ytlhrest = HttpContext.Current.Request.Form["ytlhrest"];
-            string dxdm = HttpContext.Current.Request.Form["dxdm"];
-            string dzgz = HttpContext.Current.Request.Form["dzgz"];
-            string gcdz = HttpContext.Current.Request.Form["gcdz"];
-            string score = HttpContext.Current.Request.Form["score"];
-            string id = HttpContext.Current.Request.Form["id"];
-            string appdSrc = HttpContext.Current.Request.Form["appdSrc"];
-            string apjgSrc = HttpContext.Current.Request.Form["apjgSrc"];
-            string xpbjSrc = HttpContext.Current.Request.Form["xpbjSrc"];
-            string yxyzSrc = HttpContext.Current.Request.Form["yxyzSrc"];
-            string rucSrc = HttpContext.Current.Request.Form["rucSrc"];
-            string ytjgSrc = HttpContext.Current.Request.Form["ytjgSrc"];
-            string ytfhSrc = HttpContext.Current.Request.Form["ytfhSrc"];
-            string ytlhSrc = HttpContext.Current.Request.Form["ytlhSrc"];
-            string jieLun = HttpContext.Current.Request.Form["jieLun"];
+            string projectId = HttpContext.Current.Request.Form["projectId"];//引用模型的项目id
+            string currentprojectid = HttpContext.Current.Request.Form["id"];//要插入项目模型的项目id。
+
             #endregion
 
             #region 解析验证用户
@@ -917,53 +896,186 @@ namespace SERVICE.Controllers
             {
                 if (user == null)
                 {
-                    return "用户为空！";
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户为空", string.Empty));
                 }
-                string sql = " UPDATE flz_steep_hill_info set appd={0} ";
-                if (!string.IsNullOrEmpty(appdrest)) { sql = sql + ", appdrest = '" + appdrest + "'"; };
-                if (!string.IsNullOrEmpty(apjg)) { sql = sql + ", apjg = '" + apjg + "'"; };
-                if (!string.IsNullOrEmpty(apjgrest)) { sql = sql + ", apjgrest = '" + apjgrest + "'"; };
-                if (!string.IsNullOrEmpty(xpbj)) { sql = sql + ", xpbj = '" + xpbj + "'"; };
-                if (!string.IsNullOrEmpty(xpbjrest)) { sql = sql + ", xpbjrest = '" + xpbjrest + "'"; };
-                if (!string.IsNullOrEmpty(yxyz)) { sql = sql + ", yxyz = '" + yxyz + "'"; };
-                if (!string.IsNullOrEmpty(yxyzrest)) { sql = sql + ", yxyzrest = '" + yxyzrest + "'"; };
-                if (!string.IsNullOrEmpty(ruc)) { sql = sql + ", ruc = '" + ruc + "'"; };
-                if (!string.IsNullOrEmpty(rucrest)) { sql = sql + ", rucrest  = '" + rucrest + "'"; };
-                if (!string.IsNullOrEmpty(ytjg)) { sql = sql + ", ytjg = '" + ytjg + "'"; };
-                if (!string.IsNullOrEmpty(ytjgrest)) { sql = sql + ", ytjgrest = '" + ytjgrest + "'"; };
-                if (!string.IsNullOrEmpty(ytfh)) { sql = sql + ", ytfh = '" + ytfh + "'"; };
-                if (!string.IsNullOrEmpty(ytfhrest)) { sql = sql + ", ytfhrest = '" + ytfhrest + "'"; };
-                if (!string.IsNullOrEmpty(ytlh)) { sql = sql + ", ytlh = '" + ytlh + "'"; };
-                if (!string.IsNullOrEmpty(ytlhrest)) { sql = sql + ", ytlhrest = '" + ytlhrest + "'"; };
-                if (!string.IsNullOrEmpty(dxdm)) { sql = sql + ", dxdm = '" + dxdm + "'"; };
-                if (!string.IsNullOrEmpty(dzgz)) { sql = sql + ", dzgz = '" + dzgz + "'"; };
-                if (!string.IsNullOrEmpty(gcdz)) { sql = sql + ", gcdz = '" + gcdz + "'"; };
-                if (!string.IsNullOrEmpty(score)) { sql = sql + ", score    = '" + score + "'"; };
-                if (!string.IsNullOrEmpty(appdSrc)) { sql = sql + ", appdSrc = '" + appdSrc + "'"; };
-                if (!string.IsNullOrEmpty(apjgSrc)) { sql = sql + ", apjgSrc = '" + apjgSrc + "'"; };
-                if (!string.IsNullOrEmpty(xpbjSrc)) { sql = sql + ", xpbjSrc = '" + xpbjSrc + "'"; };
-                if (!string.IsNullOrEmpty(yxyzSrc)) { sql = sql + ", yxyzSrc = '" + yxyzSrc + "'"; };
-                if (!string.IsNullOrEmpty(rucSrc)) { sql = sql + ", rucSrc  = '" + rucSrc + "'"; };
-                if (!string.IsNullOrEmpty(ytjgSrc)) { sql = sql + ", ytjgSrc = '" + ytjgSrc + "'"; };
-                if (!string.IsNullOrEmpty(ytfhSrc)) { sql = sql + ", ytfhSrc = '" + ytfhSrc + "'"; };
-                if (!string.IsNullOrEmpty(ytlhSrc)) { sql = sql + ", ytlhSrc = '" + ytlhSrc + "'"; };
-                if (!string.IsNullOrEmpty(jieLun)) { sql = sql + ", jieLun = '" + jieLun + "'"; };
-                sql = sql + ", status = '" + 1 + "'";
-                sql = sql + " where id={1}";
-                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(appd), id));
-                if (updatecount == 1)
+                //删除现有项目的指标识别。被覆盖了。
+                PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_distinguish_model_info  WHERE project_id={0}", currentprojectid));
+
+                //利用引用的项目查询，模型数据
+                string sql = "select a.*,b.indicator_value,b.identificat_value from flz_distinguish_model_info a  left join flz_weight_model_info b on a.project_id=b.project_id and a.indicator_type=b.indicator_type and  a.identificat_Index=b.identificat_Index WHERE a.project_id={0} ORDER BY a.indicator_type,a.identificat_Index;";
+                
+                string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, projectId));
+                if (!string.IsNullOrEmpty(data))
                 {
-                    return "更新成功";
+                    
+                    string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                    int id = 0;
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        FlzShiBieModelInfo flzData = ParseFlzoneHelper.ParseFlzShiBieModelInfo(rows[i]);
+                        string sql2 = "INSERT INTO flz_distinguish_model_info (project_id,indicator_Type,identificat_Index,index_Factor,factor_Value,evaluation_Criteria";
+                        string value = "("
+                        + currentprojectid + "," + SQLHelper.UpdateString(flzData.indicatorType) + ","
+                        + SQLHelper.UpdateString(flzData.identificatIndex) + ","
+                        + SQLHelper.UpdateString(flzData.indexFactor) + ","
+                        + SQLHelper.UpdateString(flzData.factorValue) + ","
+                        + SQLHelper.UpdateString(flzData.evaluationCriteria);
+                        id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, sql2 + ") VALUES" + value + ")");
+                    }
+                    if (id != -1)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "引用成功", string.Empty));
+
+                    }
+                    else
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "保存失败", string.Empty));
+                    }
                 }
                 else
                 {
-                    return "更新失败";
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "引用项目没模型数据", string.Empty));
+                }
+                
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "验证用户失败", string.Empty));
+            }
+        }
+        /// <summary>
+        /// 新建斜坡权重模型
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string AddFlzQuanZhongModel()
+        {
+            #region 参数
+            string projectId = HttpContext.Current.Request.Form["projectId"];
+            string senglist = HttpContext.Current.Request.Form["senglist"];
+
+            #endregion
+            
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+            
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookie)
+            {
+                if (user == null)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户为空！", string.Empty));
+                }
+                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_weight_model_info  WHERE project_id={0}", projectId));
+
+                List<FlzQuanZhongModelInfo> quanZhongList = JsonHelper.ToObject<List<FlzQuanZhongModelInfo>>(senglist);
+                int id = 0;
+                for (int i=0;i< quanZhongList.Count;i++)
+                {
+                    FlzQuanZhongModelInfo tempList = quanZhongList[i];
+                    string sql = "INSERT INTO flz_weight_model_info (project_id,indicator_Type,identificat_Index,indicator_value,identificat_value";
+                    string value = "("
+                    + projectId + "," + SQLHelper.UpdateString(tempList.indicatorType) + ","
+                    + SQLHelper.UpdateString(tempList.identificatIndex) + ","
+                    + SQLHelper.UpdateString(tempList.indicatorValue) + ","
+                    + SQLHelper.UpdateString(tempList.identificatValue);
+
+                     id= PostgresqlHelper.InsertDataReturnID(pgsqlConnection, sql + ") VALUES" + value + ")");
+                }
+
+
+                if (id != -1)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "新增成功", id + ""));
+
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "保存失败", string.Empty));
                 }
             }
             else
             {
-                return "验证用户失败！";
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "验证用户失败", string.Empty));
             }
+            
+        }
+
+        /// <summary>
+        /// 获取识别模型信息
+        /// </summary>
+        /// <param name="id">项目id</param>
+        /// <param name="cookie">用户信息</param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetQuanZhongModelInfoList(int id, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            string sql = "SELECT * FROM flz_weight_model_info WHERE project_id ={0}  ORDER BY indicator_type,identificat_Index";
+
+            #region
+            string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(sql, id));
+            if (!string.IsNullOrEmpty(data))
+            {
+                List<FlzQuanZhongModelInfo> flShiBieModelInfo = new List<FlzQuanZhongModelInfo>();
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    FlzQuanZhongModelInfo flzData = ParseFlzoneHelper.ParseFlzquanZhongModelInfo(rows[i]);
+                    flShiBieModelInfo.Add(flzData);
+                }
+                return JsonHelper.ToJson(flShiBieModelInfo);
+            }
+            #endregion
+
+
+            return "";
+        }
+        /// <summary>
+        /// 获取已有模型的项目信息
+        /// </summary>
+        /// <param name="id">项目id</param>
+        /// <param name="cookie">用户信息</param>
+        /// <returns></returns>
+        [HttpGet]
+        public string getHavaModelProjectList(int id, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+            
+
+            List<FlzProject> projectList = new List<FlzProject>();
+            string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("select a.* from flz_project a  inner join (select project_id from flz_distinguish_model_info GROUP BY project_id) b on a.id=b.project_id  WHERE bsm{0} and id!={1}  ORDER BY id ASC", userbsms,id));
+            #region
+            string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+            if (rows.Length < 1)
+            {
+                //无项目信息
+                return string.Empty;
+            }
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                FlzProject project = ParseFlzoneHelper.ParseProject(rows[i]);
+                if (project != null)
+                {
+                    projectList.Add(project);
+                }
+            }
+
+            if (projectList.Count > 0)
+            {
+                return JsonHelper.ToJson(projectList);
+            }
+            else
+            {
+                return string.Empty;
+            }
+
+            #endregion
+            
         }
 
     }
