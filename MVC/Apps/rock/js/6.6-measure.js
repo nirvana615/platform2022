@@ -1389,7 +1389,7 @@ function getOccurrence() {
                             //ccc = newx;
                             cartesian3f.push(cartesian33);
                         }
-
+                        console.log(cartesian3s, cartesian3f);
 
                         //求取产状要素
                         var qingXiang = 0;
@@ -1406,28 +1406,64 @@ function getOccurrence() {
                         if (nz == 0) {
                             qingJiao = 0.5 * Math.PI;
                             if (nx < 0) {
-                                qingXiang = 2 * Math.PI - Math.acos(ny / Math.sqrt(nx * nx + ny * ny));
+                                if (ny > 0) {
+                                    qingXiang = 2 * Math.PI - Math.acos(ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+                                else {
+                                    qingXiang = Math.PI + Math.acos(-ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+
                             }
                             else {
-                                qingXiang = Math.acos(ny / Math.sqrt(nx * nx + ny * ny));
+                                if (ny > 0) {
+                                    qingXiang = Math.acos(ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+                                else {
+                                    qingXiang = 0.5 * Math.PI + Math.acos(-ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+
                             }
                         }
                         else if (nz > 0) {
                             qingJiao = Math.acos(nz);
                             if (nx < 0) {
-                                qingXiang = 2 * Math.PI - Math.acos(ny / Math.sqrt(nx * nx + ny * ny));
+                                if (ny > 0) {
+                                    qingXiang = 2 * Math.PI - Math.acos(ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+                                else {
+                                    qingXiang = Math.PI + Math.acos(-ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+
                             }
                             else {
-                                qingXiang = Math.acos(ny / Math.sqrt(nx * nx + ny * ny));
+                                if (ny > 0) {
+                                    qingXiang =  Math.acos(ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+                                else {
+                                    qingXiang = 0.5 * Math.PI + Math.acos(-ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+
                             }
                         }
                         else {
                             qingJiao = Math.acos(-nz);
                             if (nx < 0) {
-                                qingXiang = 2 * Math.PI - Math.acos(-ny / Math.sqrt(nx * nx + ny * ny));
+                                if (ny > 0) {
+                                    qingXiang = 0.5 * Math.PI + Math.acos(ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+                                else {
+                                    qingXiang = Math.acos(-ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+
                             }
                             else {
-                                qingXiang = Math.acos(-ny / Math.sqrt(nx * nx + ny * ny));
+                                if (ny > 0) {
+                                    qingXiang = Math.PI + Math.acos(ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+                                else {
+                                    qingXiang = 2 * Math.PI - Math.acos(-ny / Math.sqrt(nx * nx + ny * ny));
+                                }
+
                             }
                         }
                         qingXiang = qingXiang * 180 / Math.PI;

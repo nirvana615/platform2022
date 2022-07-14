@@ -6,7 +6,6 @@
         <li style="width:17%;padding-top: 10px;">数据处理</li>
         <li style="width:17%;padding-top: 10px;">综合分析</li>
         <li style="width:17%;padding-top: 10px;">推送管理</li>
-
     </ul>
     <div class="layui-tab-content" style="margin:0px 0px">
         <!--统计分析-->
@@ -75,9 +74,7 @@
                                 <div class="layui-col-xs6">
                                     <div class="grid-demo">
                                         <div class="layui-form-item">
-                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">
-                                                <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">
-                                            </div>
+                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="autodatacustomtimeid" name="autodatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div>
                                         </div>
                                     </div>
                                 </div>
@@ -152,9 +149,10 @@
                         <li lay-id="grosserror">粗差剔除</li>
                         <li lay-id="initialvalue" style="pointer-events:none; color: darkgray;">设置初值</li>
                         <li lay-id="interpolation" style="pointer-events:none; color: darkgray;">插补数据</li>
-                        <li lay-id="fittingcurve" style="pointer-events:none; color: darkgray;">拟合曲线</li>
+                        <li lay-id="monitorcurve">监测曲线</li>
                     </ul>
                     <div class="layui-tab-content" id="editautodatatoolid" style="width:100%;height:180px;">
+                        <!-- 异常处理 -->
                         <div class="layui-tab-item layui-show">
                             <div class="layui-row">
                                 <!--左侧-->
@@ -182,6 +180,7 @@
                             <!--异常处理工具说明-->
                             <div id="editabnormaldatatooldoc"></div>
                         </div>
+                        <!-- 粗差处理 -->
                         <div class="layui-tab-item">
                             <div class="layui-row">
                                 <!--左侧-->
@@ -211,8 +210,12 @@
                         </div>
                         <div class="layui-tab-item">3</div>
                         <div class="layui-tab-item">4</div>
-                        <div class="layui-tab-item">5</div>
-                        <div class="layui-tab-item">6</div>
+                        <!-- 监测曲线 -->
+                        <div class="layui-tab-item">
+                            <div class="layui-row" id="editMonitorCurvedatatoolid">
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -241,9 +244,7 @@
                                 <div class="layui-col-xs4">
                                     <div class="grid-demo">
                                         <div class="layui-form-item">
-                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;">
-                                                <input id="overlaydatacustomtimeid" name="overlaydatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;">
-                                            </div>
+                                            <div class="layui-input-block" style="margin-left:10px;margin-right:10px;"> <input id="overlaydatacustomtimeid" name="overlaydatacustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:hidden;"> </div>
                                         </div>
                                     </div>
                                 </div>
@@ -251,9 +252,7 @@
                                     <div class="grid-demo">
                                         <div class="layui-form-item">
                                             <label class="layui-form-label" style="width:40px;padding:0px 5px;">小时雨量</label>
-                                            <div class="layui-input-block" style="right:55px;">
-                                                <input type="checkbox" id="hourrainid" name="hourrain" lay-skin="switch" lay-filter="hourrainfilter" lay-text="ON|OFF" disabled>
-                                            </div>
+                                            <div class="layui-input-block" style="right:55px;"> <input type="checkbox" id="hourrainid" name="hourrain" lay-skin="switch" lay-filter="hourrainfilter" lay-text="ON|OFF" disabled> </div>
                                         </div>
                                     </div>
                                 </div>
@@ -261,9 +260,7 @@
                                     <div class="grid-demo">
                                         <div class="layui-form-item">
                                             <label class="layui-form-label" style="width:40px;padding:0px 5px;">每日雨量</label>
-                                            <div class="layui-input-block" style="right:55px;">
-                                                <input type="checkbox" id="dayrainid" name="dayrain" lay-skin="switch" lay-filter="dayrainfilter" lay-text="ON|OFF" disabled>
-                                            </div>
+                                            <div class="layui-input-block" style="right:55px;"> <input type="checkbox" id="dayrainid" name="dayrain" lay-skin="switch" lay-filter="dayrainfilter" lay-text="ON|OFF" disabled> </div>
                                         </div>
                                     </div>
                                 </div>
@@ -290,7 +287,7 @@
                                 <legend>阈值信息</legend>
                             </fieldset>
                             <!--工具栏-->
-                            <form class="layui-form  layui-form-pane" lay-filter="pushdataform" style="margin-top:15px; margin-left:15px; " id="pushFromId">
+                            <form class="layui-form layui-form-pane" lay-filter="pushdataform" style="margin-top:15px; margin-left:15px; " id="pushFromId">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
                                         <label class="layui-form-label">监测点号</label>
