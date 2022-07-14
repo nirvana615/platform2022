@@ -35,6 +35,13 @@ namespace MODEL
         /// 推送设备的状态
         /// </summary>
         public string deviceStatus { get; set; }
-
+        /// <summary>
+        /// 初始值id
+        /// </summary>
+        public int initialValueId { get; set; }
+        /// <summary>
+        /// 初始值
+        /// </summary>
+        public string initialValue { get; set; }
     }
 }

@@ -2360,6 +2360,17 @@ namespace SERVICE.Controllers
                     pushDataList.deviceStatus = row[3];
                     pushDataList.pushNowTime = row[4];
                 }
+                //初始值
+                string intValue = PostgresqlHelper.QueryData(pgsqlConnection, string.Format(" select c.id,c.value from      monitor_cq_device a ,monitor_cqmap_device_value b ,monitor_cq_value c  where  a.zbh={0} and   a.id=b.deviceid and b.valueid=c.id  and b.ztm='1' and c.ztm='1' ", SQLHelper.UpdateString(device.Code)));
+
+                if (!string.IsNullOrEmpty(intValue))//阈值。阈值id放进来，修改阈值，启动推送
+                {
+                    string[] row = intValue.Split(new char[] { COM.ConstHelper.columnSplit });
+                    pushDataList.initialValue = row[1];
+                    pushDataList.initialValueId = Convert.ToInt32(row[0].ToString());
+                    
+                }
+
                 string gcsj = DateTime.Now.AddMonths(-2).ToString("yyyy-MM-dd");
                 //成功的时间，最后一次啊
                 //查询失败数据。

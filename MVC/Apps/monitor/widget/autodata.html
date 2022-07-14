@@ -273,6 +273,7 @@
             </div>
         </div>
         <!--推送管理-->
+         <!--推送管理-->
         <div class="layui-tab-item">
             <div class="layui-row">
                 <div class="layui-row">
@@ -287,7 +288,7 @@
                                 <legend>阈值信息</legend>
                             </fieldset>
                             <!--工具栏-->
-                            <form class="layui-form layui-form-pane" lay-filter="pushdataform" style="margin-top:15px; margin-left:15px; " id="pushFromId">
+                            <form class="layui-form  layui-form-pane" lay-filter="pushdataform" style="margin-top:15px; margin-left:15px; " id="pushFromId">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
                                         <label class="layui-form-label">监测点号</label>
@@ -299,6 +300,12 @@
                                         <label class="layui-form-label">阈值Id</label>
                                         <div class="layui-input-inline">
                                             <input type="text" name="ThresholdId" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="display:none">
+                                        <label class="layui-form-label">初值Id</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="initialValueId" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline" style="display:none">
@@ -367,12 +374,61 @@
                                             <input type="text" name="deviceStatus" disabled="" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
+                                    <div class="layui-inline" id="lfInitialValue">
+                                        <label class="layui-form-label">初值(mm)</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="lfInitialValue" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" id="ylInitialValue">
+                                        <label class="layui-form-label">初值(KN)</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="ylInitialValue" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" id="xyGNSSInitialValue">
+                                        <label class="layui-form-label">X初值</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="xygnssInitialValue" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" id="yyGNSSInitialValue">
+                                        <label class="layui-form-label">Y初值</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="yygnssInitialValue" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" id="hGNSSInitialValue">
+                                        <label class="layui-form-label">h初值</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="hgnssInitialValue" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" id="qjInitialValuex">
+                                        <label class="layui-form-label">X初值(°)</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="qjInitialValuex" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" id="qjInitialValuey">
+                                        <label class="layui-form-label">Y初值(°)</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="qjInitialValuey" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" id="qjInitialValuez">
+                                        <label class="layui-form-label">Z初值(°)</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="qjInitialValuez" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="layui-form-item" id="yuZhiUpdateId">
                                     <div class="layui-input-block">
-                                        <button type="submit" style="margin-left: 60%" class="layui-btn" lay-submit="" lay-filter="yuZhiUpdate">阈值修改</button>
+                                        <button type="submit" style="margin-left: 40%" class="layui-btn" lay-submit="" lay-filter="yuZhiUpdate">阈值修改</button>
                                         <button id="closePush" type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="closePush">关闭推送</button>
                                         <button id="openPush" type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="openPush">打开推送</button>
+                                        <button id="InitialPush" type="submit" class="layui-btn layui-btn-danger" lay-submit="" lay-filter="InitialPush">初值修改</button>
                                     </div>
                                 </div>
                             </form>

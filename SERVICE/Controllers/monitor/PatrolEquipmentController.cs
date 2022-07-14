@@ -1046,7 +1046,33 @@ namespace SERVICE.Controllers
             }
         }
         /// <summary>
-        /// 修改设备推送信息表
+        /// 修改初值信息表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public string updateChuZhiInfo()
+        {
+            #region 参数
+            string initialValue = HttpContext.Current.Request.Form["initialValue"];
+            string initialValueId = HttpContext.Current.Request.Form["initialValueId"];
+
+
+            #endregion
+            string sql = "UPDATE   monitor_cq_value SET value={0} WHERE id={1} ";
+
+            int updateCount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(sql, SQLHelper.UpdateString(initialValue), SQLHelper.UpdateString(initialValueId)));
+            if (updateCount != -1)
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "修改成功！", ""));
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "修改失败", ""));
+
+            }
+        }
+        /// <summary>
+        /// 修改设备推送信息表   
         /// </summary>
         /// <returns></returns>
         [HttpPost]
