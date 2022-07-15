@@ -794,9 +794,7 @@ function anpoMeasure() {
                         }
                     });
 
-                    var chanzhuang = getChanzhuang(geologymeasurewidget_temppoints);
-                    
-                    geologymeasurehistory.push(chanzhuang);
+                    var yancengchanzhuang = getChanzhuang(geologymeasurewidget_temppoints);
                     //求取中心点定位
                     var xsum = 0;
                     var ysum = 0;
@@ -812,7 +810,7 @@ function anpoMeasure() {
                         name: "py_Measure_single_label_" + NewGuid(),
                         position: new Cesium.Cartesian3(xsum / geologymeasurewidget_temppoints.length, ysum / geologymeasurewidget_temppoints.length, zsum / geologymeasurewidget_temppoints.length),
                         label: {
-                            text: '岩层产状：\n倾向:' + chanzhuang.qingXiang.toFixed(0) + '°\n 倾角:' + chanzhuang.qingJiao.toFixed(0) + '°',
+                            text: '岩层产状：\n倾向:' + yancengchanzhuang.qingXiang.toFixed(0) + '°\n 倾角:' + yancengchanzhuang.qingJiao.toFixed(0) + '°',
                             font: '12px Times New Roman',
                             showBackground: true,
                             backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
@@ -824,7 +822,7 @@ function anpoMeasure() {
                     });
                     //显示结果
                     if (yancengchanzhuangresult == null) {
-                        yancengchanzhuangresult = chanzhuang;
+                        yancengchanzhuangresult = yancengchanzhuang;
                     }
                     
                     geologymeasurewidget_isredo = true;
@@ -916,8 +914,7 @@ function anpoMeasure() {
                             }
                         });
 
-                        var chanzhuang = getChanzhuang(geologymeasurewidget_temppoints);
-                        geologymeasurehistory.push(chanzhuang);
+                        var anpochanzhuang = getChanzhuang(geologymeasurewidget_temppoints);
                         //求取中心点定位
                         var xsum = 0;
                         var ysum = 0;
@@ -933,7 +930,7 @@ function anpoMeasure() {
                             name: "py_Measure_single_label_" + NewGuid(),
                             position: new Cesium.Cartesian3(xsum / geologymeasurewidget_temppoints.length, ysum / geologymeasurewidget_temppoints.length, zsum / geologymeasurewidget_temppoints.length),
                             label: {
-                                text: '岸坡产状：\n倾向:' + chanzhuang.qingXiang.toFixed(0) + '°\n 倾角:' + chanzhuang.qingJiao.toFixed(0) + '°',
+                                text: '岸坡产状：\n倾向:' + anpochanzhuang.qingXiang.toFixed(0) + '°\n 倾角:' + anpochanzhuang.qingJiao.toFixed(0) + '°',
                                 font: '12px Times New Roman',
                                 showBackground: true,
                                 backgroundColor: new Cesium.Color(0.165, 0.165, 0.165, 0.5),
@@ -945,10 +942,10 @@ function anpoMeasure() {
                         });
                         //显示结果
                         if (anpochanzhuangresult == null) {
-                            anpochanzhuangresult = chanzhuang;
+                            anpochanzhuangresult = anpochanzhuang;
                         }
                         if (anpochanzhuangresult != null && yancengchanzhuangresult != null) {
-                            geologymeasurewidget_result = "岸坡结构:\n岩层倾角：" + yancengchanzhuangresult.qingJiao.toFixed(0) + "°\n岩层倾向与岸坡倾向夹角：" + Math.abs(anpochanzhuangresult.qingXiang - yancengchanzhuangresult.qingXiang).toFixed(0) + "°";
+                            geologymeasurewidget_result = "岸坡结构:\n岩层倾角：" + yancengchanzhuangresult.qingJiao.toFixed(0) + "°\n岩层倾向与岸坡倾向夹角：" + Math.abs(anpochanzhuangresult.qingXiang.toFixed(0) - yancengchanzhuangresult.qingXiang.toFixed(0)) + "°";
                             if (geologymeasurewidget_result != "") {
                                 layui.form.val("geologymeasureinfoform", {
                                     "geologymeasureresults": geologymeasurewidget_result
