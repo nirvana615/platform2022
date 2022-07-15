@@ -496,6 +496,7 @@
     <Content Include="Apps\flz\js\6.8-localtool.js" />
     <Content Include="Apps\flz\js\6.9-report.js" />
     <Content Include="Apps\flz\js\html.js" />
+    <Content Include="Apps\flz\js\7.0-geologymeasure.js" />
     <Content Include="Apps\image\css\main.css" />
     <Content Include="Apps\image\js\1.1-all.js" />
     <Content Include="Apps\image\js\1.2-para.js" />
