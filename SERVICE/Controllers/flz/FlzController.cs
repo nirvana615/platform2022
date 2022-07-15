@@ -401,11 +401,11 @@ namespace SERVICE.Controllers
                 {
                     return "请先删除测窗";
                 }
-                int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_project  WHERE id={0}", id));
-                //删除关联信息表
-                int deletecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_map_user_project  WHERE projectid={0}", id));
+                //int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_project  WHERE id={0}", id));
+                //删除关联信息表，只删除关联信息表
+                int deletecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("DELETE FROM  flz_map_user_project  WHERE projectid={0} and userid={1}", id, user.Id));
                 
-                if (updatecount == 1)
+                if (deletecount == 1)
                 {
                     return "删除成功";
                 }

@@ -1034,36 +1034,39 @@ function xiePuoTongji() {
     table.on('tool(xiepotable-view)', function (obj) {
         console.log(obj);
         var entity = viewer.entities.getById("DIZHISON_" + obj.data.id);
+        var points = obj.data.points;
+        if (points[0].L) {
+            var pointList = [];
+            for (var m in points) {
+                pointList.push(new Cesium.Cartesian3.fromDegrees(points[m].L, points[m].B, points[m].H));
+            }
+            points = pointList;
+        } 
         if (entity == undefined) {
+            
             entity = viewer.entities.add({
                 id: "DIZHISON_" + obj.data.id,
-                polyline: {
-                    positions: obj.data.points,
-                    width: 3,
-                    material: Cesium.Color.RED,
-                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                        color: Cesium.Color.RED
-                    }),
-                    show: true,
-                    classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
-                },
+                corridor: {
+                    positions: points,
+                    width: 1,
+                    material: Cesium.Color.YELLOW,
+                }
             });
         }
         if (obj.data.level.length > 0) {
             var home = JSON.parse(obj.data.level);
             viewer.scene.camera.setView(home);
         } else {
-            var xyzzz = getChanzhuang(obj.data.points);
+            var xyzzz = getChanzhuang(points);
             viewer.zoomTo(entity, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(xyzzz.qingXiang) - 180)), Cesium.Math.toRadians(parseFloat(xyzzz.qingJiao) - 90)));
 
         }
-
 
         var entitylabel = viewer.entities.getById("DIZHISON_" + obj.data.id + "_LABEL");
         if (entitylabel == undefined) {
             viewer.entities.add({
                 id: "DIZHISON_" + obj.data.id + "_LABEL",
-                position: obj.data.points[0],
+                position: points[0],
                 label: {
                     text: obj.data.name,
                     showBackground: true,
@@ -1098,21 +1101,25 @@ function xiePuoTongji() {
                 var entityList = [];
                 for (var i = 0; i < checkStatus.length;i++) {
                     var entity = viewer.entities.getById("DIZHISON_" + checkStatus[i].id);
-                    if (entity == undefined) {
+                    var points = checkStatus[i].points;
+                    if (points[0].L) {
+                        var pointList = [];
+                        for (var m in points) {
+                            pointList.push(new Cesium.Cartesian3.fromDegrees(points[m].L, points[m].B, points[m].H));
+                        }
+                        points = pointList;
+                    }
 
-                      
+                    if (entity == undefined) {
+                        
+                       
                         entity=viewer.entities.add({
                             id: "DIZHISON_" + checkStatus[i].id,
-                            polyline: {
-                                positions: checkStatus[i].points,
-                                width: 3,
-                                material: Cesium.Color.RED,
-                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                    color: Cesium.Color.RED
-                                }),
-                                show: true,
-                                classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
-                            },
+                            corridor: {
+                                positions: points,
+                                width: 1,
+                                material: Cesium.Color.YELLOW,
+                            }
                         });
 
                     }
@@ -1120,7 +1127,7 @@ function xiePuoTongji() {
                     if (entitylabel == undefined) {
                         viewer.entities.add({
                             id: "DIZHISON_" + checkStatus[i].id + "_LABEL",
-                            position: checkStatus[i].points[0],
+                            position: points[0],
                             label: {
                                 text: checkStatus[i].name,
                                 showBackground: true,
@@ -1150,43 +1157,31 @@ function xiePuoTongji() {
         } else {//单选按钮
             if (obj.checked) {//选中
                 var entity = viewer.entities.getById("DIZHISON_" + obj.data.id);
-                if (entity == undefined) {
-                    var points = obj.data.points;
-                    if (points[0].L) {
-                        var pointList = [];
-                        for (var m in points) {
-                            pointList.push(new Cesium.Cartesian3.fromDegrees(points[m].L, points[m].B, points[m].H));
-                        }
-                        entityFater = viewer.entities.add({
-                            id: "DIZHISON_" + obj.data.id,
-                            polyline: {
-                                positions: pointList,
-                                width: 1,
-                                material: Cesium.Color.YELLOW,
-                            }
-                        });
-                    } else {
-                        entity = viewer.entities.add({
-                            id: "DIZHISON_" + obj.data.id,
-                            polyline: {
-                                positions: points,
-                                width: 1,
-                                material: Cesium.Color.RED,
-                                depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                    color: Cesium.Color.RED
-                                }),
-                                show: true,
-                                classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
-                            },
-                        });
+                var points = obj.data.points;
+                if (points[0].L) {
+                    var pointList = [];
+                    for (var m in points) {
+                        pointList.push(new Cesium.Cartesian3.fromDegrees(points[m].L, points[m].B, points[m].H));
                     }
+                    points = pointList;
+                } 
+                if (entity == undefined) {
+                    
+                    entity = viewer.entities.add({
+                        id: "DIZHISON_" + obj.data.id,
+                        corridor: {
+                            positions: points,
+                            width: 1,
+                            material: Cesium.Color.YELLOW,
+                        }
+                    });
                     
                 }
                 if (obj.data.level.length > 0) {
                     var home = JSON.parse(obj.data.level);
                     viewer.scene.camera.setView(home);
                 } else {
-                    var xyzzz = getChanzhuang(obj.data.points);
+                    var xyzzz = getChanzhuang(points);
                     viewer.zoomTo(entity, new Cesium.HeadingPitchRange(Cesium.Math.toRadians(-(parseFloat(xyzzz.qingXiang) - 180)), Cesium.Math.toRadians(parseFloat(xyzzz.qingJiao) - 90)));
 
                 }
@@ -1196,7 +1191,7 @@ function xiePuoTongji() {
                 if (entitylabel == undefined) {
                     viewer.entities.add({
                         id: "DIZHISON_" + obj.data.id + "_LABEL",
-                        position: obj.data.points[0],
+                        position: points[0],
                         label: {
                             text: obj.data.name,
                             showBackground: true,

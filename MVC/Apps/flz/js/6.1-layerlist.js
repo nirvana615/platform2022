@@ -828,7 +828,7 @@ function LoadLayerListLayer(id) {
                                                                     id: data.children[i].id,
                                                                     corridor: {
                                                                         positions: pointList,
-                                                                        width: 3,
+                                                                        width: 2,
                                                                         material: Cesium.Color.YELLOW,
                                                                         //depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
                                                                         //    color: Cesium.Color.fromCssColorString('#09f654')
@@ -843,7 +843,7 @@ function LoadLayerListLayer(id) {
                                                                     id: data.children[i].id,
                                                                     corridor: {
                                                                         positions: points,
-                                                                        width: 3,
+                                                                        width: 2,
                                                                         material: Cesium.Color.RED,
                                                                         //depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
                                                                         //    color: Cesium.Color.RED
@@ -1103,7 +1103,7 @@ function LoadLayerListLayer(id) {
                                                                 console.log(pointList);
                                                                 entityFater = viewer.entities.add({
                                                                     id: data.id,
-                                                                    polyline: {
+                                                                    corridor: {
                                                                         positions: pointList,
                                                                         width: 1,
                                                                         material: Cesium.Color.YELLOW,
@@ -1120,18 +1120,18 @@ function LoadLayerListLayer(id) {
                                                         } else {
                                                             entityFater = viewer.entities.add({
                                                                 id: data.id,
-                                                                polyline: {
+                                                                corridor: {
                                                                     positions: points,
                                                                     width: 1,
                                                                     //arcType: Cesium.ArcType.RHUMB,
                                                                     material: Cesium.Color.RED,
-                                                                    depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
-                                                                        color: Cesium.Color.RED
-                                                                    }),
-                                                                    show: true,
+                                                                        //depthFailMaterial: new Cesium.PolylineDashMaterialProperty({
+                                                                        //    color: Cesium.Color.fromCssColorString('#09f654')
+                                                                        //}),
+                                                                        //show: true,
                                                                     //clampToGround: true,
-                                                                    classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
-                                                                },
+                                                                }
+
                                                             });
                                                         }
                                                         

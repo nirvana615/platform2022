@@ -1124,5 +1124,32 @@ namespace SERVICE.Controllers
 
             }
         }
+        /// <summary>
+        /// 删除推送失败的信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public string deleteFailalInfo()
+        {
+            string id = HttpContext.Current.Request.Form["id"];
+
+            string[] idList = id.Split('&');//批量删除斜坡单元
+            int updatecount = 0;
+            for (int i = 0; i < idList.Length; i++)
+            {
+                updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE monitor_cq_failure set ztm='0'  WHERE id={0}", idList[i]));
+            }
+            
+          
+            if (updatecount == 1)
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "删除成功！", ""));
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "删除失败", ""));
+
+            }
+        }
     }
 }

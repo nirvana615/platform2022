@@ -444,10 +444,12 @@
                             <div id="pushdatastatisticsdiv" style="margin-left:10px;margin-right:10px; overflow-y: auto">
                                 <table id="pushdatastatistics" lay-filter="pushdatastatistics" class="layui-hide"></table>
                                 <script type="text/html" id="table-toolbar-push">
-                                    <a class="layui-btn layui-btn layui-btn-xs" lay-event="shouPush">手动推送</a>
+                                    <a class="layui-btn" lay-event="shouPush">推送</a>
+                                    <a class="layui-btn layui-btn-danger" lay-event="delete">删除</a>
                                 </script>
                                 <script type="text/html" id="pilianPush">
                                     <a class="layui-btn layui-btn" lay-event="shouPush">批量推送</a>
+                                    <a class="layui-btn layui-btn-danger" lay-event="delete">批量删除</a>
                                 </script>
                             </div>
                         </div>
