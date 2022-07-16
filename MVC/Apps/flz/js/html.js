@@ -720,7 +720,7 @@ var xiepoTable = "	<form class='layui-form' style='margin-top:5px;margin-right:5
     + "  <button class='layui-btn layui-btn' style = 'font-size:14px;width:150px' lay-event='xie-puo-add'> 添加识别单元</button>"
     + "  <button class='layui-btn layui-btn layui-btn-danger' style = 'font-size:14px;width:150px' lay-event='xie-puo-del'> 单元批量删除</button>"
     + "  <button class='layui-btn layui-btn  layui-btn-normal' style = 'font-size:14px;width:150px' lay-event='add-model'> 添加识别模型</button>"
-    + "  <button class='layui-btn layui-btn  layui-btn-warm' style = 'font-size:14px;width:150px' lay-event='level-show'> 分级显示</button>"
+    + "  <button class='layui-btn layui-btn  layui-btn-warm' style = 'font-size:14px;width:150px' lay-event='level-show'> 显示设置</button>"
     +"</div ></script> ";
 
 
@@ -913,4 +913,37 @@ var fromModelShiBie =  "<script type='text/html' id='modelCaoZuoButonn'>        
                         //+ "     <button type='reset' class='layui-btn layui-btn-primary'>重置</button>                                                "
                         + "   </div>                                                                                                                  "
                         + " </div>                                                                                                                    "
-                        + "</form>                                                                                                                     ";
+    + "</form>                                                                                                                     ";
+
+var showShezhiHtml = "<script type='text/html' id='xiePuoshowButonn'> "
+    + "<a class='layui-btn layui-btn layui-btn-xs' lay-event='show'>选择</a>  "
+    + "</script>                                                                             "
+    + "<table class='layui-hide' id='modelshow-view' lay-filter='modelshow-view'></table>"
+    + " <form class='layui-form' action='' lay-filter='showShezhiAddFilter'>                                                                                           "
+    + " <div class='layui-form-item'>                                                                                             "
+    + "   <div class='layui-inline'>                                                                                              "
+    + "   	<label class='layui-form-label'>指标类型</label>                                                                      "
+    + "  	 <div class='layui-input-inline'>                                                                                        "
+    + "     	<select name='indicatorType' id='dicIndicatorType'  lay-filter='indicatorType' lay-verify='required'>                                                                                                 "
+
+    + "     	</select>                                                                                                             "
+    + "   	</div>                                                                                                                  "
+    + "   </div>                                                                                                                  "
+    + "   <div class='layui-inline'>                                                                                              "
+    + "		<label class='layui-form-label'>识别指标</label>                                                                      "
+    + "   	<div class='layui-input-inline'>                                                                                        "
+    + "     	<select name='identificatIndex' id='identificatIndex' lay-verify='required'>                                                                                                 "
+
+    + "     	</select>                                                                                                             "
+    + "   	</div>                                                                                                                  "
+    + "   </div>                                                                                                                  "
+    + "</div>                                                                                                                  "
+
+    + " <div class='layui-form-item'>                                                                                             "
+    + "   <div class='layui-input-block' style='margin-left: 80%' >                                                                                         "
+    + "     <button type='submit' class='layui-btn' lay-submit='' lay-filter='showShezhiSubmit'>设置</button>                            "
+    + "   </div>                                                                                                                  "
+    + " </div>                                                                                                                    "
+    + "</form>                                                                                                                     ";
+var shiliTableHtml =  "<table class='layui-hide' id='shilishow-view' lay-filter='shilishow-view'></table>";
+ 

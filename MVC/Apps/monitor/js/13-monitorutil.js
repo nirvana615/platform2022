@@ -58,6 +58,10 @@ util.fixbar({
             Measurewidget();
         } else if (type === 'bar10') {
             //标注工具
+            if (currentprojectid == null) {
+                layer.msg('请先选择项目');
+                return;
+            }
             Markwidget(currentprojectid);
         } else if (type === 'bar11') {
             //告警管理

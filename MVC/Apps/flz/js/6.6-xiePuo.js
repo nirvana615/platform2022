@@ -14,6 +14,8 @@ var xiepuoModellayerindex = null;
 var xiepuoModelData = [];//斜坡模型数据
 var xiepuoQuanZhongModelData = [];//斜坡权重模型数据
 var modelAddHavelayerindex = null;
+var xiepotabledata = [];//斜坡数据
+var showShezhilayerindex = null;//分级设置弹出框
 function gotoXiePuo() {
     //本面积计算方法为：将所有点转换为大地坐标BLH，然后将H赋值为最大H，再转换为空间直角坐标XYZ，取XY计算面积
     ClearTemp();
@@ -996,7 +998,7 @@ function xiePuoTongji() {
         }
     });
 
-    var xiepotabledata = [];
+    
     xiepotableview = table.render({
         elem: '#xiepotable-view'
         , id: 'xiepotableviewid'
@@ -1004,18 +1006,19 @@ function xiePuoTongji() {
         , skin: 'line'
         , even: false
         , page: true
-        , limit: 10
+        , limit: 20
         , toolbar: '#xie-puo-add'
         , totalRow: false
-        , initSort: { field: 'id', type: 'desc' }
+        , height: 600
+        , initSort: { field: 'name', type: 'asc' }
         , cols: [[
             { field: 'id', title: 'ID', hide: true }
-            ,{ type: 'checkbox' }
+            , { type: 'checkbox', fixed: 'left'}
             , { field: 'name', title: '斜坡名称', width: 120, align: "center", totalRowText: '合计' }
-            , { field: 'dxdm', title: '地形地貌得分', width: 120, sort: true, align: "center", totalRow: true }
-            , { field: 'dzgz', title: '地质构造得分', width: 120, sort: true, align: "center", totalRow: true }
-            , { field: 'gcdz', title: '工程地质得分', width: 120, sort: true, align: "center", totalRow: true }
-            , { field: 'score', title: '斜坡得分', width: 100, sort: true, align: "center", totalRow: true }
+            , { field: 'dxdm', title: '地形地貌得分', width: 120, align: "center", totalRow: true }
+            , { field: 'dzgz', title: '地质构造得分', width: 120,  align: "center", totalRow: true }
+            , { field: 'gcdz', title: '工程地质得分', width: 120, align: "center", totalRow: true }
+            , { field: 'score', title: '斜坡得分', width: 100, align: "center", totalRow: true }
             , {
                 field: 'jieLun', title: '识别结果', width: 200, align: "center", templet: function (row) {
                     if (row.jieLun != null && row.jieLun.length>0) {
@@ -1244,8 +1247,11 @@ function xiePuoTongji() {
             });
            
         } else if (obj.event == "level-show") {//色彩
-            var checkData = checkStatus.data;
-            console.log(checkData);
+            //var checkData = checkStatus.data;
+            
+            
+            //弹出框，看颜色设置。
+            showModelShiBie();
             // gotoXiePuo();
         }
     });
@@ -2050,6 +2056,258 @@ function deleteFlzShiBieModel(data) {
         }, datatype: "json"
     });
 }
+
+showModelShetable = null;
+function showModelShiBie() {
+    if (xiepotabledata.length == 0) {
+        layer.msg("没有识别单元", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        return false;
+    }
+    if (showShezhilayerindex != null) {
+        layer.msg("已打开显示设置窗口", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        return false;
+    }
+    showShezhilayerindex = layer.open({
+        type: 1
+        , title: ['显示设置', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+        , area: ['440px', '540px']
+        , shade: 0
+        , offset: 'auto'
+
+        , offset: ['80px', '71.2%']
+        , closeBtn: 1
+        , anim: 0
+        , maxmin: true
+        , moveOut: true
+        , content: showShezhiHtml
+        , zIndex: layer.zIndex
+        , success: function (layero) {
+            //layer.setTop(layero);
+            if (dicIndicatorType.length > 0) {
+                document.getElementById("dicIndicatorType").innerHTML = '<option value="">请选择指标类型</option>';
+                for (var i in dicIndicatorType) {
+                    document.getElementById("dicIndicatorType").innerHTML += '<option value="' + dicIndicatorType[i].value + '">' + dicIndicatorType[i].name + '</option>';
+                }
+            }
+            
+            showModelShetable = table.render({
+                elem: '#modelshow-view'
+                , id: 'modelshowId'
+                , title: '显示设置'
+                , skin: 'line'
+                , even: false
+                , page: false
+                , limit: 20
+                , height: 300
+               // , toolbar: '#show-add'
+                , totalRow: false
+                , cols: [[
+                    { type: 'radio' }
+                    , {
+                        field: 'color1', title: '', width: 60, align: "center", templet: function (row) {
+                            return '<div style="width:60px;background-color:' + row.color1+'"><span style="color:' + row.color1+'">未c处理</span><div>'
+                        }
+                    }
+                    , {
+                        field: 'color2', title: '', width: 60, align: "center", templet: function (row) {
+                            return '<div style="width:60px;background-color:' + row.color2 + '"><span style="color:' + row.color2 + '">未c处理</span><div>'
+                        }
+                    }, {
+                        field: 'color1', title: '', width: 60, align: "center", templet: function (row) {
+                            return '<div style="width:60px;background-color:' + row.color3 + '"><span style="color:' + row.color3 + '">未c处理</span><div>'
+                        }
+                    }
+                    , {
+                        field: 'color1', title: '', width: 60, align: "center", templet: function (row) {
+                            return '<div style="width:60px;background-color:' + row.color4 + '"><span style="color:' + row.color4 + '">未c处理</span><div>'
+                        }
+                    }
+                    , {
+                        field: 'color1', title: '', width: 60, align: "center", templet: function (row) {
+                            return '<div style="width:60px;background-color:' + row.color5 + '"><span style="color:' + row.color5 + '">未c处理</span><div>'
+                        }
+                    }
+                    , {
+                        field: 'color1', title: '', width: 60, align: "center", templet: function (row) {
+                            return '<div style="width:60px;background-color:' + row.color6 + '"><span style="color:' + row.color6 + '">未c处理</span><div>'
+                        }
+                    }
+                ]]
+                ,done: function (res, curr, count) {
+                    $('.layui-table .layui-table-cell > span').css({ 'font-weight': 'bold' });//表头字体样式
+                    $('th').hide();//表头隐藏的样式
+                    //$('.layui-table-page').css('margin-top', '40px');//页码部分的高度调整
+                }
+                , data: yuzhicolerType
+            });
+            //console.log(table.cache);
+            //var bindDatas = table.cache["modelshowId"];
+            //bindDatas[0].LAY_CHECKED = true;//举例
+            //xiepotableview.reload({ id: 'modelshowId', data: yuzhicolerType });
+            var checkedData = {};
+            for (var i in yuzhicolerType) {
+                if (yuzhicolerType[i].LAY_CHECKED) {
+                    checkedData = yuzhicolerType[i];
+                }
+            }
+            console.log(checkedData);
+            table.on('radio(modelshow-view)', function (obj) {
+                checkedData = obj.data;
+            });
+         
+            //监听选择类型
+            form.on('select(indicatorType)', function (data) {
+                console.log(data);
+                for (var i in dicIndicatorType) {
+                    if (dicIndicatorType[i].value == data.value) {
+                        var son = dicIndicatorType[i].son;
+                        document.getElementById("identificatIndex").innerHTML = '<option value="">请选择识别指标</option>';
+                        for (var j in son) {
+                            document.getElementById("identificatIndex").innerHTML += '<option value="' + son[j].value + '">' + son[j].name + '</option>';
+                        }
+                        break;
+                    }
+                }
+                form.render('select');
+            });
+            //监听提交
+            form.on('submit(showShezhiSubmit)', function (data) {
+                
+                if (!checkedData.color1) {
+                    layer.msg("请选择色系", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    return false;
+                }
+                var tempData = data.field;
+                var quzhiCanshu = '';
+                var tempList = [];
+                if (tempData.indicatorType == "1" && tempData.identificatIndex == "1") {//岸坡坡度
+                    quzhiCanshu = 'appd';
+                } else if (tempData.indicatorType == "1" && tempData.identificatIndex == "2") {//岸坡结构
+                    quzhiCanshu = 'apjg';
+                } else if (tempData.indicatorType == "1" && tempData.identificatIndex == "3") {//斜坡边界
+                    quzhiCanshu = 'xpbj';
+                } else if (tempData.indicatorType == "2" && tempData.identificatIndex == "1") {//岩性岩组
+                    quzhiCanshu = 'yxyz';
+                } else if (tempData.indicatorType == "2" && tempData.identificatIndex == "2") {//ru
+                    quzhiCanshu = 'ruc';
+                } else if (tempData.indicatorType == "3" && tempData.identificatIndex == "1") {//岩体结构
+                    quzhiCanshu = 'ytjg';
+                } else if (tempData.indicatorType == "3" && tempData.identificatIndex == "2") {//岩体结构
+                    quzhiCanshu = 'ytfh';
+                } else if (tempData.indicatorType == "3" && tempData.identificatIndex == "3") {//岩体结构、
+                    quzhiCanshu = 'ytlh';
+                }
+                for (var i in xiepotabledata) {//在斜坡里面
+                    if (xiepotabledata[i].status=="1") {
+                        if (tempList.length == 0) {
+                            var temp = {
+                                "key": xiepotabledata[i][quzhiCanshu].split("@")[0],
+                                "value": xiepotabledata[i][quzhiCanshu],
+                                "name": quzhiCanshu
+                            }
+                            tempList.push(temp);
+                        } else {
+                            var isin = false;
+                            for (var j in tempList) {
+                                if (tempList[j]["value"] == xiepotabledata[i][quzhiCanshu]) {
+                                    isin = true;
+                                    break;
+                                }
+                            }
+                            if (!isin) {
+                                var temp = {
+                                    "key": xiepotabledata[i][quzhiCanshu].split("@")[0],
+                                    "value": xiepotabledata[i][quzhiCanshu],
+                                    "name": quzhiCanshu
+                                }
+                                tempList.push(temp);
+                            }
+                        }
+                    }
+                    
+                }
+                
+                for (var i in tempList) {
+                    var coler=''
+                    if (i < 6) {
+                        coler = 'color' + (parseInt(i) + 1);
+                    } else {
+                        coler = 'color' + (parseInt(i)-5);
+                    }
+                    
+                    tempList[i].color = checkedData[coler] ;
+
+                }
+                for (var m in xiepotabledata) {
+                    viewer.entities.removeById("DIZHISON_" + xiepotabledata[m].id);
+                    viewer.entities.removeById("DIZHISON_" + xiepotabledata[m].id + "_LABEL");
+                }
+                var entList = [];
+                for (var m in xiepotabledata) {
+                    if (xiepotabledata[m].status=="1") {
+                        var points = xiepotabledata[m].points;
+                        if (points[0].L) {
+                            var pointList = [];
+                            for (var i in points) {
+                                pointList.push(new Cesium.Cartesian3.fromDegrees(points[i].L, points[i].B, points[i].H));
+                            }
+                            points = pointList;
+                        }
+                        for (var n in tempList) {
+                            if (tempList[n].value == xiepotabledata[m][tempList[n].name]) {
+                                var entity = viewer.entities.add({
+                                    id: "DIZHISON_" + xiepotabledata[m].id,
+                                    polygon: {
+                                        hierarchy: {
+                                            positions: points
+                                        },
+                                        material: Cesium.Color.fromCssColorString(tempList[n].color).withAlpha(0.5),//Cesium.Color.ORANGE.withAlpha(0.5),
+                                        outline: true,
+                                        //outlineColor: Cesium.Color.BLACK,
+                                        //outlineWidth: 5
+                                    },
+
+                                });
+                                viewer.entities.add({
+                                    id: "DIZHISON_" + xiepotabledata[m].id + "_LABEL",
+                                    corridor: {
+                                        positions: points,
+                                        width: 2,
+                                        material: Cesium.Color.BLACK,
+                                        //clamToGround:true
+                                    }
+
+                                });
+                                entList.push(entity);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    
+
+                }
+                if (entList.length > 0) {
+                    viewer.flyTo(entList, { duration: 5, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 10000) });
+                    
+                }
+                console.log(tempList);
+                console.log(xiepotabledata);
+
+                return false;
+            });
+           
+            form.render();
+            form.render('select');
+            layer.min(xiePuoIndex);
+        }
+        , end: function () {
+            showShezhilayerindex = null;
+            showModelShetable = null;
+            layer.restore(xiePuoIndex);
+        }
+    });
+}
 //写一个数据字典。
 var dicIndicatorType = [
     { "name": "地形地貌", "key": "dxdm", "value": "1", "son": [{ "name": "岸坡坡度", "key": "appd", "value": "1" }, { "name": "岸坡结构", "key": "apjg", "value": "2" }, { "name": "斜坡边界条件", "key": "xpbj", "value": "3" } ] },
@@ -2069,4 +2327,15 @@ var dicGcdz = [
     { "name": "岩体结构", "value": "1" },
     { "name": "岩体风化程度", "value": "2" },
     { "name": "岩体劣化程度", "value": "3" }
+]
+
+var yuzhicolerType = [
+    { "color1": "#ffff99", "color2": "#ffcc99", "color3": "#ff9999", "color4": "#ff6699", "color5": "#ff3399", "color6": "#ff0099" } ,
+    { "color1": "#99ffff", "color2": "#99ccff", "color3": "#9999ff", "color4": "#9966ff", "color5": "#9933ff", "color6": "#9900ff"},
+    { "color1": "#00FF00", "color2": "#00EE76", "color3": "#00CDCD", "color4": "#00BFFF", "color5": "#008B45", "color6": "#006400" },
+    { "color1": "#0084CC", "color2": "#002FCC", "color3": "#4200CC", "color4": "#BD00CC", "color5": "#E10049", "color6": "#FF2000" },
+    { "color1": "#FF7600", "color2": "#FFA900", "color3": "#FFDC00", "color4": "#E8F700", "color5": "#70DE00", "color6": "#00CC49" },
+    { "color1": "#CCFF66", "color2": "#60F072", "color3": "#60C7F0", "color4": "#6093F0", "color5": "#8060F0", "color6": "#CD60F0" },
+    { "color1": "#FA64AE", "color2": "#FF6D66", "color3": "#FFA766", "color4": "#FFC666", "color5": "#FFE566", "color6": "#F8FD65" },
+    { "color1": "#92FF00", "color2": "#00E83C", "color3": "#009DE8", "color4": "#0042E8", "color5": "#4000E8", "color6": "#C500E8" },
 ]
