@@ -50,7 +50,7 @@ util.fixbar({
             }
         } else if (type === 'bar5') {
             //标注工具
-            Markwidget();
+            Markwidget(current_project_id);
         } else if (type === 'bar6') {
             //加载数据
             AddLocalData();
