@@ -52,9 +52,13 @@
     <Compile Include="data\common\mark\MapMarkProject.cs" />
     <Compile Include="data\common\mark\Mark.cs" />
     <Compile Include="data\common\mark\MarkData.cs" />
+    <Compile Include="data\sysfind\uavfindmap\MapFindTargetImageInfo.cs" />
     <Compile Include="data\sysfind\uavfindmap\MapFindTargetWaypoint.cs" />
     <Compile Include="data\sysfind\uavfindmap\MapFindProjectTarget .cs" />
     <Compile Include="data\sysfind\uavfindmap\MapFindProjectRoute.cs" />
+    <Compile Include="data\sysfind\uavfind\FindImageExif.cs" />
+    <Compile Include="data\sysfind\uavfind\FindImageInfo.cs" />
+    <Compile Include="data\sysfind\uavfind\FindImageXmp.cs" />
     <Compile Include="data\sysgeo\flzone\FlzData.cs" />
     <Compile Include="data\sysgeo\flzone\FlzDataLayer.cs" />
     <Compile Include="data\sysgeo\flzone\FlzProject.cs" />
