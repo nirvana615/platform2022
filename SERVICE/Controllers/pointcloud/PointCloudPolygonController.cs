@@ -17,7 +17,7 @@ namespace SERVICE.Controllers
     public class PointCloudPolygonController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(PointCloudPolygonController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
         /// <summary>
         /// 1-新建多边形信息

@@ -14,7 +14,7 @@ namespace SERVICE.Controllers
     public class MessageController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(AuthController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
         private static string webhook = ConfigurationManager.AppSettings["webhook"] != null ? ConfigurationManager.AppSettings["webhook"].ToString() : string.Empty;
 
 

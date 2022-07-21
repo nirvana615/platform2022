@@ -15,7 +15,7 @@ namespace SERVICE.Controllers
     public class RockLayerController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(RockLayerController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
         /// <summary>
         /// 获取图层信息

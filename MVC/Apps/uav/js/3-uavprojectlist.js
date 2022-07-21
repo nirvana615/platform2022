@@ -17,8 +17,6 @@ layer.open({
     , success: function (layero) {
         layer.setTop(layero);
 
-        
-
         //渲染航线任务项目列表树
         tree.render({
             elem: '#uav-project-list-tree'
@@ -129,6 +127,9 @@ function GetUserUavProjectInfos() {
                     var models = new Object;
                     models.id = project.id;
                     models.title = "实景模型";
+                    models.nodeOperate = true;
+                    models.customItem = true;
+                    models.edit = ['view'];
                     models.spread = true;
                     if (uav_project_infos[i].Models != null && uav_project_infos[i].Models != undefined) {
                         var modelchild = [];
@@ -139,6 +140,9 @@ function GetUserUavProjectInfos() {
                             model.type = "uavsurmodel";
                             model.title = uav_project_infos[i].Models[j].RWMC;
                             model.data = uav_project_infos[i].Models[j];
+                            model.nodeOperate = true;
+                            model.customItem = true;
+                            model.edit = ['add', 'del'];
                             model.showCheckbox = true;
                             model.checked = false;
                             modelchild.push(model);
@@ -330,6 +334,19 @@ function UavProjectNodeOperate(obj) {
         } else if (obj.type === 'del') {
             DeleteUavRoute(obj.data.id);//删除航线
         };
+    }
+    else if (obj.data.type == "uavsurmodel") {
+        //模型
+        if (obj.type === 'add') {
+            ViewModel(obj.data.data); //查看模型
+        } else if (obj.type === 'update') {
+            CancelModel(current_project_id, obj.data.id);//取消模型
+        }
+    }
+    else {
+        if (obj.type === 'view') {
+            LinkModel(current_project_id);//项目关联模型
+        }
     }
 };
 

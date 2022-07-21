@@ -16,7 +16,7 @@ namespace SERVICE.Controllers
     public class UavMissionController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(UavMissionController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
 
         /// <summary>

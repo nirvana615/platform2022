@@ -20,7 +20,7 @@ namespace SERVICE.Controllers
     public class FindProjectController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(FindProjectController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
         /// <summary>
         /// 新建项目

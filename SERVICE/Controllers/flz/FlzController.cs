@@ -19,7 +19,7 @@ namespace SERVICE.Controllers
     public class FlzController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(FlzController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
         
         /// <summary>
         /// 获取当前用户所有项目

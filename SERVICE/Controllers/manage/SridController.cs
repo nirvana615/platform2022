@@ -16,7 +16,7 @@ namespace SERVICE.Controllers
     public class SridController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(SridController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
 
         /// <summary>

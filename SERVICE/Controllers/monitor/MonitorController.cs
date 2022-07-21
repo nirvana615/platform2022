@@ -19,7 +19,7 @@ namespace SERVICE.Controllers
     public class MonitorController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(MonitorController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
 
         /// <summary>

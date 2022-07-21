@@ -20,7 +20,7 @@ namespace SERVICE.Controllers
     public class RockDesignController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(RockDataController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
         /// <summary>
         /// 新建点

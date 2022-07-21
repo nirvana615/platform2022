@@ -261,6 +261,14 @@ namespace MODEL
                 {
                     monitorProject.SFJS = Convert.ToBoolean(row[30].ToString());
                 }
+                if (string.IsNullOrEmpty(row[36].ToString()))
+                {
+                    monitorProject.XMJD = null;
+                }
+                else
+                {
+                    monitorProject.XMJD = Convert.ToInt16(row[36].ToString());
+                }
 
                 return monitorProject;
             }
@@ -4766,9 +4774,6 @@ namespace MODEL
                 return null;
             }
         }
-
-
-
 
         /// <summary>
         /// 三维实景模型

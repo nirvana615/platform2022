@@ -26,7 +26,7 @@ namespace SERVICE.Controllers
     public class ImageUploadController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(ImageUploadController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
         //service 的Web.config中定义imgdir,绝对路径
         private static string imgdir = ConfigurationManager.AppSettings["imgdir"] != null ? ConfigurationManager.AppSettings["imgdir"].ToString() : string.Empty;
 

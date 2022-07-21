@@ -19,7 +19,7 @@ namespace SERVICE.Controllers
     public class UavRouteController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(UavRouteController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
 
         /// <summary>
@@ -2192,8 +2192,8 @@ namespace SERVICE.Controllers
                             double gap = (1 - (waypointInfos[i].photogrammetry.so / 100)) * flyH * uavCamera.CGQGD / uavCamera.JJ;//航线间距
                             #region 拍照间隔和飞行速度
                             double photoInterval = uavCamera.ZXPZJG;//拍照间隔
-                            //double flySpeed = Convert.ToDouble(uavDrone.ZDSPFXSD);//飞行速度
-                            double flySpeed = 8;//飞行速度
+                            double flySpeed = Convert.ToDouble(uavDrone.ZDSPFXSD);//飞行速度
+                            //double flySpeed = 8;//飞行速度
 
                             double tempSpeed = ((1 - (waypointInfos[i].photogrammetry.fo) / 100) * flyH * uavCamera.CGQKD / uavCamera.JJ) / photoInterval;
 

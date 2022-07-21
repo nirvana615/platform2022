@@ -173,7 +173,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\flz\QYWechatController.cs" />
-    <Compile Include="Controllers\monitor\ConstructionController.cs" />	
+    <Compile Include="Controllers\monitor\ConstructionController.cs" />
     <Compile Include="Controllers\tool\MarkController.cs" />
     <Compile Include="Controllers\flz\FlzController.cs" />
     <Compile Include="Controllers\flz\FlzDataController.cs" />

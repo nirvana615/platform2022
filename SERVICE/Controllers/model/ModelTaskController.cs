@@ -24,7 +24,7 @@ namespace SERVICE.Controllers
     public class ModelTaskController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(ModelTaskController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
         private static string webhookmodel = ConfigurationManager.AppSettings["webhookmodel"] != null ? ConfigurationManager.AppSettings["webhookmodel"].ToString() : string.Empty;
 
 

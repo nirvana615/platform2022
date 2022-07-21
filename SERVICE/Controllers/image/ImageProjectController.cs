@@ -19,7 +19,7 @@ namespace SERVICE.Controllers
     public class ImageProjectController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(ImageProjectController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
         /// <summary>
         /// 1---新建项目

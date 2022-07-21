@@ -18,7 +18,7 @@ namespace MVC
     public static class UserManage
     {
         private static Logger logger = Logger.CreateLogger(typeof(UserManage));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
         private static double hour = 4;//有效时间（小时）
 
 

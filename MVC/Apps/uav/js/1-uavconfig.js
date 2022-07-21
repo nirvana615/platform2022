@@ -64,9 +64,9 @@ var WAYLINECON = '<span style="margin-left:0px;margin-right:2px;"><img src="../.
 /*
  * 默认参数
  */
-var takeoffheight = 400;         //(默认值)起飞点高度，单位m
-var initialspeed = 8;            //(默认值)初始速度，单位m/s
-var routespeed = 8;              //(默认值)航线速度，单位m/s
+var takeoffheight = 150;         //(默认值)起飞点高度，单位m
+var initialspeed = 15;            //(默认值)初始速度，单位m/s
+var routespeed = 15;              //(默认值)航线速度，单位m/s
 
 var avoidheight = 150;           //(默认值)避障点高度，单位m
 var landingheight = 100;         //(默认值)降落点高度，单位m
@@ -78,14 +78,14 @@ var hovertime = 3000;           //(默认值)悬停时间，单位ms
 var yawangle = 180;             //(默认值)偏航角，单位°  [-180,180]
 var pitchangle = 0;             //(默认值)偏航角，单位°    [-90,0]
 
-var gsd = 1;                    //地面分辨率，单位cm
+var gsd = 2;                    //地面分辨率，单位cm
 var forwardoverlap = 80;        //航向重叠度，百分比
 var sideoverlap = 70;           //旁向重叠度，百分比
 var multiangle = false;         //首末航向多角度
 var doublegrid = false;         //井字形
 var directmodify = false;       //方向修正（计算第二次自定义平面坐标系y正轴点出错导致的方向错误）
 
-var level = true;              //是否水平
+var level = false;              //是否水平
 
 
 //HomeButton

@@ -16,7 +16,7 @@ namespace SERVICE.Controllers
     public class MarkController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(DisasterController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
         /// <summary>
         /// 新增标注
@@ -280,7 +280,7 @@ namespace SERVICE.Controllers
                                  + syscode + ","
                                  + SQLHelper.UpdateString(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + ","
                                  + (int)MODEL.Enum.State.InUse;
-                            string related_sql = " INSERT INTO common_map_project_mark(markid, projectid, syscode, cjsj, ztm";
+                            //string related_sql = " INSERT INTO common_map_project_mark(markid, projectid, syscode, cjsj, ztm";
                             //int related_id = PostgresqlHelper.InsertDataReturnID(pgsqlConnection, related_sql + ") VALUES" + related_value + ")");
                             //if (related_id != -1)
                             //{

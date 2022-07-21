@@ -95,7 +95,7 @@ namespace MODEL
             /// </summary>
             [RemarkAttribute("100")]
             Source = 0,
-            
+
             /// <summary>
             /// 标记删除的数据（异常值）
             /// </summary>
@@ -106,7 +106,7 @@ namespace MODEL
             /// 插补数据（保证数据采集的连续性）
             /// </summary>
             [RemarkAttribute("300")]
-            Plus =2
+            Plus = 2
         }
 
         /// <summary>
@@ -358,6 +358,22 @@ namespace MODEL
             FKQZYJC = 3
         }
 
+        /// <summary>
+        /// 项目阶段
+        /// </summary>
+        public enum ProjectStage
+        {
+            [RemarkAttribute("前期")]
+            Plan = 0,
 
+            [RemarkAttribute("运行")]
+            Run = 1,
+
+            [RemarkAttribute("完成")]
+            Finish = 2,
+
+            [RemarkAttribute("取消")]
+            Cancel = 3
+        }
     }
 }

@@ -164,6 +164,7 @@ function AddUavRoute(type) {
                         , id: 'uav-route-add-waypointtreeid'
                         , showCheckbox: false
                         , edit: ['update', 'del']
+                        , customOperate: true
                         , accordion: true
                         , showLine: false
                         , click: function (obj) {
@@ -850,6 +851,7 @@ function AddUavRoute(type) {
                         , id: 'uav-route-add-waypointtreeid'
                         , showCheckbox: false
                         , edit: ['update', 'del']
+                        , customOperate: true
                         , accordion: true
                         , showLine: false
                         , click: function (obj) {
@@ -1194,6 +1196,7 @@ function AddUavRoute(type) {
                         , id: 'uav-route-add-waypointtreeid'
                         , showCheckbox: false
                         , edit: ['update', 'del']
+                        , customOperate: true
                         , accordion: true
                         , showLine: false
                         , click: function (obj) {
@@ -1610,6 +1613,7 @@ function AddUavRoute(type) {
                         , id: 'uav-route-add-waypointtreeid'
                         , showCheckbox: false
                         , edit: ['update', 'del']
+                        , customOperate: true
                         , accordion: true
                         , showLine: false
                         , click: function (obj) {
@@ -2388,13 +2392,6 @@ function updateroutetree() {
 //添加起飞点（模型）
 function AddTakeOffModel(type) {
     $("#uav-route-add-takeoff").on("click", function () {
-
-
-
-
-
-
-
         if (current_project_tile == null) {
             layer.msg("请加载项目三维实景模型！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         }
@@ -2422,6 +2419,9 @@ function AddTakeOffModel(type) {
                                 uav_route_add_takeoff.title = "起飞点";
                                 uav_route_add_takeoff.icon = TAKEOFFICON;
                                 uav_route_add_takeoff.type = "takeoff";
+                                uav_route_add_takeoff.nodeOperate = true;
+                                uav_route_add_takeoff.customItem = true;
+                                uav_route_add_takeoff.edit = ['add', 'del'];
                                 uav_route_add_takeoff.spread = false;
                                 var pos = new Object;
                                 pos.b = Cesium.Math.toDegrees(blh.latitude);
@@ -2523,6 +2523,9 @@ function AddLandingModel(type) {
                                 uav_route_add_landing.title = "降落点";
                                 uav_route_add_landing.icon = LANDINGICON;
                                 uav_route_add_landing.type = "landing";
+                                uav_route_add_landing.nodeOperate = true;
+                                uav_route_add_landing.customItem = true;
+                                uav_route_add_landing.edit = ['add', 'del'];
                                 uav_route_add_landing.spread = false;
                                 var pos = new Object;
                                 pos.b = Cesium.Math.toDegrees(blh.latitude);
@@ -2620,6 +2623,9 @@ function AddAvoidModel(type) {
                             uav_route_add_avoid.title = "避障点" + (uav_route_add_avoids.length + 1);
                             uav_route_add_avoid.icon = AVOIDICON;
                             uav_route_add_avoid.type = "avoid";
+                            uav_route_add_avoid.nodeOperate = true;
+                            uav_route_add_avoid.customItem = true;
+                            uav_route_add_avoid.edit = ['add', 'del', 'up', 'down'];
                             uav_route_add_avoid.spread = false;
                             var pos = new Object;
                             pos.b = Cesium.Math.toDegrees(blh.latitude);
@@ -2732,6 +2738,9 @@ function AddTargetModel() {
                             uav_route_add_target.title = "目标点" + (uav_route_add_targets.length + 1);
                             uav_route_add_target.icon = TARGETICON;
                             uav_route_add_target.type = "target";
+                            uav_route_add_target.nodeOperate = true;
+                            uav_route_add_target.customItem = true;
+                            uav_route_add_target.edit = ['add', 'del', 'up', 'down'];
                             uav_route_add_target.spread = true;
                             var pos = new Object;
                             pos.b = Cesium.Math.toDegrees(blh.latitude);
@@ -2843,6 +2852,9 @@ function AddTargetEyeModel() {
                             uav_route_add_target.title = "目标点" + (uav_route_add_targets.length + 1);
                             uav_route_add_target.icon = TARGETICON;
                             uav_route_add_target.type = "target";
+                            uav_route_add_target.nodeOperate = true;
+                            uav_route_add_target.customItem = true;
+                            uav_route_add_target.edit = ['add', 'del', 'up', 'down'];
                             uav_route_add_target.spread = true;
                             var pos = new Object;
                             pos.b = Cesium.Math.toDegrees(blh.latitude);
@@ -3093,6 +3105,9 @@ function AddTargetAreaModel() {
                     uav_route_add_targetarea.title = "目标区域" + (uav_route_add_targetareas.length + 1);
                     uav_route_add_targetarea.icon = TARGETAREAICON;
                     uav_route_add_targetarea.type = "targetarea";
+                    uav_route_add_targetarea.nodeOperate = true;
+                    uav_route_add_targetarea.customItem = true;
+                    uav_route_add_targetarea.edit = ['add', 'del', 'up', 'down'];
                     uav_route_add_targetarea.spread = false;
 
                     var photogrammetry = new Object;//摄影测量参数
@@ -3203,6 +3218,9 @@ function AddTakeOffTerrain() {
                             uav_route_add_takeoff.title = "起飞点";
                             uav_route_add_takeoff.icon = TAKEOFFICON;
                             uav_route_add_takeoff.type = "takeoff";
+                            uav_route_add_takeoff.nodeOperate = true;
+                            uav_route_add_takeoff.customItem = true;
+                            uav_route_add_takeoff.edit = ['add', 'del'];
                             uav_route_add_takeoff.spread = false;
                             var pos = new Object;
                             pos.b = Cesium.Math.toDegrees(blh.latitude);
@@ -3290,6 +3308,9 @@ function AddLandingTerrain() {
                             uav_route_add_landing.title = "降落点";
                             uav_route_add_landing.icon = LANDINGICON;
                             uav_route_add_landing.type = "landing";
+                            uav_route_add_landing.nodeOperate = true;
+                            uav_route_add_landing.customItem = true;
+                            uav_route_add_landing.edit = ['add', 'del'];
                             uav_route_add_landing.spread = false;
                             var pos = new Object;
                             pos.b = Cesium.Math.toDegrees(blh.latitude);
@@ -3373,6 +3394,9 @@ function AddAvoidTerrain() {
                         uav_route_add_avoid.title = "避障点" + (uav_route_add_avoids.length + 1);
                         uav_route_add_avoid.icon = AVOIDICON;
                         uav_route_add_avoid.type = "avoid";
+                        uav_route_add_avoid.nodeOperate = true;
+                        uav_route_add_avoid.customItem = true;
+                        uav_route_add_avoid.edit = ['add', 'del', 'up', 'down'];
                         uav_route_add_avoid.spread = false;
                         var pos = new Object;
                         pos.b = Cesium.Math.toDegrees(blh.latitude);
@@ -3623,6 +3647,9 @@ function AddTargetAreaTerrain() {
                 uav_route_add_targetarea.title = "目标区域" + (uav_route_add_targetareas.length + 1);
                 uav_route_add_targetarea.icon = TARGETAREAICON;
                 uav_route_add_targetarea.type = "targetarea";
+                uav_route_add_targetarea.nodeOperate = true;
+                uav_route_add_targetarea.customItem = true;
+                uav_route_add_targetarea.edit = ['add', 'del', 'up', 'down'];
                 uav_route_add_targetarea.spread = false;
 
                 var photogrammetry = new Object;//摄影测量参数

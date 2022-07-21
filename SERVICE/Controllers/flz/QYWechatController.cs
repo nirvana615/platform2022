@@ -26,7 +26,7 @@ namespace SERVICE.Controllers
     public class QYWechatController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(QYWechatController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
         #region 获取Token
         /// <summary>

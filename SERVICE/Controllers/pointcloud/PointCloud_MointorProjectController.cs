@@ -16,7 +16,7 @@ namespace SERVICE.Controllers
     public class PointCloud_MointorProjectController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(PointCloud_MointorProjectController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
         /// <summary>
         /// 获取与点云处理关联监测项目

@@ -20,7 +20,7 @@ namespace SERVICE.Controllers
     public class ModelProjectController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(ModelProjectController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
 
         /// <summary>

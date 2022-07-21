@@ -16,7 +16,7 @@ namespace SERVICE.Controllers
     public class FactoryController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(FactoryController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
         /// <summary>
         /// 获取自动化监测设备厂家信息

@@ -27,7 +27,7 @@ namespace SERVICE.Controllers
     public class FlzWordWxpertController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(FlzWordWxpertController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
         private static string imgdir = ConfigurationManager.AppSettings["imgdir"] != null ? ConfigurationManager.AppSettings["imgdir"].ToString() : string.Empty;
         /// <summary>
         /// 旬报

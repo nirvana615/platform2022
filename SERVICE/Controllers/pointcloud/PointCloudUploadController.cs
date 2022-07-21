@@ -19,7 +19,7 @@ namespace SERVICE.Controllers
     public class PointCloudUploadController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(PointCloudUploadController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
         /// <summary>
         /// 获取时序数据信息（后台）
         /// </summary>

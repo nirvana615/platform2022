@@ -16,7 +16,7 @@ namespace SERVICE.Controllers
     public class SaleController : ApiController
     {
         private static Logger logger = Logger.CreateLogger(typeof(SaleController));
-        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
+        private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString() == "" ? COM.ConstHelper.dbConn : ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
 
 
         /// <summary>

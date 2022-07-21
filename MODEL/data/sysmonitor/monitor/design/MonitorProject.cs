@@ -151,5 +151,9 @@ namespace MODEL
         /// 项目简称
         /// </summary>
         public string XMJC { get; set; }
+        /// <summary>
+        /// 项目阶段
+        /// </summary>
+        public int? XMJD { get; set; }
     }
 }
