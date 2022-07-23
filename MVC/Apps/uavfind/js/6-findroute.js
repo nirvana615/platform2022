@@ -6,55 +6,45 @@ var LANDINGICON = '<span style="margin-right:2px;"><img src="../../../Resources/
 var TARGETICON = '<span style="margin-right:2px;"><img src="../../../Resources/img/uav/target.png" style="width:14px;height:14px;"/></span>';
 var AVOIDICON = '<span style="margin-right:2px;"><img src="../../../Resources/img/uav/avoid.png" style="width:14px;height:14px;"/></span>';
 var TARGETAREAICON = '<span style="margin-right:2px;"><img src="../../../Resources/img/uav/targetarea.png" style="width:14px;height:14px;"/></span>';
-var MODELICON = '<span style="margin-left:0px;margin-right:2px;"><img src="../../../Resources/img/map/model.png" style="width:14px;height:14px;"/></span>';
-var WAYLINECON = '<span style="margin-left:0px;margin-right:2px;"><img src="../../../Resources/img/uav/wayline.png" style="width:14px;height:14px;"/></span>';
+
 /*
  * 默认参数
  */
 var takeoffheight = 400;         //(默认值)起飞点高度，单位m
 var initialspeed = 8;            //(默认值)初始速度，单位m/s
 var routespeed = 8;              //(默认值)航线速度，单位m/s
-
 var avoidheight = 150;           //(默认值)避障点高度，单位m
 var landingheight = 100;         //(默认值)降落点高度，单位m
-
 var adjustdistance = 5;         //(默认值)调整距离，单位m
 var photodistance = 80;         //(默认值)拍照距离，单位m
 var adjustspeed = 1;            //(默认值)调整速度，单位m/s
 var hovertime = 3000;           //(默认值)悬停时间，单位ms
 var yawangle = 180;             //(默认值)偏航角，单位°  [-180,180]
 var pitchangle = 0;             //(默认值)偏航角，单位°    [-90,0]
-
-var gsd = 1;                    //地面分辨率，单位cm
-var forwardoverlap = 80;        //航向重叠度，百分比
-var sideoverlap = 70;           //旁向重叠度，百分比
-var multiangle = false;         //首末航向多角度
-var doublegrid = false;         //井字形
-var directmodify = false;       //方向修正（计算第二次自定义平面坐标系y正轴点出错导致的方向错误）
-
-var level = true;              //是否水平
+var level = true;               //是否水平
 
 
-//******TODO新建巡查航线,后期随航线规划系统更改
-function AddFindRoute() {
+//新建巡查航线
+function AddUavFindRoute() {
     if (currentprojectid == null) {
         layer.msg("请先选择当前项目！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
     }
-    else if (current_project_tile == null) {
+    else if (curtileset == null) {
         layer.msg("请加载项目三维实景模型！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
     }
     else {
+        depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
         viewer.scene.globe.depthTestAgainstTerrain = false;
-        uavrouteaddlayerindex = layer.open({
+        findrouteaddlayerindex = layer.open({
             type: 1
-            , title: ['新建目标图像采集（视线）', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+            , title: ['新建无人机宏观巡查航线', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
             , area: ['400px', '850px']
             , offset: 'r'
             , shade: 0
             , closeBtn: 1
             , maxmin: true
             , moveOut: true
-            , content: '<!--目标图像采集（新建）--><form class="layui-form" lay-filter="uav-route-add" action=""><div class="layui-form-item" style="width:100%;height:680px;"><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px;"><ul class="layui-tab-title"><li class="layui-this" style="padding-top: 5px;width:25%;">航线</li><li style="padding-top: 5px;width:25%;">无人机</li><li style="padding-top: 5px;width:25%;">规划</li></ul><div class="layui-tab-content"><!--航线--><div class="layui-tab-item layui-show"><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">航线名称</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-hxmc" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">航线类型</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-hxlxid" name="uav-route-add-hxlx" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">高程类型</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-gclxid" name="uav-route-add-gclx" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">航线速度m/s</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-hxsd" autocomplete="off" class="layui-input" lay-verify="required" /></div></div><div class="layui-form-item layui-form-text"><label class="layui-form-label" style="width:80px;text-align:left;">备&emsp;&emsp;注</label><div class="layui-input-block" style="margin-left:110px;"><textarea name="uav-route-add-bz" placeholder="请输入" class="layui-textarea" style="height:300px;padding-right:5px;"></textarea></div></div><div id="uav-route-result" style="visibility:hidden;"><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">航线长度m</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-hxcd" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">飞行时间s</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-fxsj" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">航点数量</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-hlds" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">拍照数量</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-pzsl" autocomplete="off" class="layui-input" readonly="readonly" /></div></div></div></div><!--无人机--><div class="layui-tab-item"><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">无&ensp;人&ensp;机</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-droneid" name="uav-route-add-drone" lay-filter="uav-route-add-drone" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">挂载类型</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-payloadtypeid" name="uav-route-add-payloadtype" lay-filter="uav-route-add-payloadtype" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">挂载型号</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-payloadid" name="uav-route-add-payload" lay-filter="uav-route-add-payload" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">照片比例</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-photoratioid" name="uav-route-add-photoratio" lay-filter="uav-route-add-photoratio"><option value="">请选择</option></select></div></div></div><!--规划--><div class="layui-tab-item"><div class="layui-row layui-col-space5" style="margin-bottom:5px;"><div class="layui-col-md3"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-takeoff" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 起飞点</button></div></div><div class="layui-col-md3"><div class="grid-demo"><button type="button" id="uav-route-add-target" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 目标点</button></div></div><div class="layui-col-md3"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-avoid" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 避障点</button></div></div><div class="layui-col-md3"><div class="grid-demo"><button type="button" id="uav-route-add-landing" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 降落点</button></div></div></div><div class="grid-demo grid-demo-bg1" style="height:300px;border-style:solid;border-width:1px;border-color:#e6e6e6;overflow: auto;"><!--航点树--><div id="uav-route-add-waypointtree"></div></div><div class="layui-row layui-col-space5" id="uav-route-add-action" style="margin-top:5px;visibility:hidden;"><div class="layui-col-md3"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-hover" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 悬停</button></div></div><div class="layui-col-md3"><div class="grid-demo"><button type="button" id="uav-route-add-photo" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 拍照</button></div></div><div class="layui-col-md3"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-yaw" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 偏航角</button></div></div><div class="layui-col-md3"><div class="grid-demo"><button type="button" id="uav-route-add-pitch" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 俯仰角</button></div></div></div><div class="grid-demo" style="height:260px;border-style:solid;border-width:1px;border-color:#e6e6e6;margin-top:5px;overflow: auto;"><!--参数--><div id="uav-route-add-waypointpara"></div></div></div></div></div></div><!--操作项--><div style="margin-top:5px;border-top-style:solid;border-top-width:2px;border-top-color:#f8f8f8;margin-left:5px;margin-right:5px;"><div class="layui-form-item" style="margin-top:5px;"><div style="margin-top:5px;"><button type="submit" class="layui-btn layui-btn-primary layui-btn-sm" lay-submit="" lay-filter="uav-route-add-jshx" style="width:100%;">计算</button></div></div><div class="layui-row layui-col-space5"><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-dowload-json" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">下载JSON</button></div></div><div class="layui-col-md4"><div class="grid-demo"><button type="button" id="uav-route-add-dowload-djiterra" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">下载DJI Terra</button></div></div><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-dowload-djipilot" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">下载DJI Pilot</button></div></div></div><div class="layui-form-item" style="margin-top:5px;"><div style="margin-top:5px;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="find-route-add-submit" style="width:100%;">保存</button></div></div></div></form>'
+            , content: '<!--目标图像采集（新建）--><form class="layui-form" lay-filter="uav-route-add" action=""><div class="layui-form-item" style="width:100%;height:680px;"><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px;"><ul class="layui-tab-title"><li class="layui-this" style="padding-top: 5px;width:42%;">航线</li><li style="padding-top: 5px;width:42%;">航点</li></ul><div class="layui-tab-content"><!--航线--><div class="layui-tab-item layui-show"><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">航线名称</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-hxmc" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">航线类型</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-hxlxid" name="uav-route-add-hxlx" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">高程类型</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-gclxid" name="uav-route-add-gclx" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">航线速度m/s</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-hxsd" autocomplete="off" class="layui-input" lay-verify="required" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">无&ensp;人&ensp;机</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-droneid" name="uav-route-add-drone" lay-filter="uav-route-add-drone" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">挂载类型</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-payloadtypeid" name="uav-route-add-payloadtype" lay-filter="uav-route-add-payloadtype" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">挂载型号</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-payloadid" name="uav-route-add-payload" lay-filter="uav-route-add-payload" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">照片比例</label><div class="layui-input-block" style="margin-left:110px;"><select id="uav-route-add-photoratioid" name="uav-route-add-photoratio" lay-filter="uav-route-add-photoratio"><option value="">请选择</option></select></div></div><div class="layui-form-item layui-form-text"><label class="layui-form-label" style="width:80px;text-align:left;">备&emsp;&emsp;注</label><div class="layui-input-block" style="margin-left:110px;"><textarea name="uav-route-add-bz" placeholder="请输入" class="layui-textarea" style="height:120px;padding-right:5px;"></textarea></div></div><div id="uav-route-result" style="visibility:hidden;"><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">航线长度m</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-hxcd" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">飞行时间s</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-fxsj" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">航点数量</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-hlds" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label" style="width:80px;text-align:left;">拍照数量</label><div class="layui-input-block" style="margin-left:110px;"><input type="text" name="uav-route-add-pzsl" autocomplete="off" class="layui-input" readonly="readonly" /></div></div></div></div><!--航点--><div class="layui-tab-item"><div class="layui-row layui-col-space5" style="margin-bottom:5px;"><div class="layui-col-md3"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-takeoff" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 起飞点</button></div></div><div class="layui-col-md3"><div class="grid-demo"><button type="button" id="uav-route-add-target" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 巡查点</button></div></div><div class="layui-col-md3"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-avoid" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 避障点</button></div></div><div class="layui-col-md3"><div class="grid-demo"><button type="button" id="uav-route-add-landing" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 降落点</button></div></div></div><div class="grid-demo grid-demo-bg1" style="height:300px;border-style:solid;border-width:1px;border-color:#e6e6e6;overflow: auto;"><!--航点树--><div id="uav-route-add-waypointtree"></div></div><div class="layui-row layui-col-space5" id="uav-route-add-action" style="margin-top:5px;visibility:hidden;"><div class="layui-col-md3"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-hover" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 悬停</button></div></div><div class="layui-col-md3"><div class="grid-demo"><button type="button" id="uav-route-add-photo" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 拍照</button></div></div><div class="layui-col-md3"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-yaw" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 偏航角</button></div></div><div class="layui-col-md3"><div class="grid-demo"><button type="button" id="uav-route-add-pitch" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">✚ 俯仰角</button></div></div></div><div class="grid-demo" style="height:260px;border-style:solid;border-width:1px;border-color:#e6e6e6;margin-top:5px;overflow: auto;"><!--参数--><div id="uav-route-add-waypointpara"></div></div></div></div></div></div><!--操作项--><div style="margin-top:5px;border-top-style:solid;border-top-width:2px;border-top-color:#f8f8f8;margin-left:5px;margin-right:5px;"><div class="layui-form-item" style="margin-top:5px;"><div style="margin-top:5px;"><button type="submit" class="layui-btn layui-btn-primary layui-btn-sm" lay-submit="" lay-filter="uav-route-add-jshx" style="width:100%;">计算</button></div></div><div class="layui-row layui-col-space5"><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-dowload-json" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">下载JSON</button></div></div><div class="layui-col-md4"><div class="grid-demo"><button type="button" id="uav-route-add-dowload-djiterra" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">下载DJI Terra</button></div></div><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><button type="button" id="uav-route-add-dowload-djipilot" class="layui-btn layui-btn-primary layui-btn-sm" style="width:100%;">下载DJI Pilot</button></div></div></div><div class="layui-form-item" style="margin-top:5px;"><div style="margin-top:5px;"><button type="submit" class="layui-btn" lay-submit="" lay-filter="uav-route-add-submit" style="width:100%;">保存</button></div></div></div></form>'
             , zIndex: layer.zIndex
             , success: function (layero) {
                 layer.setTop(layero);
@@ -540,7 +530,7 @@ function AddFindRoute() {
                     }
                 });
 
-                AddTakeOffModel(7);//添加起飞点
+                AddTakeOffModel(7, curtileset);//添加起飞点
                 AddLandingModel(7);//添加降落点
                 AddFindTargetEyeModel();//添加目标点（视线）
                 AddAvoidModel(7);//添加避障点
@@ -694,17 +684,33 @@ function AddFindRoute() {
                 form.render();
                 form.render('select');
             }
-            , cancel: function () {
-                //TODO
-            }
             , end: function () {
-                viewer.scene.globe.depthTestAgainstTerrain = false;
+                viewer.scene.globe.depthTestAgainstTerrain = depthTestAgainstTerrain;
                 ResetRouteElements();//重置
             }
         });
-
     }
-}
+};
+
+//查看巡查航线
+function ViewUavFindRoute() {
+
+};
+
+//编辑巡查航线
+function EditUavFindRoute() {
+};
+
+//删除巡查航线
+function DelteUavFindRoute(uavfindrouteid) {
+    /*
+     * (1) 删除航线
+     *（2）删除航线目标点
+     */
+
+};
+
+
 
 //******TODO保存航线任务,保存target\mapprojecttarget\maptargetwaypoint
 function SaveFindMission(type) {
@@ -802,6 +808,39 @@ function SaveFindMission(type) {
     });
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //删除巡查航线
 function DeleteFindRoute(delfindrouteid) {
     $.ajax({
@@ -861,7 +900,7 @@ function DeleteFindRoute(delfindrouteid) {
 //添加目标点（视线）,后期删除，用航线规划系统改后版
 function AddFindTargetEyeModel() {
     $("#uav-route-add-target").on("click", function () {
-        if (current_project_tile == null) {
+        if (curtileset == null) {
             layer.msg("请加载项目三维实景模型！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         }
         else {

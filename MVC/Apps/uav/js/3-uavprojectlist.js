@@ -17,7 +17,6 @@ layer.open({
     , success: function (layero) {
         layer.setTop(layero);
 
-        //渲染航线任务项目列表树
         tree.render({
             elem: '#uav-project-list-tree'
             , data: []
@@ -46,7 +45,7 @@ layer.open({
 
         //获取用户全部航线任务项目
         GetUserUavProjects();//快速显示
-        GetUserUavProjectInfos();//加载全部信息
+        GetUserUavProjectInfos();//加载全部
     }
 });
 
@@ -78,13 +77,13 @@ function GetUserUavProjects() {
                         child.push(createtime);
 
                         var models = new Object;
-                        models.id = project.id;
+                        //models.id = project.id;
                         models.title = "实景模型";
                         models.spread = true;
                         child.push(models);
 
                         var routes = new Object;
-                        routes.id = project.id;
+                        //routes.id = project.id;
                         routes.title = "航线任务";
                         routes.spread = true;
                         child.push(routes);
@@ -125,17 +124,19 @@ function GetUserUavProjectInfos() {
                     }
 
                     var models = new Object;
-                    models.id = project.id;
+                    //models.id = project.id;
                     models.title = "实景模型";
                     models.nodeOperate = true;
                     models.customItem = true;
                     models.edit = ['view'];
                     models.spread = true;
+
                     if (uav_project_infos[i].Models != null && uav_project_infos[i].Models != undefined) {
                         var modelchild = [];
                         for (var j in uav_project_infos[i].Models) {
                             var model = new Object;
-                            model.id = "UAVSURMODEL_" + uav_project_infos[i].Models[j].Id;
+                            //model.id = "UAVSURMODEL_" + uav_project_infos[i].Models[j].Id;
+                            model.id = uav_project_infos[i].Models[j].Id;
                             model.icon = MODELICON;
                             model.type = "uavsurmodel";
                             model.title = uav_project_infos[i].Models[j].RWMC;
@@ -152,9 +153,10 @@ function GetUserUavProjectInfos() {
                     projectchild.push(models);
 
                     var routes = new Object;
-                    routes.id = project.id;
+                    //routes.id = project.id;
                     routes.title = "航线任务";
                     routes.spread = true;
+
                     if (uav_project_infos[i].Routes != null && uav_project_infos[i].Routes != undefined) {
                         var routechild = [];
                         for (var j in uav_project_infos[i].Routes) {
@@ -261,7 +263,15 @@ function UavProjectNodeClick(obj) {
     }
     else if (obj.data.type == "uavsurmodel") {
         if (current_project_tile != null) {
-            if (obj.data.id == ("UAVSURMODEL_" + current_project_tile.data.Id)) {
+            //if (obj.data.id == ("UAVSURMODEL_" + current_project_tile.data.Id)) {
+            //    if (current_project_tile.data.MXSJ != undefined && current_project_tile.data.MXSJ != "") {
+            //        viewer.scene.camera.setView(JSON.parse(current_project_tile.data.MXSJ));
+            //    }
+            //    else {
+            //        viewer.zoomTo(current_project_tile);
+            //    }
+            //}
+            if (obj.data.id == current_project_tile.data.Id) {
                 if (current_project_tile.data.MXSJ != undefined && current_project_tile.data.MXSJ != "") {
                     viewer.scene.camera.setView(JSON.parse(current_project_tile.data.MXSJ));
                 }
@@ -327,7 +337,8 @@ function UavProjectNodeOperate(obj) {
     } else if (obj.data.type == "uavroute") {
         //航线
         if (obj.type === 'add') {
-            ViewUavRoute(obj.data.class, obj.data.id); //查看航线
+            //查看航线
+            ViewUavRoute(obj.data.class, obj.data.id);
         } else if (obj.type === 'update') {
             //编辑航线
             EditUavRoute(obj.data.class, obj.data.id);
@@ -339,7 +350,7 @@ function UavProjectNodeOperate(obj) {
         //模型
         if (obj.type === 'add') {
             ViewModel(obj.data.data); //查看模型
-        } else if (obj.type === 'update') {
+        } else if (obj.type === 'del') {
             CancelModel(current_project_id, obj.data.id);//取消模型
         }
     }

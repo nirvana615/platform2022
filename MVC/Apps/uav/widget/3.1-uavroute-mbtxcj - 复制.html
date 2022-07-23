@@ -3,8 +3,9 @@
     <div class="layui-form-item" style="width:100%;height:680px;">
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px;">
             <ul class="layui-tab-title">
-                <li class="layui-this" style="padding-top: 5px;width:42%;">航线</li>
-                <li style="padding-top: 5px;width:42%;">航点</li>
+                <li class="layui-this" style="padding-top: 5px;width:25%;">航线</li>
+                <li style="padding-top: 5px;width:25%;">无人机</li>
+                <li style="padding-top: 5px;width:25%;">规划</li>
             </ul>
 
             <div class="layui-tab-content">
@@ -41,6 +42,47 @@
                             <input type="text" name="uav-route-add-hxsd" autocomplete="off" class="layui-input" lay-verify="required" />
                         </div>
                     </div>
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label" style="width:80px;text-align:left;">备&emsp;&emsp;注</label>
+                        <div class="layui-input-block" style="margin-left:110px;">
+                            <textarea name="uav-route-add-bz" placeholder="请输入" class="layui-textarea" style="height:300px;padding-right:5px;"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="uav-route-result" style="visibility:hidden;">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:80px;text-align:left;">航线长度m</label>
+                            <div class="layui-input-block" style="margin-left:110px;">
+                                <input type="text" name="uav-route-add-hxcd" autocomplete="off" class="layui-input" readonly="readonly" />
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:80px;text-align:left;">飞行时间s</label>
+                            <div class="layui-input-block" style="margin-left:110px;">
+                                <input type="text" name="uav-route-add-fxsj" autocomplete="off" class="layui-input" readonly="readonly" />
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:80px;text-align:left;">航点数量</label>
+                            <div class="layui-input-block" style="margin-left:110px;">
+                                <input type="text" name="uav-route-add-hlds" autocomplete="off" class="layui-input" readonly="readonly" />
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:80px;text-align:left;">拍照数量</label>
+                            <div class="layui-input-block" style="margin-left:110px;">
+                                <input type="text" name="uav-route-add-pzsl" autocomplete="off" class="layui-input" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--无人机-->
+                <div class="layui-tab-item">
                     <div class="layui-form-item">
                         <label class="layui-form-label" style="width:80px;text-align:left;">无&ensp;人&ensp;机</label>
                         <div class="layui-input-block" style="margin-left:110px;">
@@ -76,46 +118,9 @@
                             </select>
                         </div>
                     </div>
-
-                    <div class="layui-form-item layui-form-text">
-                        <label class="layui-form-label" style="width:80px;text-align:left;">备&emsp;&emsp;注</label>
-                        <div class="layui-input-block" style="margin-left:110px;">
-                            <textarea name="uav-route-add-bz" placeholder="请输入" class="layui-textarea" style="height:120px;padding-right:5px;"></textarea>
-                        </div>
-                    </div>
-
-                    <div id="uav-route-result" style="visibility:hidden;">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label" style="width:80px;text-align:left;">航线长度m</label>
-                            <div class="layui-input-block" style="margin-left:110px;">
-                                <input type="text" name="uav-route-add-hxcd" autocomplete="off" class="layui-input" readonly="readonly" />
-                            </div>
-                        </div>
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label" style="width:80px;text-align:left;">飞行时间s</label>
-                            <div class="layui-input-block" style="margin-left:110px;">
-                                <input type="text" name="uav-route-add-fxsj" autocomplete="off" class="layui-input" readonly="readonly" />
-                            </div>
-                        </div>
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label" style="width:80px;text-align:left;">航点数量</label>
-                            <div class="layui-input-block" style="margin-left:110px;">
-                                <input type="text" name="uav-route-add-hlds" autocomplete="off" class="layui-input" readonly="readonly" />
-                            </div>
-                        </div>
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label" style="width:80px;text-align:left;">拍照数量</label>
-                            <div class="layui-input-block" style="margin-left:110px;">
-                                <input type="text" name="uav-route-add-pzsl" autocomplete="off" class="layui-input" readonly="readonly" />
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
-                <!--航点-->
+                <!--规划-->
                 <div class="layui-tab-item">
                     <div class="layui-row layui-col-space5" style="margin-bottom:5px;">
                         <div class="layui-col-md3">
@@ -210,4 +215,5 @@
             </div>
         </div>
     </div>
+
 </form>

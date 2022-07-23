@@ -645,7 +645,6 @@
     <Content Include="Apps\uavfind\js\6-findroute.js" />
     <Content Include="Apps\uavfind\js\8-findheader.js" />
     <Content Include="Apps\uavfind\js\9-findvutil.js" />
-    <Content Include="Apps\uavfind\widget\1.0-findprojectlist.html" />
     <Content Include="Apps\uavfind\widget\1.4 findproject-auth.html" />
     <Content Include="Apps\uavfind\widget\2.0 routetarget-add.html" />
     <Content Include="Apps\uavfind\widget\1.1 findprojectadd.html" />
@@ -665,6 +664,7 @@
     <Content Include="Apps\uav\widget\1.3 uavproject-auth.html" />
     <Content Include="Apps\uav\widget\3.01-uavroute-action.html" />
     <Content Include="Apps\uav\widget\3.02-uavroute-waypoint.html" />
+    <Content Include="Apps\uav\widget\3.1-uavroute-mbtxcj - 复制.html" />
     <Content Include="Apps\uav\widget\3.2-uavroute-xpsycl.html" />
     <Content Include="Apps\uav\widget\3.1-uavroute-mbtxcj.html" />
     <Content Include="Apps\uav\widget\2.0-uavroutetype.html" />

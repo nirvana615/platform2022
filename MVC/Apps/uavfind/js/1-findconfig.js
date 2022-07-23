@@ -26,18 +26,21 @@ var loadlayerindex = null;//全部加载层
 
 var depthTestAgainstTerrain;//深度检测值
 
-var findprojectinfoviewlayerindex = null;      //项目模块（查看）
-var findprojectinfoaddlayerindex = null;       //项目模块（新建）
-var findprojectinfoeditlayerindex = null;      //项目模块（编辑）
+var findprojectinfoviewlayerindex = null;       //项目模块（查看）
+var findprojectinfoaddlayerindex = null;        //项目模块（新建）
+var findprojectinfoeditlayerindex = null;       //项目模块（编辑）
 
-var findprojectauthlayerindex = null;          //项目授权模块
+var findprojectauthlayerindex = null;           //项目授权模块
 
-var headeruserlayerindex = null;           //用户模块
-var headernoticelayerindex = null;         //通知模块
-var headerselayerindex = null;            //设置模块
+var findrouteviewlayerindex = null;       //巡查航线（查看）
+var findrouteaddlayerindex = null;        //巡查航线（新建）
+var findrouteeditlayerindex = null;       //巡查航线（编辑）
 
+var headeruserlayerindex = null;                //用户模块
+var headernoticelayerindex = null;              //通知模块
+var headerselayerindex = null;                  //设置模块
 
-var findprojectlist = [];      //项目数据
+var findprojectlist = [];//项目数据
 
 var projectentities = [];           //项目位置及标注
 var newprojectentity = null;        //临时项目位置
@@ -45,17 +48,12 @@ var currentprojectid = null;        //当前项目id
 var currentprojecttitle = null;     //当前项目标题
 var currentmodelid = null;          //当前模型id
 var curtileset = null;              //当前模型
+var current_entities_route = [];    //当前路径
 
-var current_project_tile = null; //当前模型-航线规划系统***********
-
-var current_entities_route = [];//当前路径
 var isReloadTree = false;//是否tree重载（默认否）用于处理由于tree重载触发的选中事件
 
-
-
-//图标
-var MODELICON = '<span style="margin-left:5px;margin-right:5px;"><img src="../../../Resources/img/map/model.png" style="width:14px;height:14px;"/></span>';
-
+var MODELICON = '<span style="margin-left:0px;margin-right:2px;"><img src="../../../Resources/img/map/model.png" style="width:14px;height:14px;"/></span>';
+var WAYLINECON = '<span style="margin-left:0px;margin-right:2px;"><img src="../../../Resources/img/uav/wayline.png" style="width:14px;height:14px;"/></span>';
 
 //HomeButton功能
 viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) {
@@ -64,8 +62,13 @@ viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (e) 
     if (current_entities_route.length > 0) {
         ZoomToEntities(current_entities_route);
     }
-    else if (currentprojecttitle != null) {
-        viewer.zoomTo(currentprojecttitle);       
+    else if (curtileset != null) {
+        if (curtileset.data.MXSJ != undefined && curtileset.data.MXSJ != "") {
+            viewer.scene.camera.setView(JSON.parse(curtileset.data.MXSJ));
+        }
+        else {
+            viewer.zoomTo(curtileset);
+        }      
     }
     else {
         FlyToChina();//定位中国
@@ -93,6 +96,24 @@ function CloseAllLayer() {
     if (findprojectinfoeditlayerindex != null) {
         layer.close(findprojectinfoeditlayerindex);
         findprojectinfoeditlayerindex = null;
+    }
+
+    if (findprojectauthlayerindex != null) {
+        layer.close(findprojectauthlayerindex);
+        findprojectauthlayerindex = null;
+    }
+
+    if (headeruserlayerindex != null) {
+        layer.close(headeruserlayerindex);
+        headeruserlayerindex = null;
+    }
+    if (headernoticelayerindex != null) {
+        layer.close(headernoticelayerindex);
+        headernoticelayerindex = null;
+    }
+    if (headerselayerindex != null) {
+        layer.close(headerselayerindex);
+        headerselayerindex = null;
     }
 }
 

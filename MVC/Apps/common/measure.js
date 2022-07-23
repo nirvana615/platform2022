@@ -209,12 +209,14 @@ function pointMeasure() {
                     height = blh.z;
                 }
 
+                var xy = bl2xy(lat, lon, 3, Math.round(lon / 3) * 3, false);
+
                 if (height > 0) {
                     if (measurewidget_result == "") {
-                        measurewidget_result = "经  度： " + lon.toFixed(6) + "°\n纬  度： " + lat.toFixed(6) + "°\n高  程： " + (height).toFixed(3) + "m";
+                        measurewidget_result = "经  度： " + lon.toFixed(6) + "°\n纬  度： " + lat.toFixed(6) + "°\n高  程： " + (height).toFixed(3) + "m\nx坐标： " + xy.y.toFixed(3) + "\ny坐标： " + xy.x.toFixed(3);
                     }
                     else {
-                        measurewidget_result = "经  度： " + lon.toFixed(6) + "°\n纬  度： " + lat.toFixed(6) + "°\n高  程： " + (height).toFixed(3) + "m\n\n" + measurewidget_result;
+                        measurewidget_result = "经  度： " + lon.toFixed(6) + "°\n纬  度： " + lat.toFixed(6) + "°\n高  程： " + (height).toFixed(3) + "m\nx坐标： " + xy.y.toFixed(3) + "\ny坐标： " + xy.x.toFixed(3) + "\n\n" + measurewidget_result;
                     }
 
                     if (Cesium.defined(position)) {
@@ -433,6 +435,8 @@ function heightMeasure() {
                         //        pixelOffset: new Cesium.Cartesian2(0.0, -60),
                         //    }
                         //});
+
+                        var slope = (rblh1.height - h) / dis;
 
                         if (measurewidget_result == "") {
                             measurewidget_result = "空间距离：" + len.toFixed(3) + "m\n平面距离：" + dis.toFixed(3) + "m\n高       差：" + (rblh1.height - h).toFixed(3) + "m\n倾       角：" + (Math.acos(dis / len) * 180 / Math.PI).toFixed(2) + '°';

@@ -61,19 +61,22 @@ function GetUserAllFindProjectsQuick() {
                     var project = new Object();
                     project.id = findprojectdata[i].Project.Id;
                     project.title = findprojectdata[i].Project.XMMC;
-                    project.type = "findproject";
-                    project.spread = false;
                     project.data = findprojectdata[i].Project;
+                    project.type = "findproject";
+                    project.nodeOperate = true;
+                    project.spread = false;
 
                     var child = [];
                     var models = new Object();
                     models.title = "实景模型";
                     models.spread = false;
                     child.push(models);
+
                     var routes = new Object();
                     routes.title = "巡查航线";
                     routes.spread = false;
                     child.push(routes);
+
                     var targets = new Object();
                     targets.title = "巡查目标";
                     targets.spread = false;
@@ -146,6 +149,7 @@ function GetUserAllFindProjects() {
         url: servicesurl + "/api/FindProject/GetUserFindProjectDatas", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             findprojectlist = [];
+
             var result = JSON.parse(data);
             if (result.code == 1) {
                 var findprojectdata = JSON.parse(result.data);
@@ -163,6 +167,9 @@ function GetUserAllFindProjects() {
                     //实景模型
                     var models = new Object();
                     models.title = "实景模型";
+                    models.nodeOperate = true;
+                    models.customItem = true;
+                    models.edit = ['view'];
                     models.spread = true;
                     var modelchild = [];
 
@@ -175,7 +182,7 @@ function GetUserAllFindProjects() {
                         model.data = findprojectdata[i].Models[j];
                         model.nodeOperate = true;
                         model.customItem = true;
-                        model.edit = ['del'];
+                        model.edit = ['add', 'del'];
                         model.showCheckbox = true;
                         model.checked = false;
 
@@ -211,7 +218,6 @@ function GetUserAllFindProjects() {
 
                         routechild.push(route);
                     }
-
 
                     routes.children = routechild;
                     child.push(routes);
@@ -291,7 +297,6 @@ function FindProjectNodeClick(obj) {
                         curtileset = null;
                         currentmodelid = null;
                     }
-
 
                     //取消所有选中
                     for (var i in findprojectlist) {
@@ -423,7 +428,7 @@ function FindProjectNodeClick(obj) {
             isReloadTree = true;//标记重载
             MarkCurrentProject();
             isReloadTree = false;//重载后还原
-        } 
+        }
     }
 };
 
@@ -442,28 +447,43 @@ function FindProjectNodeOperate(obj) {
         }
     }
     else if (obj.data.type == "findsurmodel") {
-        if (obj.type == 'del') {
-            DeleteFindModel(obj.data.id, currentprojectid);//删除模型
+        //模型
+        if (obj.type == 'add') {
+            ViewModel(obj.data.data);//查看模型
+        }
+        else if (obj.type == 'del') {
+            CancelModel(obj.data.id, currentprojectid);//删除模型
         }
     }
     else if (obj.data.type == "findroute") {
         //航线
         if (obj.type === 'add') {
-            ViewUavRoute(obj.data.class, obj.data.id); //查看航线
+            ViewUavFindRoute(); //查看航线
         }
         else if (obj.type === 'update') {
-            //编辑航线
-            EditUavRoute(obj.data.class, obj.data.id);
+            EditUavFindRoute();//编辑航线
         }
         else if (obj.type === 'del') {
-            DeleteFindRoute(obj.data.id);//删除航线     
+            DelteUavFindRoute(obj.data.id);//删除航线     
         }
     }
+    else if (obj.data.type == "findtarget") {
+        //TODO目标
+        if (obj.type === 'add') {
 
+        }
+        else if (obj.type === 'update') {
 
+        }
+        else if (obj.type === 'del') {
 
-
-
+        }
+    }
+    else {
+        if (obj.type == 'view') {
+            LinkModel(currentprojectid);
+        }
+    }
 };
 
 //节点选中/取消选中
@@ -504,7 +524,7 @@ function FindProjectNodeCheck(obj) {
                     currentmodelid = obj.data.id;
                     curtileset = Load3DTiles(obj.data.data);
 
-                    current_project_tile = curtileset;//用于航线规划判读有无选中模型
+                    //current_project_tile = curtileset;//用于航线规划判读有无选中模型
 
                     if (measurewidget_layerindex != null) {
                         layui.element.tabChange('measureway', 'modelMeasure'); //模型测量
@@ -531,7 +551,7 @@ function FindProjectNodeCheck(obj) {
 
                 currentmodelid = obj.data.id;
                 curtileset = Load3DTiles(obj.data.data);
-                current_project_tile = curtileset;//用于航线规划判读有无选中模型
+                //current_project_tile = curtileset;//用于航线规划判读有无选中模型
 
                 if (measurewidget_layerindex != null) {
                     layui.element.tabChange('measureway', 'modelMeasure'); //模型测量
@@ -639,6 +659,3 @@ function FindProjectNodeCheck(obj) {
         }
     }
 };
-
-
-

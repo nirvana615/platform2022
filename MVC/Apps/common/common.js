@@ -165,6 +165,17 @@ function xy2bl0(x, y, a, f) {
     return B + " " + L;
 };
 
+/*
+ * 获取3度带中央经度
+ */
+function GetCentralMeridian3(b) {
+    if (isNaN(b)) {
+        return 0;
+    }
+    else {
+        return Math.round(b / 3) * 3;
+    }
+};
 
 //生成GUID
 function NewGuid() {

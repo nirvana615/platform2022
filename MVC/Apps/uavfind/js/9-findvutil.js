@@ -25,7 +25,6 @@ util.fixbar({
                     && findprojectinfoviewlayerindex == null                   
                     && headeruserlayerindex == null
                     && headerselayerindex == null) {
-                    //ing...待添加其余Layer
                     AddFindProject();
                 } else {
                     layer.confirm('<p style="font-size:16px">是否确定新建巡查项目？</p><br/>', { icon: 3, title: ['系统提示', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei'], zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
@@ -36,7 +35,7 @@ util.fixbar({
             }
         } else if (type === 'bar3') {
             //新建航线
-            AddFindRoute();
+            AddUavFindRoute();
         } else if (type === 'bar4') {
             //巡查影像分析对比
             FindImageCompare();
