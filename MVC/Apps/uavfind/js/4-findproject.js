@@ -174,7 +174,6 @@ function AddFindProject() {
         });
     }
 };
-
 //编辑巡查项目
 function EditFindProject(findprojectdata) {
     if (findprojectinfoeditlayerindex != null) {
@@ -287,7 +286,6 @@ function EditFindProject(findprojectdata) {
         form.render();
     };
 };
-
 //查看巡查项目
 function ViewFindProject(findprojectdata) {
     if (findprojectinfoviewlayerindex != null) {
@@ -341,19 +339,20 @@ function ViewFindProject(findprojectdata) {
         }
     };
 };
-
 //删除巡查项目
-function DeleteFindProject(projectid) {
+function DeleteFindProject(findprojectid) {
     $.ajax({
-        url: servicesurl + "/api/FindProject/DeleteFindProject", type: "delete", data: { "id": projectid, "cookie": document.cookie },
+        url: servicesurl + "/api/FindProject/DeleteFindProject", type: "delete", data: { "id": findprojectid, "cookie": document.cookie },
         success: function (data) {
             var result = JSON.parse(data);
             if (result.code == 1) {
                 var delprojectid = JSON.parse(result.data);
+
                 //清除当前项目
                 if (currentprojectid == delprojectid) {
                     currentprojectid = null;
                     currentprojecttitle = null;
+
                     //清除当前项目已加载模型
                     if (curtileset != null) {
                         viewer.scene.primitives.remove(curtileset);
@@ -382,11 +381,13 @@ function DeleteFindProject(projectid) {
                 }
                 findprojectlist = newfindprojectlist;
             }
+            else {
+                layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+            }
+
             isReloadTree = true;//标记重载
             MarkCurrentProject();
             isReloadTree = false;//重载后还原
-
-            layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
         }, datatype: "json"
     });
 };
@@ -711,12 +712,10 @@ function LinkModel(uavfindprojectid) {
         }
     });
 };
-
 //TODO查看模型
 function ViewModel(modeldata) {
 
 };
-
 //取消模型
 function CancelModel(modeltaskid, findprojectid) {
     $.ajax({

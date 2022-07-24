@@ -29,12 +29,10 @@ function AddUavFindRoute() {
     if (currentprojectid == null) {
         layer.msg("请先选择当前项目！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
     }
-    else if (curtileset == null) {
-        layer.msg("请加载项目三维实景模型！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-    }
     else {
         depthTestAgainstTerrain = viewer.scene.globe.depthTestAgainstTerrain;
         viewer.scene.globe.depthTestAgainstTerrain = false;
+
         findrouteaddlayerindex = layer.open({
             type: 1
             , title: ['新建无人机宏观巡查航线', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
@@ -692,17 +690,17 @@ function AddUavFindRoute() {
     }
 };
 
-//查看巡查航线
-function ViewUavFindRoute() {
+//TODO查看巡查航线
+function ViewUavFindRoute(findrouteid) {
 
 };
 
-//编辑巡查航线
-function EditUavFindRoute() {
+//TODO编辑巡查航线
+function EditUavFindRoute(findrouteid) {
 };
 
-//删除巡查航线
-function DelteUavFindRoute(uavfindrouteid) {
+//TODO删除巡查航线
+function DeleteUavFindRoute(findrouteid) {
     /*
      * (1) 删除航线
      *（2）删除航线目标点
@@ -711,8 +709,7 @@ function DelteUavFindRoute(uavfindrouteid) {
 };
 
 
-
-//******TODO保存航线任务,保存target\mapprojecttarget\maptargetwaypoint
+//保存
 function SaveFindMission(type) {
     form.on('submit(find-route-add-submit)', function (data) {
         if (current_json == null) {

@@ -23,9 +23,9 @@ namespace MODEL
         /// </summary>
         public List<UavRoute> Routes { get; set; }
 
-        /// <summary>
-        /// 巡查目标信息
-        /// </summary>
-        public List<FindTarget> Targets { get; set; }
+        ///// <summary>
+        ///// 巡查目标信息
+        ///// </summary>
+        //public List<FindTarget> Targets { get; set; }
     }
 }

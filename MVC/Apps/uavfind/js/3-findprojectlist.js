@@ -44,7 +44,7 @@ layer.open({
 });
 
 GetUserAllFindProjectsQuick();//获取用户项目
-GetUserAllFindProjects();//获取用户项目+模型+航线+目标
+GetUserAllFindProjectsDetail();//获取用户项目+模型+航线+目标
 
 //获取用户全部巡查项目数据(快速)
 function GetUserAllFindProjectsQuick() {
@@ -144,7 +144,7 @@ function GetUserAllFindProjectsQuick() {
 };
 
 //获取用户全部巡查项目数据
-function GetUserAllFindProjects() {
+function GetUserAllFindProjectsDetail() {
     $.ajax({
         url: servicesurl + "/api/FindProject/GetUserFindProjectDatas", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
@@ -425,6 +425,7 @@ function FindProjectNodeClick(obj) {
                     }
                 }
             }
+
             isReloadTree = true;//标记重载
             MarkCurrentProject();
             isReloadTree = false;//重载后还原
@@ -449,22 +450,26 @@ function FindProjectNodeOperate(obj) {
     else if (obj.data.type == "findsurmodel") {
         //模型
         if (obj.type == 'add') {
-            ViewModel(obj.data.data);//查看模型
+            //TODO查看模型
+            ViewModel(obj.data.data);
         }
         else if (obj.type == 'del') {
-            CancelModel(obj.data.id, currentprojectid);//删除模型
+            CancelModel(obj.data.id, currentprojectid);//取消模型
         }
     }
     else if (obj.data.type == "findroute") {
         //航线
         if (obj.type === 'add') {
-            ViewUavFindRoute(); //查看航线
+            //TODO查看航线
+            ViewUavFindRoute(obj.data.id);
         }
         else if (obj.type === 'update') {
-            EditUavFindRoute();//编辑航线
+            //TODO编辑航线
+            EditUavFindRoute(obj.data.id);
         }
         else if (obj.type === 'del') {
-            DelteUavFindRoute(obj.data.id);//删除航线     
+            //TODO删除航线
+            DeleteUavFindRoute(obj.data.id);
         }
     }
     else if (obj.data.type == "findtarget") {
@@ -481,7 +486,7 @@ function FindProjectNodeOperate(obj) {
     }
     else {
         if (obj.type == 'view') {
-            LinkModel(currentprojectid);
+            LinkModel(currentprojectid);//关联模型
         }
     }
 };

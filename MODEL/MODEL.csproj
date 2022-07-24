@@ -53,9 +53,7 @@
     <Compile Include="data\common\mark\Mark.cs" />
     <Compile Include="data\common\mark\MarkData.cs" />
     <Compile Include="data\sysfind\uavfindmap\MapFindTargetImageInfo.cs" />
-    <Compile Include="data\sysfind\uavfindmap\MapFindTargetWaypoint.cs" />
-    <Compile Include="data\sysfind\uavfindmap\MapFindProjectTarget .cs" />
-    <Compile Include="data\sysfind\uavfindmap\MapFindProjectRoute.cs" />
+    <Compile Include="data\sysfind\MapFindProjectRoute.cs" />
     <Compile Include="data\sysfind\uavfind\FindImageExif.cs" />
     <Compile Include="data\sysfind\uavfind\FindImageInfo.cs" />
     <Compile Include="data\sysfind\uavfind\FindImageXmp.cs" />
@@ -243,10 +241,9 @@
     <Compile Include="data\sysgeo\rock\RockProject.cs" />
     <Compile Include="data\sysgeo\rock\RockSelectLine.cs" />
     <Compile Include="data\sysgeo\rock\RockWindowInfo.cs" />
-    <Compile Include="data\sysfind\uavfindmap\MapUserFindProject.cs" />
-    <Compile Include="data\sysfind\uavfind\FindProject.cs" />
+    <Compile Include="data\sysfind\MapUserFindProject.cs" />
+    <Compile Include="data\sysfind\FindProject.cs" />
     <Compile Include="data\sysfind\uavfind\FindProjectData.cs" />
-    <Compile Include="data\sysfind\uavfind\FindTarget.cs" />
     <Compile Include="data\sysuav\uavmap\MapCameraPhotoRatio.cs" />
     <Compile Include="data\sysuav\uavmap\MapRouteWayarea.cs" />
     <Compile Include="data\sysuav\uavmap\MapWaypointAction.cs" />

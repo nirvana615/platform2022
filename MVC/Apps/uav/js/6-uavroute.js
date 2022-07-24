@@ -2389,7 +2389,7 @@ function updateroutetree() {
 };
 
 //添加起飞点（模型）
-function AddTakeOffModel(type,tiles) {
+function AddTakeOffModel(type, tiles) {
     $("#uav-route-add-takeoff").on("click", function () {
         if (tiles == null) {
             layer.msg("请加载项目三维实景模型！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
